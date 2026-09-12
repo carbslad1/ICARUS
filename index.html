@@ -8,9 +8,32 @@
   </head>
   <body>
     <main id="app" aria-label="Icarus">
-      <header><h1>ICARUS</h1><span>PHASE 0</span></header>
+      <header>
+        <div class="brand"><h1>ICARUS</h1><span id="phase">WATER TRIAL</span></div>
+        <div class="actions" data-water>
+          <button id="restart" type="button" aria-label="Restart" title="Restart">&#8635;</button>
+          <button id="pause" type="button" aria-label="Pause" title="Pause">&#10074;&#10074;</button>
+        </div>
+      </header>
       <div id="stage"></div>
-      <footer><output id="telemetry" aria-label="World state"></output></footer>
+      <section class="readouts" aria-label="Flight instruments" data-water>
+        <div class="speed"><output id="speed" aria-label="Speed">0.0</output><span>m/s</span></div>
+        <div class="measure"><span id="depth-label">DEPTH</span><div><output id="depth" aria-label="Depth or height">0.0</output><span> m</span></div></div>
+        <div class="measure"><span>BEST</span><div><output id="best" aria-label="Best altitude">0.0</output><span> m</span></div></div>
+        <div class="measure"><span>STREAK</span><output id="streak" aria-label="Perfect entry streak">0</output></div>
+      </section>
+      <div id="pause-state" role="status" hidden>PAUSED</div>
+      <footer>
+        <output id="telemetry" aria-label="World state" hidden></output>
+        <div class="status" data-water><output id="medium" aria-label="Medium">WATER</output><output id="entry" aria-label="Last entry"></output><output id="elapsed" aria-label="Elapsed time">00:00</output></div>
+      </footer>
+      <div class="touch-controls" data-water aria-label="Swim controls">
+        <div class="turn-controls">
+          <button type="button" data-control="left" aria-label="Turn counterclockwise" aria-pressed="false" title="Turn counterclockwise">&#8634;</button>
+          <button type="button" data-control="right" aria-label="Turn clockwise" aria-pressed="false" title="Turn clockwise">&#8635;</button>
+        </div>
+        <button type="button" data-control="thrust" aria-label="Thrust" aria-pressed="false" title="Thrust">&#9650;</button>
+      </div>
     </main>
     <script type="module" src="/src/main.ts"></script>
   </body>

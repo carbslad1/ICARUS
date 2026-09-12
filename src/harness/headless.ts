@@ -1,8 +1,9 @@
 import { CONSTANTS } from '../sim/constants';
 import type { PlayerIntent } from '../sim/intent';
 import { stepWorld } from '../sim/step';
-import { seconds, type Metres, type Seconds } from '../sim/units';
+import { seconds, type Metres, type Seconds, type WorldPos } from '../sim/units';
 import { createWorld, type World } from '../sim/world';
+import type { WaterBody } from '../sim/water/body';
 
 export interface StateFrame {
   readonly stepIndex: number;
@@ -13,6 +14,8 @@ export interface StateFrame {
   readonly originY: Metres;
   readonly entityCount: number;
   readonly intent: PlayerIntent;
+  readonly player?: Readonly<WaterBody>;
+  readonly camera?: WorldPos;
 }
 
 export interface SimHarness {
@@ -21,11 +24,11 @@ export interface SimHarness {
   snapshot(): StateFrame;
 }
 
-export function createHarness(seed: number = CONSTANTS.RNG.DEFAULT_SEED): SimHarness {
-  let world = createWorld(seed);
+export function createHarness(seed: number = CONSTANTS.RNG.DEFAULT_SEED, create: (seed: number) => World = createWorld): SimHarness {
+  let world = create(seed);
   return {
     reset(nextSeed) {
-      world = createWorld(nextSeed);
+      world = create(nextSeed);
       return world;
     },
     step(intent) {
@@ -33,6 +36,7 @@ export function createHarness(seed: number = CONSTANTS.RNG.DEFAULT_SEED): SimHar
       return world;
     },
     snapshot() {
+      const body = world.entities[0];
       return Object.freeze({
         stepIndex: world.stepIndex,
         time: seconds(world.stepIndex * CONSTANTS.TIME.SIM_DT),
@@ -42,6 +46,10 @@ export function createHarness(seed: number = CONSTANTS.RNG.DEFAULT_SEED): SimHar
         originY: world.origin.y,
         entityCount: world.entities.length,
         intent: world.intent,
+        ...(body ? {
+          player: Object.freeze({ ...body, lastCrossing: body.lastCrossing ? Object.freeze({ ...body.lastCrossing }) : null }),
+          camera: world.camera,
+        } : {}),
       });
     },
   };

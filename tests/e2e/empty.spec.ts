@@ -8,7 +8,7 @@ const trace = parseTrace(JSON.parse(readFileSync('tests/golden/empty.trace.json'
 test('built site replays the golden trace and draws identical empty frames', async ({ page }, testInfo) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
-  await page.goto('/?test=1');
+  await page.goto('/?test=1&scene=empty');
   await expect(page.locator('html')).toHaveAttribute('data-ready', 'true');
   const canvas = page.getByRole('img', { name: 'Empty Icarus world' });
   await expect(canvas).toBeVisible();
@@ -49,7 +49,7 @@ test('built site replays the golden trace and draws identical empty frames', asy
 });
 
 test('manual pumping bypasses animation callbacks and validates frame counts', async ({ page }) => {
-  await page.goto('/?test=1');
+  await page.goto('/?test=1&scene=empty');
   await expect(page.locator('html')).toHaveAttribute('data-ready', 'true');
   const result = await page.evaluate(() => {
     const hook = window.__icarus;

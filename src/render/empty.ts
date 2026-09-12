@@ -22,12 +22,16 @@ export async function createEmptyRenderer(host: HTMLElement, output: HTMLOutputE
   document.documentElement.style.setProperty('--void', cssColour(PALETTE.VOID));
   document.documentElement.style.setProperty('--primary', cssColour(PALETTE.PLAYER));
   document.documentElement.style.setProperty('--text', cssColour(PALETTE.PLAYER_HOT));
+  document.documentElement.style.setProperty('--water', cssColour(PALETTE.ABYSS));
+  document.documentElement.style.setProperty('--surface', cssColour(PALETTE.SURFACE));
+  document.documentElement.style.setProperty('--warning', cssColour(PALETTE.TELEGRAPH));
   const observer = new ResizeObserver(() => {
     app.renderer.resize(host.clientWidth, host.clientHeight);
     app.render();
   });
   observer.observe(host);
   return {
+    app,
     render(frame: StateFrame, alpha: number) {
       output.value = `SEED ${frame.seed} / STEP ${frame.stepIndex} / ENTITIES ${frame.entityCount}`;
       host.dataset.alpha = String(alpha);

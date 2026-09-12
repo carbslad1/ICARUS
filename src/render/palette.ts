@@ -2,6 +2,9 @@ export const PALETTE = Object.freeze({
   VOID: 0x04050c,
   PLAYER: 0x2bf5ff,
   PLAYER_HOT: 0xb8feff,
+  ABYSS: 0x080b1f,
+  SURFACE: 0x5fffe0,
+  TELEGRAPH: 0xffb020,
 });
 
 export function cssColour(colour: number): string {

@@ -2,10 +2,11 @@ import { idleIntent } from '../sim/intent';
 import { createHarness, type StateFrame } from './headless';
 import { parseTrace, type InputTrace } from './trace';
 import { stateCsv } from './csv';
+import { createWaterWorld, createWorld } from '../sim/world';
 
 export function replayTrace(input: InputTrace): { frames: readonly StateFrame[]; csv: string } {
   const trace = parseTrace(input);
-  const harness = createHarness(trace.seed);
+  const harness = createHarness(trace.seed, trace.version === 2 ? createWaterWorld : createWorld);
   const frames: StateFrame[] = [harness.snapshot()];
   let cursor = 0;
   let intent = idleIntent();

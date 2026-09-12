@@ -20,7 +20,8 @@
     "postverify": "node scripts/check-verify-budget.mjs",
     "preverify": "node scripts/start-verify.mjs",
     "replay": "node scripts/replay.mjs",
-    "record:empty": "node scripts/record-empty.mjs"
+    "record:empty": "node scripts/record-empty.mjs",
+    "record:water": "node scripts/record-water.mjs"
   },
   "dependencies": {
     "pixi.js": "^8.0.0"

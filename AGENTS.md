@@ -8,6 +8,7 @@
 - Individual checks: `typecheck`, `lint`, `test:sim`, `test:web`, `test:e2e`.
 - `npm run bench`: longer benchmarks, outside verify.
 - `npm run record:empty -- <new-directory>` and `npm run replay -- <trace> <new.csv>`.
+- `npm run record:water -- <new-directory>` records the Phase 1 launch/entry trace.
 - Never weaken harness rules, skip tests, loosen tolerances, or silently replace goldens.
 - Do not add dependencies without asking. The user approved `@types/node` in Phase 0.
 
@@ -17,6 +18,8 @@
 - `sim/` is renderer-free, deterministic, and runnable in pure Node.
 - One arena origin, one `toWorld` transform in `sim/units.ts`.
 - No entity holds two positions. Air entities store only arena-local positions.
+- Phase 1's temporary ballistic water body remains world-space in both media;
+  it is not an air-arena entity. Phase 2 must introduce the specified frame model.
 - Branded constructors/conversions live only in `sim/units.ts`; no external casts.
 - Fixed 1/120 s timestep. Dilation changes step count, never dt.
 - One seeded RNG on the world; no wall-clock or `Math.random` in simulation.
@@ -55,17 +58,30 @@ Steps 3–5 and 6–15 are mutually exclusive. Do not reorder or insert steps.
 
 ## Current phase
 
-Phase 0 (Scaffold) complete on 2026-09-12. Gate: record 1000 stationary-world steps,
-replay, and compare both CSVs byte-identical to the deliberately created golden.
-`npm run verify`: 73 Node/static + 8 browser + 6 Playwright tests passed locally in
-11.87 s and on GitHub in 19.21 s. No gameplay exists.
+Phase 1 (Water) implemented on 2026-09-12 after the user approved proceeding.
+Mechanical gate passed: `npm run verify` completed 127 Node/static + 10 browser +
+12 Playwright tests in 22.45 s. Human gate is PENDING; Phase 1 is not complete yet.
+Do not begin Phase 2 without the user's five-minute playtest approval.
+
+A/D rotate, W thrusts; in air only heading changes, not the arc. Arrow alternatives,
+touch hold controls, restart, and Escape/pause are available. The renderer is just
+a dolphin silhouette, one surface line, camera, and readouts, as Phase 1 requires.
+
+Exact cross-runtime replay uses fixed numeric series in `sim/math.ts`; do not
+replace them with native transcendental functions without preserving the tests.
+The new water golden is version 2 with scenario `water`. The original version 1
+empty trace and CSV remain byte-identical; `?test=1&scene=empty` selects that fixture.
+Normal development runs automatically; `?test=1` starts manual stepping paused.
+Thrust only adds remaining speed headroom, never clamps earned momentum. See
+README for the reviewed initial water-golden changes and unspecified tuning values.
+
+Phase 0's 1000-step record/replay gate remains green alongside all water checks.
 
 Published at https://carbslad1.github.io/ICARUS/ from the verified `main` build.
-Playwright verified the live site's exact 1000-step replay, production hook
+Playwright previously verified Phase 0's live 1000-step replay, production hook
 isolation, and absence of page errors. The user explicitly approved publishing
 the source code and design document in the public carbslad1/ICARUS repository.
 
-Stop after Phase 0. The next session may begin Phase 1 (Water), whose gate requires
-both the water simulation tests (especially hard-turn versus gentle-turn) and a
-human enjoying five minutes of diving. Write those tests alongside the physics;
-do not self-assess the human gate. Update this section every session.
+Stop at the Phase 1 human gate. Ask the user to dive and breach for five minutes;
+do not self-assess enjoyment. Retune water if it does not feel good. Update this
+section every session, including the user's actual verdict when available.

@@ -2,9 +2,10 @@ import { copyIntent, type PlayerIntent } from '../sim/intent';
 import { createHarness, type StateFrame } from './headless';
 import { parseTrace, type InputTrace, type TraceEntry } from './trace';
 import { stateCsv } from './csv';
+import { createWaterWorld, createWorld } from '../sim/world';
 
-export function createRecorder(seed: number) {
-  const harness = createHarness(seed);
+export function createRecorder(seed: number, scenario: 'empty' | 'water' = 'empty') {
+  const harness = createHarness(seed, scenario === 'water' ? createWaterWorld : createWorld);
   const frames: StateFrame[] = [harness.snapshot()];
   const entries: TraceEntry[] = [];
 
@@ -18,7 +19,7 @@ export function createRecorder(seed: number) {
       return frame;
     },
     trace(): InputTrace {
-      return parseTrace({ version: 1, seed, steps: harness.snapshot().stepIndex, entries });
+      return parseTrace({ ...(scenario === 'water' ? { version: 2, scenario } : { version: 1 }), seed, steps: harness.snapshot().stepIndex, entries });
     },
     csv(): string { return stateCsv(frames); },
   };

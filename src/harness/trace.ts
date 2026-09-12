@@ -7,12 +7,14 @@ export interface TraceEntry {
   readonly intent: PlayerIntent;
 }
 
-export interface InputTrace {
-  readonly version: 1;
+interface TraceData {
   readonly seed: number;
   readonly steps: number;
   readonly entries: readonly TraceEntry[];
 }
+
+export type InputTrace = (TraceData & { readonly version: 1 }) |
+  (TraceData & { readonly version: 2; readonly scenario: 'water' });
 
 function record(value: unknown): Record<string, unknown> {
   if (typeof value !== 'object' || value === null || Array.isArray(value)) {
@@ -45,7 +47,7 @@ function intentFromJson(value: unknown): PlayerIntent {
 
 export function parseTrace(value: unknown): InputTrace {
   const input = record(value);
-  if (input.version !== 1) throw new RangeError('Unsupported trace version.');
+  if (input.version !== 1 && !(input.version === 2 && input.scenario === 'water')) throw new RangeError('Unsupported trace version or scenario.');
   const seed = number(input.seed);
   createRng(seed);
   const steps = number(input.steps);
@@ -61,7 +63,9 @@ export function parseTrace(value: unknown): InputTrace {
     previous = stepIndex;
     return Object.freeze({ stepIndex, intent: intentFromJson(entry.intent) });
   });
-  return Object.freeze({ version: 1, seed, steps, entries: Object.freeze(entries) });
+  return input.version === 1
+    ? Object.freeze({ version: 1, seed, steps, entries: Object.freeze(entries) })
+    : Object.freeze({ version: 2, scenario: 'water', seed, steps, entries: Object.freeze(entries) });
 }
 
 export function traceJson(trace: InputTrace): string {
