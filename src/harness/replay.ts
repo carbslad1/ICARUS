@@ -6,7 +6,7 @@ import { createWaterWorld, createWorld } from '../sim/world';
 
 export function replayTrace(input: InputTrace): { frames: readonly StateFrame[]; csv: string } {
   const trace = parseTrace(input);
-  const harness = createHarness(trace.seed, trace.version === 2 ? createWaterWorld : createWorld);
+  const harness = createHarness(trace.seed, trace.version === 2 ? (seed) => createWaterWorld(seed, {}, trace.tuning) : createWorld);
   const frames: StateFrame[] = [harness.snapshot()];
   let cursor = 0;
   let intent = idleIntent();
@@ -16,7 +16,7 @@ export function replayTrace(input: InputTrace): { frames: readonly StateFrame[];
       intent = entry.intent;
       cursor += 1;
     }
-    harness.step(intent);
+    harness.step(intent, entry?.stepIndex === step ? entry.tuning : undefined);
     frames.push(harness.snapshot());
   }
   return { frames, csv: stateCsv(frames) };

@@ -4,6 +4,8 @@ import { idleIntent } from '../../src/sim/intent';
 import { CONSTANTS } from '../../src/sim/constants';
 import { replayTrace } from '../../src/harness/replay';
 import type { InputTrace } from '../../src/harness/trace';
+import { createWaterWorld } from '../../src/sim/world';
+import { parseMovementTuning } from '../../src/sim/tuning';
 
 afterEach(() => { delete window.__icarus; vi.restoreAllMocks(); });
 
@@ -60,4 +62,41 @@ test('pause and reset isolate manual state from real-time stepping', () => {
   expect(driver.hook.snapshot().stepIndex).toBe(1);
   driver.hook.reset(42);
   expect(driver.hook.snapshot().stepIndex).toBe(0);
+});
+
+test('live edits latch at a step boundary, survive restart, and cannot contaminate a replay', () => {
+  const driver = createBrowserDriver(() => {}, createWaterWorld);
+  driver.hook.reset(42);
+  driver.hook.stepFrames(20);
+  const before = driver.hook.snapshot();
+  const tuning = parseMovementTuning({ thrust: 65 });
+  driver.setTuning(tuning);
+  expect(driver.hook.snapshot()).toEqual(before);
+  driver.hook.stepFrames(1);
+  expect(driver.hook.snapshot().tuning).toEqual(tuning);
+  expect(driver.hook.snapshot().stepIndex).toBe(21);
+  driver.hook.reset(42);
+  expect(driver.hook.snapshot().tuning).toEqual(tuning);
+  const trace: InputTrace = { version: 2, scenario: 'water', seed: 42, steps: 3, entries: [] };
+  driver.hook.loadTrace(trace);
+  expect(driver.hook.snapshot().tuning).toBeUndefined();
+  driver.hook.stepFrames(3);
+  expect(driver.hook.snapshot()).toEqual(replayTrace(trace).frames.at(-1));
+});
+
+test('browser and headless agree exactly across recorded tuning changes', () => {
+  const trace: InputTrace = { version: 2, scenario: 'water', seed: 42, steps: 600,
+    tuning: parseMovementTuning({ thrust: 50, waterDrag: 0.001 }),
+    entries: [
+      { stepIndex: 0, intent: { ...idleIntent(), turn: 1, thrust: true } },
+      { stepIndex: 60, intent: { ...idleIntent(), thrust: true }, tuning: parseMovementTuning({ airGravity: -10 }) },
+      { stepIndex: 450, intent: idleIntent(), tuning: parseMovementTuning({}) },
+    ],
+  };
+  const driver = createBrowserDriver(() => {}, createWaterWorld);
+  driver.hook.loadTrace(trace);
+  for (const frame of replayTrace(trace).frames.slice(1)) {
+    driver.hook.stepFrames(1);
+    expect(driver.hook.snapshot()).toEqual(frame);
+  }
 });

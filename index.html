@@ -8,9 +8,11 @@
   </head>
   <body>
     <main id="app" aria-label="Icarus">
+      <div id="playfield">
       <header>
         <div class="brand"><h1>ICARUS</h1><span id="phase">WATER TRIAL</span></div>
         <div class="actions" data-water>
+          <button id="tuning-toggle" type="button" aria-label="Movement settings" title="Movement settings" aria-expanded="false" aria-controls="tuning-panel">&#9881;</button>
           <button id="restart" type="button" aria-label="Restart" title="Restart">&#8635;</button>
           <button id="pause" type="button" aria-label="Pause" title="Pause">&#10074;&#10074;</button>
         </div>
@@ -34,6 +36,23 @@
         </div>
         <button type="button" data-control="thrust" aria-label="Thrust" aria-pressed="false" title="Thrust">&#9650;</button>
       </div>
+      </div>
+      <aside id="tuning-panel" aria-label="Movement tuning" hidden>
+        <div class="tuning-heading">
+          <h2>Movement</h2>
+          <button id="tuning-close" type="button" aria-label="Close movement settings" title="Close movement settings">&#215;</button>
+        </div>
+        <div id="tuning-tabs" role="tablist" aria-label="Movement categories"></div>
+        <div id="tuning-fields"></div>
+        <div class="tuning-footer">
+          <output id="tuning-status" aria-live="polite">Default settings</output>
+          <div class="tuning-actions">
+            <button id="tuning-reset" type="button" title="Reset all movement settings">&#8634; Reset defaults</button>
+            <button id="tuning-copy" type="button" title="Copy movement settings">&#10697; Copy settings</button>
+          </div>
+          <textarea id="tuning-export" aria-label="Settings to share" readonly hidden></textarea>
+        </div>
+      </aside>
     </main>
     <script type="module" src="/src/main.ts"></script>
   </body>

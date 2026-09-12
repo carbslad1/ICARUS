@@ -3,23 +3,24 @@ import { atan2, magnitude } from '../math';
 import { angleDifference, metresPerSec, radians } from '../units';
 import type { MetresPerSec, Radians, Vec2 } from '../units';
 import type { EntryGrade } from './body';
+import { DEFAULT_TUNING, type MovementTuning } from '../tuning';
 
-export function entryQuality(heading: Radians, incoming: Vec2<MetresPerSec>, streak: number) {
+export function entryQuality(heading: Radians, incoming: Vec2<MetresPerSec>, streak: number, tuning: MovementTuning = DEFAULT_TUNING) {
   const error = radians(Math.abs(angleDifference(heading, radians(atan2(incoming.y, incoming.x)))));
   const spec = CONSTANTS.ENTRY;
   const epsilon = CONSTANTS.SURFACE.ANGLE_EPSILON;
   let grade: EntryGrade;
   let retention: number;
   if (error <= spec.PERFECT_ANGLE + epsilon) { grade = 'perfect'; retention = 1; }
-  else if (error <= spec.CLEAN_ANGLE + epsilon) { grade = 'clean'; retention = spec.CLEAN_RETENTION; }
+  else if (error <= spec.CLEAN_ANGLE + epsilon) { grade = 'clean'; retention = tuning.cleanRetention; }
   else if (error <= spec.SLOPPY_ANGLE + epsilon) {
     grade = 'sloppy';
     const proportion = (error - spec.CLEAN_ANGLE) / (spec.SLOPPY_ANGLE - spec.CLEAN_ANGLE);
-    retention = spec.CLEAN_RETENTION + (spec.SLOPPY_RETENTION - spec.CLEAN_RETENTION) * proportion;
-  } else { grade = 'belly-flop'; retention = spec.FLOP_RETENTION; }
+    retention = tuning.cleanRetention + (tuning.sloppyRetention - tuning.cleanRetention) * proportion;
+  } else { grade = 'belly-flop'; retention = tuning.flopRetention; }
   const bonus = metresPerSec(grade === 'perfect'
-    ? Math.min(spec.PERFECT_BONUS + streak * spec.PERFECT_STREAK_BONUS, spec.PERFECT_BONUS_CAP)
-    : grade === 'clean' ? spec.CLEAN_BONUS : 0);
+    ? Math.min(tuning.perfectBonus + streak * tuning.streakBonus, tuning.bonusCap)
+    : grade === 'clean' ? tuning.cleanBonus : 0);
   return {
     grade, retention, error, bonus,
     streak: grade === 'perfect' ? streak + 1 : 0,

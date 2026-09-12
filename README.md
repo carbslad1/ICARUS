@@ -17,6 +17,28 @@ nose along the incoming velocity for a perfect entry. The faint line shows veloc
 Escape pauses; the top-right buttons pause or restart. Narrow/touch screens have
 hold controls. Begin with W and a short hold of A to turn the initial dive upward.
 
+## Live Movement Settings
+
+Open the gear button to tune 18 variables while playing. The panel docks beside
+the game on desktop and below it on phones. Water covers thrust, its speed limit,
+gravity, and resistance. Steering covers body turn speed, flow response, steering
+angle, and turn resistance. Air has independent gravity and rotation speed.
+Entries covers perfect/clean boosts, streak growth and cap, speed retained by
+each imperfect entry grade, and flop recovery time. Speed retention is displayed
+as a percentage; the exported profile uses ratios from 0 to 1.
+
+Sliders apply at the next fixed simulation step without resetting position, speed,
+or progress. Number fields accept exact values within the same range. Settings
+are saved on this device and retained when restarting or reloading. Reset defaults
+restores the current flow-steering baseline without restarting the run. No physics
+defaults or golden fixtures were changed for this panel.
+
+Copy settings exports every value as versioned JSON to send back with feel feedback.
+A selectable copy remains available if clipboard permission is denied. Changes
+still work when browser storage is unavailable, with a status message. Arrow keys
+edit focused sliders and fields without steering; clicking a slider releases its
+focus when the pointer is lifted. Escape inside the panel closes it without pausing.
+
 ## Run
 
 Use Node 22 LTS (minimum supported Node: 20.19).
@@ -51,7 +73,12 @@ n fixed steps synchronously, even while paused, without calling animation APIs.
 `setPaused(false)` resumes real-time advancement. Inputs are held until changed.
 The regular page starts the water trial immediately. The explicit test fixture
 `?test=1&scene=empty` retains Phase 0. Version 1 traces select the empty scenario;
-version 2 traces declare `scenario: "water"`. Scenario selection happens upstream
+version 2 traces declare `scenario: "water"`. They can include an optional initial
+`tuning` profile and per-entry `tuning` changes at integer step boundaries.
+`createRecorder(seed, 'water', tuning)` and `recorder.step(intent, nextTuning)` record
+these settings. Explicit replay never borrows saved browser preferences. Default
+recordings retain their exact original schema and CSV; custom snapshots include
+their immutable profile. Scenario selection happens upstream
 of the simulation. Both use the same fixed-step driver.
 
 The `sim/` code runs with no browser dependencies. The headless harness exposes
@@ -74,7 +101,10 @@ Output files must not already exist. Golden fixtures are checked in under
 
 ## Water Gate And Tuning
 
-Verified locally: 137 Node/static, 10 browser, and 14 Playwright tests, in 71.38 s.
+Verified locally: 156 Node/static, 13 browser, and 24 Playwright tests, in 105.24 s.
+The tuning gate covers every parameter's effect, bounds, extreme configurations,
+independent runs, exact custom replay, persistence, clipboard denial, keyboard
+focus, touch play, and nonblank desktop/phone/landscape layouts.
 Tight and wide turns have mean radii of 6.337/19.009 m at a 26 m/s start, with both
 exiting around 26 m/s through the same 120-degree trajectory. At 60 m/s the radii
 are 13.910/39.114 m, with exit speeds of 54.203/47.149 m/s. Ten complete

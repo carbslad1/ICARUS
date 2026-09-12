@@ -5,6 +5,7 @@ import { createControls } from './input/controls';
 import { createWaterWorld, createWorld } from './sim/world';
 import { CONSTANTS } from './sim/constants';
 import { seconds } from './sim/units';
+import { createTuningPanel, loadTuning } from './ui/tuning';
 
 async function start() {
   const host = document.querySelector<HTMLElement>('#stage');
@@ -15,7 +16,9 @@ async function start() {
   const query = new URLSearchParams(location.search);
   const manual = query.get('test') === '1';
   const factory = (manual || import.meta.env.DEV) && query.get('scene') === 'empty' ? createWorld : createWaterWorld;
-  const driver = createBrowserDriver(renderer.render, factory, controls.sample);
+  const tuning = loadTuning();
+  const driver = createBrowserDriver(renderer.render, factory, controls.sample, tuning);
+  const panel = createTuningPanel(tuning, driver.setTuning, controls.clear);
   registerTestHook(window, driver.hook, import.meta.env.DEV, location.search);
   driver.hook.setPaused(manual);
   renderer.render(driver.hook.snapshot(), 0);
@@ -41,7 +44,7 @@ async function start() {
     pause(false);
   }
   function pauseKey(event: KeyboardEvent) {
-    if (event.code === 'Escape' && !event.repeat) togglePause();
+    if (event.code === 'Escape' && !event.repeat && !event.defaultPrevented) togglePause();
   }
   pauseButton?.addEventListener('click', togglePause);
   restartButton?.addEventListener('click', restart);
@@ -66,6 +69,7 @@ async function start() {
     restartButton?.removeEventListener('click', restart);
     window.removeEventListener('keydown', pauseKey);
     controls.destroy();
+    panel.destroy();
     renderer.destroy();
   });
 }

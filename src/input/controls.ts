@@ -7,6 +7,8 @@ export function createControls(target: Window, buttons: readonly HTMLButtonEleme
   const cleanup: (() => void)[] = [];
 
   function keyDown(event: KeyboardEvent) {
+    if (event.defaultPrevented || (event.target instanceof Element &&
+      event.target.closest('input, textarea, select, [contenteditable], [role="tablist"]'))) return;
     if (event.metaKey || event.ctrlKey || event.altKey || !bindings.has(event.code)) return;
     event.preventDefault();
     keys.add(event.code);

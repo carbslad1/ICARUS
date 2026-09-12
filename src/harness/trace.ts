@@ -1,10 +1,12 @@
 import { copyIntent, type PlayerIntent } from '../sim/intent';
 import { createRng } from '../sim/rng';
+import { parseMovementTuning, type MovementTuning } from '../sim/tuning';
 
 export interface TraceEntry {
   /** Zero-based: this intent is applied before executing this step. */
   readonly stepIndex: number;
   readonly intent: PlayerIntent;
+  readonly tuning?: MovementTuning;
 }
 
 interface TraceData {
@@ -14,7 +16,7 @@ interface TraceData {
 }
 
 export type InputTrace = (TraceData & { readonly version: 1 }) |
-  (TraceData & { readonly version: 2; readonly scenario: 'water' });
+  (TraceData & { readonly version: 2; readonly scenario: 'water'; readonly tuning?: MovementTuning });
 
 function record(value: unknown): Record<string, unknown> {
   if (typeof value !== 'object' || value === null || Array.isArray(value)) {
@@ -48,6 +50,7 @@ function intentFromJson(value: unknown): PlayerIntent {
 export function parseTrace(value: unknown): InputTrace {
   const input = record(value);
   if (input.version !== 1 && !(input.version === 2 && input.scenario === 'water')) throw new RangeError('Unsupported trace version or scenario.');
+  if (input.version === 1 && input.tuning !== undefined) throw new RangeError('Empty traces cannot tune movement.');
   const seed = number(input.seed);
   createRng(seed);
   const steps = number(input.steps);
@@ -61,11 +64,16 @@ export function parseTrace(value: unknown): InputTrace {
       throw new RangeError('Trace entries must be strictly increasing and inside the trace.');
     }
     previous = stepIndex;
-    return Object.freeze({ stepIndex, intent: intentFromJson(entry.intent) });
+    if (input.version === 1 && entry.tuning !== undefined) throw new RangeError('Empty traces cannot tune movement.');
+    return Object.freeze({ stepIndex, intent: intentFromJson(entry.intent),
+      ...(entry.tuning === undefined ? {} : { tuning: parseMovementTuning(entry.tuning) }),
+    });
   });
   return input.version === 1
     ? Object.freeze({ version: 1, seed, steps, entries: Object.freeze(entries) })
-    : Object.freeze({ version: 2, scenario: 'water', seed, steps, entries: Object.freeze(entries) });
+    : Object.freeze({ version: 2, scenario: 'water', seed, steps, entries: Object.freeze(entries),
+      ...(input.tuning === undefined ? {} : { tuning: parseMovementTuning(input.tuning) }),
+    });
 }
 
 export function traceJson(trace: InputTrace): string {

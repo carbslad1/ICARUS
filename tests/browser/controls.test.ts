@@ -35,3 +35,20 @@ test('manual water stepping samples the same keyboard adapter as real-time play'
     expect(driver.hook.snapshot().intent.thrust).toBe(false);
   } finally { controls.destroy(); }
 });
+
+test('editing a slider or number field does not steer or thrust, and keyup still releases', () => {
+  const controls = createControls(window, []);
+  const input = document.createElement('input');
+  input.type = 'range';
+  document.body.append(input);
+  try {
+    window.dispatchEvent(new KeyboardEvent('keydown', { code: 'KeyW' }));
+    input.dispatchEvent(new KeyboardEvent('keyup', { code: 'KeyW', bubbles: true }));
+    input.dispatchEvent(new KeyboardEvent('keydown', { code: 'ArrowLeft', bubbles: true }));
+    input.dispatchEvent(new KeyboardEvent('keydown', { code: 'KeyW', bubbles: true }));
+    expect(controls.sample()).toEqual(idleIntent());
+    input.type = 'number';
+    input.dispatchEvent(new KeyboardEvent('keydown', { code: 'ArrowUp', bubbles: true }));
+    expect(controls.sample()).toEqual(idleIntent());
+  } finally { input.remove(); controls.destroy(); }
+});

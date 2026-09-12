@@ -23,7 +23,9 @@
 - Branded constructors/conversions live only in `sim/units.ts`; no external casts.
 - Fixed 1/120 s timestep. Dilation changes step count, never dt.
 - One seeded RNG on the world; no wall-clock or `Math.random` in simulation.
-- Tunables live in the deeply frozen constants object; colours in `palette.ts`.
+- Tuning defaults and allowed ranges live in the deeply frozen constants object;
+  live overrides are validated, immutable per-world profiles. Never mutate global defaults.
+  Colours live in `palette.ts`.
 - Input drivers produce PlayerIntent upstream; no platform/debug/headless gameplay branches.
 
 ## Update order (§14.4, verbatim)
@@ -65,8 +67,14 @@ Retune 1 also FAILED its human playtest: yo-yo movement, free nose spinning,
 excessive velocity loss, and unnatural momentum. The user explicitly approved
 replacing the original hard-turn speed punishment with fluid momentum preservation.
 Flow steering is now implemented; its human re-test is PENDING. Phase 1 is not complete.
-Mechanical gate passed: `npm run verify` completed 137 Node/static + 10 browser +
-14 Playwright tests in 71.38 s. Do not restore the obsolete speed-loss requirement.
+The user requested live movement sliders to find preferred values themselves.
+There are now 18 controls across Water, Steering, Air, and Entries, with numeric
+inputs, local persistence, reset defaults, and a complete copyable settings profile.
+The panel docks beside the game or below it on phones. Changes latch at the next
+fixed step without restarting; restarting retains settings. Air rotation is now
+independently adjustable but defaults to the unchanged 4.8 rad/s.
+Mechanical gate passed: `npm run verify` completed 156 Node/static + 13 browser +
+24 Playwright tests in 105.24 s. Do not restore the obsolete speed-loss requirement.
 Do not begin Phase 2 without the user's five-minute playtest approval.
 
 Current water steering: the commanded nose lead is bounded to 0.45 rad relative
@@ -93,6 +101,10 @@ Exact cross-runtime replay uses fixed numeric series in `sim/math.ts`; do not
 replace them with native transcendental functions without preserving the tests.
 The new water golden is version 2 with scenario `water`. The original version 1
 empty trace and CSV remain byte-identical; `?test=1&scene=empty` selects that fixture.
+Version 2 also accepts optional initial `tuning` and per-entry `tuning` profiles.
+Explicit replay ignores saved browser settings. Non-default snapshots include
+their immutable profile; default snapshots keep the original shape. All four
+golden fixtures remain byte-identical in the live-tuning change.
 Normal development runs automatically; `?test=1` starts manual stepping paused.
 Thrust only adds remaining speed headroom, never clamps earned momentum. See
 README for the reviewed water-golden retune and current tuning values.

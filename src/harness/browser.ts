@@ -5,6 +5,7 @@ import { createWaterWorld, createWorld, type World } from '../sim/world';
 import { createHarness, type StateFrame } from './headless';
 import { createFixedLoop } from './loop';
 import { parseTrace, type InputTrace } from './trace';
+import { DEFAULT_TUNING, parseMovementTuning, type MovementTuning } from '../sim/tuning';
 
 export interface IcarusTestHook {
   reset(seed: number): void;
@@ -21,8 +22,11 @@ export function createBrowserDriver(
   render: (frame: StateFrame, alpha: number, previous?: StateFrame) => void,
   create: (seed: number) => World = createWorld,
   sampleInput: () => PlayerIntent = idleIntent,
+  initialTuning: MovementTuning = DEFAULT_TUNING,
 ) {
-  let harness = createHarness(CONSTANTS.RNG.DEFAULT_SEED, create);
+  let tuning = parseMovementTuning(initialTuning);
+  const withTuning = (seed: number) => ({ ...create(seed), tuning });
+  let harness = createHarness(CONSTANTS.RNG.DEFAULT_SEED, withTuning);
   let intent = idleIntent();
   let override: PlayerIntent | undefined;
   let previous = harness.snapshot();
@@ -34,14 +38,16 @@ export function createBrowserDriver(
     const entry = trace?.entries[cursor];
     if (entry?.stepIndex === harness.snapshot().stepIndex) {
       intent = entry.intent;
+      if (entry.tuning) tuning = entry.tuning;
       cursor += 1;
     }
     if (!trace) intent = override ?? sampleInput();
-    harness.step(intent);
+    harness.step(intent, tuning);
   });
 
-  function reset(seed: number, factory = create) {
-    harness = createHarness(seed, factory);
+  function reset(seed: number, factory = create, nextTuning = tuning) {
+    tuning = nextTuning;
+    harness = createHarness(seed, (seed) => ({ ...factory(seed), tuning }));
     intent = idleIntent();
     override = undefined;
     trace = undefined;
@@ -75,7 +81,8 @@ export function createBrowserDriver(
     },
     loadTrace(input: InputTrace) {
       const parsed = parseTrace(input);
-      reset(parsed.seed, parsed.version === 2 ? createWaterWorld : createWorld);
+      reset(parsed.seed, parsed.version === 2 ? createWaterWorld : createWorld,
+        parsed.version === 2 ? parsed.tuning ?? DEFAULT_TUNING : DEFAULT_TUNING);
       setPaused(true);
       trace = parsed;
       render(harness.snapshot(), 0);
@@ -86,6 +93,12 @@ export function createBrowserDriver(
 
   return {
     hook,
+    setTuning(next: MovementTuning) {
+      // Queue an immutable profile for the next fixed step without touching body state.
+      tuning = parseMovementTuning(next);
+      trace = undefined;
+      cursor = 0;
+    },
     advance(time: Seconds) {
       const alpha = loop.advance(time);
       if (paused) render(harness.snapshot(), 0);

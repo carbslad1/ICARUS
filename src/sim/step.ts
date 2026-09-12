@@ -17,20 +17,20 @@ export function stepWorld(world: World, intent: PlayerIntent, dt: Seconds): void
   if (body) {
     if (body.medium === 'water') {
       // 3. Water thrust, steering, redirect loss, gravity, and drag.
-      const forces = waterForces(body, world.intent, dt);
+      const forces = waterForces(body, world.intent, dt, world.tuning);
       // 4. Semi-implicit Euler; its trajectory is also used by the crossing solver.
       const integrated = integrateMotion(body.position, body.velocity, forces, dt);
       // 5. Exact surface crossing and fractional transition resolution.
-      const resolved = resolveCrossings(body, forces, integrated, dt, world.stepIndex);
+      const resolved = resolveCrossings(body, forces, integrated, dt, world.stepIndex, world.tuning);
       Object.assign(body, resolved.body, { medium: resolveMedium(body.medium, resolved.body.position.y, resolved.lastKind) });
     } else {
       // 6. Phase 1 uses a simple ballistic body. The flight frame starts in Phase 2.
-      const forces = airForces(body, world.intent, dt);
+      const forces = airForces(body, world.intent, dt, world.tuning);
       const integrated = integrateMotion(body.position, body.velocity, forces, dt);
       // 7. No arena yet. 8. Heading control is evaluated at the exact impact time.
       // 9-14. No enemies, projectiles, collisions, or rewards yet.
       // 15. Return to water; position and velocity are resolved at the crossing.
-      const resolved = resolveCrossings(body, forces, integrated, dt, world.stepIndex);
+      const resolved = resolveCrossings(body, forces, integrated, dt, world.stepIndex, world.tuning);
       Object.assign(body, resolved.body, { medium: resolveMedium(body.medium, resolved.body.position.y, resolved.lastKind) });
     }
     // 16. Camera follows the body with velocity look-ahead.

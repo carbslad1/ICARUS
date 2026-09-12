@@ -3,6 +3,7 @@ import { idleIntent, type PlayerIntent } from './intent';
 import { createRng, type Rng } from './rng';
 import { worldPos, type WorldPos } from './units';
 import { createBody, type BodyInitial, type WaterBody } from './water/body';
+import { DEFAULT_TUNING, type MovementTuning } from './tuning';
 
 export interface World {
   readonly seed: number;
@@ -12,6 +13,7 @@ export interface World {
   camera: WorldPos;
   stepIndex: number;
   intent: PlayerIntent;
+  tuning: MovementTuning;
 }
 
 export function createWorld(seed: number = CONSTANTS.RNG.DEFAULT_SEED): World {
@@ -23,10 +25,11 @@ export function createWorld(seed: number = CONSTANTS.RNG.DEFAULT_SEED): World {
     entities: Object.freeze([]),
     stepIndex: 0,
     intent: idleIntent(),
+    tuning: DEFAULT_TUNING,
   };
 }
 
-export function createWaterWorld(seed: number = CONSTANTS.RNG.DEFAULT_SEED, initial: BodyInitial = {}): World {
+export function createWaterWorld(seed: number = CONSTANTS.RNG.DEFAULT_SEED, initial: BodyInitial = {}, tuning: MovementTuning = DEFAULT_TUNING): World {
   const body = createBody(initial);
-  return { ...createWorld(seed), entities: Object.freeze([body]), camera: body.position };
+  return { ...createWorld(seed), entities: Object.freeze([body]), camera: body.position, tuning };
 }

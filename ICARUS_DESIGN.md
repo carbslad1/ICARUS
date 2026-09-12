@@ -823,6 +823,16 @@ Behaviours are pure functions from state to intent; mutation happens in the step
 
 `sim/constants.ts` exports one deeply-frozen object. No other file declares a tunable. A test walks it and fails CI on any unreferenced leaf.
 
+**User-requested live tuning (2026-09-12):** Phase 1 exposes 18 movement controls
+for the human feel gate. Defaults and supported ranges remain in the frozen
+constants object. Each run carries a validated, immutable override profile;
+drivers latch changes before the next fixed step without changing the timestep
+or restarting the body. Browser preferences are persisted locally and can be
+copied as versioned JSON. Water traces may record initial and step-boundary
+profiles; explicit replay never consumes browser preferences. Air rotation is
+independently adjustable. This addition changes no default physics or existing
+golden fixture, and does not satisfy or bypass the human playtest gate.
+
 Medium is derived once per step in one function, with a ±0.15 m hysteresis band around `y = 0` to prevent flutter when skimming. No other code compares a Y value to a surface threshold.
 
 ## 14.7 No conditional gameplay

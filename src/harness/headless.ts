@@ -4,6 +4,7 @@ import { stepWorld } from '../sim/step';
 import { seconds, type Metres, type Seconds, type WorldPos } from '../sim/units';
 import { createWorld, type World } from '../sim/world';
 import type { WaterBody } from '../sim/water/body';
+import { isDefaultTuning, type MovementTuning } from '../sim/tuning';
 
 export interface StateFrame {
   readonly stepIndex: number;
@@ -16,11 +17,12 @@ export interface StateFrame {
   readonly intent: PlayerIntent;
   readonly player?: Readonly<WaterBody>;
   readonly camera?: WorldPos;
+  readonly tuning?: MovementTuning;
 }
 
 export interface SimHarness {
   reset(seed: number): World;
-  step(intent: PlayerIntent): World;
+  step(intent: PlayerIntent, tuning?: MovementTuning): World;
   snapshot(): StateFrame;
 }
 
@@ -31,7 +33,8 @@ export function createHarness(seed: number = CONSTANTS.RNG.DEFAULT_SEED, create:
       world = create(nextSeed);
       return world;
     },
-    step(intent) {
+    step(intent, tuning) {
+      if (tuning) world.tuning = tuning;
       stepWorld(world, intent, CONSTANTS.TIME.SIM_DT);
       return world;
     },
@@ -49,6 +52,7 @@ export function createHarness(seed: number = CONSTANTS.RNG.DEFAULT_SEED, create:
         ...(body ? {
           player: Object.freeze({ ...body, lastCrossing: body.lastCrossing ? Object.freeze({ ...body.lastCrossing }) : null }),
           camera: world.camera,
+          ...(!isDefaultTuning(world.tuning) ? { tuning: world.tuning } : {}),
         } : {}),
       });
     },

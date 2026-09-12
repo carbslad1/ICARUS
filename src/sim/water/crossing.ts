@@ -6,8 +6,9 @@ import type { WaterBody, CrossingEvent } from './body';
 import { entryQuality, shouldSkip } from './entry';
 import { integrateMotion, passiveWaterForces, type Motion } from './physics';
 import { surfaceCrossing, type CrossingKind } from './surface';
+import { DEFAULT_TUNING, type MovementTuning } from '../tuning';
 
-export function resolveCrossings(body: Readonly<WaterBody>, initialMotion: Motion, integrated: ReturnType<typeof integrateMotion>, dt: Seconds, stepIndex: number) {
+export function resolveCrossings(body: Readonly<WaterBody>, initialMotion: Motion, integrated: ReturnType<typeof integrateMotion>, dt: Seconds, stepIndex: number, tuning: MovementTuning = DEFAULT_TUNING) {
   let result = { ...body };
   let remaining = dt;
   let elapsed = 0;
@@ -53,19 +54,19 @@ export function resolveCrossings(body: Readonly<WaterBody>, initialMotion: Motio
       result.lastCrossing = { ...event, kind: 'skip' };
       lastKind = 'skip';
     } else {
-      const quality = entryQuality(heading, impact.velocity, result.streak);
+      const quality = entryQuality(heading, impact.velocity, result.streak, tuning);
       const scale = speed === 0 ? 0 : quality.speed / speed;
       result.velocity = velocity(impact.velocity.x * scale, impact.velocity.y * scale);
       result.streak = quality.streak;
       result.entries += 1;
-      result.lockout = quality.grade === 'belly-flop' ? CONSTANTS.ENTRY.FLOP_LOCKOUT : seconds(0);
+      result.lockout = quality.grade === 'belly-flop' ? tuning.flopLockout : seconds(0);
       result.lastCrossing = { ...event, grade: quality.grade, error: quality.error };
       lastKind = 'entry';
     }
     // Finish the fractional transition here; no second phase update or input sample runs.
     const intoWater = lastKind === 'entry';
     motion = {
-      acceleration: intoWater ? passiveWaterForces(result.velocity) : acceleration(0, CONSTANTS.WATER.AIR_GRAVITY),
+      acceleration: intoWater ? passiveWaterForces(result.velocity, tuning) : acceleration(0, tuning.airGravity),
       headingRate: result.lockout > 0 ? radiansPerSec(0) : initialMotion.headingRate,
       positionFactor: intoWater ? 1 : 1 / 2,
     };
