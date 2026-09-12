@@ -2,14 +2,16 @@
 
 Phase 1: a playable water trial with momentum, steering, breaches, ballistic falls,
 graded re-entry, perfect-entry streaks, and surface skips. No arena, combat, audio,
-or final visual pipeline yet. The first human playtest rejected the slow feel;
-this is the first responsiveness retune, awaiting another human playtest.
+or final visual pipeline yet. Two human playtests rejected slow, then unnatural
+movement. This version replaces free underwater rotation with flow-aligned
+steering under the user's explicitly revised momentum-preservation rule.
 
 Play at https://carbslad1.github.io/ICARUS/.
 
 ## Controls
 
-A/D rotate counterclockwise/clockwise; W thrusts. Arrow keys also work. In the air,
+A/D curve the underwater trajectory counterclockwise/clockwise; W thrusts. Release
+steering to glide along the carried velocity. Arrow keys also work. In the air,
 rotation aims the next entry but does not steer the ballistic trajectory. Point the
 nose along the incoming velocity for a perfect entry. The faint line shows velocity.
 Escape pauses; the top-right buttons pause or restart. Narrow/touch screens have
@@ -38,7 +40,8 @@ The allowed toolchain uses Vitest 3.2.7 so its Playwright provider remains insid
 user because the Node test tools require it. The lockfile pins all resolved versions.
 Test workers are bounded to avoid CPU oversubscription. Playwright uses SwiftShader
 for a repeatable WebGL environment independent of other applications' GPU load;
-all original assertions, tolerances, timeouts, and the 120-second gate remain intact.
+all architecture checks, numeric tolerances, timeouts, and the 120-second gate remain
+intact. The user-approved replacement of the old turn-punishment rule is documented below.
 
 ## Deterministic harness
 
@@ -71,15 +74,53 @@ Output files must not already exist. Golden fixtures are checked in under
 
 ## Water Gate And Tuning
 
-Verified locally: 133 Node/static, 10 browser, and 12 Playwright tests, in 25.36 s.
-Hard turns exit at 19.116/22.235 m/s versus gentle turns at 25.854/25.851 m/s
-through the same 120-degree trajectory, starting at 26/60 m/s. Ten complete
+Verified locally: 137 Node/static, 10 browser, and 14 Playwright tests, in 71.38 s.
+Tight and wide turns have mean radii of 6.337/19.009 m at a 26 m/s start, with both
+exiting around 26 m/s through the same 120-degree trajectory. At 60 m/s the radii
+are 13.910/39.114 m, with exit speeds of 54.203/47.149 m/s. Ten complete
 perfect-entry cycles increase flight apices at each of three initial launch speeds.
 Tests also cover exact crossings, entry bands, skip thresholds, control lockout,
 terminal velocity, 30/60/120 Hz equivalence, immutable snapshots, and browser/Node
-state equality. The new 600-step water golden includes a breach and perfect entry.
+state equality. The 600-step water golden includes a breach and perfect entry.
 
-### Responsiveness Retune 1
+### Flow Steering (Current)
+
+The user explicitly approved replacing mandatory hard-turn braking with fluid
+momentum. The previous model let the nose spin independently while velocity lagged
+far behind, then applied large speed losses to the correction. The first retune
+sped up the nose without fixing that relationship.
+
+Underwater steering now commands a bounded 0.45 rad lead from the current flow;
+the body approaches it at up to 4.8 rad/s. Velocity curves toward the nose with a
+12/s response. Releasing input aligns the nose with velocity instead of carrying
+on rotating toward an independently aimed heading. Below 1 m/s the dolphin can
+orient to start moving. This does not affect air rotation or ballistic flight.
+
+Turn resistance is 0.01/rad rather than 0.35/rad, and quadratic water drag is
+0.003/m rather than 0.012/m. Thrust is not reduced for steering. The stronger entry
+rewards from Retune 1 remain, and ten complete perfect-entry cycles still compound.
+
+| Unpowered quarter turn | Retune 1 | Flow steering |
+| --- | --- | --- |
+| Exit speed from 26 m/s | 11.657 m/s | 24.528 m/s |
+| Exit speed from 60 m/s | 22.404 m/s | 54.757 m/s |
+| Turn time from 26 m/s | 0.858 s | 0.408 s |
+| Maximum body/flow separation from 26 m/s | 144.93 degrees | 20.57 degrees |
+
+The same powered dive recovery now bottoms out at 8.086 m and breaches in 0.833 s.
+These measurements are regression evidence, not a substitute for the human gate.
+The original hard-turn speed comparison was replaced by same-angle curvature and
+momentum assertions with explicit user approval. New tests require over 90% speed
+retention in both unpowered quarter turns, bounded nose/flow separation, no reversal
+during sustained turns, and stable coasting after release. No other test contracts,
+numerical tolerances, or harness limits were relaxed.
+
+The existing 600-step input trace was kept byte-identical. Its reviewed CSV now
+breaches at step 87, enters perfectly at step 422, and reaches 17.542 m. The prior
+CSV is retained in git history and `artifacts/water-before-flow-v3/`. Both original
+empty-world fixtures are unchanged.
+
+### Responsiveness Retune 1 (Historical)
 
 User feedback: sluggish movement, slow turning, too much sinking, and good entries
 should build speed a little faster. Changes from the first published water build:

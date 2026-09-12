@@ -23,10 +23,13 @@ function turnExit(rate: number, startingSpeed: number) {
   const body = player(world);
   const target = -2 * Math.PI / 3;
   const direction = { x: Math.cos(target), y: Math.sin(target) };
+  let distance = 0;
   for (let index = 0; index < 2000; index += 1) {
     const before = body.velocity;
+    const position = body.position;
     const turn = Math.max(-rate, (-Math.PI - body.heading) / (CONSTANTS.WATER.WATER_TURN_RATE * dt));
     stepWorld(world, { ...idleIntent(), turn, thrust: true }, dt);
+    const segment = Math.hypot(body.position.x - position.x, body.position.y - position.y);
     if (Math.atan2(body.velocity.y, body.velocity.x) <= target) {
       // Compare at exactly the same velocity angle, not at different body headings.
       const beforeCross = before.x * direction.y - before.y * direction.x;
@@ -34,20 +37,24 @@ function turnExit(rate: number, startingSpeed: number) {
       const fraction = beforeCross / (beforeCross - afterCross);
       const x = before.x + (body.velocity.x - before.x) * fraction;
       const y = before.y + (body.velocity.y - before.y) * fraction;
-      return { speed: Math.hypot(x, y), angle: Math.atan2(y, x), steps: index + fraction };
+      return { speed: Math.hypot(x, y), angle: Math.atan2(y, x), steps: index + fraction, meanRadius: (distance + segment * fraction) / Math.abs(target) };
     }
+    distance += segment;
   }
   throw new Error('Turn never reached the target trajectory.');
 }
 
-test.each([26, 60])('hard turns exit slower than gentle turns through the same 120-degree trajectory (%s m/s start)', (speed) => {
+test.each([26, 60])('tight input makes a smaller flowing arc through the same 120-degree trajectory (%s m/s start)', (speed) => {
   const hard = turnExit(1, speed);
   const gentle = turnExit(0.25, speed);
   expect(hard.angle).toBeCloseTo(-2 * Math.PI / 3, 12);
   expect(gentle.angle).toBeCloseTo(hard.angle, 12);
   expect(hard.steps).toBeLessThan(gentle.steps);
-  expect(hard.speed).toBeLessThan(gentle.speed * 0.9);
-  console.log(`Turn gate (${speed} m/s): hard ${hard.speed.toFixed(3)}, gentle ${gentle.speed.toFixed(3)} m/s, same 120-degree trajectory.`);
+  // The user replaced mandatory hard-turn braking with momentum-preserving curvature.
+  expect(hard.meanRadius).toBeLessThan(gentle.meanRadius / 2);
+  expect(hard.speed).toBeGreaterThan(speed * 0.9);
+  expect(gentle.speed).toBeGreaterThan(speed * 0.75);
+  console.log(`Flow gate (${speed} m/s): tight ${hard.meanRadius.toFixed(3)} m radius / ${hard.speed.toFixed(3)} m/s; wide ${gentle.meanRadius.toFixed(3)} m / ${gentle.speed.toFixed(3)} m/s.`);
 });
 
 test('from rest with no input, a downward-facing dolphin sinks to terminal velocity', () => {

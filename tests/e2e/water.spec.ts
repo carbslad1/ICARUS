@@ -95,3 +95,22 @@ test('on-screen hold controls feed thrust and release correctly', async ({ page 
   expect(await page.evaluate(() => window.__icarus?.snapshot().intent.thrust)).toBe(false);
   await expect(thrust).toHaveAttribute('aria-pressed', 'false');
 });
+
+test('real keyboard steering curves the carried momentum without spinning the nose away', async ({ page }) => {
+  await page.goto('/?test=1');
+  await expect(page.locator('html')).toHaveAttribute('data-ready', 'true');
+  const before = await page.evaluate(() => window.__icarus?.snapshot().player);
+  if (!before) throw new Error('Missing player');
+  await page.keyboard.down('a');
+  await page.evaluate(() => window.__icarus?.stepFrames(36));
+  await page.keyboard.up('a');
+  const after = await page.evaluate(() => window.__icarus?.snapshot().player);
+  if (!after) throw new Error('Missing player');
+  expect(after.medium).toBe('water');
+  const direction = Math.atan2(after.velocity.y, after.velocity.x);
+  const slip = Math.atan2(Math.sin(after.heading - direction), Math.cos(after.heading - direction));
+  expect(Math.abs(slip)).toBeLessThan(0.5);
+  expect(Math.hypot(after.velocity.x, after.velocity.y)).toBeGreaterThan(Math.hypot(before.velocity.x, before.velocity.y) * 0.9);
+  expect(Math.hypot(after.position.x - before.position.x, after.position.y - before.position.y)).toBeGreaterThan(2.5);
+  await expect(page.locator('#stage')).toHaveAttribute('data-heading', String(after.heading));
+});

@@ -308,30 +308,36 @@ All numbers are tuning starting points. The *behaviour* beside each is the requi
 
 | Constant | Start | Behaviour |
 |---|---|---|
-| `WATER_GRAVITY` | −3.5 m/s² | You sink slowly if you do nothing. |
-| `WATER_DRAG_QUADRATIC` | 0.012 /m | `a = −k·v·\|v\|`. Quadratic, so fast movement bleeds far more than slow. This makes deep fast dives costly and makes turn radius matter. |
-| `WATER_THRUST` | 22 m/s² | Along heading. |
-| `WATER_TURN_RATE` | 2.8 rad/s | Body rotation speed. |
-| `WATER_REDIRECT_RATE` | 0.55 /s | Fraction per second the velocity vector rotates toward heading. |
+| `WATER_GRAVITY` | −1.2 m/s² | You sink slowly if you do nothing. |
+| `WATER_DRAG_QUADRATIC` | 0.003 /m | `a = −k·v·\|v\|`. Light water resistance; fast dives must carry useful momentum through their turns. |
+| `WATER_THRUST` | 32 m/s² | Along heading, with no steering-dependent throttle penalty. |
+| `WATER_TURN_RATE` | 4.8 rad/s | Maximum body rotation rate. |
+| `WATER_REDIRECT_RATE` | 12 /s | Velocity bends toward the nose continuously, without snapping. |
+| `WATER_STEER_LEAD` | 0.45 rad | Maximum commanded nose lead relative to the flow. Stronger input makes a tighter curve, not free rotation. |
+| `WATER_FLOW_MIN_SPEED` | 1 m/s | Below swimming speed, the body can orient to get moving; otherwise heading follows the flow. |
 | `WATER_MAX_THRUST_SPEED` | 26 m/s | Thrust stops adding above this. Dive momentum far exceeds it — thrust builds from rest, it does not make you fast. |
 
 ## 5.2 The redirect mechanic
 
-The heart of the water game. Turning the body does not turn the velocity. Velocity rotates toward heading at `WATER_REDIRECT_RATE`, and the rotation applied costs speed:
+**User-approved revision, 2026-09-12:** prioritize fluid momentum. This replaces the original requirement that sharp turns must lose substantially more speed than gentle turns, after two human playtests found that behavior unnatural.
+
+The heart of the water game is redirecting an existing dive into a continuous curve. Steering commands a bounded nose lead relative to velocity, approached at `WATER_TURN_RATE`. Velocity bends toward the nose at `WATER_REDIRECT_RATE`; the rotation preserves its magnitude apart from light resistance. Releasing steering aligns the nose with the carried trajectory. At swimming speed the nose must not lap, face backward against, or repeatedly reverse the flow.
+
+The residual turn resistance is deliberately small:
 
 ```
 speedLoss = currentSpeed × TURN_COST × |angleRotatedThisStep|
 ```
 
-with `TURN_COST ≈ 0.35` per radian.
+with `TURN_COST ≈ 0.01` per radian, plus the light quadratic water drag above. Do not restore a large braking penalty or reduce throttle because the player is steering.
 
-A wide gentle arc from dive to ascent preserves momentum; a hard turn kills it. The player learns to plan the turn early, well before they need it.
+A wide input produces a broad arc; stronger input tightens that arc. Both preserve useful momentum. A quick turn may retain more speed than a long turn because it spends less time in water: this is acceptable. Skill is in shaping the exit vector and aligning entries, not avoiding an artificial turn punishment.
 
-**Verify this before building anything else.** If a hard turn and a gentle turn through the same total angle produce the same exit speed, the water half of the game has no depth and nothing built on top will fix it.
+**Verify this before building anything else.** Compare tight and wide turns through the same trajectory angle: their radii must differ, neither should stall, and unpowered quarter turns should retain over 90% of speed at 26 and 60 m/s. Check sustained turns for bounded body/flow separation and no direction reversals. The human feel gate remains mandatory.
 
 ## 5.3 Controls
 
-A/D rotate. W thrusts. That is the entire water control set. The depth is in the momentum, not the buttons.
+A/D steer the curve underwater and rotate freely in air. W thrusts underwater. That is the entire water control set. The depth is in the momentum, not the buttons.
 
 ## 5.4 Re-entry quality
 
@@ -339,12 +345,12 @@ Evaluated at the exact surface crossing (§14.3), on the angle between dolphin h
 
 | Band | Condition | Retention |
 |---|---|---|
-| Perfect | ≤ 0.09 rad (~5°) | 1.0× speed, +`PERFECT_BONUS` (start 1.5 m/s), streak++ |
-| Clean | ≤ 0.26 rad (~15°) | 0.97× |
+| Perfect | ≤ 0.09 rad (~5°) | 1.0× speed, +`PERFECT_BONUS` (2.25 m/s), streak++ |
+| Clean | ≤ 0.26 rad (~15°) | 0.97×, +1 m/s |
 | Sloppy | ≤ 0.7 rad (~40°) | linear 0.97 → 0.72 |
 | Belly-flop | > 0.7 rad | 0.45×, 0.25 s control lockout, heavy punish |
 
-Consecutive perfect entries escalate `PERFECT_BONUS` up to a cap; any non-perfect entry resets the streak.
+Consecutive perfect entries escalate `PERFECT_BONUS` by 0.4 m/s up to 5.5 m/s; any non-perfect entry resets the streak. These reward values reflect the user's first playtest request for faster growth from good entries.
 
 **This is the compounding engine of the entire game and the single most important number to tune.** It converts execution directly into altitude, which converts into reward tier. Everything in §4 rides on it.
 
@@ -530,7 +536,7 @@ XP orbs drop on kill (25% base, magnetised within `PICKUP_RADIUS`), collected in
 
 **The upgrade pool spans both phases**, or the build layer ends up orthogonal to the game:
 
-- **Water:** turn cost reduction · perfect-entry tolerance widening · thrust ceiling · drag reduction
+- **Water:** steering response · perfect-entry tolerance widening · thrust ceiling · drag reduction
 - **Air:** local max speed · dash charges · arena bounds expansion · airtime extension
 - **Combat:** damage, fire rate, projectile count, pickup radius, crit
 - **Economy:** XP multiplier, rare-drop weight, orb magnetism
@@ -625,7 +631,7 @@ The surface is the most important visual object in the game — it is the bounda
 - **Particulate**: drifting motes, density rising with depth, lit by the dolphin's glow — the primary conveyor of both speed and depth.
 - **Depth grade**: `SHALLOW` → `ABYSS` → `VOID` as you descend, with saturation falling. Going deep should feel like going somewhere.
 - **Speed lines** at high velocity, thin and cyan, converging behind.
-- **Turn cost is visible**: hard turns shed a visible cavitation trail. The player should be able to see that a turn cost them speed.
+- **Flow is visible**: the trail follows the curved velocity path and makes carried momentum legible. Do not imply or restore a mandatory hard-turn speed punishment.
 
 ## 11.7 Air phase visuals
 
@@ -844,7 +850,7 @@ Built in Phase 0, before any game content.
 **Simulation.** Scripted intent sequences through the headless harness:
 
 - From rest with no input, the dolphin sinks and reaches terminal velocity within tolerance.
-- **A hard turn produces measurably lower exit speed than a gentle turn through the same total angle.** This single test validates the water game.
+- **Tight steering produces a smaller-radius arc through the same total trajectory angle, while both turns preserve momentum.** Unpowered quarter turns retain over 90% of speed at 26 and 60 m/s. Sustained turns do not separate the nose from the flow or reverse direction.
 - Ten consecutive perfect entries produce monotonically increasing apex altitude.
 - Breach at a given speed produces the predicted apex and airtime within tolerance.
 - **Committing early produces a worse entry than riding the arc out.** This validates the risk dial.
@@ -896,7 +902,7 @@ Vite, TS, Vitest, Playwright. `sim/` boundary lint rules. Branded units and spac
 Momentum physics, steering, redirect and turn cost, drag, thrust. Analytic crossings. Entry quality and streaks. Surface skip. A single-line surface, a dolphin shape, a camera, a speed readout. Breaching arcs and falls back under simple ballistics — no air phase yet.
 
 **Gate, two parts:**
-1. *Mechanical:* all water simulation tests pass, including hard-turn-versus-gentle-turn.
+1. *Mechanical:* all water simulation tests pass, including momentum preservation, tight-versus-wide curvature, and continuous flow-aligned steering.
 2. *Human:* a person dives and breaches for five minutes and wants to keep going. **Not optional, not automatable.** If the empty ocean is not fun, retune §5 before proceeding.
 
 ### Phase 2 — The frame

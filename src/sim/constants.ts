@@ -16,12 +16,14 @@ export const CONSTANTS = Object.freeze({
   }),
   WATER: Object.freeze({
     WATER_GRAVITY: metresPerSec2(-1.2),
-    WATER_DRAG_QUADRATIC: perMetre(0.012),
+    WATER_DRAG_QUADRATIC: perMetre(0.003),
     WATER_THRUST: metresPerSec2(32),
     WATER_TURN_RATE: radiansPerSec(4.8),
-    WATER_REDIRECT_RATE: perSecond(1.25),
+    WATER_REDIRECT_RATE: perSecond(12),
+    WATER_STEER_LEAD: radians(0.45),
+    WATER_FLOW_MIN_SPEED: metresPerSec(1),
     WATER_MAX_THRUST_SPEED: metresPerSec(26),
-    TURN_COST: perRadian(0.35),
+    TURN_COST: perRadian(0.01),
     AIR_GRAVITY: metresPerSec2(-18),
   }),
   ENTRY: Object.freeze({

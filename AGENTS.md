@@ -61,20 +61,31 @@ Steps 3–5 and 6–15 are mutually exclusive. Do not reorder or insert steps.
 Phase 1 (Water) implemented on 2026-09-12 after the user approved proceeding.
 The first human playtest FAILED: the user reported sluggish movement, slow turning,
 excessive sinking/depth, and wanted slightly faster speed growth from good entries.
-Retune 1 addresses that feedback; its human re-test is PENDING. Phase 1 is not complete.
-Mechanical gate passed: `npm run verify` completed 133 Node/static + 10 browser +
-12 Playwright tests in 25.36 s after the retune.
+Retune 1 also FAILED its human playtest: yo-yo movement, free nose spinning,
+excessive velocity loss, and unnatural momentum. The user explicitly approved
+replacing the original hard-turn speed punishment with fluid momentum preservation.
+Flow steering is now implemented; its human re-test is PENDING. Phase 1 is not complete.
+Mechanical gate passed: `npm run verify` completed 137 Node/static + 10 browser +
+14 Playwright tests in 71.38 s. Do not restore the obsolete speed-loss requirement.
 Do not begin Phase 2 without the user's five-minute playtest approval.
 
-Retune 1: turn rate 4.8 rad/s, velocity redirect 1.25/s, thrust 32 m/s2, water
-gravity -1.2 m/s2, starting depth -4 m and vertical speed -2 m/s. Perfect entries
-add 2.25 m/s plus 0.4 per prior perfect, capped at 5.5; clean entries add 1 m/s
-after their unchanged retention. Only perfect entries build the streak. No changes
-to drag, turn cost, thrust speed ceiling, air gravity, or grading thresholds.
-The recovery test improved from 24.15 m / 2.767 s to 13.601 m / 1.500 s. Six new
-feel regression tests cover the requested behavior. Existing assertions stay intact.
+Current water steering: the commanded nose lead is bounded to 0.45 rad relative
+to the flow, with a 4.8 rad/s body slew limit and 12/s velocity response. Neutral
+steering aligns the nose to velocity. Below 1 m/s, the body can orient to start.
+Quadratic drag is 0.003/m and residual turn resistance is 0.01/rad. There is no
+steering-dependent throttle penalty. Thrust, gravity, entry rewards, grading,
+start state, and air controls are unchanged from Retune 1.
 
-A/D rotate, W thrusts; in air only heading changes, not the arc. Arrow alternatives,
+The user-approved design change is recorded in ICARUS_DESIGN sections 5, 15, and
+17. The two old mandatory-braking assertions were replaced by same-angle radius
+and momentum checks. Four new simulation cases verify coasting, sustained flow,
+and release; Playwright verifies real keyboard steering on desktop and mobile.
+All other invariants, replay equality, thresholds, tolerances, and time budgets
+remain intact. Do not interpret this specific approval as permission to weaken
+other tests. Water input traces and both Phase 0 goldens are unchanged; only the
+reviewed water CSV changed for the new physics. See README for measurements.
+
+A/D steer the flow underwater and rotate in air; W thrusts underwater. Arrow alternatives,
 touch hold controls, restart, and Escape/pause are available. The renderer is just
 a dolphin silhouette, one surface line, camera, and readouts, as Phase 1 requires.
 

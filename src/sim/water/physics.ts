@@ -23,15 +23,21 @@ export function headingRate(body: Readonly<WaterBody>, intent: PlayerIntent, dt:
 }
 
 export function waterForces(body: Readonly<WaterBody>, intent: PlayerIntent, dt: Seconds): Motion {
-  const rate = headingRate(body, intent, dt);
-  const heading = radians(body.heading + rate * dt);
   const speed = magnitude(body.velocity.x, body.velocity.y);
-  const direction = radians(atan2(body.velocity.y, body.velocity.x));
-  const rotated = angleDifference(heading, direction) * CONSTANTS.WATER.WATER_REDIRECT_RATE * dt;
+  const direction = speed === 0 ? body.heading : radians(atan2(body.velocity.y, body.velocity.x));
+  const active = Math.max(0, dt - body.lockout) / dt;
+  const lead = CONSTANTS.WATER.WATER_STEER_LEAD;
+  const flow = speed < CONSTANTS.WATER.WATER_FLOW_MIN_SPEED ? body.heading : direction;
+  // Steering leads the flow by a bounded angle; the body cannot lap its own trajectory.
+  const target = radians(flow + intent.turn * lead);
+  const rate = radiansPerSec(Math.max(-CONSTANTS.WATER.WATER_TURN_RATE,
+    Math.min(CONSTANTS.WATER.WATER_TURN_RATE, angleDifference(target, body.heading) / dt)) * active);
+  const heading = radians(body.heading + rate * dt);
+  const slip = Math.max(-lead, Math.min(lead, angleDifference(heading, direction)));
+  const rotated = slip * CONSTANTS.WATER.WATER_REDIRECT_RATE * dt;
   const kept = Math.max(0, speed * (1 - CONSTANTS.WATER.TURN_COST * Math.abs(rotated)));
   const redirected = velocity(cos(direction + rotated) * kept, sin(direction + rotated) * kept);
   const passive = passiveWaterForces(redirected);
-  const active = Math.max(0, dt - body.lockout) / dt;
   // Limit added thrust at the ceiling without clamping momentum earned elsewhere.
   const available = Math.max(0, CONSTANTS.WATER.WATER_MAX_THRUST_SPEED - speed) / dt;
   const thrust = intent.thrust ? Math.min(CONSTANTS.WATER.WATER_THRUST * active, available) : 0;
