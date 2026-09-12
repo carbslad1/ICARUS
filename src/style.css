@@ -62,30 +62,30 @@ footer { bottom: 24px; font-size: 11px; line-height: 1.6; overflow-wrap: anywher
   .touch-controls { bottom: 48px; }
 }
 
-#tuning-panel { min-width: 0; min-height: 0; display: flex; flex-direction: column; border-left: 1px solid #30363d; background: #101418; z-index: 4; }
+#tuning-panel { min-width: 0; min-height: 0; display: flex; flex-direction: column; border-left: 1px solid var(--panel-border); background: var(--panel); z-index: 4; }
 .tuning-heading { display: flex; align-items: center; justify-content: space-between; padding: 16px 18px 12px; gap: 12px; }
 .tuning-heading h2 { font-size: 17px; font-weight: 500; margin: 0; }
 .tuning-heading button { width: 32px; height: 32px; font-size: 22px; }
-#tuning-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding: 0 12px; border-bottom: 1px solid #30363d; }
+#tuning-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding: 0 12px; border-bottom: 1px solid var(--panel-border); }
 #tuning-tabs button { min-width: 0; height: 40px; font-size: 11px; border: 0; border-bottom: 2px solid transparent; border-radius: 0; background: transparent; }
 #tuning-tabs button[aria-selected="true"] { color: var(--surface); border-bottom-color: var(--surface); }
 #tuning-fields { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 6px 18px; scrollbar-gutter: stable; }
-.tuning-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 9px 8px; padding: 16px 0; border-bottom: 1px solid #242b31; }
+.tuning-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 9px 8px; padding: 16px 0; border-bottom: 1px solid var(--panel-divider); }
 .tuning-row label { font-size: 11px; line-height: 1.5; overflow-wrap: anywhere; }
 .tuning-row[data-changed="true"] label { color: var(--surface); }
 .tuning-value { display: flex; align-items: center; gap: 6px; }
-.tuning-unit { font-size: 9px; width: 5ch; color: #a7b2ba; }
-.tuning-value input { width: 68px; height: 28px; padding: 3px 5px; border: 1px solid #46515b; border-radius: 3px; background: #080b0e; color: var(--text); font-size: 12px; text-align: right; font-variant-numeric: tabular-nums; }
+.tuning-unit { font-size: 9px; width: 5ch; color: var(--muted); }
+.tuning-value input { width: 68px; height: 28px; padding: 3px 5px; border: 1px solid var(--input-border); border-radius: 3px; background: var(--input); color: var(--text); font-size: 12px; text-align: right; font-variant-numeric: tabular-nums; }
 .tuning-row input[type="range"] { grid-column: 1 / -1; display: block; width: 100%; min-width: 0; height: 24px; margin: 0; accent-color: var(--surface); cursor: pointer; }
-.tuning-footer { border-top: 1px solid #30363d; padding: 12px 18px max(14px, env(safe-area-inset-bottom)); }
-#tuning-status { display: block; min-height: 24px; font-size: 10px; line-height: 1.5; color: #a7b2ba; overflow-wrap: anywhere; }
+.tuning-footer { border-top: 1px solid var(--panel-border); padding: 12px 18px max(14px, env(safe-area-inset-bottom)); }
+#tuning-status { display: block; min-height: 24px; font-size: 10px; line-height: 1.5; color: var(--muted); overflow-wrap: anywhere; }
 .tuning-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .tuning-actions button { min-height: 36px; padding: 7px; font-size: 11px; }
-#tuning-copy { border-color: #62736d; color: var(--surface); }
-#tuning-export { display: block; width: 100%; height: 90px; resize: none; margin-top: 10px; border: 1px solid #46515b; border-radius: 3px; padding: 8px; font-size: 10px; color: var(--text); background: #080b0e; }
+#tuning-copy { border-color: var(--action-border); color: var(--surface); }
+#tuning-export { display: block; width: 100%; height: 90px; resize: none; margin-top: 10px; border: 1px solid var(--input-border); border-radius: 3px; padding: 8px; font-size: 10px; color: var(--text); background: var(--input); }
 @media (max-width: 760px) and (min-height: 521px) {
   #app.tuning-open { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) 46%; }
-  #tuning-panel { border-left: 0; border-top: 1px solid #46515b; }
+  #tuning-panel { border-left: 0; border-top: 1px solid var(--input-border); }
   .tuning-heading { padding: 8px 18px 4px; }
   .tuning-heading h2 { font-size: 15px; }
   #tuning-tabs button { height: 34px; }

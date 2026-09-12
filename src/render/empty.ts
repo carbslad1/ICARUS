@@ -25,6 +25,13 @@ export async function createEmptyRenderer(host: HTMLElement, output: HTMLOutputE
   document.documentElement.style.setProperty('--water', cssColour(PALETTE.ABYSS));
   document.documentElement.style.setProperty('--surface', cssColour(PALETTE.SURFACE));
   document.documentElement.style.setProperty('--warning', cssColour(PALETTE.TELEGRAPH));
+  document.documentElement.style.setProperty('--panel', cssColour(PALETTE.PANEL));
+  document.documentElement.style.setProperty('--panel-border', cssColour(PALETTE.PANEL_BORDER));
+  document.documentElement.style.setProperty('--panel-divider', cssColour(PALETTE.PANEL_DIVIDER));
+  document.documentElement.style.setProperty('--input', cssColour(PALETTE.INPUT));
+  document.documentElement.style.setProperty('--input-border', cssColour(PALETTE.INPUT_BORDER));
+  document.documentElement.style.setProperty('--muted', cssColour(PALETTE.MUTED));
+  document.documentElement.style.setProperty('--action-border', cssColour(PALETTE.ACTION_BORDER));
   const observer = new ResizeObserver(() => {
     app.renderer.resize(host.clientWidth, host.clientHeight);
     app.render();
