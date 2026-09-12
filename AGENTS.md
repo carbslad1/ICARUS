@@ -55,10 +55,15 @@ Steps 3–5 and 6–15 are mutually exclusive. Do not reorder or insert steps.
 
 ## Current phase
 
-Phase 0 (Scaffold). Gate passed locally on 2026-09-12: record 1000 stationary-world
-steps, replay, and compare both CSVs byte-identical to the deliberately created
-golden. `npm run verify`: 73 Node/static + 8 browser + 6 Playwright tests passed in
-26.45 s. No gameplay exists. GitHub Pages uses the verified build from `main`.
+Phase 0 (Scaffold) complete on 2026-09-12. Gate: record 1000 stationary-world steps,
+replay, and compare both CSVs byte-identical to the deliberately created golden.
+`npm run verify`: 73 Node/static + 8 browser + 6 Playwright tests passed locally in
+11.87 s and on GitHub in 19.21 s. No gameplay exists.
+
+Published at https://carbslad1.github.io/ICARUS/ from the verified `main` build.
+Playwright verified the live site's exact 1000-step replay, production hook
+isolation, and absence of page errors. The user explicitly approved publishing
+the source code and design document in the public carbslad1/ICARUS repository.
 
 Stop after Phase 0. The next session may begin Phase 1 (Water), whose gate requires
 both the water simulation tests (especially hard-turn versus gentle-turn) and a
