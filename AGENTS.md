@@ -59,9 +59,20 @@ Steps 3–5 and 6–15 are mutually exclusive. Do not reorder or insert steps.
 ## Current phase
 
 Phase 1 (Water) implemented on 2026-09-12 after the user approved proceeding.
-Mechanical gate passed: `npm run verify` completed 127 Node/static + 10 browser +
-12 Playwright tests in 22.45 s. Human gate is PENDING; Phase 1 is not complete yet.
+The first human playtest FAILED: the user reported sluggish movement, slow turning,
+excessive sinking/depth, and wanted slightly faster speed growth from good entries.
+Retune 1 addresses that feedback; its human re-test is PENDING. Phase 1 is not complete.
+Mechanical gate passed: `npm run verify` completed 133 Node/static + 10 browser +
+12 Playwright tests in 25.36 s after the retune.
 Do not begin Phase 2 without the user's five-minute playtest approval.
+
+Retune 1: turn rate 4.8 rad/s, velocity redirect 1.25/s, thrust 32 m/s2, water
+gravity -1.2 m/s2, starting depth -4 m and vertical speed -2 m/s. Perfect entries
+add 2.25 m/s plus 0.4 per prior perfect, capped at 5.5; clean entries add 1 m/s
+after their unchanged retention. Only perfect entries build the streak. No changes
+to drag, turn cost, thrust speed ceiling, air gravity, or grading thresholds.
+The recovery test improved from 24.15 m / 2.767 s to 13.601 m / 1.500 s. Six new
+feel regression tests cover the requested behavior. Existing assertions stay intact.
 
 A/D rotate, W thrusts; in air only heading changes, not the arc. Arrow alternatives,
 touch hold controls, restart, and Escape/pause are available. The renderer is just
@@ -73,13 +84,13 @@ The new water golden is version 2 with scenario `water`. The original version 1
 empty trace and CSV remain byte-identical; `?test=1&scene=empty` selects that fixture.
 Normal development runs automatically; `?test=1` starts manual stepping paused.
 Thrust only adds remaining speed headroom, never clamps earned momentum. See
-README for the reviewed initial water-golden changes and unspecified tuning values.
+README for the reviewed water-golden retune and current tuning values.
 
 Phase 0's 1000-step record/replay gate remains green alongside all water checks.
 
 Published at https://carbslad1.github.io/ICARUS/ from the verified `main` build.
-Playwright previously verified Phase 0's live 1000-step replay, production hook
-isolation, and absence of page errors. The user explicitly approved publishing
+Playwright verified Phase 1's first live build on desktop/mobile with exact water
+replay, production hook isolation, and real-time controls. The user explicitly approved publishing
 the source code and design document in the public carbslad1/ICARUS repository.
 
 Stop at the Phase 1 human gate. Ask the user to dive and breach for five minutes;

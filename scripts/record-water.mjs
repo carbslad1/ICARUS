@@ -12,7 +12,7 @@ try {
   const { traceJson } = await server.ssrLoadModule('/src/harness/trace.ts');
   const recorder = createRecorder(42, 'water');
   for (let step = 0; step < 600; step += 1) {
-    recorder.step({ ...idleIntent(), thrust: true, turn: step < 87 || step >= 270 && step < 425 ? 1 : 0 });
+    recorder.step({ ...idleIntent(), thrust: true, turn: step >= 36 && step < 80 || step >= 230 && step < 323 ? 1 : 0 });
   }
   writeFileSync(join(directory, 'water.trace.json'), traceJson(recorder.trace()), { flag: 'wx' });
   writeFileSync(join(directory, 'water.csv'), recorder.csv(), { flag: 'wx' });

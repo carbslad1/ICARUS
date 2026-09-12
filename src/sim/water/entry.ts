@@ -17,7 +17,9 @@ export function entryQuality(heading: Radians, incoming: Vec2<MetresPerSec>, str
     const proportion = (error - spec.CLEAN_ANGLE) / (spec.SLOPPY_ANGLE - spec.CLEAN_ANGLE);
     retention = spec.CLEAN_RETENTION + (spec.SLOPPY_RETENTION - spec.CLEAN_RETENTION) * proportion;
   } else { grade = 'belly-flop'; retention = spec.FLOP_RETENTION; }
-  const bonus = metresPerSec(grade === 'perfect' ? Math.min(spec.PERFECT_BONUS + streak * spec.PERFECT_STREAK_BONUS, spec.PERFECT_BONUS_CAP) : 0);
+  const bonus = metresPerSec(grade === 'perfect'
+    ? Math.min(spec.PERFECT_BONUS + streak * spec.PERFECT_STREAK_BONUS, spec.PERFECT_BONUS_CAP)
+    : grade === 'clean' ? spec.CLEAN_BONUS : 0);
   return {
     grade, retention, error, bonus,
     streak: grade === 'perfect' ? streak + 1 : 0,

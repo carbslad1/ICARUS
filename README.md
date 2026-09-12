@@ -2,7 +2,8 @@
 
 Phase 1: a playable water trial with momentum, steering, breaches, ballistic falls,
 graded re-entry, perfect-entry streaks, and surface skips. No arena, combat, audio,
-or final visual pipeline yet. The five-minute human playtest gate is still pending.
+or final visual pipeline yet. The first human playtest rejected the slow feel;
+this is the first responsiveness retune, awaiting another human playtest.
 
 Play at https://carbslad1.github.io/ICARUS/.
 
@@ -70,27 +71,58 @@ Output files must not already exist. Golden fixtures are checked in under
 
 ## Water Gate And Tuning
 
-Verified locally: 127 Node/static, 10 browser, and 12 Playwright tests, in 22.45 s.
-Hard turns exit at 20.658/20.393 m/s versus gentle turns at 25.903/25.902 m/s
+Verified locally: 133 Node/static, 10 browser, and 12 Playwright tests, in 25.36 s.
+Hard turns exit at 19.116/22.235 m/s versus gentle turns at 25.854/25.851 m/s
 through the same 120-degree trajectory, starting at 26/60 m/s. Ten complete
 perfect-entry cycles increase flight apices at each of three initial launch speeds.
 Tests also cover exact crossings, entry bands, skip thresholds, control lockout,
 terminal velocity, 30/60/120 Hz equivalence, immutable snapshots, and browser/Node
 state equality. The new 600-step water golden includes a breach and perfect entry.
 
-The design's starting force constants are retained. Added thrust is limited by
-the remaining headroom below 26 m/s; velocity itself is never clamped. Previously
-unspecified values: perfect bonus grows by 0.25 m/s to a 4 m/s cap; skipping requires
-8 m/s total speed and settles below 0.25 m/s vertical speed to avoid endless tiny
-bounces. These are starting values for the human feel test, not final balance.
+### Responsiveness Retune 1
+
+User feedback: sluggish movement, slow turning, too much sinking, and good entries
+should build speed a little faster. Changes from the first published water build:
+
+| Setting | Before | Now |
+| --- | --- | --- |
+| Body turn rate | 2.8 rad/s | 4.8 rad/s |
+| Velocity redirect rate | 0.55/s | 1.25/s |
+| Thrust | 22 m/s2 | 32 m/s2 |
+| Water gravity | -3.5 m/s2 | -1.2 m/s2 |
+| Starting depth / vertical speed | -8 m / -6 m/s | -4 m / -2 m/s |
+| Perfect bonus / streak increment / cap | 1.5 / 0.25 / 4 m/s | 2.25 / 0.4 / 5.5 m/s |
+| Clean entry bonus after retention | 0 | 1 m/s |
+
+Measured with identical recovery input: a 24 m/s downward dive now reaches only
+13.601 m depth instead of 24.150 m and breaches in 1.500 s instead of 2.767 s.
+From rest, 0.75 s of thrust reaches 22.350 m/s instead of 15.778 m/s. Three perfect
+entry rewards add 7.95 m/s instead of 5.25 m/s, before intervening water losses.
+Six regression tests were added before tuning; the original mechanical checks,
+entry thresholds, retention values, and test tolerances remain unchanged.
+
+Added thrust remains limited by headroom below 26 m/s; velocity itself is never
+clamped. Drag, turn cost, air gravity, and skip settings are unchanged. Skipping
+requires 8 m/s total speed and settles below 0.25 m/s vertical speed to avoid endless
+tiny bounces. Only perfect entries build a streak; a clean entry still resets it.
+These values await a human verdict, not a declaration of final balance.
 
 Runtime-specific native trigonometry caused browser/Node drift around 1e-13.
 Simulation math now uses fixed, range-reduced series and scaled vector magnitude;
 accuracy is independently tested to 14 decimal places. The first uncommitted water
 CSV was deliberately regenerated after this correction and the thrust-headroom
 fix: the largest numeric change was 0.162216, with no categorical changes. Its
-input trace and both original empty goldens remain unchanged. Future golden
-changes must likewise be deliberate and reviewed.
+input trace was unchanged at that stage. Both original empty goldens remain
+unchanged throughout.
+
+For Retune 1 the water trace and CSV were deliberately re-recorded and reviewed:
+faster turning requires shorter holds. The trace still has 600 steps, one breach,
+an airborne frame 300, and one perfect entry; none of its behavioral assertions
+were removed. The breach now occurs at step 113 instead of 178, entry at 392
+instead of 448, and best height is 12.113 m instead of 11.334 m. Prior fixtures
+remain in git history and were also archived locally under
+`artifacts/water-before-feel-v2/`. Future golden changes must likewise be deliberate
+and reviewed.
 
 Stop here for a human to dive and breach for five minutes. Do not start Phase 2
 until they want to keep going; retune the water first if they do not.
