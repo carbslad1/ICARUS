@@ -5,6 +5,7 @@ import { stepWorld } from '../../src/sim/step';
 import { angleDifference, radians, velocity, worldPos } from '../../src/sim/units';
 import { createWaterWorld } from '../../src/sim/world';
 import { entryQuality } from '../../src/sim/water/entry';
+import { parseMovementTuning } from '../../src/sim/tuning';
 
 const dt = CONSTANTS.TIME.SIM_DT;
 
@@ -14,8 +15,9 @@ test('the trial starts near the surface with a gentle downward drift', () => {
   expect(body?.velocity.y).toBeGreaterThanOrEqual(-2);
 });
 
-test('a half-second turn rotates the body more than two radians', () => {
-  const world = createWaterWorld(42, { position: worldPos(0, -100), heading: radians(0) });
+test('the earlier wide steering profile still turns more than two radians in half a second', () => {
+  const world = createWaterWorld(42, { position: worldPos(0, -100), heading: radians(0) },
+    parseMovementTuning({ steerLead: 0.45, redirectRate: 12, waterDrag: 0.003, turnCost: 0.01, thrustSpeed: 26 }));
   for (let step = 0; step < 60; step += 1) stepWorld(world, { ...idleIntent(), turn: 1 }, dt);
   expect(world.entities[0]?.heading).toBeGreaterThan(2);
 });

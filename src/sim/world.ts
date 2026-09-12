@@ -4,12 +4,14 @@ import { createRng, type Rng } from './rng';
 import { worldPos, type WorldPos } from './units';
 import { createBody, type BodyInitial, type WaterBody } from './water/body';
 import { DEFAULT_TUNING, type MovementTuning } from './tuning';
+import { createCycle, type FlightCycle } from './flight/state';
 
 export interface World {
   readonly seed: number;
   readonly origin: WorldPos;
   readonly rng: Rng;
-  readonly entities: readonly WaterBody[];
+  entities: readonly WaterBody[];
+  cycle?: FlightCycle;
   camera: WorldPos;
   stepIndex: number;
   intent: PlayerIntent;
@@ -32,4 +34,8 @@ export function createWorld(seed: number = CONSTANTS.RNG.DEFAULT_SEED): World {
 export function createWaterWorld(seed: number = CONSTANTS.RNG.DEFAULT_SEED, initial: BodyInitial = {}, tuning: MovementTuning = DEFAULT_TUNING): World {
   const body = createBody(initial);
   return { ...createWorld(seed), entities: Object.freeze([body]), camera: body.position, tuning };
+}
+
+export function createFlightWorld(seed: number = CONSTANTS.RNG.DEFAULT_SEED, initial: BodyInitial = {}, tuning: MovementTuning = DEFAULT_TUNING): World {
+  return { ...createWaterWorld(seed, initial, tuning), cycle: createCycle() };
 }

@@ -1,7 +1,8 @@
 import { CONSTANTS } from '../sim/constants';
 import { copyIntent, idleIntent, type PlayerIntent } from '../sim/intent';
 import type { Seconds } from '../sim/units';
-import { createWaterWorld, createWorld, type World } from '../sim/world';
+import { createWorld, type World } from '../sim/world';
+import { scenarioFactory } from './scenario';
 import { createHarness, type StateFrame } from './headless';
 import { createFixedLoop } from './loop';
 import { parseTrace, type InputTrace } from './trace';
@@ -33,6 +34,7 @@ export function createBrowserDriver(
   let paused = false;
   let trace: InputTrace | undefined;
   let cursor = 0;
+  let sampled: PlayerIntent | undefined;
   const loop = createFixedLoop(() => {
     previous = harness.snapshot();
     const entry = trace?.entries[cursor];
@@ -41,7 +43,7 @@ export function createBrowserDriver(
       if (entry.tuning) tuning = entry.tuning;
       cursor += 1;
     }
-    if (!trace) intent = override ?? sampleInput();
+    if (!trace) intent = override ?? sampled ?? sampleInput();
     harness.step(intent, tuning);
   });
 
@@ -81,7 +83,7 @@ export function createBrowserDriver(
     },
     loadTrace(input: InputTrace) {
       const parsed = parseTrace(input);
-      reset(parsed.seed, parsed.version === 2 ? createWaterWorld : createWorld,
+      reset(parsed.seed, scenarioFactory(parsed.version === 2 ? parsed.scenario : 'empty'),
         parsed.version === 2 ? parsed.tuning ?? DEFAULT_TUNING : DEFAULT_TUNING);
       setPaused(true);
       trace = parsed;
@@ -100,9 +102,11 @@ export function createBrowserDriver(
       cursor = 0;
     },
     advance(time: Seconds) {
-      const alpha = loop.advance(time);
-      if (paused) render(harness.snapshot(), 0);
-      else render(harness.snapshot(), alpha, previous);
+      if (paused) return;
+      sampled = sampleInput();
+      const alpha = loop.advance(time, harness.snapshot().scenario === 'flight' ? () => harness.snapshot().breach?.dilation ?? 1 : 1);
+      sampled = undefined;
+      render(harness.snapshot(), alpha, previous);
     },
   };
 }

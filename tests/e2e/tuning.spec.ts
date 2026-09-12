@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 import { createHarness } from '../../src/harness/headless';
 import { parseTrace } from '../../src/harness/trace';
 import { replayTrace } from '../../src/harness/replay';
-import { createWaterWorld } from '../../src/sim/world';
+import { createFlightWorld } from '../../src/sim/world';
 import { idleIntent } from '../../src/sim/intent';
 import { DEFAULT_TUNING, parseMovementTuning } from '../../src/sim/tuning';
 
@@ -30,7 +30,7 @@ test('sliders apply live without resetting a run and match the headless tuned mo
   await page.keyboard.down('w');
   await page.evaluate(() => window.__icarus?.stepFrames(12));
   await page.keyboard.up('w');
-  const harness = createHarness(1, createWaterWorld);
+  const harness = createHarness(1, createFlightWorld);
   for (let i = 0; i < 24; i += 1) harness.step(idleIntent());
   harness.step(idleIntent(), parseMovementTuning({ thrust: 79 }));
   for (let i = 0; i < 12; i += 1) harness.step({ ...idleIntent(), thrust: true });

@@ -309,13 +309,13 @@ All numbers are tuning starting points. The *behaviour* beside each is the requi
 | Constant | Start | Behaviour |
 |---|---|---|
 | `WATER_GRAVITY` | −1.2 m/s² | You sink slowly if you do nothing. |
-| `WATER_DRAG_QUADRATIC` | 0.003 /m | `a = −k·v·\|v\|`. Light water resistance; fast dives must carry useful momentum through their turns. |
+| `WATER_DRAG_QUADRATIC` | 0.001 /m | `a = −k·v·\|v\|`. Light water resistance; fast dives must carry useful momentum through their turns. |
 | `WATER_THRUST` | 32 m/s² | Along heading, with no steering-dependent throttle penalty. |
 | `WATER_TURN_RATE` | 4.8 rad/s | Maximum body rotation rate. |
-| `WATER_REDIRECT_RATE` | 12 /s | Velocity bends toward the nose continuously, without snapping. |
-| `WATER_STEER_LEAD` | 0.45 rad | Maximum commanded nose lead relative to the flow. Stronger input makes a tighter curve, not free rotation. |
+| `WATER_REDIRECT_RATE` | 14 /s | Velocity bends toward the nose continuously, without snapping. |
+| `WATER_STEER_LEAD` | 0.24 rad | Maximum commanded nose lead relative to the flow. Stronger input makes a tighter curve, not free rotation. |
 | `WATER_FLOW_MIN_SPEED` | 1 m/s | Below swimming speed, the body can orient to get moving; otherwise heading follows the flow. |
-| `WATER_MAX_THRUST_SPEED` | 26 m/s | Thrust stops adding above this. Dive momentum far exceeds it — thrust builds from rest, it does not make you fast. |
+| `WATER_MAX_THRUST_SPEED` | 37 m/s | Thrust stops adding above this. Dive momentum far exceeds it — thrust builds from rest, it does not make you fast. |
 
 ## 5.2 The redirect mechanic
 
@@ -329,7 +329,7 @@ The residual turn resistance is deliberately small:
 speedLoss = currentSpeed × TURN_COST × |angleRotatedThisStep|
 ```
 
-with `TURN_COST ≈ 0.01` per radian, plus the light quadratic water drag above. Do not restore a large braking penalty or reduce throttle because the player is steering.
+with `TURN_COST ≈ 0.02` per radian, plus the light quadratic water drag above. Do not restore a large braking penalty or reduce throttle because the player is steering. These five settings are the user's selected profile, supplied on 2026-09-12 with their instruction to proceed beyond the water trial.
 
 A wide input produces a broad arc; stronger input tightens that arc. Both preserve useful momentum. A quick turn may retain more speed than a long turn because it spends less time in water: this is acceptable. Skill is in shaping the exit vector and aligning entries, not avoiding an artificial turn punishment.
 
@@ -445,6 +445,19 @@ At commitment the sprite snaps to player heading control for the re-entry alignm
 Short fixed displacement in local space (3.5 m over 0.12 s) with i-frames and a brief cooldown. Limited charges, restored on water entry. Because it is local, it is a pure dodge and does not perturb the arc at all.
 
 ## 7.6 Commitment
+
+**Phase 2 implementation call, pending human playtest (2026-09-12).** The original
+text leaves an upward early commitment above the surface undefined. The current
+trial uses quick return: at commitment, transfer the actual sprite position through
+`toWorld`, bank frame velocity, and mirror an upward Y component downward. Dissolve
+the arena and animate that one world-space body to the surface over 0.3 seconds,
+with A/D heading control and no extra falling energy. Grade the banked vector at
+the end. Forced commitment adds the specified 60% assist. A surface skip retains
+the remaining dash charges; only a real water entry replenishes them. This keeps
+early escape costly and avoids running underwater physics in midair. The user
+was offered quick return versus natural fall; quick return is the stated default
+assumption, not a recorded preference. This paragraph clarifies the implementation
+of the two descriptions below for this trial.
 
 **Voluntary.** The player holds the dive input. A ~0.3 s commit animation during which control transfers from free movement to heading control — the player rotates to align with the frame's current velocity vector. Then re-entry resolves.
 

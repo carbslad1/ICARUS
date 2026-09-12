@@ -14,7 +14,7 @@ test('water recording and replay match the reviewed golden, including a breach a
   const expected = readFileSync('tests/golden/water.csv', 'utf8');
   const replay = replayTrace(trace);
   expect(replay.csv).toBe(expected);
-  const recorder = createRecorder(trace.seed, 'water');
+  const recorder = createRecorder(trace.seed, 'water', trace.version === 2 ? trace.tuning : undefined);
   let intent = idleIntent();
   let cursor = 0;
   for (let index = 0; index < trace.steps; index += 1) {

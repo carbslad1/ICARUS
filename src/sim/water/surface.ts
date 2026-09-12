@@ -4,6 +4,15 @@ import { seconds, type Metres, type MetresPerSec, type MetresPerSec2, type Secon
 export type Medium = 'water' | 'air';
 export type CrossingKind = 'breach' | 'entry' | 'skip';
 
+export function breachApproach(y: Metres, vy: MetresPerSec): Seconds | undefined {
+  return y >= CONSTANTS.BREACH.ARM_DEPTH && y < CONSTANTS.SURFACE.SURFACE_Y && vy > 0
+    ? seconds((CONSTANTS.SURFACE.SURFACE_Y - y) / vy) : undefined;
+}
+
+export function frameReturned(y: Metres, vy: MetresPerSec): boolean {
+  return y <= CONSTANTS.SURFACE.SURFACE_Y && vy <= 0;
+}
+
 export function resolveMedium(previous: Medium, y: Metres, crossing?: CrossingKind): Medium {
   if (crossing) return crossing === 'entry' ? 'water' : 'air';
   if (y > CONSTANTS.SURFACE.SURFACE_Y + CONSTANTS.SURFACE.HYSTERESIS) return 'air';

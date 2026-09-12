@@ -25,16 +25,31 @@
         <div class="measure"><span>STREAK</span><output id="streak" aria-label="Perfect entry streak">0</output></div>
       </section>
       <div id="pause-state" role="status" hidden>PAUSED</div>
+      <section id="flight-info" aria-label="Flight" hidden>
+        <div><span>TIER <output id="tier" aria-label="Arena tier">1</output></span><output id="airtime" aria-label="Flight time remaining">0.0 s</output></div>
+        <progress id="flight-progress" aria-label="Flight remaining" max="1" value="1"></progress>
+        <div class="flight-detail"><span>APEX <output id="apex" aria-label="Projected apex">0 m</output></span><span>DASH <output id="dash-charges" aria-label="Dash charges">2</output></span></div>
+      </section>
       <footer>
         <output id="telemetry" aria-label="World state" hidden></output>
         <div class="status" data-water><output id="medium" aria-label="Medium">WATER</output><output id="entry" aria-label="Last entry"></output><output id="elapsed" aria-label="Elapsed time">00:00</output></div>
       </footer>
       <div class="touch-controls" data-water aria-label="Swim controls">
-        <div class="turn-controls">
+        <div class="turn-controls" data-swim-control>
           <button type="button" data-control="left" aria-label="Turn counterclockwise" aria-pressed="false" title="Turn counterclockwise">&#8634;</button>
           <button type="button" data-control="right" aria-label="Turn clockwise" aria-pressed="false" title="Turn clockwise">&#8635;</button>
         </div>
-        <button type="button" data-control="thrust" aria-label="Thrust" aria-pressed="false" title="Thrust">&#9650;</button>
+        <button type="button" data-control="thrust" data-swim-control aria-label="Thrust" aria-pressed="false" title="Thrust">&#9650;</button>
+        <div class="air-pad" data-air-control hidden aria-label="Air movement">
+          <button type="button" data-control="thrust" aria-label="Fly up" aria-pressed="false" title="Fly up">&#8593;</button>
+          <button type="button" data-control="left" aria-label="Fly left" aria-pressed="false" title="Fly left">&#8592;</button>
+          <button type="button" data-control="down" aria-label="Fly down" aria-pressed="false" title="Fly down">&#8595;</button>
+          <button type="button" data-control="right" aria-label="Fly right" aria-pressed="false" title="Fly right">&#8594;</button>
+        </div>
+        <div class="air-actions" data-air-control hidden>
+          <button type="button" data-control="dash" aria-label="Dash" aria-pressed="false" title="Dash (Shift)">&#187;</button>
+          <button type="button" data-control="commit" aria-label="Dive" aria-pressed="false" title="Dive (Space)">&#8615;</button>
+        </div>
       </div>
       </div>
       <aside id="tuning-panel" aria-label="Movement tuning" hidden>

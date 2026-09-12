@@ -10,7 +10,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 2px
 button:disabled { cursor: default; opacity: .4; }
 #app { position: relative; width: 100%; height: 100%; min-height: 180px; display: grid; grid-template-columns: minmax(0, 1fr); }
 #app.tuning-open { grid-template-columns: minmax(0, 1fr) 350px; }
-#playfield { position: relative; min-width: 0; min-height: 0; overflow: hidden; }
+#playfield { position: relative; min-width: 0; min-height: 0; overflow: hidden; container-type: size; }
 #stage { position: absolute; inset: 0; }
 canvas { display: block; width: 100%; height: 100%; }
 header, footer { position: absolute; z-index: 1; left: 28px; right: 28px; pointer-events: none; }
@@ -41,6 +41,40 @@ footer { bottom: 24px; font-size: 11px; line-height: 1.6; overflow-wrap: anywher
 .turn-controls { display: flex; gap: 10px; }
 .touch-controls button { width: 58px; height: 58px; font-size: 30px; pointer-events: auto; }
 .touch-controls > button { font-size: 24px; }
+#flight-info { position: absolute; z-index: 1; top: 94px; right: 28px; width: 180px; pointer-events: none; font-size: 12px; font-variant-numeric: tabular-nums; }
+#flight-info > div { display: flex; justify-content: space-between; gap: 10px; }
+#flight-info progress { width: 100%; height: 3px; margin: 10px 0; accent-color: var(--surface); }
+.flight-detail { font-size: 9px; color: var(--muted); }
+.air-pad { display: grid; grid-template-columns: repeat(3, 46px); grid-template-rows: repeat(2, 42px); gap: 4px; }
+.air-pad button { width: 46px; height: 42px; font-size: 23px; }
+.air-pad button:first-child { grid-column: 2; }
+.air-pad button:nth-child(2) { grid-column: 1; }
+.air-actions { display: flex; gap: 8px; align-self: end; }
+.air-actions button { width: 46px; height: 46px; font-size: 27px; }
+[data-mode="air"] .touch-controls { display: flex; }
+@media (pointer: fine) and (min-width: 601px) { .air-pad { visibility: hidden; } }
+@media (max-width: 600px) {
+  #flight-info { top: 94px; right: 18px; width: 152px; }
+  .flight-scene .touch-controls { gap: 8px; left: 14px; right: 14px; }
+}
+@media (max-height: 520px) {
+  #flight-info { top: 130px; right: 18px; width: 128px; }
+}
+.flight-scene .readouts { top: 82px; left: 18px; right: 18px; grid-template-columns: repeat(4, auto); align-items: center; gap: 12px; }
+.flight-scene .speed output { font-size: 24px; }
+.flight-scene .measure { gap: 2px; }
+.flight-scene #flight-info { top: 126px; left: 18px; right: 18px; width: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; }
+.flight-scene #flight-info progress { order: 3; grid-column: 1 / -1; margin: 0; }
+.flight-scene .flight-detail { align-items: center; }
+@container (max-height: 400px) {
+  .flight-scene .readouts { top: 72px; }
+  .flight-scene #flight-info { top: 111px; font-size: 10px; gap: 5px 12px; }
+  .flight-scene .touch-controls { bottom: 36px; }
+  .air-pad { grid-template-columns: repeat(4, 36px); grid-template-rows: 36px; gap: 3px; }
+  .air-pad button { width: 36px; height: 36px; font-size: 20px; }
+  .air-pad button:first-child, .air-pad button:nth-child(2) { grid-column: auto; }
+  .air-actions button { width: 36px; height: 36px; font-size: 24px; }
+}
 @media (pointer: coarse) { .touch-controls { display: flex; } }
 @media (max-width: 600px) {
   header, footer { left: 18px; right: 18px; }

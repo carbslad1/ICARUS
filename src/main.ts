@@ -2,7 +2,7 @@ import './style.css';
 import { createBrowserDriver, registerTestHook } from './harness/browser';
 import { createWaterRenderer } from './render/water';
 import { createControls } from './input/controls';
-import { createWaterWorld, createWorld } from './sim/world';
+import { createFlightWorld, createWaterWorld, createWorld } from './sim/world';
 import { CONSTANTS } from './sim/constants';
 import { seconds } from './sim/units';
 import { createTuningPanel, loadTuning } from './ui/tuning';
@@ -15,13 +15,19 @@ async function start() {
   const controls = createControls(window, [...document.querySelectorAll<HTMLButtonElement>('[data-control]')]);
   const query = new URLSearchParams(location.search);
   const manual = query.get('test') === '1';
-  const factory = (manual || import.meta.env.DEV) && query.get('scene') === 'empty' ? createWorld : createWaterWorld;
+  const factory = query.get('scene') === 'water' ? createWaterWorld
+    : (manual || import.meta.env.DEV) && query.get('scene') === 'empty' ? createWorld : createFlightWorld;
   const tuning = loadTuning();
-  const driver = createBrowserDriver(renderer.render, factory, controls.sample, tuning);
+  const driver = createBrowserDriver(renderer.render, factory, () => {
+    const state = driver.hook.snapshot();
+    return controls.sample(state.flight ? 'air' : state.returning ? 'return' : 'water');
+  }, tuning);
   const panel = createTuningPanel(tuning, driver.setTuning, controls.clear);
   registerTestHook(window, driver.hook, import.meta.env.DEV, location.search);
   driver.hook.setPaused(manual);
   renderer.render(driver.hook.snapshot(), 0);
+  const resize = new ResizeObserver(() => renderer.render(driver.hook.snapshot(), 0));
+  resize.observe(host);
   const pauseButton = document.querySelector<HTMLButtonElement>('#pause');
   const restartButton = document.querySelector<HTMLButtonElement>('#restart');
   const pauseState = document.querySelector<HTMLElement>('#pause-state');
@@ -70,6 +76,7 @@ async function start() {
     window.removeEventListener('keydown', pauseKey);
     controls.destroy();
     panel.destroy();
+    resize.disconnect();
     renderer.destroy();
   });
 }

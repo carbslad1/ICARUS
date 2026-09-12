@@ -1,6 +1,7 @@
 {
   "version": 2,
   "scenario": "water",
+  "tuning": { "waterDrag": 0.003, "thrustSpeed": 26, "redirectRate": 12, "steerLead": 0.45, "turnCost": 0.01 },
   "seed": 42,
   "steps": 600,
   "entries": [

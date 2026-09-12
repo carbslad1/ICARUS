@@ -8,7 +8,7 @@ const trace = parseTrace(JSON.parse(readFileSync('tests/golden/water.trace.json'
 test('a visible dolphin breaches and re-enters identically to headless simulation', async ({ page }, testInfo) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
-  await page.goto('/?test=1');
+  await page.goto('/?test=1&scene=water');
   await expect(page.locator('html')).toHaveAttribute('data-ready', 'true');
   const canvas = page.getByRole('img', { name: 'Icarus water trial' });
   await expect(canvas).toBeVisible();
@@ -53,7 +53,7 @@ test('a visible dolphin breaches and re-enters identically to headless simulatio
 });
 
 test('keyboard controls, blur release, pause, and restart work in the actual application', async ({ page }) => {
-  await page.goto('/?test=1');
+  await page.goto('/?test=1&scene=water');
   await expect(page.locator('html')).toHaveAttribute('data-ready', 'true');
   const before = await page.evaluate(() => window.__icarus?.snapshot());
   await page.keyboard.down('w');
@@ -78,7 +78,7 @@ test('keyboard controls, blur release, pause, and restart work in the actual app
 });
 
 test('on-screen hold controls feed thrust and release correctly', async ({ page }, testInfo) => {
-  await page.goto('/?test=1');
+  await page.goto('/?test=1&scene=water');
   await expect(page.locator('html')).toHaveAttribute('data-ready', 'true');
   if (testInfo.project.name === 'desktop') await page.setViewportSize({ width: 540, height: 800 });
   const thrust = page.getByRole('button', { name: 'Thrust', exact: true });
@@ -97,7 +97,7 @@ test('on-screen hold controls feed thrust and release correctly', async ({ page 
 });
 
 test('real keyboard steering curves the carried momentum without spinning the nose away', async ({ page }) => {
-  await page.goto('/?test=1');
+  await page.goto('/?test=1&scene=water');
   await expect(page.locator('html')).toHaveAttribute('data-ready', 'true');
   const before = await page.evaluate(() => window.__icarus?.snapshot().player);
   if (!before) throw new Error('Missing player');

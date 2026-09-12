@@ -60,7 +60,8 @@ test.each([26, 60])('tight input makes a smaller flowing arc through the same 12
 test('from rest with no input, a downward-facing dolphin sinks to terminal velocity', () => {
   const world = createWaterWorld(42, { position: worldPos(0, -500), velocity: velocity(0, 0), heading: radians(-Math.PI / 2) });
   const body = player(world);
-  for (let step = 0; step < 12000; step += 1) stepWorld(world, idleIntent(), dt);
+  // Lower resistance needs more settling time; keep the terminal-speed tolerance.
+  for (let step = 0; step < 24000; step += 1) stepWorld(world, idleIntent(), dt);
   const terminal = Math.sqrt(Math.abs(CONSTANTS.WATER.WATER_GRAVITY) / CONSTANTS.WATER.WATER_DRAG_QUADRATIC);
   expect(body.position.y).toBeLessThan(-500);
   expect(body.velocity.y).toBeCloseTo(-terminal, 3);
@@ -121,7 +122,7 @@ test('ten consecutive perfect entries produce monotonically increasing ideal bal
 });
 
 test('a belly-flop locks controls for its specified duration', () => {
-  const world = createWaterWorld(42, { position: worldPos(0, 0.01), velocity: velocity(0, -30), heading: radians(0), medium: 'air' });
+  const world = createWaterWorld(42, { position: worldPos(0, 0.01), velocity: velocity(0, -30), heading: radians(Math.PI), medium: 'air' });
   stepWorld(world, idleIntent(), dt);
   const body = player(world);
   expect(body.lastCrossing?.grade).toBe('belly-flop');

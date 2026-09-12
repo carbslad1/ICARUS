@@ -2,13 +2,13 @@ import { copyIntent, type PlayerIntent } from '../sim/intent';
 import { createHarness, type StateFrame } from './headless';
 import { parseTrace, type InputTrace, type TraceEntry } from './trace';
 import { stateCsv } from './csv';
-import { createWaterWorld, createWorld } from '../sim/world';
+import { scenarioFactory } from './scenario';
 import { DEFAULT_TUNING, isDefaultTuning, parseMovementTuning, type MovementTuning } from '../sim/tuning';
 
-export function createRecorder(seed: number, scenario: 'empty' | 'water' = 'empty', initial: MovementTuning = DEFAULT_TUNING) {
+export function createRecorder(seed: number, scenario: 'empty' | 'water' | 'flight' = 'empty', initial: MovementTuning = DEFAULT_TUNING) {
   const tuning = parseMovementTuning(initial);
   if (scenario === 'empty' && !isDefaultTuning(tuning)) throw new RangeError('Empty recordings cannot tune movement.');
-  const harness = createHarness(seed, scenario === 'water' ? (seed) => createWaterWorld(seed, {}, tuning) : createWorld);
+  const harness = createHarness(seed, (seed) => scenarioFactory(scenario)(seed, {}, tuning));
   const frames: StateFrame[] = [harness.snapshot()];
   const entries: TraceEntry[] = [];
 
@@ -25,7 +25,7 @@ export function createRecorder(seed: number, scenario: 'empty' | 'water' = 'empt
       return frame;
     },
     trace(): InputTrace {
-      return parseTrace({ ...(scenario === 'water' ? { version: 2, scenario } : { version: 1 }), seed, steps: harness.snapshot().stepIndex, entries,
+      return parseTrace({ ...(scenario !== 'empty' ? { version: 2, scenario } : { version: 1 }), seed, steps: harness.snapshot().stepIndex, entries,
         ...(!isDefaultTuning(tuning) ? { tuning } : {}),
       });
     },

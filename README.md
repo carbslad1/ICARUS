@@ -1,47 +1,49 @@
 # ICARUS
 
-Phase 1: a playable water trial with momentum, steering, breaches, ballistic falls,
-graded re-entry, perfect-entry streaks, and surface skips. No arena, combat, audio,
-or final visual pipeline yet. Two human playtests rejected slow, then unnatural
-movement. This version replaces free underwater rotation with flow-aligned
-steering under the user's explicitly revised momentum-preservation rule.
+A dolphin momentum game with an arena carried through the sky by each breach.
+Phase 2 is the playable flight-frame trial. The arena is deliberately empty for
+the next human playtest; combat, rewards, audio, and the final visual pipeline
+come in subsequent phases.
 
-Play at https://carbslad1.github.io/ICARUS/.
+[Play ICARUS](https://carbslad1.github.io/ICARUS/).
 
 ## Controls
 
-A/D curve the underwater trajectory counterclockwise/clockwise; W thrusts. Release
-steering to glide along the carried velocity. Arrow keys also work. In the air,
-rotation aims the next entry but does not steer the ballistic trajectory. Point the
-nose along the incoming velocity for a perfect entry. The faint line shows velocity.
-Escape pauses; the top-right buttons pause or restart. Narrow/touch screens have
-hold controls. Begin with W and a short hold of A to turn the initial dive upward.
+- Water: A/D curve the carried momentum; W thrusts. Arrow keys also work.
+- Air: WASD or arrows move freely inside the arena. Shift dashes; Space commits
+  to a dive. Touch screens have directional, dash, and dive controls.
+- Return: A/D align the dolphin with the incoming-velocity line during the
+  0.3-second entry window. Natural flight expiry adds 60% orientation assistance.
+- Escape pauses. The top-right buttons open movement settings, restart, or pause.
 
-## Live Movement Settings
+The camera follows the ballistic arena origin in flight. Local movement and
+dash never steer or accelerate that origin. Projected apex sets the arena tier;
+the time bar shows remaining flight time. Two dash charges replenish after an
+actual water entry, never from a surface skip.
 
-Open the gear button to tune 18 variables while playing. The panel docks beside
-the game on desktop and below it on phones. Water covers thrust, its speed limit,
-gravity, and resistance. Steering covers body turn speed, flow response, steering
-angle, and turn resistance. Air has independent gravity and rotation speed.
-Entries covers perfect/clean boosts, streak growth and cap, speed retained by
-each imperfect entry grade, and flop recovery time. Speed retention is displayed
-as a percentage; the exported profile uses ratios from 0 to 1.
+Early commitment banks the frame's current speed. A quick return animation
+brings the sprite to the surface without adding fall energy, so an early escape
+costs momentum even with perfect alignment. An upward frame vector is mirrored
+downward. This is a provisional interpretation of the design's ambiguous early
+re-entry rule, exposed for this playtest.
 
-Sliders apply at the next fixed simulation step without resetting position, speed,
-or progress. Number fields accept exact values within the same range. Settings
-are saved on this device and retained when restarting or reloading. Reset defaults
-restores the current flow-steering baseline without restarting the run. No physics
-defaults or golden fixtures were changed for this panel.
+## Movement Settings
 
-Copy settings exports every value as versioned JSON to send back with feel feedback.
-A selectable copy remains available if clipboard permission is denied. Changes
-still work when browser storage is unavailable, with a status message. Arrow keys
-edit focused sliders and fields without steering; clicking a slider releases its
-focus when the pointer is lifted. Escape inside the panel closes it without pausing.
+The user's selected defaults are water resistance 0.001, thrust speed limit 37,
+flow response 14, steering angle 0.24, and turn resistance 0.02. The remaining
+13 settings retain their selected values. Thrust adds speed only below its limit;
+it never removes speed earned from an entry.
 
-## Run
+The gear opens 18 live sliders with exact number inputs, device persistence,
+reset, and versioned JSON export. The panel docks beside the game or below it
+on phones. Edits take effect on the next fixed step without resetting the run.
+Previously saved settings remain intact; Reset defaults selects this new baseline.
+Air rotation controls entry alignment; free flight movement has its own direct
+response. Clipboard denial leaves selectable JSON available.
 
-Use Node 22 LTS (minimum supported Node: 20.19).
+## Run And Verify
+
+Node 22 LTS is used (minimum 20.19).
 
 ```sh
 npm ci
@@ -50,159 +52,56 @@ npm run dev
 npm run verify
 ```
 
-`verify` runs strict TypeScript checking, architecture lint, Node simulation/static
-tests, Vitest in Chromium, and Playwright against the production build at desktop
-and mobile sizes. A post-verification check enforces the 120-second budget.
-`npm run test:sim`, `npm run test:web`, and `npm run test:e2e` run each test project.
-`npm run bench` keeps longer performance work outside the fast verification path.
+Verification runs strict TypeScript, architecture lint, simulation/static tests,
+Chromium tests, and Playwright against the production build, with a 120-second
+budget. Individual projects: `test:sim`, `test:web`, `test:e2e`. Longer benchmarks
+use `npm run bench`. No dependencies were added for Phase 2.
 
-The allowed toolchain uses Vitest 3.2.7 so its Playwright provider remains inside
-`@vitest/browser`, without requiring an additional browser-provider dependency.
-`@types/node` is the single additional dev dependency, explicitly approved by the
-user because the Node test tools require it. The lockfile pins all resolved versions.
-Test workers are bounded to avoid CPU oversubscription. Playwright uses SwiftShader
-for a repeatable WebGL environment independent of other applications' GPU load;
-all architecture checks, numeric tolerances, timeouts, and the 120-second gate remain
-intact. The user-approved replacement of the old turn-punishment rule is documented below.
+Latest local result: all checks passed in 92.98 seconds, including 188 simulation/
+static tests, 14 browser tests, and 30 Playwright checks. Human flight feedback is
+still required before the next phase.
 
-## Deterministic harness
+The browser hook is available in development or with `?test=1`. Test mode starts
+paused; `stepFrames(n)` pumps exact fixed steps without animation callbacks.
+Paused worlds redraw only on an explicit change or resize.
 
-The hook at `window.__icarus` is registered in development or with `?test=1`.
-Reset and trace loading pause automatic simulation. `stepFrames(n)` runs exactly
-n fixed steps synchronously, even while paused, without calling animation APIs.
-`setPaused(false)` resumes real-time advancement. Inputs are held until changed.
-The regular page starts the water trial immediately. The explicit test fixture
-`?test=1&scene=empty` retains Phase 0. Version 1 traces select the empty scenario;
-version 2 traces declare `scenario: "water"`. They can include an optional initial
-`tuning` profile and per-entry `tuning` changes at integer step boundaries.
-`createRecorder(seed, 'water', tuning)` and `recorder.step(intent, nextTuning)` record
-these settings. Explicit replay never borrows saved browser preferences. Default
-recordings retain their exact original schema and CSV; custom snapshots include
-their immutable profile. Scenario selection happens upstream
-of the simulation. Both use the same fixed-step driver.
+## Architecture And Replay
 
-The `sim/` code runs with no browser dependencies. The headless harness exposes
-`reset`, `step`, and `snapshot`. Coordinates are Y-up, lengths are metres, and time
-is seconds at a fixed 120 Hz. Branded constructors and the single arena-to-world
-transform live in `src/sim/units.ts`.
+The simulation is deterministic and renderer-free. World coordinates are Y-up,
+SI units are branded, and the timestep is always 1/120 second. Breach dilation
+changes fixed-step scheduling; input still samples at display rate. The arena
+owns one ballistic origin; its player owns one local position. The water body
+is removed at breach and recreated from `toWorld` at commitment.
 
-```sh
-npm run record:empty -- artifacts/new-recording
-npm run replay -- artifacts/new-recording/empty.trace.json artifacts/replayed.csv
-diff artifacts/new-recording/empty.csv artifacts/replayed.csv
-npm run record:water -- artifacts/new-water-recording
-npm run replay -- artifacts/new-water-recording/water.trace.json artifacts/water-replayed.csv
-```
+The normal page uses the flight cycle. `?scene=water` preserves the original
+ballistic trial, and `?test=1&scene=empty` preserves the empty Phase 0 fixture.
+Version 1 traces select the empty world; version 2 selects `water` or `flight`
+and supports initial/per-step tuning profiles. Explicit replay ignores saved
+browser settings. The recorder and headless harness support all scenarios.
 
-Output files must not already exist. Golden fixtures are checked in under
-`tests/golden/`; verification never updates them. Gate evidence is written to
-`artifacts/gate/`, screenshots to `test-results/`, and timing to
-`artifacts/verify-result.json`.
+The Phase 0 goldens and the Phase 1 water CSV are byte-identical to the previous
+build. The water trace now pins its historical movement profile explicitly.
+No golden CSV was regenerated for the new defaults. The earlier half-second
+turn test retains its original profile; the terminal-speed check runs longer
+for lower resistance while preserving its tolerance. New checks exercise the
+selected defaults and the complete flight cycle.
 
-## Water Gate And Tuning
+Phase 2 checks cover ballistic apex/airtime, tier boundaries, local movement,
+edge bounds, dash distance/charges, position transfer, early versus full-flight
+entry, forced assist, breach timeout/cooldown, 30/60/120 Hz scheduling, shallow
+hops, surface skips, and exact cross-runtime cycle replay. Playwright exercises
+keyboard/touch controls, phone/desktop layouts, persistent tuning, and canvas
+visibility. Screenshots and timing evidence are written under `test-results/`
+and `artifacts/`.
 
-Verified locally: 156 Node/static, 13 browser, and 24 Playwright tests, in 105.24 s.
-The tuning gate covers every parameter's effect, bounds, extreme configurations,
-independent runs, exact custom replay, persistence, clipboard denial, keyboard
-focus, touch play, and nonblank desktop/phone/landscape layouts.
-Tight and wide turns have mean radii of 6.337/19.009 m at a 26 m/s start, with both
-exiting around 26 m/s through the same 120-degree trajectory. At 60 m/s the radii
-are 13.910/39.114 m, with exit speeds of 54.203/47.149 m/s. Ten complete
-perfect-entry cycles increase flight apices at each of three initial launch speeds.
-Tests also cover exact crossings, entry bands, skip thresholds, control lockout,
-terminal velocity, 30/60/120 Hz equivalence, immutable snapshots, and browser/Node
-state equality. The 600-step water golden includes a breach and perfect entry.
+## Build Sequence
 
-### Flow Steering (Current)
+The user approved moving beyond water after supplying the movement profile.
+The next human gate is the flight contrast: play several cycles, move around
+inside the arena, and describe how it differs from underwater movement.
+Enemies are Phase 3, combat Phase 4, rewards Phase 5, depth Phase 6, and final
+visuals/audio Phase 7. Advance one phase per session.
 
-The user explicitly approved replacing mandatory hard-turn braking with fluid
-momentum. The previous model let the nose spin independently while velocity lagged
-far behind, then applied large speed losses to the correction. The first retune
-sped up the nose without fixing that relationship.
-
-Underwater steering now commands a bounded 0.45 rad lead from the current flow;
-the body approaches it at up to 4.8 rad/s. Velocity curves toward the nose with a
-12/s response. Releasing input aligns the nose with velocity instead of carrying
-on rotating toward an independently aimed heading. Below 1 m/s the dolphin can
-orient to start moving. This does not affect air rotation or ballistic flight.
-
-Turn resistance is 0.01/rad rather than 0.35/rad, and quadratic water drag is
-0.003/m rather than 0.012/m. Thrust is not reduced for steering. The stronger entry
-rewards from Retune 1 remain, and ten complete perfect-entry cycles still compound.
-
-| Unpowered quarter turn | Retune 1 | Flow steering |
-| --- | --- | --- |
-| Exit speed from 26 m/s | 11.657 m/s | 24.528 m/s |
-| Exit speed from 60 m/s | 22.404 m/s | 54.757 m/s |
-| Turn time from 26 m/s | 0.858 s | 0.408 s |
-| Maximum body/flow separation from 26 m/s | 144.93 degrees | 20.57 degrees |
-
-The same powered dive recovery now bottoms out at 8.086 m and breaches in 0.833 s.
-These measurements are regression evidence, not a substitute for the human gate.
-The original hard-turn speed comparison was replaced by same-angle curvature and
-momentum assertions with explicit user approval. New tests require over 90% speed
-retention in both unpowered quarter turns, bounded nose/flow separation, no reversal
-during sustained turns, and stable coasting after release. No other test contracts,
-numerical tolerances, or harness limits were relaxed.
-
-The existing 600-step input trace was kept byte-identical. Its reviewed CSV now
-breaches at step 87, enters perfectly at step 422, and reaches 17.542 m. The prior
-CSV is retained in git history and `artifacts/water-before-flow-v3/`. Both original
-empty-world fixtures are unchanged.
-
-### Responsiveness Retune 1 (Historical)
-
-User feedback: sluggish movement, slow turning, too much sinking, and good entries
-should build speed a little faster. Changes from the first published water build:
-
-| Setting | Before | Now |
-| --- | --- | --- |
-| Body turn rate | 2.8 rad/s | 4.8 rad/s |
-| Velocity redirect rate | 0.55/s | 1.25/s |
-| Thrust | 22 m/s2 | 32 m/s2 |
-| Water gravity | -3.5 m/s2 | -1.2 m/s2 |
-| Starting depth / vertical speed | -8 m / -6 m/s | -4 m / -2 m/s |
-| Perfect bonus / streak increment / cap | 1.5 / 0.25 / 4 m/s | 2.25 / 0.4 / 5.5 m/s |
-| Clean entry bonus after retention | 0 | 1 m/s |
-
-Measured with identical recovery input: a 24 m/s downward dive now reaches only
-13.601 m depth instead of 24.150 m and breaches in 1.500 s instead of 2.767 s.
-From rest, 0.75 s of thrust reaches 22.350 m/s instead of 15.778 m/s. Three perfect
-entry rewards add 7.95 m/s instead of 5.25 m/s, before intervening water losses.
-Six regression tests were added before tuning; the original mechanical checks,
-entry thresholds, retention values, and test tolerances remain unchanged.
-
-Added thrust remains limited by headroom below 26 m/s; velocity itself is never
-clamped. Drag, turn cost, air gravity, and skip settings are unchanged. Skipping
-requires 8 m/s total speed and settles below 0.25 m/s vertical speed to avoid endless
-tiny bounces. Only perfect entries build a streak; a clean entry still resets it.
-These values await a human verdict, not a declaration of final balance.
-
-Runtime-specific native trigonometry caused browser/Node drift around 1e-13.
-Simulation math now uses fixed, range-reduced series and scaled vector magnitude;
-accuracy is independently tested to 14 decimal places. The first uncommitted water
-CSV was deliberately regenerated after this correction and the thrust-headroom
-fix: the largest numeric change was 0.162216, with no categorical changes. Its
-input trace was unchanged at that stage. Both original empty goldens remain
-unchanged throughout.
-
-For Retune 1 the water trace and CSV were deliberately re-recorded and reviewed:
-faster turning requires shorter holds. The trace still has 600 steps, one breach,
-an airborne frame 300, and one perfect entry; none of its behavioral assertions
-were removed. The breach now occurs at step 113 instead of 178, entry at 392
-instead of 448, and best height is 12.113 m instead of 11.334 m. Prior fixtures
-remain in git history and were also archived locally under
-`artifacts/water-before-feel-v2/`. Future golden changes must likewise be deliberate
-and reviewed.
-
-Stop here for a human to dive and breach for five minutes. Do not start Phase 2
-until they want to keep going; retune the water first if they do not.
-
-## Publish
-
-The repository is `carbslad1/ICARUS`. GitHub Pages must use **GitHub Actions** as its
-source. Pushing to `main` runs verification and publishes the exact tested `dist/`
-artifact only after all checks pass. Pull requests verify without deploying.
-
-Read `ICARUS_DESIGN.md` for the full design and `AGENTS.md` for the current phase,
-working commands, and binding update order. Advance one phase per session.
+GitHub Actions verifies every main-branch build before deploying the exact tested
+artifact to Pages. Read `ICARUS_DESIGN.md` for the full design and `AGENTS.md`
+for operational rules and the current gate.

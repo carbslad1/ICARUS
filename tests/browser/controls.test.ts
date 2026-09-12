@@ -1,7 +1,8 @@
 import { expect, test } from 'vitest';
 import { createControls } from '../../src/input/controls';
 import { createBrowserDriver } from '../../src/harness/browser';
-import { createWaterWorld } from '../../src/sim/world';
+import { createFlightWorld, createWaterWorld } from '../../src/sim/world';
+import { seconds, velocity, worldPos } from '../../src/sim/units';
 import { idleIntent } from '../../src/sim/intent';
 
 test('keyboard input supports simultaneous thrust and steering, releases, and opposing keys', () => {
@@ -51,4 +52,14 @@ test('editing a slider or number field does not steer or thrust, and keyup still
     input.dispatchEvent(new KeyboardEvent('keydown', { code: 'ArrowUp', bubbles: true }));
     expect(controls.sample()).toEqual(idleIntent());
   } finally { input.remove(); controls.destroy(); }
+});
+
+test('input keeps sampling each display frame while breach dilation slows the simulation', () => {
+  let samples = 0;
+  const driver = createBrowserDriver(() => {},
+    (seed) => createFlightWorld(seed, { position: worldPos(0, -2), velocity: velocity(0, 30) }),
+    () => { samples += 1; return idleIntent(); });
+  for (let i = 0; i < 60; i += 1) driver.advance(seconds(1 / 60));
+  expect(samples).toBe(60);
+  expect(driver.hook.snapshot().stepIndex).toBeLessThan(20);
 });

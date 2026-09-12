@@ -16,7 +16,7 @@ interface TraceData {
 }
 
 export type InputTrace = (TraceData & { readonly version: 1 }) |
-  (TraceData & { readonly version: 2; readonly scenario: 'water'; readonly tuning?: MovementTuning });
+  (TraceData & { readonly version: 2; readonly scenario: 'water' | 'flight'; readonly tuning?: MovementTuning });
 
 function record(value: unknown): Record<string, unknown> {
   if (typeof value !== 'object' || value === null || Array.isArray(value)) {
@@ -49,7 +49,7 @@ function intentFromJson(value: unknown): PlayerIntent {
 
 export function parseTrace(value: unknown): InputTrace {
   const input = record(value);
-  if (input.version !== 1 && !(input.version === 2 && input.scenario === 'water')) throw new RangeError('Unsupported trace version or scenario.');
+  if (input.version !== 1 && !(input.version === 2 && (input.scenario === 'water' || input.scenario === 'flight'))) throw new RangeError('Unsupported trace version or scenario.');
   if (input.version === 1 && input.tuning !== undefined) throw new RangeError('Empty traces cannot tune movement.');
   const seed = number(input.seed);
   createRng(seed);
@@ -71,7 +71,7 @@ export function parseTrace(value: unknown): InputTrace {
   });
   return input.version === 1
     ? Object.freeze({ version: 1, seed, steps, entries: Object.freeze(entries) })
-    : Object.freeze({ version: 2, scenario: 'water', seed, steps, entries: Object.freeze(entries),
+    : Object.freeze({ version: 2, scenario: input.scenario === 'flight' ? 'flight' : 'water', seed, steps, entries: Object.freeze(entries),
       ...(input.tuning === undefined ? {} : { tuning: parseMovementTuning(input.tuning) }),
     });
 }
