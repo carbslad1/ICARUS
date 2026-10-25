@@ -1,0 +1,533 @@
+{
+  "suite": "shop-runtime",
+  "builtFile": "/home/user/icarus/ICARUS-demo.html",
+  "sha256": "4758476fad7b967313d8dea9163488cc101e7f745f5cf255f7e4d8cb1efa32ff",
+  "passed": 19,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "Seeded shops: shelf of three, Routine row of two, at most six offers; run rules are rare shelf offers",
+      "passed": true,
+      "detail": {
+        "shops": 500,
+        "ruleOffersPerShop": 0.104
+      }
+    },
+    {
+      "name": "Locked prices and offers survive shop changes without exceeding six",
+      "passed": true,
+      "detail": {
+        "shops": 3
+      }
+    },
+    {
+      "name": "Six locked offers all return at their original prices; nothing is displaced",
+      "passed": true,
+      "detail": {
+        "held": 6
+      }
+    },
+    {
+      "name": "Six weapon slots reject purchases without charging; combining preserves total paid cost",
+      "passed": true
+    },
+    {
+      "name": "Pack opening charges once; a pick never charges again",
+      "passed": true
+    },
+    {
+      "name": "Single Routine offers apply exactly once and charge once; capped upgrades refuse without charging",
+      "passed": true
+    },
+    {
+      "name": "Bought draws raise the next wave’s hand size; Loaded reels adds one more, up to seven",
+      "passed": true
+    },
+    {
+      "name": "Gear purchases sell one copy and reverse their exact stat contributions",
+      "passed": true
+    },
+    {
+      "name": "No XP or level-ups: stats come only from Gear",
+      "passed": true
+    },
+    {
+      "name": "Charm slot cap rejects shelf additions without payment and permits selling/replacing",
+      "passed": true
+    },
+    {
+      "name": "Charm loop run rule adds a slot; the extra shelf is capped at one",
+      "passed": true
+    },
+    {
+      "name": "Full charm inventory cannot pay for a charm pack with no immediately selectable option",
+      "passed": true
+    },
+    {
+      "name": "Mega charm pack assigns its single price across picks before 50% resale",
+      "passed": true,
+      "detail": {
+        "spent": 20,
+        "refund": 10
+      }
+    },
+    {
+      "name": "Odd-price Mega pack allocation preserves its exact purchase cost across both charm picks",
+      "passed": true
+    },
+    {
+      "name": "Mega charm pack keeps its second pick as an explained Routine fallback after the last charm slot fills",
+      "passed": true
+    },
+    {
+      "name": "Full charm inventories never generate Charm packs",
+      "passed": true,
+      "detail": {
+        "packs": 99
+      }
+    },
+    {
+      "name": "Techniques start at wave four; Echo is offered",
+      "passed": true,
+      "detail": {
+        "packs": 1000,
+        "echo": 67
+      }
+    },
+    {
+      "name": "Mega pack retains enough legal choices after the first pick in capped-build fixtures",
+      "passed": true,
+      "detail": {
+        "packs": 1200
+      }
+    },
+    {
+      "name": "Seeded affordability, charm eligibility and rarity frequency across five progression points",
+      "passed": true,
+      "detail": [
+        {
+          "wave": 1,
+          "affordableShelf": 2.96,
+          "affordableRoutine": 2,
+          "rareCharmFraction": 0.04,
+          "rareShareOfPool": 0.16216216216216217
+        },
+        {
+          "wave": 5,
+          "affordableShelf": 2.7666666666666666,
+          "affordableRoutine": 2,
+          "rareCharmFraction": 0.05054151624548736,
+          "rareShareOfPool": 0.16216216216216217
+        },
+        {
+          "wave": 10,
+          "affordableShelf": 2.61,
+          "affordableRoutine": 2,
+          "rareCharmFraction": 0.06859205776173286,
+          "rareShareOfPool": 0.16216216216216217
+        },
+        {
+          "wave": 15,
+          "affordableShelf": 2.58,
+          "affordableRoutine": 2,
+          "rareCharmFraction": 0.06498194945848375,
+          "rareShareOfPool": 0.16216216216216217
+        },
+        {
+          "wave": 19,
+          "affordableShelf": 2.5566666666666666,
+          "affordableRoutine": 2,
+          "rareCharmFraction": 0.07581227436823104,
+          "rareShareOfPool": 0.16216216216216217
+        }
+      ]
+    }
+  ],
+  "observations": {
+    "exampleOffers": [
+      {
+        "wave": 1,
+        "offers": [
+          {
+            "row": "weapon",
+            "id": "harpoon",
+            "price": 14
+          },
+          {
+            "row": "stat",
+            "id": 5,
+            "price": 12
+          },
+          {
+            "row": "charm",
+            "id": "N07",
+            "price": 20
+          },
+          {
+            "row": "routine",
+            "id": "polish",
+            "price": 7
+          },
+          {
+            "row": "pack",
+            "id": "charm",
+            "price": 8
+          }
+        ]
+      },
+      {
+        "wave": 5,
+        "offers": [
+          {
+            "row": "weapon",
+            "id": "harpoon",
+            "price": 23
+          },
+          {
+            "row": "item",
+            "id": "I08",
+            "price": 20
+          },
+          {
+            "row": "voucher",
+            "id": "charm",
+            "price": 57
+          },
+          {
+            "row": "routine",
+            "id": "draw",
+            "price": 38
+          },
+          {
+            "row": "pack",
+            "id": "charm",
+            "price": 15
+          }
+        ]
+      },
+      {
+        "wave": 10,
+        "offers": [
+          {
+            "row": "weapon",
+            "id": "harpoon",
+            "price": 34
+          },
+          {
+            "row": "item",
+            "id": "I08",
+            "price": 30
+          },
+          {
+            "row": "voucher",
+            "id": "charm",
+            "price": 80
+          },
+          {
+            "row": "routine",
+            "id": "draw",
+            "price": 54
+          },
+          {
+            "row": "pack",
+            "id": "routine",
+            "price": 34
+          }
+        ]
+      },
+      {
+        "wave": 15,
+        "offers": [
+          {
+            "row": "weapon",
+            "id": "harpoon",
+            "price": 45
+          },
+          {
+            "row": "item",
+            "id": "I08",
+            "price": 40
+          },
+          {
+            "row": "voucher",
+            "id": "charm",
+            "price": 102
+          },
+          {
+            "row": "routine",
+            "id": "draw",
+            "price": 70
+          },
+          {
+            "row": "pack",
+            "id": "routine",
+            "price": 45
+          }
+        ]
+      },
+      {
+        "wave": 19,
+        "offers": [
+          {
+            "row": "weapon",
+            "id": "harpoon",
+            "price": 53
+          },
+          {
+            "row": "item",
+            "id": "I08",
+            "price": 48
+          },
+          {
+            "row": "voucher",
+            "id": "charm",
+            "price": 120
+          },
+          {
+            "row": "routine",
+            "id": "draw",
+            "price": 82
+          },
+          {
+            "row": "pack",
+            "id": "routine",
+            "price": 53
+          }
+        ]
+      }
+    ],
+    "ruleOffersPerShop": 0.104,
+    "progression": [
+      {
+        "wave": 1,
+        "shops": 300,
+        "clearIncome": 28,
+        "affordableShelf": 888,
+        "affordableRoutine": 600,
+        "charmOffers": 300,
+        "rareCharms": 12,
+        "unaffordableShops": 0,
+        "counts": {
+          "N07": 6,
+          "N20": 8,
+          "N05": 14,
+          "N01": 10,
+          "N15": 7,
+          "S16": 14,
+          "S02": 11,
+          "S11": 13,
+          "N13": 11,
+          "S17": 9,
+          "S03": 11,
+          "S07": 13,
+          "S06": 12,
+          "S12": 13,
+          "N03": 11,
+          "N11": 6,
+          "N08": 8,
+          "N17": 13,
+          "N18": 7,
+          "S15": 12,
+          "S01": 7,
+          "N06": 12,
+          "S04": 8,
+          "N12": 7,
+          "N02": 13,
+          "N19": 11,
+          "S09": 6,
+          "S14": 9,
+          "S08": 6,
+          "N10": 2,
+          "S10": 3,
+          "N09": 3,
+          "N16": 2,
+          "N14": 2
+        }
+      },
+      {
+        "wave": 5,
+        "shops": 300,
+        "clearIncome": 44,
+        "affordableShelf": 830,
+        "affordableRoutine": 600,
+        "charmOffers": 277,
+        "rareCharms": 14,
+        "unaffordableShops": 0,
+        "counts": {
+          "N09": 3,
+          "N08": 7,
+          "S07": 9,
+          "S08": 8,
+          "S15": 11,
+          "N15": 6,
+          "N16": 4,
+          "N20": 8,
+          "N05": 12,
+          "S12": 9,
+          "S01": 6,
+          "S17": 6,
+          "N01": 14,
+          "S04": 5,
+          "S03": 11,
+          "N02": 14,
+          "N19": 14,
+          "N18": 3,
+          "N17": 16,
+          "S06": 13,
+          "N06": 10,
+          "S16": 12,
+          "S09": 6,
+          "N12": 5,
+          "N03": 11,
+          "S02": 14,
+          "N10": 2,
+          "N13": 6,
+          "S11": 9,
+          "S10": 2,
+          "N11": 5,
+          "N07": 7,
+          "S14": 6,
+          "N14": 3
+        }
+      },
+      {
+        "wave": 10,
+        "shops": 300,
+        "clearIncome": 64,
+        "affordableShelf": 783,
+        "affordableRoutine": 600,
+        "charmOffers": 277,
+        "rareCharms": 19,
+        "unaffordableShops": 0,
+        "counts": {
+          "N10": 5,
+          "N09": 4,
+          "S07": 10,
+          "S08": 8,
+          "S15": 10,
+          "N15": 7,
+          "N16": 4,
+          "N20": 9,
+          "N05": 11,
+          "S12": 9,
+          "S01": 6,
+          "N01": 14,
+          "S04": 8,
+          "N02": 15,
+          "N03": 9,
+          "N18": 3,
+          "N17": 17,
+          "S06": 10,
+          "N06": 13,
+          "S17": 5,
+          "S16": 13,
+          "S10": 3,
+          "N13": 6,
+          "N12": 5,
+          "S03": 8,
+          "N19": 12,
+          "S02": 14,
+          "S11": 10,
+          "N07": 6,
+          "N11": 4,
+          "N08": 5,
+          "S09": 6,
+          "N14": 3,
+          "S14": 5
+        }
+      },
+      {
+        "wave": 15,
+        "shops": 300,
+        "clearIncome": 84,
+        "affordableShelf": 774,
+        "affordableRoutine": 600,
+        "charmOffers": 277,
+        "rareCharms": 18,
+        "unaffordableShops": 0,
+        "counts": {
+          "N10": 4,
+          "N09": 4,
+          "S07": 10,
+          "S08": 7,
+          "S15": 10,
+          "N15": 8,
+          "N16": 4,
+          "N20": 9,
+          "N06": 12,
+          "N05": 9,
+          "S12": 8,
+          "S01": 6,
+          "N01": 14,
+          "S04": 8,
+          "N02": 13,
+          "N03": 10,
+          "N18": 3,
+          "N17": 17,
+          "S06": 9,
+          "S17": 7,
+          "S10": 3,
+          "N13": 6,
+          "N12": 5,
+          "S03": 8,
+          "N19": 12,
+          "N07": 6,
+          "S02": 14,
+          "S16": 10,
+          "N11": 5,
+          "S11": 8,
+          "S14": 8,
+          "N08": 9,
+          "N14": 3,
+          "S09": 8
+        }
+      },
+      {
+        "wave": 19,
+        "shops": 300,
+        "clearIncome": 100,
+        "affordableShelf": 767,
+        "affordableRoutine": 600,
+        "charmOffers": 277,
+        "rareCharms": 21,
+        "unaffordableShops": 0,
+        "counts": {
+          "N10": 6,
+          "S07": 11,
+          "S08": 7,
+          "S15": 10,
+          "N15": 8,
+          "N16": 4,
+          "N20": 9,
+          "N06": 11,
+          "N05": 8,
+          "S12": 9,
+          "S01": 6,
+          "N01": 15,
+          "S04": 8,
+          "N03": 12,
+          "N02": 12,
+          "N18": 3,
+          "N17": 17,
+          "S06": 8,
+          "N07": 7,
+          "S17": 6,
+          "S10": 3,
+          "N13": 5,
+          "N12": 5,
+          "S03": 9,
+          "N19": 12,
+          "S02": 13,
+          "S16": 10,
+          "N11": 6,
+          "S11": 7,
+          "N08": 7,
+          "S14": 7,
+          "N14": 4,
+          "N09": 4,
+          "S09": 8
+        }
+      }
+    ]
+  }
+}

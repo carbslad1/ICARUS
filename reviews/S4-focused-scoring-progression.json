@@ -1,0 +1,6945 @@
+{
+  "round": "S4-focused",
+  "scope": "Real simulation with automated launch/position/shopping policies; no grants; six runs, not population win rates",
+  "results": [
+    {
+      "flow": "live-overtime-until-water-entry",
+      "purchasePolicy": "type-focused weapons with real replacements, defence gear and route score purchases",
+      "stats": {
+        "Close": 0,
+        "Shot": 0,
+        "Blast": 0,
+        "Damage %": 0,
+        "Attack speed": 0,
+        "Crit": 0,
+        "Reach": 0,
+        "Area": 0,
+        "Max HP": 0,
+        "Armour": 3,
+        "Regen": 0,
+        "Lift": 0,
+        "Hang": 0,
+        "Drive": 0,
+        "Air steering": 0,
+        "Luck": 0
+      },
+      "diagnosis": {
+        "wave": 11,
+        "reason": "quota",
+        "score": 1575,
+        "quota": 5692,
+        "quotaRatio": 0.2767041461700632,
+        "quotaMet": false,
+        "hp": 50,
+        "maxHp": 100,
+        "armour": 11,
+        "regen": 0,
+        "activeAir": 64.72196075135179,
+        "airRemaining": 0,
+        "overtime": true,
+        "overtimeAir": 4.721960751351501,
+        "damageTaken": 1466.1057692307695,
+        "acceptedHits": 25,
+        "primaryApplied": 45870.42566666671,
+        "secondaryApplied": 197.76666666666662,
+        "chips": 217,
+        "bankedFlights": 20,
+        "busts": 18,
+        "bails": 23,
+        "unbankedChips": 0,
+        "unbankedBaseEstimate": 0,
+        "slots": [
+          {
+            "id": "fin",
+            "tier": 2
+          },
+          {
+            "id": "sonic",
+            "tier": 4
+          },
+          {
+            "id": "sonic",
+            "tier": 3
+          },
+          {
+            "id": "arc",
+            "tier": 2
+          }
+        ],
+        "lastHits": [
+          {
+            "air": 47.9677592422826,
+            "value": 40.38461538461538,
+            "hp": 9.61538461538462,
+            "phase": "ascent",
+            "enemies": 46
+          },
+          {
+            "air": 48.367759242282574,
+            "value": 40.38461538461538,
+            "hp": 0,
+            "phase": "ascent",
+            "enemies": 41
+          },
+          {
+            "air": 49.749303213227115,
+            "value": 75,
+            "hp": 0,
+            "phase": "ascent",
+            "enemies": 42
+          },
+          {
+            "air": 53.200737997380806,
+            "value": 54.8076923076923,
+            "hp": 0,
+            "phase": "apex",
+            "enemies": 29
+          },
+          {
+            "air": 54.93640434897846,
+            "value": 40.38461538461538,
+            "hp": 9.61538461538462,
+            "phase": "ascent",
+            "enemies": 32
+          },
+          {
+            "air": 58.19473768231161,
+            "value": 30.288461538461533,
+            "hp": 0,
+            "phase": "descent",
+            "enemies": 29
+          }
+        ],
+        "bossSpawned": false,
+        "bossDefeated": false,
+        "bossRecoveries": 0
+      },
+      "damageByWave": {
+        "1": 35.294117647058826,
+        "2": 155.29411764705887,
+        "3": 208.421052631579,
+        "4": 287.36842105263156,
+        "5": 242.8571428571428,
+        "6": 496.02272727272725,
+        "7": 688.75,
+        "8": 590.625,
+        "9": 1102.5,
+        "10": 809.1346153846151,
+        "11": 1466.1057692307695
+      },
+      "hitsByWave": {
+        "1": 4,
+        "2": 11,
+        "3": 12,
+        "4": 13,
+        "5": 10,
+        "6": 16,
+        "7": 22,
+        "8": 15,
+        "9": 28,
+        "10": 28,
+        "11": 25
+      },
+      "lastIncoming": [
+        {
+          "wave": 9,
+          "air": 5.662777804608007,
+          "value": 36.25,
+          "hp": 27.5,
+          "phase": "descent",
+          "enemies": 12,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 7.860225113307701,
+          "value": 36.25,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 10,
+          "pursuers": 2
+        },
+        {
+          "wave": 9,
+          "air": 11.131186765569574,
+          "value": 36.25,
+          "hp": 13.75,
+          "phase": "apex",
+          "enemies": 17,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 13.66805545662515,
+          "value": 36.25,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 25,
+          "pursuers": 1
+        },
+        {
+          "wave": 9,
+          "air": 15.644450210962395,
+          "value": 36.25,
+          "hp": 13.75,
+          "phase": "ascent",
+          "enemies": 19,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 16.919450210962324,
+          "value": 36.25,
+          "hp": 0,
+          "phase": "apex",
+          "enemies": 17,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 23.806198424262096,
+          "value": 36.25,
+          "hp": 13.75,
+          "phase": "ascent",
+          "enemies": 31,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 25.314531757595343,
+          "value": 36.25,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 26,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 27.149046661412985,
+          "value": 36.25,
+          "hp": 13.75,
+          "phase": "ascent",
+          "enemies": 39,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 29.8157133280795,
+          "value": 36.25,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 35,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 31.994968603267015,
+          "value": 55,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 44,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 33.968992698631226,
+          "value": 48.75,
+          "hp": 1.25,
+          "phase": "ascent",
+          "enemies": 41,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 34.83565936529784,
+          "value": 36.25,
+          "hp": 0,
+          "phase": "apex",
+          "enemies": 35,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 36.50673808660983,
+          "value": 48.75,
+          "hp": 1.25,
+          "phase": "ascent",
+          "enemies": 48,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 37.73173808660976,
+          "value": 36.25,
+          "hp": 0,
+          "phase": "apex",
+          "enemies": 48,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 39.04675787989539,
+          "value": 36.25,
+          "hp": 13.75,
+          "phase": "ascent",
+          "enemies": 56,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 39.51342454656203,
+          "value": 36.25,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 56,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 40.4821638362047,
+          "value": 36.25,
+          "hp": 13.75,
+          "phase": "ascent",
+          "enemies": 57,
+          "pursuers": 1
+        },
+        {
+          "wave": 9,
+          "air": 42.423830502871255,
+          "value": 55,
+          "hp": 0,
+          "phase": "apex",
+          "enemies": 48,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 46.18475887080946,
+          "value": 48.75,
+          "hp": 1.25,
+          "phase": "apex",
+          "enemies": 37,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 47.05975887080941,
+          "value": 36.25,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 31,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 49.166484701284254,
+          "value": 48.75,
+          "hp": 1.25,
+          "phase": "ascent",
+          "enemies": 39,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 51.9414847012841,
+          "value": 36.25,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 48,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 52.92482648286362,
+          "value": 36.25,
+          "hp": 13.75,
+          "phase": "ascent",
+          "enemies": 53,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 54.29149314953021,
+          "value": 36.25,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 42,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 58.329193981085155,
+          "value": 36.25,
+          "hp": 13.75,
+          "phase": "descent",
+          "enemies": 36,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 59.529193981085086,
+          "value": 36.25,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 34,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 6.711769463303572,
+          "value": 36.92307692307691,
+          "hp": 63.07692307692309,
+          "phase": "apex",
+          "enemies": 15,
+          "pursuers": 1
+        },
+        {
+          "wave": 10,
+          "air": 8.52010279663694,
+          "value": 36.92307692307691,
+          "hp": 26.153846153846175,
+          "phase": "descent",
+          "enemies": 17,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 10.557649607041974,
+          "value": 36.92307692307691,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 18,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 14.710301346047181,
+          "value": 36.92307692307691,
+          "hp": 13.076923076923087,
+          "phase": "apex",
+          "enemies": 16,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 20.77385810321471,
+          "value": 36.92307692307691,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 14,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 22.472891612057637,
+          "value": 36.92307692307691,
+          "hp": 13.076923076923087,
+          "phase": "ascent",
+          "enemies": 26,
+          "pursuers": 1
+        },
+        {
+          "wave": 10,
+          "air": 24.539558278724186,
+          "value": 6.346153846153846,
+          "hp": 6.7307692307692415,
+          "phase": "apex",
+          "enemies": 21,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 25.939558278724107,
+          "value": 6.346153846153846,
+          "hp": 0.3846153846153957,
+          "phase": "descent",
+          "enemies": 13,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 27.68878248646233,
+          "value": 36.92307692307691,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 17,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 30.625856557218977,
+          "value": 6.346153846153846,
+          "hp": 43.65384615384615,
+          "phase": "apex",
+          "enemies": 21,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 30.8341898905523,
+          "value": 6.346153846153846,
+          "hp": 37.30769230769231,
+          "phase": "apex",
+          "enemies": 20,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 31.225856557218943,
+          "value": 36.92307692307691,
+          "hp": 0.3846153846153939,
+          "phase": "descent",
+          "enemies": 24,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 31.62585655721892,
+          "value": 36.92307692307691,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 22,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 33.71117460888399,
+          "value": 6.346153846153846,
+          "hp": 43.65384615384615,
+          "phase": "ascent",
+          "enemies": 26,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 34.027841275550635,
+          "value": 6.346153846153846,
+          "hp": 37.30769230769231,
+          "phase": "ascent",
+          "enemies": 27,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 38.44430665954856,
+          "value": 36.92307692307691,
+          "hp": 0.3846153846153939,
+          "phase": "ascent",
+          "enemies": 30,
+          "pursuers": 1
+        },
+        {
+          "wave": 10,
+          "air": 39.08597332621519,
+          "value": 36.92307692307691,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 31,
+          "pursuers": 1
+        },
+        {
+          "wave": 10,
+          "air": 41.60455036948418,
+          "value": 36.92307692307691,
+          "hp": 13.076923076923087,
+          "phase": "ascent",
+          "enemies": 21,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 44.02121703615071,
+          "value": 55.67307692307691,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 19,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 45.84005085482262,
+          "value": 55.67307692307691,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 34,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 48.12056808300993,
+          "value": 49.90384615384614,
+          "hp": 0.09615384615386091,
+          "phase": "ascent",
+          "enemies": 27,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 48.67890141634323,
+          "value": 36.92307692307691,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 28,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 51.403401116136685,
+          "value": 36.92307692307691,
+          "hp": 13.076923076923087,
+          "phase": "ascent",
+          "enemies": 30,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 53.795067782803216,
+          "value": 6.346153846153846,
+          "hp": 6.7307692307692415,
+          "phase": "descent",
+          "enemies": 26,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 54.89506778280315,
+          "value": 36.92307692307691,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 32,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 56.10691968340354,
+          "value": 6.346153846153846,
+          "hp": 43.65384615384615,
+          "phase": "ascent",
+          "enemies": 16,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 59.01525301673671,
+          "value": 36.92307692307691,
+          "hp": 6.730769230769241,
+          "phase": "descent",
+          "enemies": 31,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 59.86525301673666,
+          "value": 6.346153846153846,
+          "hp": 0.3846153846153948,
+          "phase": "descent",
+          "enemies": 28,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 3.6373083563868414,
+          "value": 56.25,
+          "hp": 43.75,
+          "phase": "descent",
+          "enemies": 2,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 6.731976846506748,
+          "value": 75,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 8,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 12.252566455314158,
+          "value": 75,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 14,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 14.000748142602042,
+          "value": 41.105769230769226,
+          "hp": 8.894230769230774,
+          "phase": "ascent",
+          "enemies": 14,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 15.109081475935312,
+          "value": 75,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 9,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 18.345057640688168,
+          "value": 54.8076923076923,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 15,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 21.3327269241948,
+          "value": 75,
+          "hp": 0,
+          "phase": "apex",
+          "enemies": 14,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 23.655424623732333,
+          "value": 75,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 15,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 26.628789804245823,
+          "value": 75,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 20,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 28.58512706274581,
+          "value": 40.38461538461538,
+          "hp": 9.61538461538462,
+          "phase": "ascent",
+          "enemies": 30,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 29.69346039607908,
+          "value": 30.288461538461533,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 30,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 35.554524039131195,
+          "value": 75,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 35,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 37.03176308271732,
+          "value": 75,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 41,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 38.119421584437845,
+          "value": 40.38461538461538,
+          "hp": 9.61538461538462,
+          "phase": "ascent",
+          "enemies": 36,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 39.56942158443776,
+          "value": 75,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 23,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 41.428964584147586,
+          "value": 75,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 32,
+          "pursuers": 1
+        },
+        {
+          "wave": 11,
+          "air": 42.575526136445916,
+          "value": 56.25,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 39,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 45.006346634405105,
+          "value": 40.38461538461538,
+          "hp": 9.61538461538462,
+          "phase": "ascent",
+          "enemies": 33,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 46.03134663440505,
+          "value": 75,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 39,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 47.9677592422826,
+          "value": 40.38461538461538,
+          "hp": 9.61538461538462,
+          "phase": "ascent",
+          "enemies": 46,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 48.367759242282574,
+          "value": 40.38461538461538,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 41,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 49.749303213227115,
+          "value": 75,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 42,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 53.200737997380806,
+          "value": 54.8076923076923,
+          "hp": 0,
+          "phase": "apex",
+          "enemies": 29,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 54.93640434897846,
+          "value": 40.38461538461538,
+          "hp": 9.61538461538462,
+          "phase": "ascent",
+          "enemies": 32,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 58.19473768231161,
+          "value": 30.288461538461533,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 29,
+          "pursuers": 0
+        }
+      ],
+      "buildSha256": "4758476fad7b967313d8dea9163488cc101e7f745f5cf255f7e4d8cb1efa32ff",
+      "route": "low-close",
+      "seed": 11,
+      "cash": 9,
+      "outcome": "dead",
+      "reason": "quota",
+      "wave": 11,
+      "score": 1575,
+      "quota": 5692,
+      "hp": 50,
+      "kills": 1549,
+      "spent": 831,
+      "weapons": [
+        "fin:2",
+        "sonic:4",
+        "sonic:3",
+        "arc:2"
+      ],
+      "charms": [
+        "S16",
+        "N04",
+        "S07",
+        "S12",
+        "S04"
+      ],
+      "items": {
+        "I04": 1,
+        "I08": 1
+      },
+      "routines": {
+        "Repeat": 0,
+        "Formation": 1,
+        "Variety": 2
+      },
+      "weights": {
+        "spout": 0.6,
+        "front": 0.1,
+        "back": 0.1,
+        "cork": 0.2,
+        "star": 0
+      },
+      "draws": 5,
+      "waves": [
+        {
+          "wave": 1,
+          "score": 177,
+          "quota": 70,
+          "hands": 10,
+          "busts": 0,
+          "bails": 4,
+          "meanMult": 4.111111111111112,
+          "draws": 3,
+          "hp": 100,
+          "pearls": 49,
+          "phaseChips": {
+            "ascent": 18,
+            "apex": 22,
+            "descent": 6
+          },
+          "avgAir": 2.0685071811515963
+        },
+        {
+          "wave": 2,
+          "score": 466,
+          "quota": 113,
+          "hands": 10,
+          "busts": 1,
+          "bails": 9,
+          "meanMult": 7.111111111111111,
+          "draws": 4,
+          "hp": 100,
+          "pearls": 66,
+          "phaseChips": {
+            "ascent": 19,
+            "apex": 29,
+            "descent": 16
+          },
+          "avgAir": 2.5605114209646045
+        },
+        {
+          "wave": 3,
+          "score": 474,
+          "quota": 233,
+          "hands": 12,
+          "busts": 3,
+          "bails": 12,
+          "meanMult": 8.666666666666668,
+          "draws": 4,
+          "hp": 100,
+          "pearls": 62,
+          "phaseChips": {
+            "ascent": 32,
+            "apex": 27,
+            "descent": 20
+          },
+          "avgAir": 2.5805659905204963
+        },
+        {
+          "wave": 4,
+          "score": 3455,
+          "quota": 370,
+          "hands": 14,
+          "busts": 3,
+          "bails": 13,
+          "meanMult": 10.571428571428571,
+          "draws": 4,
+          "hp": 100,
+          "pearls": 82,
+          "phaseChips": {
+            "ascent": 57,
+            "apex": 68,
+            "descent": 41
+          },
+          "avgAir": 2.528031641756724
+        },
+        {
+          "wave": 5,
+          "score": 6414,
+          "quota": 712,
+          "hands": 12,
+          "busts": 2,
+          "bails": 10,
+          "meanMult": 10.583333333333334,
+          "draws": 4,
+          "hp": 100,
+          "pearls": 90,
+          "phaseChips": {
+            "ascent": 66,
+            "apex": 78,
+            "descent": 64
+          },
+          "avgAir": 3.3730177784377715
+        },
+        {
+          "wave": 6,
+          "score": 2778,
+          "quota": 1094,
+          "hands": 14,
+          "busts": 7,
+          "bails": 14,
+          "meanMult": 10.285714285714286,
+          "draws": 4,
+          "hp": 100,
+          "pearls": 84,
+          "phaseChips": {
+            "ascent": 129,
+            "apex": 74,
+            "descent": 29
+          },
+          "avgAir": 3.2190180675683995
+        },
+        {
+          "wave": 7,
+          "score": 4841,
+          "quota": 1693,
+          "hands": 16,
+          "busts": 10,
+          "bails": 20,
+          "meanMult": 7.866666666666666,
+          "draws": 4,
+          "hp": 100,
+          "pearls": 113,
+          "phaseChips": {
+            "ascent": 153,
+            "apex": 92,
+            "descent": 43
+          },
+          "avgAir": 3.1363630594896894
+        },
+        {
+          "wave": 8,
+          "score": 8558,
+          "quota": 2124,
+          "hands": 16,
+          "busts": 7,
+          "bails": 13,
+          "meanMult": 15.178571428571425,
+          "draws": 4,
+          "hp": 100,
+          "pearls": 125,
+          "phaseChips": {
+            "ascent": 89,
+            "apex": 111,
+            "descent": 44
+          },
+          "avgAir": 3.619650749010923
+        },
+        {
+          "wave": 9,
+          "score": 18955,
+          "quota": 5295,
+          "hands": 19,
+          "busts": 14,
+          "bails": 28,
+          "meanMult": 15.666666666666666,
+          "draws": 5,
+          "hp": 100,
+          "pearls": 135,
+          "phaseChips": {
+            "ascent": 384,
+            "apex": 245,
+            "descent": 120
+          },
+          "avgAir": 3.393576454723019
+        },
+        {
+          "wave": 10,
+          "score": 15311,
+          "quota": 6506,
+          "hands": 15,
+          "busts": 9,
+          "bails": 24,
+          "meanMult": 18.300000000000004,
+          "draws": 5,
+          "hp": 100,
+          "pearls": 115,
+          "phaseChips": {
+            "ascent": 189,
+            "apex": 155,
+            "descent": 157
+          },
+          "avgAir": 4.013330086554374
+        }
+      ],
+      "purchases": [
+        {
+          "wave": 1,
+          "row": "weapon",
+          "id": "sonic",
+          "price": 14
+        },
+        {
+          "wave": 1,
+          "row": "routine",
+          "id": "draw",
+          "price": 25
+        },
+        {
+          "wave": 1,
+          "row": "pack",
+          "id": "charm",
+          "price": 8
+        },
+        {
+          "wave": 2,
+          "row": "item",
+          "id": "I04",
+          "price": 23
+        },
+        {
+          "wave": 2,
+          "row": "weapon",
+          "id": "sonic",
+          "price": 16
+        },
+        {
+          "wave": 2,
+          "row": "routine",
+          "id": "transfer",
+          "price": 8
+        },
+        {
+          "wave": 2,
+          "row": "routine",
+          "id": "routine",
+          "price": 11
+        },
+        {
+          "wave": 3,
+          "row": "weapon",
+          "id": "fin",
+          "price": 18
+        },
+        {
+          "wave": 3,
+          "row": "routine",
+          "id": "polish",
+          "price": 10
+        },
+        {
+          "wave": 3,
+          "row": "pack",
+          "id": "charm",
+          "price": 12
+        },
+        {
+          "wave": 3,
+          "row": "weapon",
+          "id": "sonic",
+          "price": 18
+        },
+        {
+          "wave": 4,
+          "row": "weapon",
+          "id": "sonic",
+          "price": 37
+        },
+        {
+          "wave": 4,
+          "row": "routine",
+          "id": "polish",
+          "price": 12
+        },
+        {
+          "wave": 4,
+          "row": "routine",
+          "id": "transfer",
+          "price": 11
+        },
+        {
+          "wave": 4,
+          "row": "charm",
+          "id": "S07",
+          "price": 20
+        },
+        {
+          "wave": 5,
+          "row": "weapon",
+          "id": "sonic",
+          "price": 41
+        },
+        {
+          "wave": 5,
+          "row": "routine",
+          "id": "polish",
+          "price": 14
+        },
+        {
+          "wave": 5,
+          "row": "pack",
+          "id": "charm",
+          "price": 15
+        },
+        {
+          "wave": 5,
+          "row": "stat",
+          "id": 9,
+          "price": 20
+        },
+        {
+          "wave": 6,
+          "row": "weapon",
+          "id": "sonic",
+          "price": 25
+        },
+        {
+          "wave": 6,
+          "row": "routine",
+          "id": "polish",
+          "price": 15
+        },
+        {
+          "wave": 6,
+          "row": "routine",
+          "id": "technique",
+          "price": 28
+        },
+        {
+          "wave": 7,
+          "row": "weapon",
+          "id": "sonic",
+          "price": 27
+        },
+        {
+          "wave": 7,
+          "row": "routine",
+          "id": "polish",
+          "price": 17
+        },
+        {
+          "wave": 7,
+          "row": "pack",
+          "id": "routine",
+          "price": 18
+        },
+        {
+          "wave": 7,
+          "row": "charm",
+          "id": "S04",
+          "price": 37
+        },
+        {
+          "wave": 8,
+          "row": "weapon",
+          "id": "sonic",
+          "price": 51
+        },
+        {
+          "wave": 8,
+          "row": "routine",
+          "id": "technique",
+          "price": 33
+        },
+        {
+          "wave": 8,
+          "row": "pack",
+          "id": "routine",
+          "price": 20
+        },
+        {
+          "wave": 9,
+          "row": "weapon",
+          "id": "arc",
+          "price": 54
+        },
+        {
+          "wave": 9,
+          "row": "routine",
+          "id": "transfer",
+          "price": 18
+        },
+        {
+          "wave": 9,
+          "row": "pack",
+          "id": "routine",
+          "price": 22
+        },
+        {
+          "wave": 9,
+          "row": "weapon",
+          "id": "fin",
+          "price": 31
+        },
+        {
+          "wave": 10,
+          "row": "item",
+          "id": "I08",
+          "price": 30
+        },
+        {
+          "wave": 10,
+          "row": "routine",
+          "id": "routine",
+          "price": 26
+        },
+        {
+          "wave": 10,
+          "row": "routine",
+          "id": "routine",
+          "price": 26
+        },
+        {
+          "wave": 10,
+          "row": "routine",
+          "id": "transfer",
+          "price": 20
+        }
+      ],
+      "ticks": 84546
+    },
+    {
+      "flow": "live-overtime-until-water-entry",
+      "purchasePolicy": "type-focused weapons with real replacements, defence gear and route score purchases",
+      "stats": {
+        "Close": 0,
+        "Shot": 0,
+        "Blast": 0,
+        "Damage %": 0,
+        "Attack speed": 0,
+        "Crit": 0,
+        "Reach": 0,
+        "Area": 0,
+        "Max HP": 0,
+        "Armour": 0,
+        "Regen": 0,
+        "Lift": 0,
+        "Hang": 0,
+        "Drive": 0,
+        "Air steering": 0,
+        "Luck": 0
+      },
+      "diagnosis": {
+        "wave": 3,
+        "reason": "quota",
+        "score": 187,
+        "quota": 233,
+        "quotaRatio": 0.8025751072961373,
+        "quotaMet": false,
+        "hp": 11.176470588235297,
+        "maxHp": 100,
+        "armour": 2,
+        "regen": 0,
+        "activeAir": 30.4508754989614,
+        "airRemaining": 0,
+        "overtime": true,
+        "overtimeAir": 0.4508754989614233,
+        "damageTaken": 257.20588235294116,
+        "acceptedHits": 14,
+        "primaryApplied": 1617.4999999999998,
+        "secondaryApplied": 101.5,
+        "chips": 59,
+        "bankedFlights": 13,
+        "busts": 3,
+        "bails": 13,
+        "unbankedChips": 0,
+        "unbankedBaseEstimate": 0,
+        "slots": [
+          {
+            "id": "sonic",
+            "tier": 2
+          }
+        ],
+        "lastHits": [
+          {
+            "air": 18.356624004331483,
+            "value": 19.41176470588235,
+            "hp": 0,
+            "phase": "ascent",
+            "enemies": 8
+          },
+          {
+            "air": 20.47032792157294,
+            "value": 19.41176470588235,
+            "hp": 30.58823529411765,
+            "phase": "apex",
+            "enemies": 11
+          },
+          {
+            "air": 21.303661254906228,
+            "value": 14.558823529411764,
+            "hp": 16.029411764705884,
+            "phase": "descent",
+            "enemies": 9
+          },
+          {
+            "air": 23.01918794526055,
+            "value": 19.41176470588235,
+            "hp": 0,
+            "phase": "ascent",
+            "enemies": 6
+          },
+          {
+            "air": 25.552843267212456,
+            "value": 19.41176470588235,
+            "hp": 30.58823529411765,
+            "phase": "descent",
+            "enemies": 7
+          },
+          {
+            "air": 28.52507018561542,
+            "value": 19.41176470588235,
+            "hp": 11.176470588235297,
+            "phase": "apex",
+            "enemies": 5
+          }
+        ],
+        "bossSpawned": false,
+        "bossDefeated": false,
+        "bossRecoveries": 0
+      },
+      "damageByWave": {
+        "1": 61.764705882352956,
+        "2": 98.82352941176472,
+        "3": 257.20588235294116
+      },
+      "hitsByWave": {
+        "1": 7,
+        "2": 7,
+        "3": 14
+      },
+      "lastIncoming": [
+        {
+          "wave": 1,
+          "air": 5.305606784159056,
+          "value": 8.823529411764707,
+          "hp": 91.17647058823529,
+          "phase": "descent",
+          "enemies": 6,
+          "pursuers": 0
+        },
+        {
+          "wave": 1,
+          "air": 6.318225181900111,
+          "value": 8.823529411764707,
+          "hp": 82.35294117647058,
+          "phase": "ascent",
+          "enemies": 5,
+          "pursuers": 0
+        },
+        {
+          "wave": 1,
+          "air": 6.55989184856679,
+          "value": 8.823529411764707,
+          "hp": 73.52941176470587,
+          "phase": "apex",
+          "enemies": 5,
+          "pursuers": 0
+        },
+        {
+          "wave": 1,
+          "air": 12.103343335124325,
+          "value": 8.823529411764707,
+          "hp": 64.70588235294116,
+          "phase": "descent",
+          "enemies": 4,
+          "pursuers": 0
+        },
+        {
+          "wave": 1,
+          "air": 13.562612661235868,
+          "value": 8.823529411764707,
+          "hp": 55.88235294117645,
+          "phase": "apex",
+          "enemies": 1,
+          "pursuers": 0
+        },
+        {
+          "wave": 1,
+          "air": 14.287612661235826,
+          "value": 8.823529411764707,
+          "hp": 47.05882352941174,
+          "phase": "descent",
+          "enemies": 4,
+          "pursuers": 0
+        },
+        {
+          "wave": 1,
+          "air": 15.519476372534482,
+          "value": 8.823529411764707,
+          "hp": 38.23529411764703,
+          "phase": "ascent",
+          "enemies": 2,
+          "pursuers": 0
+        },
+        {
+          "wave": 2,
+          "air": 9.230960510695857,
+          "value": 14.117647058823529,
+          "hp": 85.88235294117646,
+          "phase": "descent",
+          "enemies": 2,
+          "pursuers": 0
+        },
+        {
+          "wave": 2,
+          "air": 12.897900495602212,
+          "value": 14.117647058823529,
+          "hp": 71.76470588235293,
+          "phase": "ascent",
+          "enemies": 6,
+          "pursuers": 0
+        },
+        {
+          "wave": 2,
+          "air": 13.631174268011794,
+          "value": 14.117647058823529,
+          "hp": 57.6470588235294,
+          "phase": "descent",
+          "enemies": 2,
+          "pursuers": 0
+        },
+        {
+          "wave": 2,
+          "air": 15.20815150861937,
+          "value": 14.117647058823529,
+          "hp": 43.52941176470587,
+          "phase": "apex",
+          "enemies": 3,
+          "pursuers": 0
+        },
+        {
+          "wave": 2,
+          "air": 16.97292850011788,
+          "value": 14.117647058823529,
+          "hp": 29.41176470588234,
+          "phase": "apex",
+          "enemies": 5,
+          "pursuers": 0
+        },
+        {
+          "wave": 2,
+          "air": 19.294812424627086,
+          "value": 14.117647058823529,
+          "hp": 15.294117647058812,
+          "phase": "ascent",
+          "enemies": 3,
+          "pursuers": 0
+        },
+        {
+          "wave": 2,
+          "air": 21.18647909129365,
+          "value": 14.117647058823529,
+          "hp": 1.1764705882352828,
+          "phase": "descent",
+          "enemies": 6,
+          "pursuers": 0
+        },
+        {
+          "wave": 3,
+          "air": 2.8925443980877845,
+          "value": 14.558823529411764,
+          "hp": 85.44117647058823,
+          "phase": "apex",
+          "enemies": 5,
+          "pursuers": 0
+        },
+        {
+          "wave": 3,
+          "air": 6.667046322102037,
+          "value": 19.41176470588235,
+          "hp": 66.02941176470588,
+          "phase": "descent",
+          "enemies": 3,
+          "pursuers": 0
+        },
+        {
+          "wave": 3,
+          "air": 10.441805532248951,
+          "value": 19.41176470588235,
+          "hp": 46.617647058823536,
+          "phase": "descent",
+          "enemies": 3,
+          "pursuers": 0
+        },
+        {
+          "wave": 3,
+          "air": 10.974183853905515,
+          "value": 14.558823529411764,
+          "hp": 32.05882352941177,
+          "phase": "ascent",
+          "enemies": 2,
+          "pursuers": 0
+        },
+        {
+          "wave": 3,
+          "air": 12.349183853905437,
+          "value": 19.41176470588235,
+          "hp": 12.647058823529417,
+          "phase": "descent",
+          "enemies": 10,
+          "pursuers": 0
+        },
+        {
+          "wave": 3,
+          "air": 13.11443180955262,
+          "value": 19.41176470588235,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 9,
+          "pursuers": 0
+        },
+        {
+          "wave": 3,
+          "air": 15.398546675317554,
+          "value": 19.41176470588235,
+          "hp": 30.58823529411765,
+          "phase": "apex",
+          "enemies": 8,
+          "pursuers": 0
+        },
+        {
+          "wave": 3,
+          "air": 16.165213341984177,
+          "value": 19.41176470588235,
+          "hp": 11.176470588235297,
+          "phase": "descent",
+          "enemies": 6,
+          "pursuers": 0
+        },
+        {
+          "wave": 3,
+          "air": 18.356624004331483,
+          "value": 19.41176470588235,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 8,
+          "pursuers": 0
+        },
+        {
+          "wave": 3,
+          "air": 20.47032792157294,
+          "value": 19.41176470588235,
+          "hp": 30.58823529411765,
+          "phase": "apex",
+          "enemies": 11,
+          "pursuers": 0
+        },
+        {
+          "wave": 3,
+          "air": 21.303661254906228,
+          "value": 14.558823529411764,
+          "hp": 16.029411764705884,
+          "phase": "descent",
+          "enemies": 9,
+          "pursuers": 0
+        },
+        {
+          "wave": 3,
+          "air": 23.01918794526055,
+          "value": 19.41176470588235,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 6,
+          "pursuers": 0
+        },
+        {
+          "wave": 3,
+          "air": 25.552843267212456,
+          "value": 19.41176470588235,
+          "hp": 30.58823529411765,
+          "phase": "descent",
+          "enemies": 7,
+          "pursuers": 0
+        },
+        {
+          "wave": 3,
+          "air": 28.52507018561542,
+          "value": 19.41176470588235,
+          "hp": 11.176470588235297,
+          "phase": "apex",
+          "enemies": 5,
+          "pursuers": 0
+        }
+      ],
+      "buildSha256": "4758476fad7b967313d8dea9163488cc101e7f745f5cf255f7e4d8cb1efa32ff",
+      "route": "low-close",
+      "seed": 23,
+      "cash": 7,
+      "outcome": "dead",
+      "reason": "quota",
+      "wave": 3,
+      "score": 187,
+      "quota": 233,
+      "hp": 11.176470588235297,
+      "kills": 120,
+      "spent": 69,
+      "weapons": [
+        "sonic:2"
+      ],
+      "charms": [],
+      "items": {
+        "I04": 1,
+        "I08": 1
+      },
+      "routines": {
+        "Repeat": 1,
+        "Formation": 1,
+        "Variety": 0
+      },
+      "weights": {
+        "spout": 0.2,
+        "front": 0.2,
+        "back": 0.2,
+        "cork": 0.2,
+        "star": 0.2
+      },
+      "draws": 3,
+      "waves": [
+        {
+          "wave": 1,
+          "score": 134,
+          "quota": 70,
+          "hands": 10,
+          "busts": 0,
+          "bails": 6,
+          "meanMult": 2.5,
+          "draws": 3,
+          "hp": 100,
+          "pearls": 40,
+          "phaseChips": {
+            "ascent": 8,
+            "apex": 37,
+            "descent": 10
+          },
+          "avgAir": 2.0164539744510597
+        },
+        {
+          "wave": 2,
+          "score": 148,
+          "quota": 113,
+          "hands": 11,
+          "busts": 0,
+          "bails": 6,
+          "meanMult": 3,
+          "draws": 3,
+          "hp": 100,
+          "pearls": 42,
+          "phaseChips": {
+            "ascent": 11,
+            "apex": 25,
+            "descent": 18
+          },
+          "avgAir": 2.2904347341445885
+        }
+      ],
+      "purchases": [
+        {
+          "wave": 1,
+          "row": "item",
+          "id": "I04",
+          "price": 20
+        },
+        {
+          "wave": 1,
+          "row": "weapon",
+          "id": "sonic",
+          "price": 14
+        },
+        {
+          "wave": 2,
+          "row": "item",
+          "id": "I08",
+          "price": 14
+        },
+        {
+          "wave": 2,
+          "row": "routine",
+          "id": "routine",
+          "price": 11
+        },
+        {
+          "wave": 2,
+          "row": "pack",
+          "id": "routine",
+          "price": 10
+        }
+      ],
+      "ticks": 14665
+    },
+    {
+      "flow": "live-overtime-until-water-entry",
+      "purchasePolicy": "type-focused weapons with real replacements, defence gear and route score purchases",
+      "stats": {
+        "Close": 0,
+        "Shot": 6,
+        "Blast": 0,
+        "Damage %": 0,
+        "Attack speed": 0,
+        "Crit": 0,
+        "Reach": 0,
+        "Area": 0,
+        "Max HP": 0,
+        "Armour": 1,
+        "Regen": 0,
+        "Lift": 0,
+        "Hang": 0,
+        "Drive": 0,
+        "Air steering": 0,
+        "Luck": 0
+      },
+      "diagnosis": {
+        "wave": 17,
+        "reason": "quota",
+        "score": 6440,
+        "quota": 25657,
+        "quotaRatio": 0.2510036247417859,
+        "quotaMet": false,
+        "hp": 50,
+        "maxHp": 100,
+        "armour": 1,
+        "regen": 0,
+        "activeAir": 61.9785877027073,
+        "airRemaining": 0,
+        "overtime": true,
+        "overtimeAir": 1.9785877027074195,
+        "damageTaken": 1733.75,
+        "acceptedHits": 10,
+        "primaryApplied": 87163.78620117775,
+        "secondaryApplied": 927.7282275553952,
+        "chips": 159,
+        "bankedFlights": 11,
+        "busts": 10,
+        "bails": 10,
+        "unbankedChips": 0,
+        "unbankedBaseEstimate": 0,
+        "slots": [
+          {
+            "id": "harpoon",
+            "tier": 4
+          },
+          {
+            "id": "harpoon",
+            "tier": 3
+          },
+          {
+            "id": "minigun",
+            "tier": 3
+          },
+          {
+            "id": "laser",
+            "tier": 2
+          },
+          {
+            "id": "minigun",
+            "tier": 2
+          }
+        ],
+        "lastHits": [
+          {
+            "air": 32.22663582659053,
+            "value": 189.375,
+            "hp": 0,
+            "phase": "ascent",
+            "enemies": 33
+          },
+          {
+            "air": 40.01309581435966,
+            "value": 189.375,
+            "hp": 0,
+            "phase": "ascent",
+            "enemies": 40
+          },
+          {
+            "air": 44.68779047800103,
+            "value": 99.375,
+            "hp": 0,
+            "phase": "ascent",
+            "enemies": 70
+          },
+          {
+            "air": 50.01328422437818,
+            "value": 159.375,
+            "hp": 0,
+            "phase": "ascent",
+            "enemies": 77
+          },
+          {
+            "air": 54.73591703405728,
+            "value": 189.375,
+            "hp": 0,
+            "phase": "ascent",
+            "enemies": 83
+          },
+          {
+            "air": 58.44993132670464,
+            "value": 189.375,
+            "hp": 0,
+            "phase": "ascent",
+            "enemies": 100
+          }
+        ],
+        "bossSpawned": false,
+        "bossDefeated": false,
+        "bossRecoveries": 0
+      },
+      "damageByWave": {
+        "2": 48,
+        "3": 23.466666666666665,
+        "4": 49.733333333333334,
+        "5": 150,
+        "6": 143.23529411764707,
+        "7": 192.94117647058823,
+        "8": 289.55882352941177,
+        "9": 307.6470588235294,
+        "10": 394.8529411764705,
+        "11": 707.9411764705883,
+        "12": 808.9705882352939,
+        "13": 1087.6470588235295,
+        "14": 1027.5,
+        "15": 924.1176470588234,
+        "16": 784.1176470588236,
+        "17": 1733.75
+      },
+      "hitsByWave": {
+        "2": 3,
+        "3": 1,
+        "4": 2,
+        "5": 6,
+        "6": 4,
+        "7": 5,
+        "8": 6,
+        "9": 5,
+        "10": 8,
+        "11": 8,
+        "12": 11,
+        "13": 10,
+        "14": 9,
+        "15": 9,
+        "16": 6,
+        "17": 10
+      },
+      "lastIncoming": [
+        {
+          "wave": 8,
+          "air": 39.14351318116422,
+          "value": 45.88235294117647,
+          "hp": 4.117647058823529,
+          "phase": "ascent",
+          "enemies": 12,
+          "pursuers": 0
+        },
+        {
+          "wave": 8,
+          "air": 47.0092411225713,
+          "value": 35.88235294117647,
+          "hp": 0,
+          "phase": "apex",
+          "enemies": 8,
+          "pursuers": 0
+        },
+        {
+          "wave": 8,
+          "air": 49.94048943306731,
+          "value": 45.88235294117647,
+          "hp": 4.117647058823529,
+          "phase": "ascent",
+          "enemies": 15,
+          "pursuers": 0
+        },
+        {
+          "wave": 8,
+          "air": 52.06548943306719,
+          "value": 45.88235294117647,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 14,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 30.426714107071135,
+          "value": 51.17647058823529,
+          "hp": 48.82352941176471,
+          "phase": "descent",
+          "enemies": 37,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 33.3850474404043,
+          "value": 77.6470588235294,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 41,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 38.70668035115437,
+          "value": 51.17647058823529,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 43,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 47.54713294752592,
+          "value": 68.82352941176471,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 68,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 58.94979630406044,
+          "value": 58.82352941176471,
+          "hp": 0,
+          "phase": "apex",
+          "enemies": 51,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 14.447130882314314,
+          "value": 46.47058823529411,
+          "hp": 53.52941176470589,
+          "phase": "descent",
+          "enemies": 13,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 20.640099519911654,
+          "value": 46.47058823529411,
+          "hp": 7.058823529411782,
+          "phase": "apex",
+          "enemies": 15,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 23.59843285324482,
+          "value": 9.705882352941176,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 15,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 39.27027740809295,
+          "value": 46.47058823529411,
+          "hp": 3.529411764705891,
+          "phase": "descent",
+          "enemies": 26,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 45.433596446444014,
+          "value": 76.3235294117647,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 38,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 53.07999575180512,
+          "value": 56.47058823529411,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 64,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 56.40927681949008,
+          "value": 56.47058823529411,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 74,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 59.567318316611434,
+          "value": 56.47058823529411,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 81,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 8.215667982918559,
+          "value": 114.70588235294117,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 2,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 14.094137660823803,
+          "value": 114.70588235294117,
+          "hp": 0,
+          "phase": "apex",
+          "enemies": 3,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 27.370657000145943,
+          "value": 51.76470588235294,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 11,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 29.795987472825708,
+          "value": 61.76470588235294,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 20,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 32.46263199087331,
+          "value": 114.70588235294117,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 38,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 42.7148569826921,
+          "value": 73.82352941176471,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 22,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 50.223345108526544,
+          "value": 114.70588235294117,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 25,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 60.63371451268116,
+          "value": 61.76470588235294,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 18,
+          "pursuers": 0
+        },
+        {
+          "wave": 12,
+          "air": 25.234886616706813,
+          "value": 90.1470588235294,
+          "hp": 9.852941176470594,
+          "phase": "apex",
+          "enemies": 7,
+          "pursuers": 0
+        },
+        {
+          "wave": 12,
+          "air": 37.42608512909913,
+          "value": 57.05882352941177,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 31,
+          "pursuers": 0
+        },
+        {
+          "wave": 12,
+          "air": 42.09911990942667,
+          "value": 67.05882352941177,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 33,
+          "pursuers": 0
+        },
+        {
+          "wave": 12,
+          "air": 45.38845199281516,
+          "value": 67.05882352941177,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 49,
+          "pursuers": 1
+        },
+        {
+          "wave": 12,
+          "air": 46.465292108257344,
+          "value": 67.05882352941177,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 52,
+          "pursuers": 2
+        },
+        {
+          "wave": 12,
+          "air": 47.5400060380321,
+          "value": 125.29411764705883,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 47,
+          "pursuers": 0
+        },
+        {
+          "wave": 12,
+          "air": 48.46674709902897,
+          "value": 67.05882352941177,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 49,
+          "pursuers": 0
+        },
+        {
+          "wave": 12,
+          "air": 52.498016618265225,
+          "value": 67.05882352941177,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 52,
+          "pursuers": 0
+        },
+        {
+          "wave": 12,
+          "air": 56.25639332997404,
+          "value": 67.05882352941177,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 61,
+          "pursuers": 0
+        },
+        {
+          "wave": 12,
+          "air": 57.2727336594934,
+          "value": 67.05882352941177,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 64,
+          "pursuers": 0
+        },
+        {
+          "wave": 12,
+          "air": 60.47785872668141,
+          "value": 67.05882352941177,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 68,
+          "pursuers": 0
+        },
+        {
+          "wave": 13,
+          "air": 20.281957435208998,
+          "value": 104.70588235294117,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 23,
+          "pursuers": 0
+        },
+        {
+          "wave": 13,
+          "air": 23.69815446500921,
+          "value": 114.70588235294117,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 34,
+          "pursuers": 0
+        },
+        {
+          "wave": 13,
+          "air": 26.846134620119283,
+          "value": 114.70588235294117,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 28,
+          "pursuers": 0
+        },
+        {
+          "wave": 13,
+          "air": 30.333670642809714,
+          "value": 114.70588235294117,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 44,
+          "pursuers": 0
+        },
+        {
+          "wave": 13,
+          "air": 33.91195266362492,
+          "value": 114.70588235294117,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 49,
+          "pursuers": 0
+        },
+        {
+          "wave": 13,
+          "air": 37.297806414560284,
+          "value": 72.35294117647058,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 71,
+          "pursuers": 0
+        },
+        {
+          "wave": 13,
+          "air": 42.62097304723447,
+          "value": 114.70588235294117,
+          "hp": 0,
+          "phase": "apex",
+          "enemies": 72,
+          "pursuers": 0
+        },
+        {
+          "wave": 13,
+          "air": 50.326267726197216,
+          "value": 114.70588235294117,
+          "hp": 0,
+          "phase": "apex",
+          "enemies": 92,
+          "pursuers": 0
+        },
+        {
+          "wave": 13,
+          "air": 56.71234039033967,
+          "value": 107.6470588235294,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 98,
+          "pursuers": 0
+        },
+        {
+          "wave": 13,
+          "air": 60.06008770558249,
+          "value": 114.70588235294117,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 97,
+          "pursuers": 0
+        },
+        {
+          "wave": 14,
+          "air": 10.038328444959024,
+          "value": 113.52941176470588,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 4,
+          "pursuers": 0
+        },
+        {
+          "wave": 14,
+          "air": 21.974662571966462,
+          "value": 67.6470588235294,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 10,
+          "pursuers": 0
+        },
+        {
+          "wave": 14,
+          "air": 33.304891972038064,
+          "value": 113.52941176470588,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 20,
+          "pursuers": 0
+        },
+        {
+          "wave": 14,
+          "air": 34.213049045757195,
+          "value": 123.52941176470588,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 24,
+          "pursuers": 0
+        },
+        {
+          "wave": 14,
+          "air": 35.8137353784314,
+          "value": 115.1470588235294,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 22,
+          "pursuers": 0
+        },
+        {
+          "wave": 14,
+          "air": 41.046511380294845,
+          "value": 123.52941176470588,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 23,
+          "pursuers": 0
+        },
+        {
+          "wave": 14,
+          "air": 49.081335758860746,
+          "value": 123.52941176470588,
+          "hp": 0,
+          "phase": "apex",
+          "enemies": 42,
+          "pursuers": 0
+        },
+        {
+          "wave": 14,
+          "air": 54.091304921877004,
+          "value": 123.52941176470588,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 62,
+          "pursuers": 0
+        },
+        {
+          "wave": 14,
+          "air": 59.94974763128673,
+          "value": 123.52941176470588,
+          "hp": 0,
+          "phase": "apex",
+          "enemies": 67,
+          "pursuers": 0
+        },
+        {
+          "wave": 15,
+          "air": 18.687717185718768,
+          "value": 72.94117647058823,
+          "hp": 27.058823529411768,
+          "phase": "descent",
+          "enemies": 27,
+          "pursuers": 0
+        },
+        {
+          "wave": 15,
+          "air": 23.114263576553178,
+          "value": 72.94117647058823,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 27,
+          "pursuers": 0
+        },
+        {
+          "wave": 15,
+          "air": 29.08636278824264,
+          "value": 132.35294117647058,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 54,
+          "pursuers": 0
+        },
+        {
+          "wave": 15,
+          "air": 33.288969759629836,
+          "value": 82.94117647058823,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 90,
+          "pursuers": 0
+        },
+        {
+          "wave": 15,
+          "air": 43.67276384743085,
+          "value": 132.35294117647058,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 39,
+          "pursuers": 0
+        },
+        {
+          "wave": 15,
+          "air": 48.377372856788845,
+          "value": 132.35294117647058,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 37,
+          "pursuers": 0
+        },
+        {
+          "wave": 15,
+          "air": 51.83559742595939,
+          "value": 82.94117647058823,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 57,
+          "pursuers": 0
+        },
+        {
+          "wave": 15,
+          "air": 52.93639826137245,
+          "value": 132.35294117647058,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 43,
+          "pursuers": 0
+        },
+        {
+          "wave": 15,
+          "air": 58.157062807929215,
+          "value": 82.94117647058823,
+          "hp": 0,
+          "phase": "apex",
+          "enemies": 61,
+          "pursuers": 0
+        },
+        {
+          "wave": 16,
+          "air": 3.2488106575750053,
+          "value": 141.1764705882353,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 10,
+          "pursuers": 0
+        },
+        {
+          "wave": 16,
+          "air": 41.13903942068345,
+          "value": 78.23529411764706,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 30,
+          "pursuers": 0
+        },
+        {
+          "wave": 16,
+          "air": 45.56013826351025,
+          "value": 141.1764705882353,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 58,
+          "pursuers": 0
+        },
+        {
+          "wave": 16,
+          "air": 46.514408671692244,
+          "value": 141.1764705882353,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 63,
+          "pursuers": 0
+        },
+        {
+          "wave": 16,
+          "air": 49.93016203553452,
+          "value": 141.1764705882353,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 59,
+          "pursuers": 0
+        },
+        {
+          "wave": 16,
+          "air": 56.41860145645824,
+          "value": 141.1764705882353,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 90,
+          "pursuers": 0
+        },
+        {
+          "wave": 17,
+          "air": 17.53427547581567,
+          "value": 149.375,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 12,
+          "pursuers": 0
+        },
+        {
+          "wave": 17,
+          "air": 22.088567391591038,
+          "value": 189.375,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 14,
+          "pursuers": 0
+        },
+        {
+          "wave": 17,
+          "air": 24.60620356772918,
+          "value": 189.375,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 18,
+          "pursuers": 0
+        },
+        {
+          "wave": 17,
+          "air": 27.716941257961206,
+          "value": 189.375,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 26,
+          "pursuers": 0
+        },
+        {
+          "wave": 17,
+          "air": 32.22663582659053,
+          "value": 189.375,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 33,
+          "pursuers": 0
+        },
+        {
+          "wave": 17,
+          "air": 40.01309581435966,
+          "value": 189.375,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 40,
+          "pursuers": 0
+        },
+        {
+          "wave": 17,
+          "air": 44.68779047800103,
+          "value": 99.375,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 70,
+          "pursuers": 0
+        },
+        {
+          "wave": 17,
+          "air": 50.01328422437818,
+          "value": 159.375,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 77,
+          "pursuers": 0
+        },
+        {
+          "wave": 17,
+          "air": 54.73591703405728,
+          "value": 189.375,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 83,
+          "pursuers": 0
+        },
+        {
+          "wave": 17,
+          "air": 58.44993132670464,
+          "value": 189.375,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 100,
+          "pursuers": 0
+        }
+      ],
+      "buildSha256": "4758476fad7b967313d8dea9163488cc101e7f745f5cf255f7e4d8cb1efa32ff",
+      "route": "middle-shot",
+      "seed": 11,
+      "cash": 15,
+      "outcome": "dead",
+      "reason": "quota",
+      "wave": 17,
+      "score": 6440,
+      "quota": 25657,
+      "hp": 50,
+      "kills": 2903,
+      "spent": 1469,
+      "weapons": [
+        "harpoon:4",
+        "harpoon:3",
+        "minigun:3",
+        "laser:2",
+        "minigun:2"
+      ],
+      "charms": [
+        "N03",
+        "S06",
+        "N05"
+      ],
+      "items": {
+        "I10": 1,
+        "I02": 1
+      },
+      "routines": {
+        "Repeat": 3,
+        "Formation": 3,
+        "Variety": 2
+      },
+      "weights": {
+        "spout": 0.2,
+        "front": 0.6,
+        "back": 0,
+        "cork": 0.2,
+        "star": 0
+      },
+      "draws": 6,
+      "waves": [
+        {
+          "wave": 1,
+          "score": 207,
+          "quota": 70,
+          "hands": 7,
+          "busts": 0,
+          "bails": 0,
+          "meanMult": 3.8571428571428563,
+          "draws": 3,
+          "hp": 100,
+          "pearls": 55,
+          "phaseChips": {
+            "ascent": 14,
+            "apex": 32,
+            "descent": 14
+          },
+          "avgAir": 2.967325444663143
+        },
+        {
+          "wave": 2,
+          "score": 267,
+          "quota": 113,
+          "hands": 8,
+          "busts": 0,
+          "bails": 1,
+          "meanMult": 4.142857142857142,
+          "draws": 3,
+          "hp": 100,
+          "pearls": 66,
+          "phaseChips": {
+            "ascent": 19,
+            "apex": 26,
+            "descent": 21
+          },
+          "avgAir": 3.4173374879053835
+        },
+        {
+          "wave": 3,
+          "score": 772,
+          "quota": 233,
+          "hands": 8,
+          "busts": 0,
+          "bails": 1,
+          "meanMult": 6.25,
+          "draws": 4,
+          "hp": 100,
+          "pearls": 86,
+          "phaseChips": {
+            "ascent": 38,
+            "apex": 55,
+            "descent": 34
+          },
+          "avgAir": 3.857637227929434
+        },
+        {
+          "wave": 4,
+          "score": 1414,
+          "quota": 370,
+          "hands": 8,
+          "busts": 0,
+          "bails": 2,
+          "meanMult": 9,
+          "draws": 5,
+          "hp": 100,
+          "pearls": 85,
+          "phaseChips": {
+            "ascent": 46,
+            "apex": 61,
+            "descent": 59
+          },
+          "avgAir": 4.412725921725974
+        },
+        {
+          "wave": 5,
+          "score": 2453,
+          "quota": 712,
+          "hands": 9,
+          "busts": 1,
+          "bails": 6,
+          "meanMult": 8.125,
+          "draws": 5,
+          "hp": 100,
+          "pearls": 101,
+          "phaseChips": {
+            "ascent": 63,
+            "apex": 86,
+            "descent": 62
+          },
+          "avgAir": 4.611258571790341
+        },
+        {
+          "wave": 6,
+          "score": 4248,
+          "quota": 1094,
+          "hands": 8,
+          "busts": 1,
+          "bails": 4,
+          "meanMult": 12.375,
+          "draws": 5,
+          "hp": 100,
+          "pearls": 98,
+          "phaseChips": {
+            "ascent": 71,
+            "apex": 110,
+            "descent": 95
+          },
+          "avgAir": 5.922327700015776
+        },
+        {
+          "wave": 7,
+          "score": 9305,
+          "quota": 1693,
+          "hands": 9,
+          "busts": 2,
+          "bails": 3,
+          "meanMult": 17.25,
+          "draws": 5,
+          "hp": 100,
+          "pearls": 105,
+          "phaseChips": {
+            "ascent": 169,
+            "apex": 180,
+            "descent": 83
+          },
+          "avgAir": 5.850905496775708
+        },
+        {
+          "wave": 8,
+          "score": 12571,
+          "quota": 2124,
+          "hands": 10,
+          "busts": 3,
+          "bails": 6,
+          "meanMult": 22,
+          "draws": 5,
+          "hp": 100,
+          "pearls": 127,
+          "phaseChips": {
+            "ascent": 156,
+            "apex": 108,
+            "descent": 113
+          },
+          "avgAir": 6.032646972501913
+        },
+        {
+          "wave": 9,
+          "score": 16778,
+          "quota": 5295,
+          "hands": 9,
+          "busts": 4,
+          "bails": 4,
+          "meanMult": 22.4375,
+          "draws": 5,
+          "hp": 100,
+          "pearls": 135,
+          "phaseChips": {
+            "ascent": 239,
+            "apex": 247,
+            "descent": 213
+          },
+          "avgAir": 6.79644003615414
+        },
+        {
+          "wave": 10,
+          "score": 15507,
+          "quota": 6506,
+          "hands": 9,
+          "busts": 5,
+          "bails": 8,
+          "meanMult": 30.666666666666664,
+          "draws": 6,
+          "hp": 100,
+          "pearls": 116,
+          "phaseChips": {
+            "ascent": 271,
+            "apex": 229,
+            "descent": 143
+          },
+          "avgAir": 6.842140312039195
+        },
+        {
+          "wave": 11,
+          "score": 9410,
+          "quota": 5692,
+          "hands": 11,
+          "busts": 8,
+          "bails": 8,
+          "meanMult": 35.349999999999994,
+          "draws": 6,
+          "hp": 100,
+          "pearls": 101,
+          "phaseChips": {
+            "ascent": 161,
+            "apex": 126,
+            "descent": 88
+          },
+          "avgAir": 5.541328382465488
+        },
+        {
+          "wave": 12,
+          "score": 16821,
+          "quota": 8395,
+          "hands": 14,
+          "busts": 10,
+          "bails": 11,
+          "meanMult": 35.21428571428571,
+          "draws": 6,
+          "hp": 100,
+          "pearls": 128,
+          "phaseChips": {
+            "ascent": 265,
+            "apex": 123,
+            "descent": 108
+          },
+          "avgAir": 4.498874424685371
+        },
+        {
+          "wave": 13,
+          "score": 11514,
+          "quota": 9653,
+          "hands": 12,
+          "busts": 10,
+          "bails": 10,
+          "meanMult": 46.583333333333336,
+          "draws": 6,
+          "hp": 100,
+          "pearls": 98,
+          "phaseChips": {
+            "ascent": 216,
+            "apex": 63,
+            "descent": 40
+          },
+          "avgAir": 5.044834549329178
+        },
+        {
+          "wave": 14,
+          "score": 21072,
+          "quota": 9634,
+          "hands": 12,
+          "busts": 9,
+          "bails": 9,
+          "meanMult": 56.5,
+          "draws": 6,
+          "hp": 100,
+          "pearls": 151,
+          "phaseChips": {
+            "ascent": 300,
+            "apex": 78,
+            "descent": 76
+          },
+          "avgAir": 5.300212644581417
+        },
+        {
+          "wave": 15,
+          "score": 19306,
+          "quota": 17258,
+          "hands": 10,
+          "busts": 8,
+          "bails": 9,
+          "meanMult": 55.45,
+          "draws": 6,
+          "hp": 100,
+          "pearls": 103,
+          "phaseChips": {
+            "ascent": 269,
+            "apex": 116,
+            "descent": 133
+          },
+          "avgAir": 6.195903648399414
+        },
+        {
+          "wave": 16,
+          "score": 53775,
+          "quota": 22258,
+          "hands": 9,
+          "busts": 6,
+          "bails": 6,
+          "meanMult": 75.88888888888889,
+          "draws": 6,
+          "hp": 100,
+          "pearls": 173,
+          "phaseChips": {
+            "ascent": 268,
+            "apex": 143,
+            "descent": 111
+          },
+          "avgAir": 6.728642460245853
+        }
+      ],
+      "purchases": [
+        {
+          "wave": 1,
+          "row": "weapon",
+          "id": "harpoon",
+          "price": 14
+        },
+        {
+          "wave": 1,
+          "row": "routine",
+          "id": "polish",
+          "price": 7
+        },
+        {
+          "wave": 1,
+          "row": "item",
+          "id": "I10",
+          "price": 20
+        },
+        {
+          "wave": 2,
+          "row": "routine",
+          "id": "draw",
+          "price": 28
+        },
+        {
+          "wave": 2,
+          "row": "routine",
+          "id": "polish",
+          "price": 9
+        },
+        {
+          "wave": 2,
+          "row": "stat",
+          "id": 1,
+          "price": 14
+        },
+        {
+          "wave": 3,
+          "row": "item",
+          "id": "I02",
+          "price": 16
+        },
+        {
+          "wave": 3,
+          "row": "weapon",
+          "id": "harpoon",
+          "price": 18
+        },
+        {
+          "wave": 3,
+          "row": "routine",
+          "id": "draw",
+          "price": 47
+        },
+        {
+          "wave": 4,
+          "row": "weapon",
+          "id": "harpoon",
+          "price": 20
+        },
+        {
+          "wave": 4,
+          "row": "pack",
+          "id": "charm",
+          "price": 13
+        },
+        {
+          "wave": 4,
+          "row": "stat",
+          "id": 9,
+          "price": 18
+        },
+        {
+          "wave": 4,
+          "row": "charm",
+          "id": "S06",
+          "price": 20
+        },
+        {
+          "wave": 5,
+          "row": "weapon",
+          "id": "harpoon",
+          "price": 23
+        },
+        {
+          "wave": 5,
+          "row": "routine",
+          "id": "polish",
+          "price": 14
+        },
+        {
+          "wave": 5,
+          "row": "pack",
+          "id": "routine",
+          "price": 15
+        },
+        {
+          "wave": 5,
+          "row": "routine",
+          "id": "routine",
+          "price": 17
+        },
+        {
+          "wave": 5,
+          "row": "routine",
+          "id": "technique",
+          "price": 26
+        },
+        {
+          "wave": 6,
+          "row": "weapon",
+          "id": "harpoon",
+          "price": 25
+        },
+        {
+          "wave": 6,
+          "row": "routine",
+          "id": "transfer",
+          "price": 14
+        },
+        {
+          "wave": 6,
+          "row": "routine",
+          "id": "transfer",
+          "price": 14
+        },
+        {
+          "wave": 6,
+          "row": "weapon",
+          "id": "harpoon",
+          "price": 25
+        },
+        {
+          "wave": 6,
+          "row": "routine",
+          "id": "polish",
+          "price": 15
+        },
+        {
+          "wave": 7,
+          "row": "weapon",
+          "id": "minigun",
+          "price": 47
+        },
+        {
+          "wave": 7,
+          "row": "routine",
+          "id": "polish",
+          "price": 17
+        },
+        {
+          "wave": 7,
+          "row": "routine",
+          "id": "routine",
+          "price": 20
+        },
+        {
+          "wave": 8,
+          "row": "weapon",
+          "id": "harpoon",
+          "price": 51
+        },
+        {
+          "wave": 8,
+          "row": "routine",
+          "id": "routine",
+          "price": 22
+        },
+        {
+          "wave": 8,
+          "row": "routine",
+          "id": "technique",
+          "price": 33
+        },
+        {
+          "wave": 9,
+          "row": "weapon",
+          "id": "laser",
+          "price": 31
+        },
+        {
+          "wave": 9,
+          "row": "routine",
+          "id": "draw",
+          "price": 96
+        },
+        {
+          "wave": 10,
+          "row": "weapon",
+          "id": "laser",
+          "price": 34
+        },
+        {
+          "wave": 10,
+          "row": "routine",
+          "id": "focus",
+          "price": 46
+        },
+        {
+          "wave": 10,
+          "row": "routine",
+          "id": "routine",
+          "price": 26
+        },
+        {
+          "wave": 11,
+          "row": "routine",
+          "id": "routine",
+          "price": 27
+        },
+        {
+          "wave": 11,
+          "row": "pack",
+          "id": "charm",
+          "price": 25
+        },
+        {
+          "wave": 11,
+          "row": "routine",
+          "id": "polish",
+          "price": 23
+        },
+        {
+          "wave": 12,
+          "row": "weapon",
+          "id": "minigun",
+          "price": 64
+        },
+        {
+          "wave": 12,
+          "row": "routine",
+          "id": "transfer",
+          "price": 23
+        },
+        {
+          "wave": 12,
+          "row": "pack",
+          "id": "routine",
+          "price": 27
+        },
+        {
+          "wave": 13,
+          "row": "weapon",
+          "id": "harpoon",
+          "price": 40
+        },
+        {
+          "wave": 13,
+          "row": "pack",
+          "id": "routine",
+          "price": 29
+        },
+        {
+          "wave": 14,
+          "row": "weapon",
+          "id": "minigun",
+          "price": 71
+        },
+        {
+          "wave": 14,
+          "row": "routine",
+          "id": "routine",
+          "price": 33
+        },
+        {
+          "wave": 14,
+          "row": "routine",
+          "id": "transfer",
+          "price": 26
+        },
+        {
+          "wave": 15,
+          "row": "weapon",
+          "id": "harpoon",
+          "price": 45
+        },
+        {
+          "wave": 15,
+          "row": "routine",
+          "id": "polish",
+          "price": 30
+        },
+        {
+          "wave": 16,
+          "row": "weapon",
+          "id": "harpoon",
+          "price": 47
+        },
+        {
+          "wave": 16,
+          "row": "routine",
+          "id": "polish",
+          "price": 31
+        },
+        {
+          "wave": 16,
+          "row": "routine",
+          "id": "polish",
+          "price": 31
+        },
+        {
+          "wave": 16,
+          "row": "stat",
+          "id": 1,
+          "price": 42
+        }
+      ],
+      "ticks": 137067
+    },
+    {
+      "flow": "live-overtime-until-water-entry",
+      "purchasePolicy": "type-focused weapons with real replacements, defence gear and route score purchases",
+      "stats": {
+        "Close": 0,
+        "Shot": 0,
+        "Blast": 0,
+        "Damage %": -0.08,
+        "Attack speed": 0,
+        "Crit": 0,
+        "Reach": 0,
+        "Area": 0,
+        "Max HP": 18,
+        "Armour": 0,
+        "Regen": 3,
+        "Lift": 0,
+        "Hang": 0,
+        "Drive": 0,
+        "Air steering": 0,
+        "Luck": 0
+      },
+      "diagnosis": {
+        "wave": 13,
+        "reason": "quota",
+        "score": 5169,
+        "quota": 9653,
+        "quotaRatio": 0.5354811975551642,
+        "quotaMet": false,
+        "hp": 140,
+        "maxHp": 280,
+        "armour": 0,
+        "regen": 3,
+        "activeAir": 62.9474406047811,
+        "airRemaining": 0,
+        "overtime": true,
+        "overtimeAir": 2.9474406047812556,
+        "damageTaken": 1036.1,
+        "acceptedHits": 11,
+        "primaryApplied": 58506.3921625413,
+        "secondaryApplied": 6568.949262302572,
+        "chips": 265,
+        "bankedFlights": 7,
+        "busts": 4,
+        "bails": 9,
+        "unbankedChips": 0,
+        "unbankedBaseEstimate": 0,
+        "slots": [
+          {
+            "id": "harpoon",
+            "tier": 4
+          },
+          {
+            "id": "harpoon",
+            "tier": 1
+          },
+          {
+            "id": "minigun",
+            "tier": 4
+          },
+          {
+            "id": "laser",
+            "tier": 2
+          }
+        ],
+        "lastHits": [
+          {
+            "air": 45.49467038062349,
+            "value": 84.5,
+            "hp": 85.5,
+            "phase": "descent",
+            "enemies": 28
+          },
+          {
+            "air": 45.9280037139568,
+            "value": 130,
+            "hp": 0,
+            "phase": "descent",
+            "enemies": 25
+          },
+          {
+            "air": 50.43910237877059,
+            "value": 82,
+            "hp": 78,
+            "phase": "apex",
+            "enemies": 20
+          },
+          {
+            "air": 50.86410237877057,
+            "value": 122,
+            "hp": 0,
+            "phase": "apex",
+            "enemies": 20
+          },
+          {
+            "air": 57.992489209282446,
+            "value": 84.5,
+            "hp": 65.5,
+            "phase": "ascent",
+            "enemies": 29
+          },
+          {
+            "air": 59.942489209282336,
+            "value": 82,
+            "hp": 0,
+            "phase": "apex",
+            "enemies": 31
+          }
+        ],
+        "bossSpawned": false,
+        "bossDefeated": false,
+        "bossRecoveries": 0
+      },
+      "damageByWave": {
+        "1": 20,
+        "4": 84,
+        "5": 34,
+        "7": 34.5,
+        "8": 360.125,
+        "9": 311.5,
+        "10": 743,
+        "11": 515.5,
+        "12": 779.675,
+        "13": 1036.1
+      },
+      "hitsByWave": {
+        "1": 2,
+        "4": 3,
+        "5": 1,
+        "7": 1,
+        "8": 7,
+        "9": 5,
+        "10": 14,
+        "11": 7,
+        "12": 9,
+        "13": 11
+      },
+      "lastIncoming": [
+        {
+          "wave": 1,
+          "air": 13.581340413063797,
+          "value": 10,
+          "hp": 90,
+          "phase": "descent",
+          "enemies": 3,
+          "pursuers": 0
+        },
+        {
+          "wave": 1,
+          "air": 16.607368044701833,
+          "value": 10,
+          "hp": 80,
+          "phase": "descent",
+          "enemies": 1,
+          "pursuers": 0
+        },
+        {
+          "wave": 4,
+          "air": 12.20246348434053,
+          "value": 28,
+          "hp": 72,
+          "phase": "apex",
+          "enemies": 6,
+          "pursuers": 0
+        },
+        {
+          "wave": 4,
+          "air": 27.600222310195768,
+          "value": 28,
+          "hp": 44,
+          "phase": "ascent",
+          "enemies": 14,
+          "pursuers": 0
+        },
+        {
+          "wave": 4,
+          "air": 35.676532971436544,
+          "value": 28,
+          "hp": 16,
+          "phase": "descent",
+          "enemies": 19,
+          "pursuers": 0
+        },
+        {
+          "wave": 5,
+          "air": 31.315109680158425,
+          "value": 34,
+          "hp": 156,
+          "phase": "ascent",
+          "enemies": 11,
+          "pursuers": 0
+        },
+        {
+          "wave": 7,
+          "air": 43.2258824814985,
+          "value": 34.5,
+          "hp": 155.5,
+          "phase": "descent",
+          "enemies": 13,
+          "pursuers": 0
+        },
+        {
+          "wave": 8,
+          "air": 3.1372105184762584,
+          "value": 59.625,
+          "hp": 130.375,
+          "phase": "apex",
+          "enemies": 3,
+          "pursuers": 0
+        },
+        {
+          "wave": 8,
+          "air": 7.611756464229713,
+          "value": 52,
+          "hp": 88.375,
+          "phase": "ascent",
+          "enemies": 4,
+          "pursuers": 0
+        },
+        {
+          "wave": 8,
+          "air": 14.032280374177686,
+          "value": 39,
+          "hp": 79.375,
+          "phase": "ascent",
+          "enemies": 4,
+          "pursuers": 0
+        },
+        {
+          "wave": 8,
+          "air": 16.36561370751089,
+          "value": 52,
+          "hp": 37.375,
+          "phase": "ascent",
+          "enemies": 1,
+          "pursuers": 0
+        },
+        {
+          "wave": 8,
+          "air": 32.06291423283389,
+          "value": 39,
+          "hp": 48.375,
+          "phase": "apex",
+          "enemies": 12,
+          "pursuers": 0
+        },
+        {
+          "wave": 8,
+          "air": 33.92124756616712,
+          "value": 79.5,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 10,
+          "pursuers": 0
+        },
+        {
+          "wave": 8,
+          "air": 52.85649346866061,
+          "value": 39,
+          "hp": 126,
+          "phase": "apex",
+          "enemies": 8,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 37.37990611429351,
+          "value": 43.5,
+          "hp": 146.5,
+          "phase": "descent",
+          "enemies": 45,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 41.50161209459196,
+          "value": 88,
+          "hp": 68.5,
+          "phase": "apex",
+          "enemies": 54,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 47.197276030964126,
+          "value": 43.5,
+          "hp": 45,
+          "phase": "ascent",
+          "enemies": 47,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 52.63894269763048,
+          "value": 78,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 58,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 58.59593190652896,
+          "value": 58.5,
+          "hp": 56.5,
+          "phase": "descent",
+          "enemies": 60,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 18.49955012746268,
+          "value": 41.599999999999994,
+          "hp": 148.4,
+          "phase": "descent",
+          "enemies": 14,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 22.549845359567374,
+          "value": 11,
+          "hp": 147.4,
+          "phase": "apex",
+          "enemies": 16,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 25.23317869290056,
+          "value": 11,
+          "hp": 146.4,
+          "phase": "descent",
+          "enemies": 19,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 27.012775827592865,
+          "value": 41.599999999999994,
+          "hp": 114.80000000000001,
+          "phase": "ascent",
+          "enemies": 21,
+          "pursuers": 1
+        },
+        {
+          "wave": 10,
+          "air": 36.18204485228908,
+          "value": 41.599999999999994,
+          "hp": 103.20000000000002,
+          "phase": "ascent",
+          "enemies": 27,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 36.58204485228906,
+          "value": 63.99999999999999,
+          "hp": 39.200000000000024,
+          "phase": "ascent",
+          "enemies": 32,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 39.72371151895555,
+          "value": 96.49999999999999,
+          "hp": 0,
+          "phase": "apex",
+          "enemies": 30,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 46.76917019213794,
+          "value": 41.599999999999994,
+          "hp": 63.400000000000006,
+          "phase": "apex",
+          "enemies": 54,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 48.377503525471184,
+          "value": 96.49999999999999,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 55,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 56.6781192074593,
+          "value": 63.99999999999999,
+          "hp": 51.00000000000001,
+          "phase": "descent",
+          "enemies": 81,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 57.078119207459274,
+          "value": 63.99999999999999,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 78,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 62.4730409376962,
+          "value": 41.599999999999994,
+          "hp": 63.400000000000006,
+          "phase": "ascent",
+          "enemies": 100,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 63.14804093769616,
+          "value": 63.99999999999999,
+          "hp": 9.400000000000013,
+          "phase": "apex",
+          "enemies": 100,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 64.83970760436344,
+          "value": 63.99999999999999,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 98,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 8.50999799937934,
+          "value": 84.5,
+          "hp": 195.5,
+          "phase": "ascent",
+          "enemies": 5,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 33.47589157290354,
+          "value": 45.5,
+          "hp": 234.5,
+          "phase": "descent",
+          "enemies": 27,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 38.20399128826929,
+          "value": 130,
+          "hp": 114.5,
+          "phase": "apex",
+          "enemies": 20,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 38.60399128826927,
+          "value": 70,
+          "hp": 44.5,
+          "phase": "apex",
+          "enemies": 19,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 55.016623662254425,
+          "value": 45.5,
+          "hp": 69,
+          "phase": "ascent",
+          "enemies": 13,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 58.69162366225422,
+          "value": 70,
+          "hp": 9,
+          "phase": "descent",
+          "enemies": 20,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 59.191623662254194,
+          "value": 70,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 23,
+          "pursuers": 0
+        },
+        {
+          "wave": 12,
+          "air": 39.32486035616361,
+          "value": 49.4,
+          "hp": 230.6,
+          "phase": "ascent",
+          "enemies": 23,
+          "pursuers": 0
+        },
+        {
+          "wave": 12,
+          "air": 41.8581936894968,
+          "value": 76,
+          "hp": 154.6,
+          "phase": "descent",
+          "enemies": 28,
+          "pursuers": 0
+        },
+        {
+          "wave": 12,
+          "air": 42.25819368949678,
+          "value": 76,
+          "hp": 88.6,
+          "phase": "descent",
+          "enemies": 30,
+          "pursuers": 0
+        },
+        {
+          "wave": 12,
+          "air": 42.72486035616342,
+          "value": 113.5,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 32,
+          "pursuers": 0
+        },
+        {
+          "wave": 12,
+          "air": 47.5873036287691,
+          "value": 76,
+          "hp": 74,
+          "phase": "ascent",
+          "enemies": 36,
+          "pursuers": 0
+        },
+        {
+          "wave": 12,
+          "air": 51.14563696210223,
+          "value": 67.275,
+          "hp": 16.724999999999994,
+          "phase": "descent",
+          "enemies": 26,
+          "pursuers": 0
+        },
+        {
+          "wave": 12,
+          "air": 51.56230362876887,
+          "value": 103.5,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 28,
+          "pursuers": 0
+        },
+        {
+          "wave": 12,
+          "air": 58.549853525661675,
+          "value": 142,
+          "hp": 18,
+          "phase": "apex",
+          "enemies": 56,
+          "pursuers": 0
+        },
+        {
+          "wave": 12,
+          "air": 58.9494187676953,
+          "value": 76,
+          "hp": 0,
+          "phase": "apex",
+          "enemies": 53,
+          "pursuers": 0
+        },
+        {
+          "wave": 13,
+          "air": 6.8680849254849345,
+          "value": 53.300000000000004,
+          "hp": 226.7,
+          "phase": "descent",
+          "enemies": 6,
+          "pursuers": 0
+        },
+        {
+          "wave": 13,
+          "air": 18.126825595808352,
+          "value": 53.300000000000004,
+          "hp": 213.39999999999998,
+          "phase": "descent",
+          "enemies": 13,
+          "pursuers": 0
+        },
+        {
+          "wave": 13,
+          "air": 25.994478456698378,
+          "value": 130,
+          "hp": 113.39999999999998,
+          "phase": "descent",
+          "enemies": 17,
+          "pursuers": 0
+        },
+        {
+          "wave": 13,
+          "air": 28.4034371958027,
+          "value": 84.5,
+          "hp": 38.89999999999998,
+          "phase": "ascent",
+          "enemies": 11,
+          "pursuers": 0
+        },
+        {
+          "wave": 13,
+          "air": 33.57843719580241,
+          "value": 130,
+          "hp": 0,
+          "phase": "apex",
+          "enemies": 21,
+          "pursuers": 0
+        },
+        {
+          "wave": 13,
+          "air": 45.49467038062349,
+          "value": 84.5,
+          "hp": 85.5,
+          "phase": "descent",
+          "enemies": 28,
+          "pursuers": 0
+        },
+        {
+          "wave": 13,
+          "air": 45.9280037139568,
+          "value": 130,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 25,
+          "pursuers": 0
+        },
+        {
+          "wave": 13,
+          "air": 50.43910237877059,
+          "value": 82,
+          "hp": 78,
+          "phase": "apex",
+          "enemies": 20,
+          "pursuers": 0
+        },
+        {
+          "wave": 13,
+          "air": 50.86410237877057,
+          "value": 122,
+          "hp": 0,
+          "phase": "apex",
+          "enemies": 20,
+          "pursuers": 0
+        },
+        {
+          "wave": 13,
+          "air": 57.992489209282446,
+          "value": 84.5,
+          "hp": 65.5,
+          "phase": "ascent",
+          "enemies": 29,
+          "pursuers": 0
+        },
+        {
+          "wave": 13,
+          "air": 59.942489209282336,
+          "value": 82,
+          "hp": 0,
+          "phase": "apex",
+          "enemies": 31,
+          "pursuers": 0
+        }
+      ],
+      "buildSha256": "4758476fad7b967313d8dea9163488cc101e7f745f5cf255f7e4d8cb1efa32ff",
+      "route": "middle-shot",
+      "seed": 23,
+      "cash": 1,
+      "outcome": "dead",
+      "reason": "quota",
+      "wave": 13,
+      "score": 5169,
+      "quota": 9653,
+      "hp": 140,
+      "kills": 2334,
+      "spent": 1024,
+      "weapons": [
+        "harpoon:4",
+        "harpoon:1",
+        "minigun:4",
+        "laser:2"
+      ],
+      "charms": [
+        "S02",
+        "N01",
+        "S04"
+      ],
+      "items": {
+        "I02": 1,
+        "I08": 2,
+        "I01": 1
+      },
+      "routines": {
+        "Repeat": 1,
+        "Formation": 1,
+        "Variety": 1
+      },
+      "weights": {
+        "spout": 0.1,
+        "front": 0.4,
+        "back": 0.2,
+        "cork": 0.1,
+        "star": 0.2
+      },
+      "draws": 5,
+      "waves": [
+        {
+          "wave": 1,
+          "score": 204,
+          "quota": 70,
+          "hands": 8,
+          "busts": 0,
+          "bails": 2,
+          "meanMult": 3.375,
+          "draws": 3,
+          "hp": 100,
+          "pearls": 54,
+          "phaseChips": {
+            "ascent": 23,
+            "apex": 17,
+            "descent": 23
+          },
+          "avgAir": 2.605852582113191
+        },
+        {
+          "wave": 2,
+          "score": 1072,
+          "quota": 113,
+          "hands": 7,
+          "busts": 0,
+          "bails": 0,
+          "meanMult": 17.571428571428573,
+          "draws": 4,
+          "hp": 100,
+          "pearls": 65,
+          "phaseChips": {
+            "ascent": 22,
+            "apex": 19,
+            "descent": 20
+          },
+          "avgAir": 3.7669727893879963
+        },
+        {
+          "wave": 3,
+          "score": 2091,
+          "quota": 233,
+          "hands": 8,
+          "busts": 0,
+          "bails": 0,
+          "meanMult": 16.92857142857143,
+          "draws": 4,
+          "hp": 100,
+          "pearls": 75,
+          "phaseChips": {
+            "ascent": 24,
+            "apex": 61,
+            "descent": 40
+          },
+          "avgAir": 3.9176033257951337
+        },
+        {
+          "wave": 4,
+          "score": 2865,
+          "quota": 370,
+          "hands": 8,
+          "busts": 0,
+          "bails": 3,
+          "meanMult": 18.8125,
+          "draws": 5,
+          "hp": 100,
+          "pearls": 91,
+          "phaseChips": {
+            "ascent": 48,
+            "apex": 66,
+            "descent": 46
+          },
+          "avgAir": 4.56568218763873
+        },
+        {
+          "wave": 5,
+          "score": 6394,
+          "quota": 712,
+          "hands": 7,
+          "busts": 0,
+          "bails": 1,
+          "meanMult": 26.214285714285715,
+          "draws": 5,
+          "hp": 190,
+          "pearls": 94,
+          "phaseChips": {
+            "ascent": 60,
+            "apex": 49,
+            "descent": 87
+          },
+          "avgAir": 5.802138384370555
+        },
+        {
+          "wave": 6,
+          "score": 20787,
+          "quota": 1094,
+          "hands": 8,
+          "busts": 0,
+          "bails": 0,
+          "meanMult": 36.375,
+          "draws": 5,
+          "hp": 190,
+          "pearls": 100,
+          "phaseChips": {
+            "ascent": 78,
+            "apex": 197,
+            "descent": 92
+          },
+          "avgAir": 5.935082814595448
+        },
+        {
+          "wave": 7,
+          "score": 20830,
+          "quota": 1693,
+          "hands": 8,
+          "busts": 0,
+          "bails": 1,
+          "meanMult": 34.4375,
+          "draws": 5,
+          "hp": 190,
+          "pearls": 118,
+          "phaseChips": {
+            "ascent": 101,
+            "apex": 185,
+            "descent": 126
+          },
+          "avgAir": 6.354177765833604
+        },
+        {
+          "wave": 8,
+          "score": 8200,
+          "quota": 2124,
+          "hands": 8,
+          "busts": 1,
+          "bails": 7,
+          "meanMult": 20.71875,
+          "draws": 5,
+          "hp": 190,
+          "pearls": 127,
+          "phaseChips": {
+            "ascent": 104,
+            "apex": 112,
+            "descent": 107
+          },
+          "avgAir": 7.075715416488548
+        },
+        {
+          "wave": 9,
+          "score": 19954,
+          "quota": 5295,
+          "hands": 8,
+          "busts": 1,
+          "bails": 5,
+          "meanMult": 24.5625,
+          "draws": 5,
+          "hp": 190,
+          "pearls": 134,
+          "phaseChips": {
+            "ascent": 232,
+            "apex": 230,
+            "descent": 251
+          },
+          "avgAir": 7.577080938395795
+        },
+        {
+          "wave": 10,
+          "score": 7284,
+          "quota": 6506,
+          "hands": 9,
+          "busts": 4,
+          "bails": 13,
+          "meanMult": 15.694444444444446,
+          "draws": 5,
+          "hp": 190,
+          "pearls": 73,
+          "phaseChips": {
+            "ascent": 272,
+            "apex": 286,
+            "descent": 172
+          },
+          "avgAir": 7.48042423728482
+        },
+        {
+          "wave": 11,
+          "score": 12039,
+          "quota": 5692,
+          "hands": 7,
+          "busts": 1,
+          "bails": 5,
+          "meanMult": 28.57142857142857,
+          "draws": 5,
+          "hp": 280,
+          "pearls": 114,
+          "phaseChips": {
+            "ascent": 162,
+            "apex": 172,
+            "descent": 162
+          },
+          "avgAir": 8.709949498877231
+        },
+        {
+          "wave": 12,
+          "score": 13000,
+          "quota": 8395,
+          "hands": 7,
+          "busts": 3,
+          "bails": 5,
+          "meanMult": 22.28571428571429,
+          "draws": 5,
+          "hp": 280,
+          "pearls": 105,
+          "phaseChips": {
+            "ascent": 202,
+            "apex": 238,
+            "descent": 132
+          },
+          "avgAir": 8.829253723062013
+        }
+      ],
+      "purchases": [
+        {
+          "wave": 1,
+          "row": "routine",
+          "id": "draw",
+          "price": 25
+        },
+        {
+          "wave": 1,
+          "row": "charm",
+          "id": "S04",
+          "price": 20
+        },
+        {
+          "wave": 1,
+          "row": "pack",
+          "id": "charm",
+          "price": 8
+        },
+        {
+          "wave": 2,
+          "row": "item",
+          "id": "I02",
+          "price": 14
+        },
+        {
+          "wave": 2,
+          "row": "weapon",
+          "id": "harpoon",
+          "price": 16
+        },
+        {
+          "wave": 2,
+          "row": "routine",
+          "id": "polish",
+          "price": 9
+        },
+        {
+          "wave": 2,
+          "row": "weapon",
+          "id": "harpoon",
+          "price": 16
+        },
+        {
+          "wave": 3,
+          "row": "weapon",
+          "id": "harpoon",
+          "price": 18
+        },
+        {
+          "wave": 3,
+          "row": "routine",
+          "id": "draw",
+          "price": 47
+        },
+        {
+          "wave": 4,
+          "row": "weapon",
+          "id": "harpoon",
+          "price": 20
+        },
+        {
+          "wave": 4,
+          "row": "routine",
+          "id": "polish",
+          "price": 12
+        },
+        {
+          "wave": 4,
+          "row": "pack",
+          "id": "charm",
+          "price": 13
+        },
+        {
+          "wave": 4,
+          "row": "stat",
+          "id": 8,
+          "price": 18
+        },
+        {
+          "wave": 4,
+          "row": "weapon",
+          "id": "minigun",
+          "price": 20
+        },
+        {
+          "wave": 5,
+          "row": "item",
+          "id": "I08",
+          "price": 20
+        },
+        {
+          "wave": 5,
+          "row": "routine",
+          "id": "routine",
+          "price": 17
+        },
+        {
+          "wave": 5,
+          "row": "routine",
+          "id": "polish",
+          "price": 14
+        },
+        {
+          "wave": 5,
+          "row": "item",
+          "id": "I01",
+          "price": 32
+        },
+        {
+          "wave": 6,
+          "row": "weapon",
+          "id": "minigun",
+          "price": 25
+        },
+        {
+          "wave": 6,
+          "row": "routine",
+          "id": "polish",
+          "price": 15
+        },
+        {
+          "wave": 6,
+          "row": "routine",
+          "id": "routine",
+          "price": 18
+        },
+        {
+          "wave": 6,
+          "row": "stat",
+          "id": 10,
+          "price": 22
+        },
+        {
+          "wave": 7,
+          "row": "weapon",
+          "id": "minigun",
+          "price": 47
+        },
+        {
+          "wave": 7,
+          "row": "routine",
+          "id": "routine",
+          "price": 20
+        },
+        {
+          "wave": 7,
+          "row": "routine",
+          "id": "focus",
+          "price": 37
+        },
+        {
+          "wave": 8,
+          "row": "weapon",
+          "id": "harpoon",
+          "price": 94
+        },
+        {
+          "wave": 8,
+          "row": "routine",
+          "id": "polish",
+          "price": 18
+        },
+        {
+          "wave": 9,
+          "row": "item",
+          "id": "I08",
+          "price": 28
+        },
+        {
+          "wave": 9,
+          "row": "weapon",
+          "id": "minigun",
+          "price": 100
+        },
+        {
+          "wave": 10,
+          "row": "weapon",
+          "id": "laser",
+          "price": 34
+        },
+        {
+          "wave": 10,
+          "row": "stat",
+          "id": 8,
+          "price": 30
+        },
+        {
+          "wave": 11,
+          "row": "weapon",
+          "id": "laser",
+          "price": 36
+        },
+        {
+          "wave": 11,
+          "row": "routine",
+          "id": "transfer",
+          "price": 21
+        },
+        {
+          "wave": 11,
+          "row": "routine",
+          "id": "technique",
+          "price": 40
+        },
+        {
+          "wave": 12,
+          "row": "routine",
+          "id": "polish",
+          "price": 25
+        },
+        {
+          "wave": 12,
+          "row": "pack",
+          "id": "routine",
+          "price": 27
+        },
+        {
+          "wave": 12,
+          "row": "routine",
+          "id": "transfer",
+          "price": 23
+        },
+        {
+          "wave": 12,
+          "row": "routine",
+          "id": "polish",
+          "price": 25
+        }
+      ],
+      "ticks": 93860
+    },
+    {
+      "flow": "live-overtime-until-water-entry",
+      "purchasePolicy": "type-focused weapons with real replacements, defence gear and route score purchases",
+      "stats": {
+        "Close": -1,
+        "Shot": 0,
+        "Blast": 3,
+        "Damage %": 0,
+        "Attack speed": 0,
+        "Crit": 0,
+        "Reach": 0,
+        "Area": 0,
+        "Max HP": 0,
+        "Armour": 6,
+        "Regen": 0,
+        "Lift": 0,
+        "Hang": 0,
+        "Drive": 0,
+        "Air steering": 0,
+        "Luck": 0
+      },
+      "diagnosis": {
+        "wave": 11,
+        "reason": "quota",
+        "score": 949,
+        "quota": 5692,
+        "quotaRatio": 0.16672522839072382,
+        "quotaMet": false,
+        "hp": 50,
+        "maxHp": 100,
+        "armour": 6,
+        "regen": 0,
+        "activeAir": 64.00122511807312,
+        "airRemaining": 0,
+        "overtime": true,
+        "overtimeAir": 4.001225118073338,
+        "damageTaken": 667.8571428571429,
+        "acceptedHits": 10,
+        "primaryApplied": 36829.925702523935,
+        "secondaryApplied": 319.3903265118389,
+        "chips": 164,
+        "bankedFlights": 9,
+        "busts": 8,
+        "bails": 10,
+        "unbankedChips": 0,
+        "unbankedBaseEstimate": 0,
+        "slots": [
+          {
+            "id": "rocket",
+            "tier": 3
+          },
+          {
+            "id": "flak",
+            "tier": 4
+          },
+          {
+            "id": "rocket",
+            "tier": 1
+          }
+        ],
+        "lastHits": [
+          {
+            "air": 40.17052941417174,
+            "value": 50,
+            "hp": 0,
+            "phase": "ascent",
+            "enemies": 27
+          },
+          {
+            "air": 46.10875524630193,
+            "value": 50,
+            "hp": 0,
+            "phase": "ascent",
+            "enemies": 28
+          },
+          {
+            "air": 50.96923848684532,
+            "value": 67.85714285714286,
+            "hp": 0,
+            "phase": "ascent",
+            "enemies": 42
+          },
+          {
+            "air": 54.284382503918835,
+            "value": 92.85714285714286,
+            "hp": 0,
+            "phase": "ascent",
+            "enemies": 21
+          },
+          {
+            "air": 59.17216553554478,
+            "value": 37.5,
+            "hp": 12.5,
+            "phase": "ascent",
+            "enemies": 27
+          },
+          {
+            "air": 60.55549886887803,
+            "value": 92.85714285714286,
+            "hp": 0,
+            "phase": "ascent",
+            "enemies": 23
+          }
+        ],
+        "bossSpawned": false,
+        "bossDefeated": false,
+        "bossRecoveries": 0
+      },
+      "damageByWave": {
+        "2": 16,
+        "3": 18.333333333333336,
+        "4": 70,
+        "5": 28.333333333333336,
+        "6": 43.75,
+        "7": 164.2857142857143,
+        "8": 323.30357142857144,
+        "9": 159.64285714285717,
+        "10": 573.4821428571428,
+        "11": 667.8571428571429
+      },
+      "hitsByWave": {
+        "2": 1,
+        "3": 1,
+        "4": 3,
+        "5": 1,
+        "6": 1,
+        "7": 5,
+        "8": 8,
+        "9": 4,
+        "10": 14,
+        "11": 10
+      },
+      "lastIncoming": [
+        {
+          "wave": 2,
+          "air": 13.196301412847426,
+          "value": 16,
+          "hp": 84,
+          "phase": "descent",
+          "enemies": 5,
+          "pursuers": 0
+        },
+        {
+          "wave": 3,
+          "air": 4.225919133280873,
+          "value": 18.333333333333336,
+          "hp": 81.66666666666666,
+          "phase": "descent",
+          "enemies": 3,
+          "pursuers": 0
+        },
+        {
+          "wave": 4,
+          "air": 4.292401041040837,
+          "value": 23.333333333333336,
+          "hp": 76.66666666666666,
+          "phase": "descent",
+          "enemies": 1,
+          "pursuers": 0
+        },
+        {
+          "wave": 4,
+          "air": 13.55135166990082,
+          "value": 23.333333333333336,
+          "hp": 53.33333333333332,
+          "phase": "ascent",
+          "enemies": 2,
+          "pursuers": 0
+        },
+        {
+          "wave": 4,
+          "air": 28.80873624630153,
+          "value": 23.333333333333336,
+          "hp": 29.999999999999986,
+          "phase": "descent",
+          "enemies": 3,
+          "pursuers": 0
+        },
+        {
+          "wave": 5,
+          "air": 31.36449136911598,
+          "value": 28.333333333333336,
+          "hp": 71.66666666666666,
+          "phase": "descent",
+          "enemies": 10,
+          "pursuers": 0
+        },
+        {
+          "wave": 6,
+          "air": 4.7711465190392275,
+          "value": 43.75,
+          "hp": 56.25,
+          "phase": "descent",
+          "enemies": 4,
+          "pursuers": 0
+        },
+        {
+          "wave": 7,
+          "air": 16.273437015143482,
+          "value": 32.85714285714286,
+          "hp": 67.14285714285714,
+          "phase": "ascent",
+          "enemies": 12,
+          "pursuers": 0
+        },
+        {
+          "wave": 7,
+          "air": 19.056770348476658,
+          "value": 32.85714285714286,
+          "hp": 34.28571428571428,
+          "phase": "apex",
+          "enemies": 13,
+          "pursuers": 0
+        },
+        {
+          "wave": 7,
+          "air": 25.70079229277926,
+          "value": 32.85714285714286,
+          "hp": 1.4285714285714164,
+          "phase": "ascent",
+          "enemies": 6,
+          "pursuers": 0
+        },
+        {
+          "wave": 7,
+          "air": 26.92579229277919,
+          "value": 32.85714285714286,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 17,
+          "pursuers": 0
+        },
+        {
+          "wave": 7,
+          "air": 42.285092526492065,
+          "value": 32.85714285714286,
+          "hp": 17.14285714285714,
+          "phase": "apex",
+          "enemies": 13,
+          "pursuers": 0
+        },
+        {
+          "wave": 8,
+          "air": 7.357628737080783,
+          "value": 27.85714285714286,
+          "hp": 72.14285714285714,
+          "phase": "descent",
+          "enemies": 6,
+          "pursuers": 0
+        },
+        {
+          "wave": 8,
+          "air": 12.358344437652796,
+          "value": 56.785714285714285,
+          "hp": 15.357142857142854,
+          "phase": "apex",
+          "enemies": 9,
+          "pursuers": 0
+        },
+        {
+          "wave": 8,
+          "air": 13.291677770986077,
+          "value": 37.142857142857146,
+          "hp": 0,
+          "phase": "apex",
+          "enemies": 4,
+          "pursuers": 0
+        },
+        {
+          "wave": 8,
+          "air": 21.553930760845887,
+          "value": 27.85714285714286,
+          "hp": 22.14285714285714,
+          "phase": "descent",
+          "enemies": 13,
+          "pursuers": 0
+        },
+        {
+          "wave": 8,
+          "air": 22.17893076084585,
+          "value": 37.142857142857146,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 14,
+          "pursuers": 0
+        },
+        {
+          "wave": 8,
+          "air": 28.884390559113506,
+          "value": 37.142857142857146,
+          "hp": 12.857142857142854,
+          "phase": "apex",
+          "enemies": 12,
+          "pursuers": 0
+        },
+        {
+          "wave": 8,
+          "air": 30.601057225780075,
+          "value": 56.785714285714285,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 17,
+          "pursuers": 0
+        },
+        {
+          "wave": 8,
+          "air": 37.96182007595414,
+          "value": 42.589285714285715,
+          "hp": 7.410714285714285,
+          "phase": "apex",
+          "enemies": 14,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 22.883527420976396,
+          "value": 31.071428571428573,
+          "hp": 68.92857142857143,
+          "phase": "apex",
+          "enemies": 22,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 31.29655202485057,
+          "value": 41.785714285714285,
+          "hp": 27.142857142857146,
+          "phase": "ascent",
+          "enemies": 23,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 36.85488535818359,
+          "value": 55.714285714285715,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 25,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 52.85779204496997,
+          "value": 31.071428571428573,
+          "hp": 18.928571428571427,
+          "phase": "descent",
+          "enemies": 27,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 16.715454024311775,
+          "value": 34.28571428571428,
+          "hp": 65.71428571428572,
+          "phase": "descent",
+          "enemies": 19,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 22.354011155761814,
+          "value": 7.857142857142858,
+          "hp": 57.85714285714286,
+          "phase": "ascent",
+          "enemies": 18,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 23.345677822428424,
+          "value": 61.78571428571428,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 15,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 26.81900929542852,
+          "value": 61.78571428571428,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 26,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 33.11828475964664,
+          "value": 34.28571428571428,
+          "hp": 15.714285714285722,
+          "phase": "apex",
+          "enemies": 19,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 33.51828475964662,
+          "value": 45.71428571428571,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 17,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 37.395451705075565,
+          "value": 7.857142857142858,
+          "hp": 42.14285714285714,
+          "phase": "ascent",
+          "enemies": 29,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 37.61211837174222,
+          "value": 68.92857142857142,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 25,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 44.01094158856451,
+          "value": 45.71428571428571,
+          "hp": 4.285714285714292,
+          "phase": "apex",
+          "enemies": 22,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 45.01094158856446,
+          "value": 68.92857142857142,
+          "hp": 0,
+          "phase": "apex",
+          "enemies": 30,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 50.32500068532991,
+          "value": 51.69642857142856,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 30,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 53.37779944996022,
+          "value": 7.857142857142858,
+          "hp": 42.14285714285714,
+          "phase": "ascent",
+          "enemies": 38,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 53.594466116626876,
+          "value": 7.857142857142858,
+          "hp": 34.28571428571428,
+          "phase": "ascent",
+          "enemies": 38,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 58.30279944995995,
+          "value": 68.92857142857142,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 34,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 7.555193811692131,
+          "value": 69.64285714285714,
+          "hp": 30.35714285714286,
+          "phase": "descent",
+          "enemies": 5,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 16.039970860429943,
+          "value": 69.64285714285714,
+          "hp": 0,
+          "phase": "apex",
+          "enemies": 10,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 24.422710301861567,
+          "value": 67.85714285714286,
+          "hp": 0,
+          "phase": "apex",
+          "enemies": 14,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 35.77839743494178,
+          "value": 69.64285714285714,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 19,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 40.17052941417174,
+          "value": 50,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 27,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 46.10875524630193,
+          "value": 50,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 28,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 50.96923848684532,
+          "value": 67.85714285714286,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 42,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 54.284382503918835,
+          "value": 92.85714285714286,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 21,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 59.17216553554478,
+          "value": 37.5,
+          "hp": 12.5,
+          "phase": "ascent",
+          "enemies": 27,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 60.55549886887803,
+          "value": 92.85714285714286,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 23,
+          "pursuers": 0
+        }
+      ],
+      "buildSha256": "4758476fad7b967313d8dea9163488cc101e7f745f5cf255f7e4d8cb1efa32ff",
+      "route": "high-blast",
+      "seed": 11,
+      "cash": 14,
+      "outcome": "dead",
+      "reason": "quota",
+      "wave": 11,
+      "score": 949,
+      "quota": 5692,
+      "hp": 50,
+      "kills": 1827,
+      "spent": 829,
+      "weapons": [
+        "rocket:3",
+        "flak:4",
+        "rocket:1"
+      ],
+      "charms": [
+        "N05",
+        "S03",
+        "N09"
+      ],
+      "items": {
+        "I06": 1,
+        "I08": 1
+      },
+      "routines": {
+        "Repeat": 1,
+        "Formation": 3,
+        "Variety": 2
+      },
+      "weights": {
+        "spout": 0.2,
+        "front": 0.2,
+        "back": 0.2,
+        "cork": 0.2,
+        "star": 0.2
+      },
+      "draws": 6,
+      "waves": [
+        {
+          "wave": 1,
+          "score": 253,
+          "quota": 70,
+          "hands": 6,
+          "busts": 0,
+          "bails": 0,
+          "meanMult": 5,
+          "draws": 3,
+          "hp": 100,
+          "pearls": 56,
+          "phaseChips": {
+            "ascent": 19,
+            "apex": 13,
+            "descent": 20
+          },
+          "avgAir": 3.8208258238944293
+        },
+        {
+          "wave": 2,
+          "score": 369,
+          "quota": 113,
+          "hands": 6,
+          "busts": 0,
+          "bails": 1,
+          "meanMult": 5.499999999999999,
+          "draws": 4,
+          "hp": 100,
+          "pearls": 71,
+          "phaseChips": {
+            "ascent": 25,
+            "apex": 13,
+            "descent": 28
+          },
+          "avgAir": 4.584292331622019
+        },
+        {
+          "wave": 3,
+          "score": 1311,
+          "quota": 233,
+          "hands": 6,
+          "busts": 0,
+          "bails": 1,
+          "meanMult": 9.666666666666666,
+          "draws": 5,
+          "hp": 100,
+          "pearls": 78,
+          "phaseChips": {
+            "ascent": 34,
+            "apex": 41,
+            "descent": 38
+          },
+          "avgAir": 5.2189578217902115
+        },
+        {
+          "wave": 4,
+          "score": 7057,
+          "quota": 370,
+          "hands": 6,
+          "busts": 0,
+          "bails": 3,
+          "meanMult": 31.5,
+          "draws": 6,
+          "hp": 100,
+          "pearls": 93,
+          "phaseChips": {
+            "ascent": 43,
+            "apex": 118,
+            "descent": 36
+          },
+          "avgAir": 5.86531069825769
+        },
+        {
+          "wave": 5,
+          "score": 10463,
+          "quota": 712,
+          "hands": 7,
+          "busts": 0,
+          "bails": 1,
+          "meanMult": 34.57142857142857,
+          "draws": 6,
+          "hp": 100,
+          "pearls": 101,
+          "phaseChips": {
+            "ascent": 74,
+            "apex": 142,
+            "descent": 106
+          },
+          "avgAir": 6.428134704795855
+        },
+        {
+          "wave": 6,
+          "score": 14914,
+          "quota": 1094,
+          "hands": 7,
+          "busts": 0,
+          "bails": 1,
+          "meanMult": 37.85714285714286,
+          "draws": 6,
+          "hp": 100,
+          "pearls": 99,
+          "phaseChips": {
+            "ascent": 125,
+            "apex": 176,
+            "descent": 118
+          },
+          "avgAir": 7.217438493408062
+        },
+        {
+          "wave": 7,
+          "score": 28290,
+          "quota": 1693,
+          "hands": 7,
+          "busts": 1,
+          "bails": 5,
+          "meanMult": 65.85714285714286,
+          "draws": 6,
+          "hp": 100,
+          "pearls": 109,
+          "phaseChips": {
+            "ascent": 144,
+            "apex": 152,
+            "descent": 131
+          },
+          "avgAir": 7.629179459134028
+        },
+        {
+          "wave": 8,
+          "score": 12588,
+          "quota": 2124,
+          "hands": 7,
+          "busts": 3,
+          "bails": 7,
+          "meanMult": 44.92857142857143,
+          "draws": 6,
+          "hp": 100,
+          "pearls": 113,
+          "phaseChips": {
+            "ascent": 95,
+            "apex": 185,
+            "descent": 78
+          },
+          "avgAir": 8.24309944948647
+        },
+        {
+          "wave": 9,
+          "score": 47236,
+          "quota": 5295,
+          "hands": 7,
+          "busts": 1,
+          "bails": 4,
+          "meanMult": 53.642857142857146,
+          "draws": 6,
+          "hp": 100,
+          "pearls": 134,
+          "phaseChips": {
+            "ascent": 290,
+            "apex": 324,
+            "descent": 395
+          },
+          "avgAir": 9.265889010144708
+        },
+        {
+          "wave": 10,
+          "score": 9820,
+          "quota": 6506,
+          "hands": 9,
+          "busts": 7,
+          "bails": 11,
+          "meanMult": 38.125,
+          "draws": 6,
+          "hp": 100,
+          "pearls": 107,
+          "phaseChips": {
+            "ascent": 373,
+            "apex": 214,
+            "descent": 52
+          },
+          "avgAir": 6.835669692884305
+        }
+      ],
+      "purchases": [
+        {
+          "wave": 1,
+          "row": "routine",
+          "id": "polish",
+          "price": 7
+        },
+        {
+          "wave": 1,
+          "row": "charm",
+          "id": "N09",
+          "price": 34
+        },
+        {
+          "wave": 1,
+          "row": "pack",
+          "id": "routine",
+          "price": 8
+        },
+        {
+          "wave": 2,
+          "row": "pack",
+          "id": "routine",
+          "price": 10
+        },
+        {
+          "wave": 2,
+          "row": "stat",
+          "id": 9,
+          "price": 14
+        },
+        {
+          "wave": 2,
+          "row": "item",
+          "id": "I06",
+          "price": 23
+        },
+        {
+          "wave": 2,
+          "row": "weapon",
+          "id": "flak",
+          "price": 16
+        },
+        {
+          "wave": 3,
+          "row": "routine",
+          "id": "polish",
+          "price": 10
+        },
+        {
+          "wave": 3,
+          "row": "pack",
+          "id": "charm",
+          "price": 12
+        },
+        {
+          "wave": 3,
+          "row": "weapon",
+          "id": "rocket",
+          "price": 18
+        },
+        {
+          "wave": 3,
+          "row": "routine",
+          "id": "polish",
+          "price": 10
+        },
+        {
+          "wave": 3,
+          "row": "pack",
+          "id": "routine",
+          "price": 12
+        },
+        {
+          "wave": 4,
+          "row": "weapon",
+          "id": "flak",
+          "price": 20
+        },
+        {
+          "wave": 4,
+          "row": "routine",
+          "id": "polish",
+          "price": 12
+        },
+        {
+          "wave": 4,
+          "row": "routine",
+          "id": "polish",
+          "price": 12
+        },
+        {
+          "wave": 4,
+          "row": "stat",
+          "id": 2,
+          "price": 18
+        },
+        {
+          "wave": 4,
+          "row": "routine",
+          "id": "routine",
+          "price": 15
+        },
+        {
+          "wave": 5,
+          "row": "routine",
+          "id": "routine",
+          "price": 17
+        },
+        {
+          "wave": 5,
+          "row": "routine",
+          "id": "polish",
+          "price": 14
+        },
+        {
+          "wave": 5,
+          "row": "weapon",
+          "id": "flak",
+          "price": 23
+        },
+        {
+          "wave": 5,
+          "row": "routine",
+          "id": "polish",
+          "price": 14
+        },
+        {
+          "wave": 5,
+          "row": "routine",
+          "id": "technique",
+          "price": 26
+        },
+        {
+          "wave": 6,
+          "row": "routine",
+          "id": "technique",
+          "price": 28
+        },
+        {
+          "wave": 6,
+          "row": "pack",
+          "id": "routine",
+          "price": 17
+        },
+        {
+          "wave": 6,
+          "row": "stat",
+          "id": 9,
+          "price": 22
+        },
+        {
+          "wave": 6,
+          "row": "charm",
+          "id": "S03",
+          "price": 25
+        },
+        {
+          "wave": 7,
+          "row": "weapon",
+          "id": "flak",
+          "price": 47
+        },
+        {
+          "wave": 7,
+          "row": "routine",
+          "id": "polish",
+          "price": 17
+        },
+        {
+          "wave": 7,
+          "row": "pack",
+          "id": "routine",
+          "price": 18
+        },
+        {
+          "wave": 7,
+          "row": "item",
+          "id": "I08",
+          "price": 24
+        },
+        {
+          "wave": 8,
+          "row": "weapon",
+          "id": "flak",
+          "price": 29
+        },
+        {
+          "wave": 8,
+          "row": "routine",
+          "id": "polish",
+          "price": 18
+        },
+        {
+          "wave": 8,
+          "row": "weapon",
+          "id": "flak",
+          "price": 51
+        },
+        {
+          "wave": 9,
+          "row": "routine",
+          "id": "routine",
+          "price": 24
+        },
+        {
+          "wave": 9,
+          "row": "routine",
+          "id": "routine",
+          "price": 24
+        },
+        {
+          "wave": 9,
+          "row": "weapon",
+          "id": "rocket",
+          "price": 54
+        },
+        {
+          "wave": 10,
+          "row": "weapon",
+          "id": "rocket",
+          "price": 34
+        },
+        {
+          "wave": 10,
+          "row": "routine",
+          "id": "routine",
+          "price": 26
+        },
+        {
+          "wave": 10,
+          "row": "routine",
+          "id": "routine",
+          "price": 26
+        }
+      ],
+      "ticks": 84929
+    },
+    {
+      "flow": "live-overtime-until-water-entry",
+      "purchasePolicy": "type-focused weapons with real replacements, defence gear and route score purchases",
+      "stats": {
+        "Close": 0,
+        "Shot": 0,
+        "Blast": 0,
+        "Damage %": -0.08,
+        "Attack speed": 0,
+        "Crit": 0,
+        "Reach": 0,
+        "Area": 0,
+        "Max HP": 18,
+        "Armour": 0,
+        "Regen": 6,
+        "Lift": 0,
+        "Hang": 0,
+        "Drive": 0,
+        "Air steering": 0,
+        "Luck": 0
+      },
+      "diagnosis": {
+        "wave": 17,
+        "reason": "quota",
+        "score": 0,
+        "quota": 25657,
+        "quotaRatio": 0,
+        "quotaMet": false,
+        "hp": 140,
+        "maxHp": 280,
+        "armour": 0,
+        "regen": 6,
+        "activeAir": 60.96731410183975,
+        "airRemaining": 0,
+        "overtime": true,
+        "overtimeAir": 0.9673141018398066,
+        "damageTaken": 1528,
+        "acceptedHits": 8,
+        "primaryApplied": 107112.66322584989,
+        "secondaryApplied": 877.5573333333334,
+        "chips": 214,
+        "bankedFlights": 6,
+        "busts": 6,
+        "bails": 7,
+        "unbankedChips": 0,
+        "unbankedBaseEstimate": 0,
+        "slots": [
+          {
+            "id": "flak",
+            "tier": 3
+          },
+          {
+            "id": "depth",
+            "tier": 3
+          },
+          {
+            "id": "rocket",
+            "tier": 3
+          },
+          {
+            "id": "rocket",
+            "tier": 4
+          },
+          {
+            "id": "rocket",
+            "tier": 2
+          }
+        ],
+        "lastHits": [
+          {
+            "air": 21.696056843196132,
+            "value": 202,
+            "hp": 0,
+            "phase": "apex",
+            "enemies": 10
+          },
+          {
+            "air": 30.92199690082566,
+            "value": 202,
+            "hp": 0,
+            "phase": "ascent",
+            "enemies": 14
+          },
+          {
+            "air": 40.09233903809845,
+            "value": 170,
+            "hp": 0,
+            "phase": "ascent",
+            "enemies": 8
+          },
+          {
+            "air": 45.71473423395085,
+            "value": 202,
+            "hp": 0,
+            "phase": "ascent",
+            "enemies": 27
+          },
+          {
+            "air": 49.855876630558605,
+            "value": 146,
+            "hp": 14,
+            "phase": "ascent",
+            "enemies": 29
+          },
+          {
+            "air": 57.314209963891514,
+            "value": 202,
+            "hp": 0,
+            "phase": "descent",
+            "enemies": 54
+          }
+        ],
+        "bossSpawned": false,
+        "bossDefeated": false,
+        "bossRecoveries": 0
+      },
+      "damageByWave": {
+        "3": 44,
+        "4": 9,
+        "7": 110,
+        "8": 224,
+        "9": 60,
+        "10": 158.49999999999997,
+        "11": 1014,
+        "12": 437,
+        "13": 1058,
+        "14": 460,
+        "15": 554,
+        "16": 453,
+        "17": 1528
+      },
+      "hitsByWave": {
+        "3": 2,
+        "4": 1,
+        "7": 3,
+        "8": 7,
+        "9": 1,
+        "10": 5,
+        "11": 11,
+        "12": 5,
+        "13": 9,
+        "14": 5,
+        "15": 5,
+        "16": 4,
+        "17": 8
+      },
+      "lastIncoming": [
+        {
+          "wave": 3,
+          "air": 12.564785744159362,
+          "value": 22,
+          "hp": 78,
+          "phase": "apex",
+          "enemies": 4,
+          "pursuers": 0
+        },
+        {
+          "wave": 3,
+          "air": 14.873119077492564,
+          "value": 22,
+          "hp": 56,
+          "phase": "descent",
+          "enemies": 5,
+          "pursuers": 0
+        },
+        {
+          "wave": 4,
+          "air": 19.268162703172962,
+          "value": 9,
+          "hp": 181,
+          "phase": "ascent",
+          "enemies": 1,
+          "pursuers": 0
+        },
+        {
+          "wave": 7,
+          "air": 18.396664010377247,
+          "value": 46,
+          "hp": 234,
+          "phase": "ascent",
+          "enemies": 18,
+          "pursuers": 0
+        },
+        {
+          "wave": 7,
+          "air": 21.571664010377066,
+          "value": 46,
+          "hp": 188,
+          "phase": "descent",
+          "enemies": 14,
+          "pursuers": 0
+        },
+        {
+          "wave": 7,
+          "air": 23.888853935279222,
+          "value": 18,
+          "hp": 170,
+          "phase": "ascent",
+          "enemies": 9,
+          "pursuers": 0
+        },
+        {
+          "wave": 8,
+          "air": 14.608337935668489,
+          "value": 24,
+          "hp": 256,
+          "phase": "descent",
+          "enemies": 3,
+          "pursuers": 0
+        },
+        {
+          "wave": 8,
+          "air": 18.647154106088184,
+          "value": 24,
+          "hp": 232,
+          "phase": "ascent",
+          "enemies": 6,
+          "pursuers": 0
+        },
+        {
+          "wave": 8,
+          "air": 40.325764163048675,
+          "value": 24,
+          "hp": 208,
+          "phase": "descent",
+          "enemies": 11,
+          "pursuers": 0
+        },
+        {
+          "wave": 8,
+          "air": 42.53409749638188,
+          "value": 52,
+          "hp": 156,
+          "phase": "descent",
+          "enemies": 15,
+          "pursuers": 0
+        },
+        {
+          "wave": 8,
+          "air": 44.282267445177816,
+          "value": 24,
+          "hp": 132,
+          "phase": "ascent",
+          "enemies": 9,
+          "pursuers": 0
+        },
+        {
+          "wave": 8,
+          "air": 50.90726744517744,
+          "value": 52,
+          "hp": 80,
+          "phase": "descent",
+          "enemies": 8,
+          "pursuers": 0
+        },
+        {
+          "wave": 8,
+          "air": 55.64975937927404,
+          "value": 24,
+          "hp": 56,
+          "phase": "apex",
+          "enemies": 15,
+          "pursuers": 0
+        },
+        {
+          "wave": 9,
+          "air": 34.46926112535242,
+          "value": 60,
+          "hp": 220,
+          "phase": "descent",
+          "enemies": 19,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 13.712928152543304,
+          "value": 35.99999999999999,
+          "hp": 244,
+          "phase": "ascent",
+          "enemies": 8,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 20.579040289338984,
+          "value": 0,
+          "hp": 280,
+          "phase": "ascent",
+          "enemies": 14,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 22.420706956005546,
+          "value": 0,
+          "hp": 280,
+          "phase": "ascent",
+          "enemies": 16,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 58.99677507083898,
+          "value": 35.99999999999999,
+          "hp": 244,
+          "phase": "ascent",
+          "enemies": 23,
+          "pursuers": 0
+        },
+        {
+          "wave": 10,
+          "air": 62.34677507083879,
+          "value": 86.49999999999999,
+          "hp": 177.5,
+          "phase": "ascent",
+          "enemies": 21,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 30.381466278157767,
+          "value": 42,
+          "hp": 238,
+          "phase": "descent",
+          "enemies": 26,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 32.13231986946692,
+          "value": 42,
+          "hp": 206,
+          "phase": "ascent",
+          "enemies": 29,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 34.16565320280014,
+          "value": 130,
+          "hp": 86,
+          "phase": "ascent",
+          "enemies": 28,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 36.83231986946665,
+          "value": 70,
+          "hp": 36,
+          "phase": "apex",
+          "enemies": 26,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 39.315653202799844,
+          "value": 70,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 31,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 42.12992998427141,
+          "value": 70,
+          "hp": 80,
+          "phase": "ascent",
+          "enemies": 13,
+          "pursuers": 1
+        },
+        {
+          "wave": 11,
+          "air": 43.296596650938014,
+          "value": 130,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 22,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 47.3961982021351,
+          "value": 130,
+          "hp": 20,
+          "phase": "ascent",
+          "enemies": 21,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 48.87953153546835,
+          "value": 130,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 20,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 55.939374945170734,
+          "value": 130,
+          "hp": 40,
+          "phase": "ascent",
+          "enemies": 20,
+          "pursuers": 0
+        },
+        {
+          "wave": 11,
+          "air": 57.922708278503954,
+          "value": 70,
+          "hp": 0,
+          "phase": "apex",
+          "enemies": 18,
+          "pursuers": 0
+        },
+        {
+          "wave": 12,
+          "air": 3.620324631304464,
+          "value": 76,
+          "hp": 204,
+          "phase": "ascent",
+          "enemies": 5,
+          "pursuers": 0
+        },
+        {
+          "wave": 12,
+          "air": 39.472776515776275,
+          "value": 48,
+          "hp": 232,
+          "phase": "apex",
+          "enemies": 15,
+          "pursuers": 0
+        },
+        {
+          "wave": 12,
+          "air": 40.59777651577622,
+          "value": 113.5,
+          "hp": 118.5,
+          "phase": "apex",
+          "enemies": 17,
+          "pursuers": 0
+        },
+        {
+          "wave": 12,
+          "air": 53.79047281912133,
+          "value": 114,
+          "hp": 94.5,
+          "phase": "descent",
+          "enemies": 23,
+          "pursuers": 0
+        },
+        {
+          "wave": 12,
+          "air": 66.63615153310711,
+          "value": 85.5,
+          "hp": 89,
+          "phase": "descent",
+          "enemies": 17,
+          "pursuers": 0
+        },
+        {
+          "wave": 13,
+          "air": 10.094699482348394,
+          "value": 130,
+          "hp": 150,
+          "phase": "descent",
+          "enemies": 10,
+          "pursuers": 0
+        },
+        {
+          "wave": 13,
+          "air": 12.287864932750969,
+          "value": 102,
+          "hp": 58,
+          "phase": "ascent",
+          "enemies": 8,
+          "pursuers": 0
+        },
+        {
+          "wave": 13,
+          "air": 20.47119826608384,
+          "value": 130,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 15,
+          "pursuers": 0
+        },
+        {
+          "wave": 13,
+          "air": 24.04336585278808,
+          "value": 130,
+          "hp": 10,
+          "phase": "ascent",
+          "enemies": 25,
+          "pursuers": 0
+        },
+        {
+          "wave": 13,
+          "air": 42.9796819163145,
+          "value": 102,
+          "hp": 38,
+          "phase": "descent",
+          "enemies": 19,
+          "pursuers": 0
+        },
+        {
+          "wave": 13,
+          "air": 44.06301524964777,
+          "value": 122,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 19,
+          "pursuers": 0
+        },
+        {
+          "wave": 13,
+          "air": 47.56095029230021,
+          "value": 130,
+          "hp": 20,
+          "phase": "ascent",
+          "enemies": 37,
+          "pursuers": 1
+        },
+        {
+          "wave": 13,
+          "air": 55.99428362563307,
+          "value": 130,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 30,
+          "pursuers": 0
+        },
+        {
+          "wave": 13,
+          "air": 64.56287564006625,
+          "value": 82,
+          "hp": 98,
+          "phase": "apex",
+          "enemies": 24,
+          "pursuers": 0
+        },
+        {
+          "wave": 14,
+          "air": 31.952630354137987,
+          "value": 112,
+          "hp": 168,
+          "phase": "apex",
+          "enemies": 5,
+          "pursuers": 0
+        },
+        {
+          "wave": 14,
+          "air": 34.67763035413783,
+          "value": 88,
+          "hp": 90,
+          "phase": "descent",
+          "enemies": 18,
+          "pursuers": 0
+        },
+        {
+          "wave": 14,
+          "air": 37.91771067865102,
+          "value": 60,
+          "hp": 50,
+          "phase": "ascent",
+          "enemies": 14,
+          "pursuers": 0
+        },
+        {
+          "wave": 14,
+          "air": 44.634377345317304,
+          "value": 88,
+          "hp": 12,
+          "phase": "apex",
+          "enemies": 16,
+          "pursuers": 0
+        },
+        {
+          "wave": 14,
+          "air": 55.38494203942692,
+          "value": 112,
+          "hp": 0,
+          "phase": "apex",
+          "enemies": 13,
+          "pursuers": 0
+        },
+        {
+          "wave": 15,
+          "air": 35.47475374407289,
+          "value": 66,
+          "hp": 214,
+          "phase": "descent",
+          "enemies": 26,
+          "pursuers": 0
+        },
+        {
+          "wave": 15,
+          "air": 41.00657302883041,
+          "value": 122,
+          "hp": 122,
+          "phase": "ascent",
+          "enemies": 8,
+          "pursuers": 0
+        },
+        {
+          "wave": 15,
+          "air": 51.91490636216312,
+          "value": 150,
+          "hp": 42,
+          "phase": "descent",
+          "enemies": 43,
+          "pursuers": 0
+        },
+        {
+          "wave": 15,
+          "air": 58.12198362885723,
+          "value": 66,
+          "hp": 16,
+          "phase": "apex",
+          "enemies": 17,
+          "pursuers": 0
+        },
+        {
+          "wave": 15,
+          "air": 59.58865029552381,
+          "value": 150,
+          "hp": 0,
+          "phase": "apex",
+          "enemies": 21,
+          "pursuers": 0
+        },
+        {
+          "wave": 16,
+          "air": 6.805034498331516,
+          "value": 100,
+          "hp": 180,
+          "phase": "apex",
+          "enemies": 13,
+          "pursuers": 0
+        },
+        {
+          "wave": 16,
+          "air": 55.34949093691656,
+          "value": 105.5,
+          "hp": 174.5,
+          "phase": "ascent",
+          "enemies": 28,
+          "pursuers": 0
+        },
+        {
+          "wave": 16,
+          "air": 59.091157603583014,
+          "value": 147.5,
+          "hp": 47,
+          "phase": "ascent",
+          "enemies": 27,
+          "pursuers": 0
+        },
+        {
+          "wave": 16,
+          "air": 59.78282427024964,
+          "value": 100,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 33,
+          "pursuers": 0
+        },
+        {
+          "wave": 17,
+          "air": 10.394191077709374,
+          "value": 202,
+          "hp": 78,
+          "phase": "descent",
+          "enemies": 10,
+          "pursuers": 0
+        },
+        {
+          "wave": 17,
+          "air": 10.794191077709351,
+          "value": 202,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 10,
+          "pursuers": 0
+        },
+        {
+          "wave": 17,
+          "air": 21.696056843196132,
+          "value": 202,
+          "hp": 0,
+          "phase": "apex",
+          "enemies": 10,
+          "pursuers": 0
+        },
+        {
+          "wave": 17,
+          "air": 30.92199690082566,
+          "value": 202,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 14,
+          "pursuers": 0
+        },
+        {
+          "wave": 17,
+          "air": 40.09233903809845,
+          "value": 170,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 8,
+          "pursuers": 0
+        },
+        {
+          "wave": 17,
+          "air": 45.71473423395085,
+          "value": 202,
+          "hp": 0,
+          "phase": "ascent",
+          "enemies": 27,
+          "pursuers": 0
+        },
+        {
+          "wave": 17,
+          "air": 49.855876630558605,
+          "value": 146,
+          "hp": 14,
+          "phase": "ascent",
+          "enemies": 29,
+          "pursuers": 0
+        },
+        {
+          "wave": 17,
+          "air": 57.314209963891514,
+          "value": 202,
+          "hp": 0,
+          "phase": "descent",
+          "enemies": 54,
+          "pursuers": 0
+        }
+      ],
+      "buildSha256": "4758476fad7b967313d8dea9163488cc101e7f745f5cf255f7e4d8cb1efa32ff",
+      "route": "high-blast",
+      "seed": 23,
+      "cash": 1,
+      "outcome": "dead",
+      "reason": "quota",
+      "wave": 17,
+      "score": 0,
+      "quota": 25657,
+      "hp": 140,
+      "kills": 4045,
+      "spent": 1778,
+      "weapons": [
+        "flak:3",
+        "depth:3",
+        "rocket:3",
+        "rocket:4",
+        "rocket:2"
+      ],
+      "charms": [
+        "S03",
+        "N19",
+        "N01",
+        "S07",
+        "N09"
+      ],
+      "items": {
+        "I10": 2,
+        "I06": 1
+      },
+      "routines": {
+        "Repeat": 4,
+        "Formation": 4,
+        "Variety": 4
+      },
+      "weights": {
+        "spout": 0.2,
+        "front": 0.2,
+        "back": 0.2,
+        "cork": 0.2,
+        "star": 0.2
+      },
+      "draws": 6,
+      "waves": [
+        {
+          "wave": 1,
+          "score": 220,
+          "quota": 70,
+          "hands": 5,
+          "busts": 0,
+          "bails": 0,
+          "meanMult": 3.5999999999999996,
+          "draws": 3,
+          "hp": 100,
+          "pearls": 56,
+          "phaseChips": {
+            "ascent": 15,
+            "apex": 26,
+            "descent": 19
+          },
+          "avgAir": 4.110573387620796
+        },
+        {
+          "wave": 2,
+          "score": 1173,
+          "quota": 113,
+          "hands": 6,
+          "busts": 0,
+          "bails": 0,
+          "meanMult": 10.666666666666666,
+          "draws": 4,
+          "hp": 100,
+          "pearls": 69,
+          "phaseChips": {
+            "ascent": 30,
+            "apex": 36,
+            "descent": 32
+          },
+          "avgAir": 4.572106776309225
+        },
+        {
+          "wave": 3,
+          "score": 1684,
+          "quota": 233,
+          "hands": 6,
+          "busts": 0,
+          "bails": 2,
+          "meanMult": 12.5,
+          "draws": 5,
+          "hp": 100,
+          "pearls": 72,
+          "phaseChips": {
+            "ascent": 51,
+            "apex": 30,
+            "descent": 51
+          },
+          "avgAir": 5.1121463744242694
+        },
+        {
+          "wave": 4,
+          "score": 2718,
+          "quota": 370,
+          "hands": 7,
+          "busts": 0,
+          "bails": 1,
+          "meanMult": 14.857142857142858,
+          "draws": 5,
+          "hp": 190,
+          "pearls": 95,
+          "phaseChips": {
+            "ascent": 37,
+            "apex": 60,
+            "descent": 89
+          },
+          "avgAir": 5.738130659978011
+        },
+        {
+          "wave": 5,
+          "score": 6958,
+          "quota": 712,
+          "hands": 6,
+          "busts": 0,
+          "bails": 0,
+          "meanMult": 20.500000000000004,
+          "draws": 6,
+          "hp": 190,
+          "pearls": 96,
+          "phaseChips": {
+            "ascent": 57,
+            "apex": 86,
+            "descent": 118
+          },
+          "avgAir": 6.6839393949636206
+        },
+        {
+          "wave": 6,
+          "score": 17581,
+          "quota": 1094,
+          "hands": 7,
+          "busts": 0,
+          "bails": 0,
+          "meanMult": 44.357142857142854,
+          "draws": 6,
+          "hp": 190,
+          "pearls": 99,
+          "phaseChips": {
+            "ascent": 138,
+            "apex": 96,
+            "descent": 141
+          },
+          "avgAir": 7.110357744450113
+        },
+        {
+          "wave": 7,
+          "score": 19832,
+          "quota": 1693,
+          "hands": 7,
+          "busts": 0,
+          "bails": 3,
+          "meanMult": 31.785714285714285,
+          "draws": 6,
+          "hp": 280,
+          "pearls": 107,
+          "phaseChips": {
+            "ascent": 133,
+            "apex": 213,
+            "descent": 145
+          },
+          "avgAir": 7.844995585190622
+        },
+        {
+          "wave": 8,
+          "score": 14718,
+          "quota": 2124,
+          "hands": 7,
+          "busts": 0,
+          "bails": 7,
+          "meanMult": 28.92857142857143,
+          "draws": 6,
+          "hp": 280,
+          "pearls": 128,
+          "phaseChips": {
+            "ascent": 108,
+            "apex": 153,
+            "descent": 148
+          },
+          "avgAir": 8.481005933192435
+        },
+        {
+          "wave": 9,
+          "score": 46809,
+          "quota": 5295,
+          "hands": 7,
+          "busts": 0,
+          "bails": 1,
+          "meanMult": 39.357142857142854,
+          "draws": 6,
+          "hp": 280,
+          "pearls": 121,
+          "phaseChips": {
+            "ascent": 310,
+            "apex": 227,
+            "descent": 381
+          },
+          "avgAir": 9.140529585592335
+        },
+        {
+          "wave": 10,
+          "score": 60690,
+          "quota": 6506,
+          "hands": 7,
+          "busts": 0,
+          "bails": 3,
+          "meanMult": 45.57142857142858,
+          "draws": 6,
+          "hp": 280,
+          "pearls": 131,
+          "phaseChips": {
+            "ascent": 294,
+            "apex": 395,
+            "descent": 278
+          },
+          "avgAir": 9.736874153560324
+        },
+        {
+          "wave": 11,
+          "score": 13990,
+          "quota": 5692,
+          "hands": 7,
+          "busts": 4,
+          "bails": 10,
+          "meanMult": 31.500000000000004,
+          "draws": 6,
+          "hp": 280,
+          "pearls": 132,
+          "phaseChips": {
+            "ascent": 202,
+            "apex": 227,
+            "descent": 94
+          },
+          "avgAir": 8.789311613021594
+        },
+        {
+          "wave": 12,
+          "score": 51211,
+          "quota": 8395,
+          "hands": 6,
+          "busts": 0,
+          "bails": 5,
+          "meanMult": 57.08333333333333,
+          "draws": 6,
+          "hp": 280,
+          "pearls": 164,
+          "phaseChips": {
+            "ascent": 197,
+            "apex": 287,
+            "descent": 277
+          },
+          "avgAir": 11.14162506737902
+        },
+        {
+          "wave": 13,
+          "score": 22447,
+          "quota": 9653,
+          "hands": 6,
+          "busts": 3,
+          "bails": 9,
+          "meanMult": 34.33333333333333,
+          "draws": 6,
+          "hp": 280,
+          "pearls": 144,
+          "phaseChips": {
+            "ascent": 283,
+            "apex": 322,
+            "descent": 171
+          },
+          "avgAir": 11.729262126652914
+        },
+        {
+          "wave": 14,
+          "score": 26597,
+          "quota": 9634,
+          "hands": 5,
+          "busts": 1,
+          "bails": 5,
+          "meanMult": 46.4,
+          "draws": 6,
+          "hp": 280,
+          "pearls": 167,
+          "phaseChips": {
+            "ascent": 191,
+            "apex": 180,
+            "descent": 180
+          },
+          "avgAir": 12.0462425388159
+        },
+        {
+          "wave": 15,
+          "score": 47330,
+          "quota": 17258,
+          "hands": 5,
+          "busts": 1,
+          "bails": 5,
+          "meanMult": 57.6,
+          "draws": 6,
+          "hp": 280,
+          "pearls": 172,
+          "phaseChips": {
+            "ascent": 279,
+            "apex": 233,
+            "descent": 276
+          },
+          "avgAir": 12.895312304600505
+        },
+        {
+          "wave": 16,
+          "score": 164466,
+          "quota": 22258,
+          "hands": 5,
+          "busts": 1,
+          "bails": 4,
+          "meanMult": 174.8,
+          "draws": 6,
+          "hp": 280,
+          "pearls": 197,
+          "phaseChips": {
+            "ascent": 244,
+            "apex": 262,
+            "descent": 242
+          },
+          "avgAir": 12.947283380616048
+        }
+      ],
+      "purchases": [
+        {
+          "wave": 1,
+          "row": "routine",
+          "id": "polish",
+          "price": 7
+        },
+        {
+          "wave": 1,
+          "row": "charm",
+          "id": "S03",
+          "price": 14
+        },
+        {
+          "wave": 1,
+          "row": "pack",
+          "id": "routine",
+          "price": 8
+        },
+        {
+          "wave": 1,
+          "row": "item",
+          "id": "I10",
+          "price": 20
+        },
+        {
+          "wave": 2,
+          "row": "weapon",
+          "id": "rocket",
+          "price": 16
+        },
+        {
+          "wave": 2,
+          "row": "routine",
+          "id": "routine",
+          "price": 11
+        },
+        {
+          "wave": 2,
+          "row": "routine",
+          "id": "draw",
+          "price": 42
+        },
+        {
+          "wave": 3,
+          "row": "weapon",
+          "id": "flak",
+          "price": 18
+        },
+        {
+          "wave": 3,
+          "row": "routine",
+          "id": "routine",
+          "price": 13
+        },
+        {
+          "wave": 3,
+          "row": "pack",
+          "id": "charm",
+          "price": 12
+        },
+        {
+          "wave": 3,
+          "row": "stat",
+          "id": 8,
+          "price": 16
+        },
+        {
+          "wave": 4,
+          "row": "routine",
+          "id": "routine",
+          "price": 15
+        },
+        {
+          "wave": 4,
+          "row": "charm",
+          "id": "N01",
+          "price": 20
+        },
+        {
+          "wave": 4,
+          "row": "pack",
+          "id": "routine",
+          "price": 13
+        },
+        {
+          "wave": 4,
+          "row": "weapon",
+          "id": "rocket",
+          "price": 37
+        },
+        {
+          "wave": 5,
+          "row": "weapon",
+          "id": "flak",
+          "price": 23
+        },
+        {
+          "wave": 5,
+          "row": "routine",
+          "id": "routine",
+          "price": 17
+        },
+        {
+          "wave": 5,
+          "row": "routine",
+          "id": "routine",
+          "price": 17
+        },
+        {
+          "wave": 5,
+          "row": "routine",
+          "id": "routine",
+          "price": 17
+        },
+        {
+          "wave": 5,
+          "row": "pack",
+          "id": "routine",
+          "price": 15
+        },
+        {
+          "wave": 6,
+          "row": "weapon",
+          "id": "flak",
+          "price": 44
+        },
+        {
+          "wave": 6,
+          "row": "routine",
+          "id": "routine",
+          "price": 18
+        },
+        {
+          "wave": 6,
+          "row": "routine",
+          "id": "polish",
+          "price": 15
+        },
+        {
+          "wave": 6,
+          "row": "stat",
+          "id": 8,
+          "price": 22
+        },
+        {
+          "wave": 7,
+          "row": "item",
+          "id": "I06",
+          "price": 37
+        },
+        {
+          "wave": 7,
+          "row": "weapon",
+          "id": "depth",
+          "price": 27
+        },
+        {
+          "wave": 7,
+          "row": "routine",
+          "id": "polish",
+          "price": 17
+        },
+        {
+          "wave": 7,
+          "row": "routine",
+          "id": "polish",
+          "price": 17
+        },
+        {
+          "wave": 8,
+          "row": "weapon",
+          "id": "rocket",
+          "price": 29
+        },
+        {
+          "wave": 8,
+          "row": "pack",
+          "id": "charm",
+          "price": 20
+        },
+        {
+          "wave": 8,
+          "row": "weapon",
+          "id": "rocket",
+          "price": 51
+        },
+        {
+          "wave": 8,
+          "row": "stat",
+          "id": 10,
+          "price": 26
+        },
+        {
+          "wave": 9,
+          "row": "routine",
+          "id": "polish",
+          "price": 20
+        },
+        {
+          "wave": 9,
+          "row": "pack",
+          "id": "routine",
+          "price": 22
+        },
+        {
+          "wave": 9,
+          "row": "routine",
+          "id": "polish",
+          "price": 20
+        },
+        {
+          "wave": 9,
+          "row": "routine",
+          "id": "routine",
+          "price": 24
+        },
+        {
+          "wave": 9,
+          "row": "stat",
+          "id": 10,
+          "price": 28
+        },
+        {
+          "wave": 10,
+          "row": "weapon",
+          "id": "rocket",
+          "price": 58
+        },
+        {
+          "wave": 10,
+          "row": "routine",
+          "id": "polish",
+          "price": 22
+        },
+        {
+          "wave": 10,
+          "row": "weapon",
+          "id": "rocket",
+          "price": 34
+        },
+        {
+          "wave": 11,
+          "row": "weapon",
+          "id": "depth",
+          "price": 61
+        },
+        {
+          "wave": 11,
+          "row": "routine",
+          "id": "routine",
+          "price": 27
+        },
+        {
+          "wave": 11,
+          "row": "routine",
+          "id": "polish",
+          "price": 23
+        },
+        {
+          "wave": 12,
+          "row": "weapon",
+          "id": "rocket",
+          "price": 38
+        },
+        {
+          "wave": 12,
+          "row": "routine",
+          "id": "routine",
+          "price": 29
+        },
+        {
+          "wave": 12,
+          "row": "routine",
+          "id": "routine",
+          "price": 29
+        },
+        {
+          "wave": 12,
+          "row": "routine",
+          "id": "polish",
+          "price": 25
+        },
+        {
+          "wave": 12,
+          "row": "routine",
+          "id": "polish",
+          "price": 25
+        },
+        {
+          "wave": 13,
+          "row": "routine",
+          "id": "routine",
+          "price": 31
+        },
+        {
+          "wave": 13,
+          "row": "routine",
+          "id": "polish",
+          "price": 26
+        },
+        {
+          "wave": 13,
+          "row": "weapon",
+          "id": "rocket",
+          "price": 68
+        },
+        {
+          "wave": 14,
+          "row": "routine",
+          "id": "polish",
+          "price": 28
+        },
+        {
+          "wave": 14,
+          "row": "charm",
+          "id": "N09",
+          "price": 86
+        },
+        {
+          "wave": 14,
+          "row": "pack",
+          "id": "routine",
+          "price": 42
+        },
+        {
+          "wave": 15,
+          "row": "item",
+          "id": "I10",
+          "price": 60
+        },
+        {
+          "wave": 15,
+          "row": "replacement",
+          "id": "rocket",
+          "price": 56
+        },
+        {
+          "wave": 15,
+          "row": "routine",
+          "id": "polish",
+          "price": 30
+        },
+        {
+          "wave": 16,
+          "row": "weapon",
+          "id": "depth",
+          "price": 47
+        },
+        {
+          "wave": 16,
+          "row": "routine",
+          "id": "technique",
+          "price": 52
+        },
+        {
+          "wave": 16,
+          "row": "routine",
+          "id": "polish",
+          "price": 31
+        },
+        {
+          "wave": 16,
+          "row": "routine",
+          "id": "polish",
+          "price": 31
+        },
+        {
+          "wave": 16,
+          "row": "routine",
+          "id": "polish",
+          "price": 31
+        }
+      ],
+      "ticks": 139464
+    }
+  ]
+}

@@ -2,23 +2,24 @@
 var FiveCombat = (function () {
   'use strict';
   var hooks = {}, IDS = ['I01','I02','I03','I04','I05','I06','I07','I08','I09','I10'];
+  // Shop text is two lines at most (design doc §4.8); `copies` explains stacking in the details panel.
   var catalogue = [
-    {id:'I01',name:'Overkill reservoir',price:18,rarity:2,text:'Bank 25% of wasted primary damage; release it on the next surviving target. +15% per copy, up to 75%.'},
-    {id:'I02',name:'Slow wound',price:10,rarity:1,text:'First target of each attack takes 15% noncrit damage over 2 active-air seconds. +10% per copy.'},
-    {id:'I03',name:'Wake collector',price:18,rarity:2,text:'Three safe projectile grazes load a 50% arc to a nearby second target. +25% per copy.'},
-    {id:'I04',name:'Opening reserve',price:18,rarity:2,text:'After a ready breach, the first hit with another target sends a forward 35% cone from its impact, radius6m, to up to three other enemies. Holds its charge until useful. 4 active-air seconds recharge. +20% per copy.'},
-    {id:'I05',name:'Apex lens',price:30,rarity:3,minWave:5,text:'Ascent attacks load four charges. From apex onward, your displayed strongest slot releases +15% per charge on its first surviving victim. Killing blows preserve the charge. 6 air seconds recharge. +10% per copy.'},
-    {id:'I06',name:'Paired circuit',price:18,rarity:2,text:'Link two living nearby targets for 2 seconds; later attacks echo 20%. 6 air seconds recharge. +10% per copy, up to 50%.'},
-    {id:'I07',name:'Water hammer',price:30,rarity:3,text:'After a kill, real water contact blasts nearby enemies for 75% of your strongest attack. 6 air seconds recharge. +35% per copy.'},
-    {id:'I08',name:'Repulsor hull',price:10,rarity:1,text:'A ready accepted hit deals 25% less and pushes up to eight nearby enemies. 8 air seconds recharge. +10% per copy, up to 55%.'},
-    {id:'I09',name:'Sinking mark',price:10,rarity:1,text:'First target of an attack moves 20% slower for 1.5 air seconds. One mark; half effect on bosses. +10% per copy, up to 40%.'},
-    {id:'I10',name:'Entry membrane',price:18,rarity:2,text:'A kill-bearing entry stores a 10%-HP shield for the next flight. 8 air seconds recharge. +5% per copy, up to 25%.'}
+    {id:'I01',name:'Overkill reservoir',price:18,rarity:2,text:'Wasted kill damage (25%) strikes your next target.',copies:'+15% per copy, up to 75%.'},
+    {id:'I02',name:'Slow wound',price:10,rarity:1,text:'Each attack\u2019s first target bleeds 15% over 2 s.',copies:'+10% per copy.'},
+    {id:'I03',name:'Wake collector',price:18,rarity:2,text:'Three near-miss grazes charge a 50% arc to a second target.',copies:'+25% per copy.'},
+    {id:'I04',name:'Opening reserve',price:18,rarity:2,text:'After breach, your first hit sprays 35% to 3 enemies beyond it.',copies:'+20% per copy. Recharges in 4 s.'},
+    {id:'I05',name:'Apex lens',price:30,rarity:3,minWave:5,text:'Climbing hits charge your strongest weapon for the apex (+15% each).',copies:'+10% per copy. Recharges in 6 s.'},
+    {id:'I06',name:'Paired circuit',price:18,rarity:2,text:'Links two nearby enemies; hitting one echoes 20% to the other.',copies:'+10% per copy, up to 50%. Recharges in 6 s.'},
+    {id:'I07',name:'Water hammer',price:30,rarity:3,text:'After a kill, splashdown blasts nearby enemies for 75% of your best hit.',copies:'+35% per copy. Recharges in 6 s.'},
+    {id:'I08',name:'Repulsor hull',price:10,rarity:1,text:'A hit deals 25% less and shoves nearby enemies away.',copies:'+10% per copy, up to 55%. Recharges in 8 s.'},
+    {id:'I09',name:'Sinking mark',price:10,rarity:1,text:'Each attack\u2019s first target moves 20% slower for 1.5 s.',copies:'+10% per copy, up to 40%. Half effect on bosses.'},
+    {id:'I10',name:'Entry membrane',price:18,rarity:2,text:'Splashdown with kills: a 10% HP shield on your next jump.',copies:'+5% per copy, up to 25%. Recharges in 8 s.'}
   ];
   function configure(next) { hooks = Object.assign({}, hooks, next || {}); return api; }
   function create() { return {time:0,cooldowns:{I04:0,I05:0,I06:0,I07:0,I08:0,I10:0},reservoir:0,reservoirAttack:null,wounds:{},graze:{},grazeCharges:0,grazeNext:0,opening:false,apex:{slot:-1,id:null,amount:0,charges:0,released:false},pair:null,mark:null,shield:0,storedShield:0,attacks:{},attackOrder:[],triggers:{},entryDone:false}; }
   function state(r) { if (!r.demo) r.demo={}; if (!r.demo.itemCounts) r.demo.itemCounts={}; return r.demo.itemState || (r.demo.itemState=create()); }
   function count(r,id) { return Math.max(0,Math.floor(Number(r.demo && r.demo.itemCounts && r.demo.itemCounts[id])||0)); }
-  function live(r) { return r.mode==='playing' && r.medium && r.medium.kind==='air' && !r.armed; }
+  function live(r) { return r.mode==='playing' && r.medium && r.medium.kind==='air' && !r.armed && !(r.hand && r.hand.busted); }
   function alive(r,e) { return !!e && e.hp>0 && (r.enemies||[]).includes(e); }
   function position(r) { return hooks.position ? hooks.position(r) : r.medium && r.medium.local || {x:0,y:0}; }
   function world(r,p) { var o=r.medium && r.medium.origin || {x:0,y:0}; return {x:o.x+p.x,y:o.y+p.y}; }

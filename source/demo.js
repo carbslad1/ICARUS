@@ -48,7 +48,7 @@ var DEMO = (() => {
     Reach:{group:'combat',sizes:[1,2,3,4]},Area:{group:'combat',sizes:[.05,.10,.15,.20]},
     'Max HP':{group:'defence',sizes:[3,6,9,12]},Armour:{group:'defence',sizes:[1,2,3,4]},Regen:{group:'defence',sizes:[2,3,4,5]},
     Lift:{group:'flight',sizes:[1,2,3,4]},Hang:{group:'flight',sizes:[1,2,3,4]},Drive:{group:'flight',sizes:[1,2,3,4]},'Air steering':{group:'flight',sizes:[.03,.06,.09,.12]},
-    Pickup:{group:'economy',sizes:[1,2,3,4]},Luck:{group:'economy',sizes:[5,10,15,20]},'XP gain':{group:'economy',sizes:[.05,.10,.15,.20]}
+    Luck:{group:'economy',sizes:[5,10,15,20]}
   };
   const items = [
     {name:'Close training',up:'Close',value:3,down:'Shot',loss:1}, {name:'Sight glass',up:'Shot',value:3,down:'Armour',loss:1},
@@ -58,9 +58,10 @@ var DEMO = (() => {
     {name:'Reinforced scales',up:'Max HP',value:9,down:'Damage %',loss:.04}, {name:'Shell weave',up:'Armour',value:3},
     {name:'Recovery tissue',up:'Regen',value:3}, {name:'Rising fin',up:'Lift',value:3},
     {name:'Floating fin',up:'Hang',value:3}, {name:'Driving fin',up:'Drive',value:3},
-    {name:'Collector',up:'Pickup',value:3}, {name:'Lucky shell',up:'Luck',value:10}, {name:'Fast learner',up:'XP gain',value:.15},
-    {name:'Routine space',rule:'hand',text:'+1 hand size.'}, {name:'Charm loop',rule:'charm',text:'+1 charm slot.'}
+    {name:'Lucky shell',up:'Luck',value:10}, {name:'Steering fin',up:'Air steering',value:.09}
   ];
+  // Gear is the only source of stats (design doc §4.10): no XP or level-ups. Driving fin stays out of offers, as before.
+  const gearStats=items.map((x,i)=>i).filter(i=>items[i].up!=='Drive');
   const tier=(v,l)=>Array.isArray(v)?v[l-1]:v;
   const choose=(r,a)=>a[Math.floor(ce(r)*a.length)];
   const shuffle=(r,a)=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(ce(r)*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
@@ -75,12 +76,15 @@ var DEMO = (() => {
     let time=g[0],interval=g[2],left=g[1],first=true;
     while(time<clock(w)){for(const u of g[9])total+=(u[1]+u[2])/2*u[3]*(Obt[u[0]]?.[2]||1)*(first?g[5]:1);if(left--<=0)break;time+=interval;interval=Math.max(g[4],interval-g[3]);first=false;if(interval<=0)break}
   }return total+(w%10===0?25:0)}
-  const quota=w=>Math.max(1,Math.ceil(expectedChips(w)*(1.65+.50*(w-1))));
-  const cap=r=>FiveScore.draws(r.wave);
+  // The required mult grows geometrically, like a blind ladder, because the score machine now compounds (§4.3). [TUNE]
+  const quota=w=>Math.max(1,Math.ceil(expectedChips(w)*2.2*Math.pow(1.23,w-1)));
+  const cap=r=>FiveScore.draws(r.demo.score,r.demo.charms);
+  // A hit bails the trick in progress; 0 HP busts the jump (design doc §4.6). Tuning values.
+  const BUST={fall:24,revive:.5};
   const charmSlots=r=>5+(r.demo.charmBonus||0);
   function phase(r){const h=r.hand,t=h?.activeAir||0,p=h?.pred||{air:1,apex:.5};return t<p.apex-p.air*.1?'ascent':t<=p.apex+p.air*.1?'apex':'descent'}
   function strongest(r){return r.slots.map((g,slot)=>({id:g.id,slot,amount:weaponDamage(r,weapons[g.id],g.lvl,false)})).sort((a,b)=>b.amount-a.amount||a.slot-b.slot)[0]||{id:'',slot:-1,amount:0}}
-  function ledger(r){const h=r.hand;return {K:h.K,kills:h.kills,hits:h.hits,air:h.activeAir,predAir:h.pred.air,phases:h.phaseChips,openingK:h.openingK,lateK:h.lateK,belowK:h.belowK,entryKills:h.entryKills,primaryTypes:[...h.primaryTypes],maxMulti:h.maxMulti,wave:r.wave,bankId:h.n}}
+  function ledger(r){const h=r.hand;return {K:h.K,kills:h.kills,hits:h.hits,air:h.activeAir,bails:h.bails,busted:!!h.busted,netUsed:!!h.netUsed,hpFrac:r.hp/Math.max(1,r.stats.maxHp),banked:r.demo.history.filter(x=>x.score>0).length,closeWeapons:r.slots.filter(g=>weapons[g.id]?.type==='Close').length,maxMulti:h.maxMulti,wave:r.wave,bankId:h.n,luck:r.demo.stats.Luck,angle:Math.abs(Math.atan2(Math.sin(h.launch.angle),Math.abs(Math.cos(h.launch.angle))))*180/Math.PI}}
   function returnBoss(r,e,pursuer=null){
     if(!e||e.hp<=0||r.demo.bossDefeated)return;
     if(r.enemies.some(q=>q.id===e.id)||(r.pursuers||[]).some(q=>q.id===e.id))return;
@@ -92,18 +96,20 @@ var DEMO = (() => {
     r.demo.bossRecoveries=(r.demo.bossRecoveries||0)+1;
   }
   function bossAlive(r){return r.enemies.some(e=>e.role==='boss'&&e.hp>0)||(r.pursuers||[]).some(p=>p.e?.role==='boss'&&p.e.hp>0)}
-  function diagnosis(r){const t=r.demo.waveTelemetry||{},h=r.hand;return {wave:r.wave,reason:r.endReason||null,score:r.wscore,quota:r.quota,quotaRatio:r.wscore/Math.max(1,r.quota),quotaMet:r.wscore>=r.quota,hp:r.hp,maxHp:r.stats.maxHp,armour:r.stats.armour,regen:r.demo.stats.Regen,activeAir:r.demo.air,airRemaining:r.budget,overtime:!!r.demo.overtime,overtimeAir:r.demo.overtimeAir||0,damageTaken:t.damageTaken||0,acceptedHits:t.hits||0,primaryApplied:t.primaryApplied||0,secondaryApplied:t.secondaryApplied||0,chips:r.wkill,bankedFlights:r.demo.history.length,unbankedChips:h?.open?h.K:0,unbankedBaseEstimate:h?.open?Math.round(h.K*h.mult):0,slots:r.slots.map(g=>({id:g.id,tier:g.lvl})),lastHits:(t.lastHits||[]).slice(-6),bossSpawned:!!r.demo.bossSpawned,bossDefeated:!!r.demo.bossDefeated,bossRecoveries:r.demo.bossRecoveries||0};}
-  function recordKill(r,e,ctx){const h=r.hand;if(!h)return;const t=h.activeAir,ph=phase(r),kv=e.kv||1,below=e.pos.y-r.medium.local.y>=4;
-    h.K+=kv;h.phaseChips[ph]+=kv;if(t<=Math.min(1,.2*h.pred.air))h.openingK+=kv;if(t>=.75*h.pred.air)h.lateK+=kv;if(below)h.belowK+=kv;if(ctx.item==='I07')h.entryKills++;
-    ScoreCues.chips(r,kv,Mr(r.medium.origin,e.pos));
-    h.kills.push({t,phase:ph,kv,weaponType:weapons[ctx.weapon]?.type,primary:ctx.primary,attackId:ctx.attackId,below,entry:ctx.item==='I07'});
-    if(ctx.primary){const id=ctx.attackId||0;h.attackKills[id]=(h.attackKills[id]||0)+1;h.maxMulti=Math.max(h.maxMulti,h.attackKills[id])}
+  function diagnosis(r){const t=r.demo.waveTelemetry||{},h=r.hand;return {wave:r.wave,reason:r.endReason||null,score:r.wscore,quota:r.quota,quotaRatio:r.wscore/Math.max(1,r.quota),quotaMet:r.wscore>=r.quota,hp:r.hp,maxHp:r.stats.maxHp,armour:r.stats.armour,regen:r.demo.stats.Regen,activeAir:r.demo.air,airRemaining:r.budget,overtime:!!r.demo.overtime,overtimeAir:r.demo.overtimeAir||0,damageTaken:t.damageTaken||0,acceptedHits:t.hits||0,primaryApplied:t.primaryApplied||0,secondaryApplied:t.secondaryApplied||0,chips:r.wkill,bankedFlights:r.demo.history.length,busts:t.busts||0,bails:t.bails||0,unbankedChips:h?.open?h.K:0,unbankedBaseEstimate:h?.open?Math.round(h.K*h.mult):0,slots:r.slots.map(g=>({id:g.id,tier:g.lvl})),lastHits:(t.lastHits||[]).slice(-6),bossSpawned:!!r.demo.bossSpawned,bossDefeated:!!r.demo.bossDefeated,bossRecoveries:r.demo.bossRecoveries||0};}
+  // Kills are chips, plus chip bonuses for how they happened (design doc §4.2). Score only; damage is untouched.
+  function recordKill(r,e,ctx){const h=r.hand;if(!h)return;const t=h.activeAir,ph=phase(r),kv=e.kv||1,B=FiveScore.chipBonus;
+    let multi=0;if(ctx.primary){const id=ctx.attackId||0;h.attackKills[id]=(h.attackKills[id]||0)+1;h.maxMulti=Math.max(h.maxMulti,h.attackKills[id]);if(h.attackKills[id]>=2)multi=B.multi}
+    const apex=ph==='apex'?B.apex:0,crit=ctx.crit?B.crit:0,bonus=multi+apex+crit;
+    h.K+=kv+bonus;h.phaseChips[ph]+=kv+bonus;h.bonus.multi+=multi;h.bonus.apex+=apex;h.bonus.crit+=crit;
+    ScoreCues.chips(r,kv+bonus,Mr(r.medium.origin,e.pos),bonus?{multi,apex,crit}:null);
+    h.kills.push({t,phase:ph,kv,bonus,weaponType:weapons[ctx.weapon]?.type,primary:ctx.primary,attackId:ctx.attackId,above:e.pos.y-r.medium.local.y>=2,crit:!!ctx.crit,opening:t<=1,late:h.pred.air-t<=1,entry:ctx.item==='I07'});
   }
   function sync(r){
     const s=r.demo.stats;
     r.stats.damage=Math.max(.05,1+s['Damage %']);r.stats.fireRate=Math.max(.1,1+s['Attack speed']);
     r.stats.armour=s.Armour+2*r.slots.filter(g=>weapons[g.id]?.type==='Close').length;
-    r.stats.maxHp=100+((r.lvl||0)+s['Max HP'])*hpScale();r.stats.magnet=13+s.Pickup;r.stats.xpRate=Math.max(.1,1+s['XP gain']);
+    r.stats.maxHp=100+s['Max HP']*hpScale();r.stats.magnet=13;r.stats.xpRate=1;
     r.hp=Math.min(r.hp,r.stats.maxHp);
   }
   function init(r,starter){
@@ -120,44 +126,59 @@ var DEMO = (() => {
     
     r.enemies=[];r.pursuers=[];r.shots=[];r.wshots=[];r.eorbs=[];r.departing=[];r.warns=[];r.bw=-1;r.bq=[];r.spawnRemaining=0;r.boss=null;
     r.medium={kind:'water',pos:se(0,-10.5),heading:-Math.PI/4,velocity:{x:18,y:-18}};r.cam=se(0,-10.5);r.camV=se(0,0);r.row=false;r.tkq=null;
+    drawNext(r);
   }
+  // The next jump's tricks are drawn as soon as the previous jump banks or busts, so the dive can show their heat (§4.4).
+  function drawNext(r){const d=r.demo;d.heldHand=FiveScore.draw(d.score,cap(r),()=>ce(r));d.handSeq=(d.handSeq||0)+1;d.heat=FiveScore.heat(d.score,d.heldHand,d.stats.Luck)}
   function forecast(r,m){const s=r.demo.stats,vy=Math.max(.1,m.vy),g=15*Math.max(.4,1-.025*s.Hang),air=vy/15+Math.sqrt((vy*vy/15)/g);return{height:vy*vy/30,air,apex:vy/15,distance:Math.abs(m.vx)*air,turned:r.demo.lastDir!==0&&r.demo.lastDir!==Math.sign(m.vx)}};
   function open(r){const d=r.demo,m=r.medium,s=d.stats;m.vx*=Math.max(.25,1+.03*s.Drive);m.vy*=Math.max(.25,1+.03*s.Lift);
-    const pred=forecast(r,m),hand=d.heldHand||FiveScore.draw(d.score,cap(r),()=>ce(r));d.heldHand=hand;
-    const raw=FiveScore.evaluate(structuredClone(d.score),hand,{K:0,wave:r.wave},[],()=>.5);
+    if(!d.heldHand)drawNext(r);const pred=forecast(r,m),hand=d.heldHand;
+    const raw=FiveScore.evaluate(d.score,hand,{K:0,wave:r.wave,preview:true},[],()=>.5);
     r.hand={n:d.history.length+1,open:1,K:0,M:raw.mult,mult:raw.mult,banked:0,drawn:hand.slice(),parts:[],trick:'plain',kills:[],completed:hand.map(id=>({id,name:cards[id].name,family:cards[id].family})),controls:[],slots:hand.length,cap:cap(r),air:0,activeAir:0,airAll:0,t0:r.time,x0:m.origin.x,peak:0,dist:0,hits:0,hpLost:0,
-      launch:{angle:Math.atan2(m.vy,m.vx),speed:Math.hypot(m.vx,m.vy)},pred,ref:standard(r.wave),apex:false,active:null,held:[],lit:[],fizzles:[],phaseChips:{ascent:0,apex:0,descent:0},openingK:0,lateK:0,belowK:0,entryKills:0,primaryTypes:new Set(),attackKills:{},maxMulti:0};
+      launch:{angle:Math.atan2(m.vy,m.vx),speed:Math.hypot(m.vx,m.vy)},pred,ref:standard(r.wave),apex:false,active:null,held:[],lit:[],fizzles:[],phaseChips:{ascent:0,apex:0,descent:0},bonus:{multi:0,apex:0,crit:0},bails:[],busted:false,netUsed:false,attackKills:{},maxMulti:0};
     ScoreCues.begin(r);FiveCombat.breach(r);r.hand.itemStart={...r.demo.itemState.triggers};
   }
   function fireCharms(){} // Phase facts are accumulated in combat; score charms resolve exactly once at entry.
   function nextCard(){}
-  function tickCards(r){const h=r.hand;if(!h?.open)return;ScoreCues.tick(r);const n=h.drawn.length,i=Math.min(n-1,Math.floor(h.air/Math.max(.1,h.pred.air)*n)),id=h.drawn[i];h.active={list:[{id}],elapsed:(h.air/Math.max(.1,h.pred.air)*n)%1,time:1};h.parts=[{spout:'spout',front:'front',back:'front',cork:'cork',star:'pose'}[id]]}
+  function tickCards(r){const h=r.hand;if(!h?.open)return;if(h.busted){h.active=null;return}ScoreCues.tick(r);const n=h.drawn.length,i=Math.min(n-1,Math.floor(h.air/Math.max(.1,h.pred.air)*n)),id=h.drawn[i];h.active={list:[{id}],elapsed:(h.air/Math.max(.1,h.pred.air)*n)%1,time:1};h.parts=[{spout:'spout',front:'front',back:'front',cork:'cork',star:'pose'}[id]]}
   function bank(r){const h=r.hand;if(!h?.open)return;const d=r.demo;d.score.luck=d.stats.Luck;
     const result=FiveScore.evaluate(d.score,h.drawn,ledger(r),d.charms.map(id=>({id,face:d.charmFaces[id]})),()=>ce(r));
-    h.active=null;h.open=0;h.M=h.mult=result.mult;h.banked=Math.round(h.K*h.mult);r.wscore+=h.banked;if(h.K>0)d.heldHand=null;
+    h.active=null;h.open=0;h.M=h.mult=result.mult;h.chips=result.chips;h.banked=result.score;r.wscore+=h.banked;d.pendingPearls=(d.pendingPearls||0)+(result.pearls||0);
+    if(h.busted)r.hp=Math.max(1,Math.round(r.stats.maxHp*BUST.revive));
     ScoreCues.finish(r,result);
     const items=Object.entries(d.itemState.triggers).map(([id,n])=>({id,name:FiveCombat.items[id].name,count:n-(h.itemStart[id]||0)})).filter(x=>x.count>0);
-    d.history.push({base:result.base,items,techniqueLog:result.techniqueLog,predAir:h.pred.air,apexWeapon:d.itemState.apex.id,chips:h.K,mult:h.mult,score:h.banked,cards:h.drawn.map(id=>cards[id].name),drawn:h.drawn.slice(),combos:result.combos,charmLog:result.charmLog,kills:h.kills.length,air:h.activeAir,physicalAir:h.air,peak:h.peak,hits:h.hits,hpLost:h.hpLost,launch:{...h.launch},slots:h.slots,cap:h.cap,phases:{...h.phaseChips},openingK:h.openingK,lateK:h.lateK,entryKills:h.entryKills});d.last=d.history.at(-1);
-    for(const c of result.charmLog||[])if(c.after!==c.before){const effect=c.factor>1?'×mult':'+mult',amount=c.factor>1?c.factor:c.after-c.before;d.lastCharm={name:c.name,effect,value:amount,t:r.time};r.events.push({kind:'charm',pos:he(r),name:c.name,effect,value:amount,seq:(r.events.filter(e=>e.kind==='charm').length+1)})}
-    r.events.push({kind:'bank',pos:he(r),value:h.banked,K:h.K,M:h.mult,n:h.drawn.length,trick:'plain'});
+    d.history.push({base:result.base,items,techniqueLog:result.techniqueLog,predAir:h.pred.air,apexWeapon:d.itemState.apex.id,chips:result.chips,killChips:h.K,bonus:{...h.bonus},mult:h.mult,score:h.banked,pearls:result.pearls||0,busted:!!h.busted,bails:result.bails.slice(),cards:h.drawn.map(id=>cards[id].name),drawn:h.drawn.slice(),combos:result.combos,charmLog:result.charmLog,kills:h.kills.length,air:h.activeAir,physicalAir:h.air,peak:h.peak,hits:h.hits,hpLost:h.hpLost,launch:{...h.launch},slots:h.slots,cap:h.cap,phases:{...h.phaseChips},entryKills:h.kills.filter(k=>k.entry).length});d.last=d.history.at(-1);
+    for(const c of result.charmLog||[])if(c.active){const effect=c.factor>1?'×mult':c.chips?'+chips':c.pearls?'pearls':c.after!==c.before?'+mult':null,amount=c.factor>1?c.factor:c.chips||c.pearls||c.after-c.before;if(!effect)continue;d.lastCharm={name:c.name,effect,value:amount,t:r.time};r.events.push({kind:'charm',pos:he(r),name:c.name,effect,value:amount,seq:(r.events.filter(e=>e.kind==='charm').length+1)})}
+    r.events.push({kind:'bank',pos:he(r),value:h.banked,K:result.chips,M:h.mult,n:h.drawn.length,busted:!!h.busted,trick:'plain'});
+    if(h.K>0||h.busted)drawNext(r);
   }
   function damage(r,e,amount,weapon,dx=0,dy=0,kb=0,crit=false,ctx=null){
-    if(r.mode!=='playing'||r.medium.kind!=='air'||r.armed||!r.enemies.includes(e)||e.hp<=0)return;
-    ctx={...(ctx||r.demo.currentAttack||{primary:false,weapon,base:amount}),beforeHP:e.hp,amount};if(ctx.primary&&r.hand)r.hand.primaryTypes.add(weapons[ctx.weapon]?.type);
+    if(r.mode!=='playing'||r.medium.kind!=='air'||r.armed||r.hand?.busted||!r.enemies.includes(e)||e.hp<=0)return;
+    ctx={...(ctx||r.demo.currentAttack||{primary:false,weapon,base:amount}),beforeHP:e.hp,amount};
     amount=FiveCombat.beforeDamage(r,e,amount,ctx);e.hp-=amount;ctx.amount=amount;ctx.killed=e.hp<=0;const applied=Math.min(ctx.beforeHP,amount);if(r.demo.waveTelemetry)r.demo.waveTelemetry[ctx.primary?'primaryApplied':'secondaryApplied']+=applied;r.events.push({kind:'damage',pos:Mr(r.medium.origin,e.pos),value:amount,applied:Math.min(ctx.beforeHP,amount),primary:ctx.primary,item:ctx.item,weapon,id:e.id,crit:!!crit});
     if(e.hp>0){e.velocity.x+=dx*kb;e.velocity.y+=dy*kb;FiveCombat.afterDamage(r,e,ctx);return}
     r.enemies=r.enemies.filter(x=>x!==e);r.kills++;r.flightKills++;r.wkill+=e.kv;r.waveKills++;
     // as v3's kill (lw): a splitter breaks into two swarmers
     if(e.kind==='splitter')for(let s=0;s<2&&r.enemies.length+(r.pursuers?.length||0)<100;s++){const o=6*Ld(r.wave);r.enemies.push({...e,id:++r.id,kind:'swarmer',xp:Osp.xp,tint:0,pos:ye(e.pos.x+(s?1.3:-1.3),e.pos.y+1.5),hp:o,maxHp:o,radius:ObR(1),age:0,velocity:{x:s?12:-12,y:8}})}
     if(e.role==='boss')r.demo.bossDefeated=true;recordKill(r,e,ctx);FiveCombat.afterDamage(r,e,ctx);
-    Oxedrop(r,r.medium,e);r.events.push({kind:'kill',pos:Mr(r.medium.origin,e.pos),enemy:e.kind,weapon,value:e.kv});
+    r.events.push({kind:'kill',pos:Mr(r.medium.origin,e.pos),enemy:e.kind,weapon,value:e.kv});
   }
   function hit(r,amount){
-    if(r.medium.kind!=='air'||r.armed||r.hurt>0||r.medium.elapsed<.3)return;
+    if(r.medium.kind!=='air'||r.armed||r.hand?.busted||r.hurt>0||r.medium.elapsed<.3)return;
     const a=r.stats.armour,f=a>=0?15/(15+a):1-a/15,value=FiveCombat.acceptedHit(r,amount*f);
     r.hp=Math.max(0,r.hp-value);r.hurt=tune.bro?Math.min(.4,Math.max(.2,value/Math.max(1,r.stats.maxHp)*.4/.15)):.7;r.metrics.hits++;if(r.hand){r.hand.hits++;r.hand.hpLost+=value}
     const t=r.demo.waveTelemetry;if(t){t.damageTaken+=value;t.hits++;t.lastHits.push({air:r.demo.air,value,hp:r.hp,phase:r.hand?phase(r):'air',enemies:r.enemies.length});if(t.lastHits.length>12)t.lastHits.shift();}
-    r.events.push({kind:'hit',pos:he(r),value});if(r.hp<=0){r.mode='dead';r.endReason='health';r.demo.lastFailure=diagnosis(r)}
+    r.events.push({kind:'hit',pos:he(r),value});if(value>0)bail(r);if(r.hp<=0)bust(r);
+  }
+  // A hit bails the trick in progress: it pays nothing and does not count for combos. Landed tricks keep their value.
+  function bail(r){const h=r.hand;if(!h?.open||h.busted)return;const n=h.drawn.length,i=Math.floor(h.air/Math.max(.1,h.pred.air)*n);
+    if(i>=n||i<(h.scoreShow?.count||0)||h.bails.includes(i))return;
+    if(r.demo.charms.includes('N15')&&!h.netUsed){h.netUsed=true;ScoreCues.saved(r,i);return}
+    h.bails.push(i);r.demo.waveTelemetry&&(r.demo.waveTelemetry.bails=(r.demo.waveTelemetry.bails||0)+1);ScoreCues.bail(r,i);
+  }
+  // 0 HP busts the jump: out of combat, the dolphin falls from where it is, spending air clock; it banks nothing at the water.
+  function bust(r){const h=r.hand,m=r.medium;r.hp=0;if(!h?.open||h.busted)return;h.busted=true;h.active=null;m.vy=Math.min(m.vy,-BUST.fall);m.vx*=.4;
+    r.demo.waveTelemetry&&(r.demo.waveTelemetry.busts=(r.demo.waveTelemetry.busts||0)+1);r.events.push({kind:'bust',pos:he(r)});ScoreCues.bust(r);
   }
   // Enemies are v3 carve's: its spawn schedule (Obs, called from ME), bodies, health and movement. spawn() is for the
   // demo's boss and for tests; an ordinary enemy is made by v3's own Ospw, just outside the view's edge as v3's Obq does.
@@ -183,7 +204,7 @@ var DEMO = (() => {
       const range=d.range+s.Reach*(d.type==='Close'?.5:1),dist=e=>Math.hypot(e.pos.x-me.x,e.pos.y-me.y),near=T.find(e=>e.hp>0&&dist(e)<=range+8+e.radius);
       const held=g.tg&&near&&near.id!==g.tg?T.find(e=>e.id===g.tg&&e.hp>0&&dist(e)<=range+8+e.radius):null;
       g.tg=held&&dist(near)>dist(held)*.8?held.id:near?near.id:0;
-      if(!air||r.armed||g.cd>0)continue;
+      if(!air||r.armed||r.hand?.busted||g.cd>0)continue;
       const tgt=g.tg&&T.find(e=>e.id===g.tg&&e.hp>0&&dist(e)<=range+e.radius),target=tgt||T.find(e=>e.hp>0&&dist(e)<=range+e.radius);if(!target)continue;  // hp>0: an earlier weapon this tick may have killed it
       const angle=Math.atan2(target.pos.y-me.y,target.pos.x-me.x),c=Math.cos(angle),sn=Math.sin(angle),crit=ce(r)<wt(tier(d.crit,l)+s.Crit,0,1),amount=weaponDamage(r,d,l,crit);
       r.demo.currentAttack={primary:true,attackId:++r.demo.attackSeq,weapon:g.id,slot:r.slots.indexOf(g),base:weaponDamage(r,d,l,false),crit};
@@ -242,7 +263,7 @@ var DEMO = (() => {
     if(!d.bossSpawned&&r.wave%10===0&&d.air>=clock(r.wave)*.3){spawn(r,true);d.bossSpawned=bossAlive(r)}
     fire(r,dt);enemies(r,m,input,dt);if(r.mode!=='playing')return;shots(r,dt,true);
     Oxeair(r,m,dt);
-    if(tune.bro){const R=d.stats.Regen;if(R>0&&r.hp<r.stats.maxHp){d.regenT=(d.regenT||0)+dt;const period=5/(1+(R-1)/2.25);
+    if(r.hand?.busted){}else if(tune.bro){const R=d.stats.Regen;if(R>0&&r.hp<r.stats.maxHp){d.regenT=(d.regenT||0)+dt;const period=5/(1+(R-1)/2.25);
       while(d.regenT>=period){d.regenT-=period;r.hp=Math.min(r.stats.maxHp,r.hp+hpScale())}}else d.regenT=0}
     else r.hp=Math.min(r.stats.maxHp,r.hp+Math.max(0,d.stats.Regen)*dt/5);r.metrics.peakEnemies=Math.max(r.metrics.peakEnemies,r.enemies.length);
   }
@@ -251,69 +272,102 @@ var DEMO = (() => {
   function finish(r){
     if(r.mode!=='playing')return;const d=r.demo;const report={wave:r.wave,score:r.wscore,quota:r.quota,killed:r.wkill,hands:d.history.length,diagnosis:diagnosis(r)};r.lastWave=report;
     if(r.wscore<r.quota){r.mode='dead';r.endReason='quota';d.lastFailure=diagnosis(r);return}
-    const base=24+r.wave*4,bonus=Math.min(24,Math.floor(base*.3*Math.max(0,r.wscore/r.quota-1))),interest=Math.min(8,Math.floor(r.xp*.1)),extra=d.pendingPearls||0;
+    // Overscore funds the build: half the base pay per full quota beaten, up to one more base pay (design doc §4.10). [TUNE]
+    const base=24+r.wave*4,bonus=Math.min(base,Math.floor(base*.5*Math.max(0,r.wscore/r.quota-1))),interest=Math.min(8,Math.floor(r.xp*.1)),extra=d.pendingPearls||0;
     report.pay={clear:base,score:bonus,interest,charms:extra,total:base+bonus+interest+extra};d.pendingPearls=0;r.xp+=report.pay.total;r.earned+=report.pay.total;r.hp=r.stats.maxHp;
-    if(r.wave===20){r.mode='won';r.milestones.victory=true}else{r.mode='shop';shop(r);levelChoices(r)}
+    r.lvup=0;if(r.wave===20){r.mode='won';r.milestones.victory=true}else{r.mode='shop';shop(r)}
   }
   function rarity(r){const a=ce(r),luck=Math.max(0,r.demo.stats.Luck)*.001;return a<.015+r.wave*.002+luck?4:a<.10+r.wave*.007+luck?3:a<.35+r.wave*.01+luck?2:1}
   const price=(r,base)=>Math.max(1,Math.floor((base+r.wave+.1*base*r.wave)*r.demo.shopMultiplier));
-  function charmPool(r){const d=r.demo,n=cap(r),types=new Set(r.slots.map(g=>weapons[g.id].type));return Object.keys(charms).filter(id=>!d.charms.includes(id)&&!d.offers.some(o=>!o.bought&&o.row==='charm'&&o.id===id)&&!(id==='S05'&&(n<5||types.size<2))&&!(id==='S06'&&n<4)&&!(id==='S13'&&!d.itemCounts.I07)&&!(id==='S16'&&(n<5||r.wave>=17)))}
+  // Rarity sets how often an offer appears, not only its price (design doc §4.10). Luck and later waves lift rarer odds.
+  function rarityWeight(r,level){const luck=Math.max(0,r.demo.stats.Luck)*.002,late=Math.min(.3,.015*r.wave);return level>=3?.2+late+luck:level===2?.55+late/2+luck:1}
+  function weighted(r,list,weight){const ws=list.map(weight),sum=ws.reduce((a,b)=>a+b,0);if(!list.length||!(sum>0))return undefined;let q=ce(r)*sum;for(let i=0;i<list.length;i++){q-=ws[i];if(q<0)return list[i]}return list.at(-1)}
+  const types=r=>new Set(r.slots.map(g=>weapons[g.id].type));
+  // After the commit offer, Routine offers favour the most-drawn trick.
+  function routineFace(r){const s=r.demo.score;if(s.focus&&ce(r)<.65)return FiveScore.faces.reduce((a,b)=>s.weights[b]>s.weights[a]?b:a);return choose(r,FiveScore.faces)}
+  function boundFace(r){const s=r.demo.score;return weighted(r,FiveScore.faces,f=>s.weights[f]+.05)}
+  // Charm and gear offers lean towards the held build (design doc §4.10).
+  function charmFit(r,id){const d=r.demo,s=d.score,top=Math.max(...FiveScore.faces.map(f=>s.weights[f]));
+    if(['N12','S06','N09'].includes(id))return top>=.4||s.routines.Repeat>0?2:1;
+    if(id==='N13')return s.routines.Formation>0?2:1;
+    if(['S05','S02'].includes(id))return s.routines.Variety>0?2:1;
+    if(['S13','N04'].includes(id))return 2;
+    if(['S10','N01'].includes(id))return d.itemCounts.I05?2:1;
+    return 1}
+  function charmPool(r){const d=r.demo,n=cap(r),t=types(r);return Object.keys(charms).filter(id=>!d.charms.includes(id)&&!d.offers.some(o=>!o.bought&&o.row==='charm'&&o.id===id)&&!(id==='S05'&&n<5)&&!(charms[id].requires&&!d.itemCounts[charms[id].requires])&&!(id==='N04'&&!t.has('Close'))&&!(id==='N16'&&n>=FiveScore.tune.maxDraws))}
+  // Defence gear is the only way to buy survival now that levels are gone, so it is offered more often.
+  function gearFit(r,kind,id){const t=types(r),d=r.demo;if(kind==='stat'){const x=items[id];return (t.has(x.up)?2:x.down&&t.has(x.down)?.5:1)*(stats[x.up]?.group==='defence'?2:1)}
+    return id==='I07'&&d.charms.includes('S13')||id==='I05'&&(d.charms.includes('S10')||d.charms.includes('N01'))?2:1}
+  // One Routine upgrade: trick value, combo level, draw odds, an extra draw, a technique or the commit offer (design doc §4.9).
+  function routineChoice(r){const d=r.demo,s=d.score,T=FiveScore.tune,kinds=[['polish',3],['routine',2],['transfer',2]];
+    if(s.draws<T.maxBought)kinds.push(['draw',1.4]);if(r.wave>=4)kinds.push(['technique',.7]);if(!s.focus&&r.wave>=3)kinds.push(['focus',.25]);
+    const kind=weighted(r,kinds,k=>k[1])[0],face=routineFace(r);
+    if(kind==='routine'){const id=choose(r,['Repeat','Formation','Variety'].filter(g=>s.routines[g]<T.routineCap));if(id)return {kind,id}}
+    if(kind==='draw'||kind==='focus')return {kind};
+    if(kind==='technique'){const open=FiveScore.faces.filter(f=>!s.techniques[f]);if(open.length)return {kind,face:open.includes(face)?face:choose(r,open),id:choose(r,['lucky','gold','echo'])}}
+    if(kind==='transfer'){const recipients=FiveScore.faces.filter(f=>s.weights[f]+T.transfer<=T.weightCap+1e-8),recipient=recipients.includes(face)?face:choose(r,recipients),donor=choose(r,FiveScore.faces.filter(f=>f!==recipient&&s.weights[f]>=T.transfer-1e-8));if(recipient&&donor)return {kind,donor,recipient}}
+    const open=FiveScore.faces.filter(f=>s.polish[f]<T.polishCap);return {kind:'polish',face:open.includes(face)?face:choose(r,open)||face}}
+  const routinePrice={polish:6,routine:8,transfer:5,technique:14,focus:18};
+  function choicePrice(r,c){return c.kind==='draw'?22+12*(r.demo.score.draws-FiveScore.tune.baseDraws):routinePrice[c.kind]||8}
+  function applyChoice(r,c){const s=r.demo.score;
+    if(c.kind==='routine')return FiveScore.routine(s,c.id);if(c.kind==='polish')return FiveScore.polish(s,c.face);if(c.kind==='transfer')return FiveScore.transfer(s,c.donor,c.recipient);
+    if(c.kind==='technique')return FiveScore.technique(s,c.face,c.id);if(c.kind==='draw')return FiveScore.addDraw(s);if(c.kind==='focus'){if(s.focus)return false;s.focus=true;return true}return false}
+  const ruleIds=r=>['charm','reroll',...(r.demo.shelfBonus<1?['shelf']:[])];
   function offer(r,row){const d=r.demo,uid=++d.uid;
     if(row==='weapon'){const owned=r.slots.map(g=>g.id),types=r.slots.map(g=>weapons[g.id].type),pool=Object.keys(weapons),q=ce(r),id=q<.35?choose(r,owned):q<.7?choose(r,pool.filter(k=>types.includes(weapons[k].type))):choose(r,pool),level=q<.35&&ce(r)<.7?choose(r,r.slots.filter(g=>g.id===id&&g.lvl<4).map(g=>g.lvl))||Math.min(rarity(r),1+Math.floor(r.wave/4)):Math.min(rarity(r),1+Math.floor(r.wave/4));return {uid,row,id,level,price:price(r,[12,24,48,96][level-1])}}
-    if(row==='charm'){const id=choose(r,charmPool(r));if(!id)return offer(r,'item');return {uid,row,id,face:id==='S01'?choose(r,FiveScore.faces):null,price:price(r,charms[id].price||18)}}
-    if(row==='item'){const pool=Object.keys(FiveCombat.items).filter(id=>!(id==='I05'&&r.wave<5)&&!(id==='I07'&&r.wave<3));const id=choose(r,pool);return {uid,row,id,price:price(r,FiveCombat.items[id].price||18)}}
-    if(row==='stat'){const id=Math.floor(ce(r)*(items.length-2));if(items[id].up==='Drive')return offer(r,'item');return {uid,row,id,price:price(r,10)}}
-    if(row==='pack'){let id=d.offers.some(o=>o.row==='pack')?(r.wave>=10&&ce(r)<.55?'routine':'charm'):'rehearsal';const mega=r.wave>=10&&ce(r)<.25;let fallback='';
-      if(id==='charm'&&(d.charms.length+(mega?2:1)>charmSlots(r)||!charmPool(r).length)){id='rehearsal';fallback='Charm choices unavailable: this is a Rehearsal pack instead.'}
-      return {uid,row,id,mega,fallback,price:price(r,mega?12:7)}}
-    return {uid,row:'voucher',id:choose(r,['charm','reroll',...(d.shelfBonus<1?['shelf']:[])]),price:price(r,35)};
+    if(row==='charm'){const id=weighted(r,charmPool(r),id=>rarityWeight(r,charms[id].rarity)*charmFit(r,id));if(!id)return offer(r,'gear');return {uid,row,id,face:charms[id].bound?boundFace(r):null,price:price(r,charms[id].price)}}
+    if(row==='gear')return offer(r,ce(r)<.45?'item':'stat');
+    if(row==='item'){const pool=Object.keys(FiveCombat.items).filter(id=>!(id==='I05'&&r.wave<5)&&!(id==='I07'&&r.wave<3));const id=weighted(r,pool,id=>rarityWeight(r,FiveCombat.items[id].rarity)*gearFit(r,'item',id));return {uid,row,id,price:price(r,FiveCombat.items[id].price||18)}}
+    if(row==='stat'){const id=weighted(r,gearStats,i=>gearFit(r,'stat',i));return {uid,row,id,price:price(r,10)}}
+    if(row==='routine'){const choice=routineChoice(r);return {uid,row,id:choice.kind,choice,price:price(r,choicePrice(r,choice))}}
+    if(row==='pack'){const mega=r.wave>=8&&ce(r)<.25,charmOk=d.charms.length+(mega?2:1)<=charmSlots(r)&&charmPool(r).length>0;return {uid,row,id:charmOk&&ce(r)<.4?'charm':'routine',mega,fallback:'',price:price(r,mega?12:7)}}
+    return {uid,row:'voucher',id:choose(r,ruleIds(r)),price:price(r,35)};
   }
+  // Shelf: weapon, gear, charm (+1 with the extra shelf); permanent run rules appear there as rare offers. Routine row: two offers.
+  const inRoutineRow=o=>o.row==='routine'||o.row==='pack';
+  function shelfOffer(r,i){if(r.wave>=2&&i>0&&ce(r)<.07)return offer(r,'voucher');return offer(r,i===0?'weapon':i===1?'gear':i===2?'charm':choose(r,['weapon','gear','charm']))}
+  function routineOffer(r,i){return offer(r,i===0||ce(r)<.5?'routine':'pack')}
   function shop(r){const d=r.demo,held=[...new Map([...d.offers,...(d.deferredOffers||[])].filter(o=>o.locked&&!o.bought&&o.row!=='voucher').map(o=>[o.uid,o])).values()];
     d.offers=held.slice(0,6);d.deferredOffers=held.slice(6);d.pack=null;d.weaponChoice=null;d.rerolls={shelf:0,pack:0};
-    const shelves=3+d.shelfBonus;for(let i=d.offers.filter(o=>!['pack','voucher'].includes(o.row)).length;i<shelves&&d.offers.length<6;i++){let row=i===0?'weapon':i===1?(ce(r)<.6?'weapon':'item'):(ce(r)<.55?'charm':ce(r)<.6?'item':'stat');d.offers.push(offer(r,row))}
-    for(let i=d.offers.filter(o=>o.row==='pack').length;i<2&&d.offers.length<6;i++)d.offers.push(offer(r,'pack'));
-    if([5,10,15].includes(r.wave)){if(d.offers.length>=6){let j=d.offers.findLastIndex(o=>o.row==='pack'&&!o.locked);if(j<0)j=d.offers.findLastIndex(o=>o.row==='pack');if(j<0)j=d.offers.length-1;
-      const removed=d.offers.splice(j,1)[0];if(removed.locked){d.deferredOffers.push(removed);d.toast='A locked offer is held at its original price for the next shop so this wave can show its voucher.'}}
-      d.offers.push(offer(r,'voucher'))}
+    const shelves=3+d.shelfBonus;for(let i=d.offers.filter(o=>!inRoutineRow(o)).length;i<shelves&&d.offers.length<6;i++)d.offers.push(shelfOffer(r,i));
+    for(let i=d.offers.filter(inRoutineRow).length;i<2&&d.offers.length<6;i++)d.offers.push(routineOffer(r,i));
   }
-  function levelChoices(r){if(!r.lvup){r.demo.levelChoices=[];return}const types=new Set(r.slots.map(g=>weapons[g.id].type)),all=Object.keys(stats).filter(k=>k!=='Drive');r.demo.levelChoices=['combat','defence','flight'].map(group=>{const pool=all.filter(k=>(stats[k].group===group||group==='flight'&&stats[k].group==='economy')&&(!['Close','Shot','Blast'].includes(k)||types.has(k)));return{id:choose(r,pool),level:rarity(r)}})}
   function addStat(r,k,v){r.demo.stats[k]+=v;sync(r);if(k==='Max HP'&&v>0)r.hp=Math.min(r.stats.maxHp,r.hp+v*hpScale())}
+  const choiceKey=c=>[c.kind,c.id||'',c.face||'',c.donor||'',c.recipient||''].join(':');
   function packChoices(r,o){const d=r.demo,out=[],n=o.mega?5:3;
-    for(let i=0;i<n;i++){if(o.id==='charm'){const ids=charmPool(r).filter(id=>!out.some(c=>c.id===id));const id=choose(r,ids);if(id){out.push({kind:'charm',id,face:id==='S01'?choose(r,FiveScore.faces):null});continue}}
-      if(o.id==='routine'){const id=choose(r,['Repeat','Formation','Variety'].filter(g=>d.score.routines[g]<4&&!out.some(c=>c.id===g)));if(id){out.push({kind:'routine',id});continue}}
-      const face=choose(r,FiveScore.faces),q=ce(r);
-      if(r.wave>=5&&q<.15&&!d.score.techniques[face]){out.push({kind:'technique',face,id:ce(r)<.5?'lucky':'gold'});continue}
-      if(q<.55&&d.score.polish[face]<4){out.push({kind:'polish',face});continue}
-      const donors=FiveScore.faces.filter(f=>d.score.weights[f]>=.10-.00001),recipients=FiveScore.faces.filter(f=>d.score.weights[f]<=.45+.00001),donor=choose(r,donors),recipient=choose(r,recipients.filter(f=>f!==donor));if(recipient)out.push({kind:'transfer',donor,recipient});else out.push({kind:'polish',face})
-    }return out;
+    for(let tries=0;out.length<n&&tries<60;tries++){let c=null;
+      if(o.id==='charm'){const id=weighted(r,charmPool(r).filter(id=>!out.some(x=>x.id===id)),id=>rarityWeight(r,charms[id].rarity)*charmFit(r,id));if(id)c={kind:'charm',id,face:charms[id].bound?boundFace(r):null}}
+      if(!c)c=routineChoice(r);
+      if(!out.some(x=>choiceKey(x)===choiceKey(c)))out.push(c)}
+    return out;
   }
-  function packChoiceValid(r,c){const d=r.demo,s=d.score;if(!c||c.used)return false;
+  function packChoiceValid(r,c){const d=r.demo,s=d.score,T=FiveScore.tune;if(!c||c.used)return false;
     if(c.kind==='charm')return d.charms.length<charmSlots(r)&&!d.charms.includes(c.id);
-    if(c.kind==='routine')return (s.routines[c.id]||0)<4;
-    if(c.kind==='polish')return (s.polish[c.face]||0)<4;
-    if(c.kind==='transfer')return c.donor!==c.recipient&&s.weights[c.donor]>=.10-.00001&&s.weights[c.recipient]<=.45+.00001;
-    if(c.kind==='technique')return r.wave>=5&&['gold','lucky'].includes(c.id)&&s.techniques[c.face]!==c.id;
+    if(c.kind==='routine')return (s.routines[c.id]||0)<T.routineCap;
+    if(c.kind==='polish')return (s.polish[c.face]||0)<T.polishCap;
+    if(c.kind==='transfer')return c.donor!==c.recipient&&s.weights[c.donor]>=T.transfer-1e-5&&s.weights[c.recipient]+T.transfer<=T.weightCap+1e-5;
+    if(c.kind==='technique')return ['gold','lucky','echo'].includes(c.id)&&s.techniques[c.face]!==c.id;
+    if(c.kind==='draw')return s.draws<T.maxBought;
+    if(c.kind==='focus')return !s.focus;
     return false;
   }
-  function repairPack(r,p){const d=r.demo,s=d.score,all=[];
-    if(p.id==='charm')for(const id of charmPool(r))all.push({kind:'charm',id,face:id==='S01'?choose(r,FiveScore.faces):null});
-    if(p.id==='routine')for(const id of ['Repeat','Formation','Variety'])if(s.routines[id]<4)all.push({kind:'routine',id});
-    const rehearsal=[];for(const face of FiveScore.faces){if(s.polish[face]<4)rehearsal.push({kind:'polish',face});
-      if(r.wave>=5&&!s.techniques[face])for(const id of ['lucky','gold'])rehearsal.push({kind:'technique',face,id});
-      for(const recipient of FiveScore.faces)if(face!==recipient&&s.weights[face]>=.10-.00001&&s.weights[recipient]<=.45+.00001)rehearsal.push({kind:'transfer',donor:face,recipient})}
-    const key=c=>[c.kind,c.id||'',c.face||'',c.donor||'',c.recipient||''].join(':');
-    const used=new Set(p.choices.filter(c=>c.used||packChoiceValid(r,c)).map(key)),seen=new Set();
-    for(let i=0;i<p.choices.length;i++){const current=p.choices[i],k=key(current);if(current.used){seen.add(k);continue}if(packChoiceValid(r,current)&&!seen.has(k)){seen.add(k);continue}
-      let pool=all.filter(c=>packChoiceValid(r,c)&&!used.has(key(c)));
-      if(!pool.length){pool=rehearsal.filter(c=>packChoiceValid(r,c)&&!used.has(key(c)));if(p.id!=='rehearsal'&&pool.length)p.fallback='Unavailable choices have become Rehearsal options; your remaining pick is preserved.'}
-      if(pool.length){p.choices[i]=choose(r,pool);used.add(key(p.choices[i]));seen.add(key(p.choices[i]))}
+  function repairPack(r,p){const all=[];
+    if(p.id==='charm')for(const id of charmPool(r))all.push({kind:'charm',id,face:charms[id].bound?boundFace(r):null});
+    const routine=[{kind:'draw'},{kind:'focus'},...['Repeat','Formation','Variety'].map(id=>({kind:'routine',id}))];
+    for(const face of FiveScore.faces){routine.push({kind:'polish',face});for(const id of ['lucky','gold','echo'])routine.push({kind:'technique',face,id});
+      for(const recipient of FiveScore.faces)if(face!==recipient)routine.push({kind:'transfer',donor:face,recipient})}
+    if(p.id!=='charm')all.push(...routine);
+    const used=new Set(p.choices.filter(c=>c.used||packChoiceValid(r,c)).map(choiceKey)),seen=new Set();
+    for(let i=0;i<p.choices.length;i++){const current=p.choices[i],k=choiceKey(current);if(current.used){seen.add(k);continue}if(packChoiceValid(r,current)&&!seen.has(k)){seen.add(k);continue}
+      let pool=all.filter(c=>packChoiceValid(r,c)&&!used.has(choiceKey(c)));
+      if(!pool.length){pool=routine.filter(c=>packChoiceValid(r,c)&&!used.has(choiceKey(c)));if(p.id==='charm'&&pool.length)p.fallback='No charm can be added now, so the remaining choices are Routine upgrades.'}
+      if(pool.length){p.choices[i]=choose(r,pool);used.add(choiceKey(p.choices[i]));seen.add(choiceKey(p.choices[i]))}
     }
   }
-  function command(r,action,index){const d=r.demo;if(r.mode!=='shop')return false;d.toast='';if(r.lvup&&action!=='level'){d.toast='Choose your level upgrades first.';return false}
-    if(action==='level'){const c=d.levelChoices[index];if(!c||!r.lvup)return false;addStat(r,c.id,stats[c.id].sizes[c.level-1]);r.lvup--;levelChoices(r);return true}
-    if(action==='next'){if(r.lvup||d.pack||d.weaponChoice){d.toast=r.lvup?'Choose your level upgrades first.':d.pack?'Finish choosing from your open pack.':'Choose a replacement or cancel it first.';return false}r.wave++;wave(r);sync(r);r.mode='playing';return true}
+  function command(r,action,index){const d=r.demo;if(r.mode!=='shop')return false;d.toast='';
+    if(action==='next'){if(d.pack||d.weaponChoice){d.toast=d.pack?'Finish choosing from your open pack.':'Choose a replacement or cancel it first.';return false}r.wave++;wave(r);sync(r);r.mode='playing';return true}
     if(action==='lock'){const o=d.offers.find(x=>x.uid===+index);if(!o||o.bought||o.row==='voucher')return false;o.locked=!o.locked;return true}
-    if(action==='reroll'){const row=index==='weapon'?'shelf':index,cost=Math.max(1,2+(d.rerolls[row]||0)-d.rerollDiscount);if(!['shelf','pack'].includes(row)||r.xp<cost||d.pack)return false;const canChange=d.offers.some(o=>(row==='pack'?o.row==='pack':!['pack','voucher'].includes(o.row))&&(!o.locked||o.bought));if(!canChange){d.toast='Unlock an offer before rerolling this row.';return false}d.weaponChoice=null;r.xp-=cost;d.rerolls[row]=(d.rerolls[row]||0)+1;const pred=o=>row==='pack'?o.row==='pack':!['pack','voucher'].includes(o.row),n=d.offers.filter(pred).length;d.offers=d.offers.filter(o=>!pred(o)||o.locked&&!o.bought);for(let i=d.offers.filter(pred).length;i<n;i++)d.offers.push(offer(r,row==='pack'?'pack':i===0?'weapon':choose(r,['weapon','item','charm','stat'])));return true}
+    if(action==='reroll'){const row=index==='weapon'?'shelf':index,cost=Math.max(1,2+(d.rerolls[row]||0)-d.rerollDiscount);if(!['shelf','pack'].includes(row)||r.xp<cost||d.pack)return false;const pred=o=>row==='pack'?inRoutineRow(o):!inRoutineRow(o),canChange=d.offers.some(o=>pred(o)&&(!o.locked||o.bought));if(!canChange){d.toast='Unlock an offer before rerolling this row.';return false}d.weaponChoice=null;r.xp-=cost;d.rerolls[row]=(d.rerolls[row]||0)+1;const n=d.offers.filter(pred).length;d.offers=d.offers.filter(o=>!pred(o)||o.locked&&!o.bought);for(let i=d.offers.filter(pred).length;i<n;i++)d.offers.push(row==='pack'?routineOffer(r,i):shelfOffer(r,i));return true}
     if(action==='weaponChoice'){const o=d.offers.find(x=>x.uid===+index);if(!o||o.bought||o.row!=='weapon'||d.pack||r.slots.length!==6)return false;d.weaponChoice=o.uid;return true}
     if(action==='weaponCancel'){d.weaponChoice=null;return true}
     if(action==='replaceWeapon'){const i=+index,o=d.offers.find(x=>x.uid===d.weaponChoice),g=r.slots[i];if(!g||!o||o.bought||o.row!=='weapon'||d.pack)return false;const refund=Math.floor((g.paid||0)/2),cost=o.price-refund;if(r.xp<cost)return false;const next=Owslot(o.id,o.level,++d.uid);next.paid=o.price;next.cd=0;r.slots[i]=next;r.xp-=cost;o.bought=true;o.locked=false;d.weaponChoice=null;sync(r);return true}
@@ -323,13 +377,14 @@ var DEMO = (() => {
       else if(o.row==='charm'){if(d.charms.length>=charmSlots(r)||d.charms.includes(o.id))return false;d.charms.push(o.id);d.charmPaid[o.id]=o.price;d.charmFaces[o.id]=o.face}
       else if(o.row==='item'){FiveCombat.buy(r,o.id);(d.itemPaid??={})[o.id]=[...(d.itemPaid?.[o.id]||[]),o.price]}
       else if(o.row==='stat'){const a=items[o.id];addStat(r,a.up,a.value);if(a.down)addStat(r,a.down,-a.loss);d.statInventory.push({id:o.id,paid:o.price,uid:o.uid})}
+      else if(o.row==='routine'){if(!packChoiceValid(r,o.choice)){d.toast='That upgrade is already at its cap.';return false}applyChoice(r,o.choice)}
       else if(o.row==='voucher'){if(o.id==='shelf'&&d.shelfBonus>=1){d.toast='Your extra shelf is already active.';return false}if(o.id==='charm')d.charmBonus++;if(o.id==='reroll')d.rerollDiscount++;if(o.id==='shelf')d.shelfBonus=Math.min(1,d.shelfBonus+1)}
       else if(o.row==='pack'){d.pack={id:o.id,remaining:o.mega?2:1,picks:o.mega?2:1,taken:0,price:o.price,choices:packChoices(r,o)};repairPack(r,d.pack)};
       r.xp-=o.price;o.bought=true;o.locked=false;sync(r);return true;
     }
     if(action==='packPick'){const p=d.pack,c=p?.choices[+index];if(!c||c.used)return false;let ok=false;
       if(c.kind==='charm'){if(d.charms.length>=charmSlots(r)||d.charms.includes(c.id))return false;d.charms.push(c.id);d.charmPaid[c.id]=Math.floor(p.price/p.picks)+(p.taken<p.price%p.picks?1:0);d.charmFaces[c.id]=c.face;ok=true}
-      if(c.kind==='routine')ok=FiveScore.routine(d.score,c.id);if(c.kind==='polish')ok=FiveScore.polish(d.score,c.face);if(c.kind==='transfer')ok=FiveScore.transfer(d.score,c.donor,c.recipient);if(c.kind==='technique')ok=FiveScore.technique(d.score,c.face,c.id);
+      else ok=packChoiceValid(r,c)&&applyChoice(r,c);
       if(!ok){d.toast='That choice is at its cap; choose another.';repairPack(r,p);return false}c.used=true;p.taken++;p.remaining--;if(!p.remaining)d.pack=null;else repairPack(r,p);return true;
     }
     if(action==='packSkip'){if(!d.pack)return false;d.pack=null;return true}
@@ -343,13 +398,14 @@ var DEMO = (() => {
   }
   function preview(r){return null}
 
-  return {broEnemy,withContact,hpScale,tune,TUNE_DEFAULT,saveTune,charmSlots,weapons,cards,charms,stats,items,tier,fmt,phase,strongest,ledger,diagnosis,bossAlive,returnBoss,continueSchedule,statText,standard,clock,quota,expectedChips,cap,init,wave,sync,open,fireCharms,nextCard,tickCards,bank,damage,hit,spawn,fire,weaponDamage,combat,drift,finish,shop,levelChoices,command,preview};
+  return {broEnemy,withContact,hpScale,tune,TUNE_DEFAULT,saveTune,charmSlots,weapons,cards,charms,stats,items,tier,fmt,phase,strongest,ledger,diagnosis,bossAlive,returnBoss,continueSchedule,statText,standard,clock,quota,expectedChips,cap,init,wave,sync,open,fireCharms,nextCard,tickCards,bank,damage,hit,spawn,fire,weaponDamage,combat,drift,finish,shop,command,preview,drawNext,applyChoice,packChoiceValid,routineChoice,charmPool,BUST};
 })();
 
 /* The existing simulation entry points now use the vertical slice. */
 FiveCombat.configure({damage:(r,e,a,c)=>DEMO.damage(r,e,a,c.weapon||('item-'+c.item),0,0,0,false,c),strongest:r=>DEMO.strongest(r),phase:r=>DEMO.phase(r),position:r=>r.medium.local});
 // Match automatic XP level gains to the same HP scale as explicit upgrades.
-{const xp0=Oxepay;Oxepay=function(r,m,pos){const before=r.lvl||0;xp0(r,m,pos);if(r.demo){const gained=(r.lvl||0)-before;r.hp+=gained*(DEMO.hpScale()-1);DEMO.sync(r)}}}
+// No XP or level-ups (design doc §4.10): Gear is the only stat stream. Kills drop no orbs, and any orb pays nothing.
+Oxepay=function(){};
 var DemoHd=Hd;
 Hd=function(seed,starter='harpoon',record=0){return DEMO.init(DemoHd(seed,starter,record),starter)};
 Owsetup=function(r){r.world='open';r.diff='standard';return r};
@@ -387,7 +443,7 @@ SE=function(r,m,input,dt,depth){
   if(r.mode!=='playing')return;
   if(apex!==null&&apex<=t+1e-9&&!h.apex){h.apex=true;if(!r.armed)DEMO.fireCharms(r,'apex');r.events.push({kind:'apex',pos:he(r)});if(dt-t>1e-9)Il(r,input,dt-t,depth+1);return}
   if(land!==null&&land<=t+1e-9){
-    const pos=he(r);if(!r.armed)FiveCombat.entry(r);DEMO.bank(r);Oxebag(r,pos,m);r.shots=[];
+    const pos=he(r);if(!r.armed&&!r.hand?.busted)FiveCombat.entry(r);DEMO.bank(r);Oxebag(r,pos,m);r.shots=[];
     // as v3 carve: at the entry every enemy becomes a pursuer (or flies off, with pursuit off). Pursuers hold above the
     // sea while you swim and come back as enemies at the breach (Zq).
     for(const E of [...r.enemies])Qz.on?Pz(r,m,E):nw(r,m,E);r.enemies=[];
@@ -422,8 +478,9 @@ function DemoButton(action,index,label,disabled=false,extra=''){return `<button 
 function DemoCap(n){return n}
 function DemoSet(id,text){const el=document.getElementById(id);if(el&&el.textContent!==text)el.textContent=text}
 function DemoCharmText(e,v){return (e==='×mult'?'×':'+')+DEMO.fmt(v)+' MULT'}
-function DemoPhaseSummary(last){return `<div class="demo-phases" aria-label="Chips by flight phase">${['ascent','apex','descent'].map((p,i)=>`<span class="phase-${p}"><i style="width:${100*(last.phases[p]||0)/Math.max(1,last.chips)}%"></i><b>${p[0].toUpperCase()+p.slice(1)}</b> ${last.phases[p]||0}</span>`).join('')}</div>`}
-function DemoBankBreakdown(last){return `<div class="demo-bank-detail"><p class="demo-drawn">${last.cards.map(DemoEscape).join(' · ')}</p><p>Tricks +${DEMO.fmt(last.base||0)} · Combos +${DEMO.fmt((last.combos||[]).reduce((s,c)=>s+c.value,0))}${last.techniqueLog?.length?' · Lucky +'+DEMO.fmt(last.techniqueLog.reduce((s,t)=>s+t.value,0)):''}</p><div class="demo-combo-line">${(last.combos||[]).map(c=>`<span>${c.name} +${DEMO.fmt(c.value)}</span>`).join('')||'No matching combo'}</div>${DemoPhaseSummary(last)}<p>${last.air.toFixed(1)}s active flight / ${Number(last.predAir||0).toFixed(1)}s predicted · ${last.hits} accepted hits</p><div class="demo-charm-report">${(last.charmLog||[]).map(c=>`<div class="${c.active?'paid':'missed'}"><b>${c.active?'PAID':'MISSED'} · ${DemoEscape(c.name)}</b><strong>${DEMO.fmt(c.before)} → ${DEMO.fmt(c.after)}</strong><span>${DemoEscape(c.reason||'')}</span></div>`).join('')}</div><p>Items this flight: ${(last.items||[]).map(x=>x.name+' ×'+x.count).join(' · ')||'none activated'}.</p></div>`}
+function DemoPhaseSummary(last){const total=Math.max(1,last.killChips??last.chips);return `<div class="demo-phases" aria-label="Chips by flight phase">${['ascent','apex','descent'].map(p=>`<span class="phase-${p}"><i style="width:${100*(last.phases?.[p]||0)/total}%"></i><b>${p[0].toUpperCase()+p.slice(1)}</b> ${last.phases?.[p]||0}</span>`).join('')}</div>`}
+function DemoBankBreakdown(last){const b=last.bonus||{},extra=(b.multi||0)+(b.apex||0)+(b.crit||0),charmChips=(last.charmLog||[]).reduce((s,c)=>s+(c.chips||0),0),bails=last.bails||[];
+  return `<div class="demo-bank-detail">${last.busted?`<p class="demo-bust"><b>BUST</b> · 0 HP · banked ${last.score}</p>`:''}<p class="demo-drawn">${(last.drawn||[]).map((id,i)=>`<span class="${bails.includes(i)?'bailed':'landed'}">${DemoEscape(FiveScore.names[id])}${bails.includes(i)?' · BAIL':''}</span>`).join(' · ')}</p><p>Chips ${DEMO.fmt(last.chips)}: kills ${DEMO.fmt((last.killChips??last.chips)-extra)} · multi-kill +${b.multi||0} · apex +${b.apex||0} · crit +${b.crit||0}${charmChips?' · charms +'+DEMO.fmt(charmChips):''}</p><p>Tricks +${DEMO.fmt(last.base||0)} · Combos +${DEMO.fmt((last.combos||[]).reduce((s,c)=>s+c.value,0))}${last.techniqueLog?.length?' · Lucky +'+DEMO.fmt(last.techniqueLog.reduce((s,t)=>s+t.value,0)):''}</p><div class="demo-combo-line">${(last.combos||[]).map(c=>`<span>${c.name} +${DEMO.fmt(c.value)}</span>`).join('')||'No matching combo'}</div>${DemoPhaseSummary(last)}<p>${(last.air||0).toFixed(1)}s of flight · ${last.hits||0} hits · ${bails.length} Bail${bails.length===1?'':'s'}${last.pearls?` · +${last.pearls} pearls`:''}</p><div class="demo-charm-report">${(last.charmLog||[]).map(c=>`<div class="${c.active?'paid':'missed'}"><b>${c.active?'PAID':'MISSED'} · ${DemoEscape(c.name)}</b><strong>${c.chips?'+'+DEMO.fmt(c.chips)+' chips':c.pearls?'+'+c.pearls+' pearls':DEMO.fmt(c.before)+' → '+DEMO.fmt(c.after)}</strong><span>${DemoEscape(c.reason||'')}</span></div>`).join('')}</div><p>Items this flight: ${(last.items||[]).map(x=>x.name+' ×'+x.count).join(' · ')||'none activated'}.</p></div>`}
 
 of=function(){if(!S?.demo||!document.getElementById('wave-number'))return;DemoOf();const d=S.demo,h=S.hand,air=S.medium.kind==='air',last=d.last;
   DemoSet('phase-label',S.armed?'CLOCK OUT · LAND TO BANK':air?'AIRBORNE':'SAFE WATER');DemoSet('budget-label','AIR REMAINING');DemoSet('budget-value',Math.max(0,S.budget).toFixed(1)+'s');DemoSet('budget-caption',`BANKED ${Math.round(S.wscore)} / ${S.quota} · ${S.wscore>=S.quota?'QUOTA MET':'QUOTA'}`);
@@ -437,47 +494,22 @@ function DemoBind(){for(const b of hr.querySelectorAll('[data-demo]'))b.onclick=
   if(a==='starter'){En=i;ql();return}if(a==='begin'){Zd(En);return}if(a==='tune'){document.getElementById('tune')?DemoPanel(false):DemoTune(true);return}if(a==='help'){const el=document.getElementById('demo-how');if(el)el.hidden=!el.hidden;return}if(a==='home'){ql();return}
   if(a==='next'){if(DEMO.command(S,a,i)){ke=0;as=Br(S);sf()}else Xl();return}DEMO.command(S,a,i);Xl();if(a==='level'){(hr.querySelector('[data-demo=level]:not(:disabled)')||hr.querySelector('[data-demo=buy]:not(:disabled)'))?.focus({preventScroll:true})}else if(S.demo.pack){const choice=hr.querySelector('[data-demo=packPick]:not(:disabled)');choice?.focus({preventScroll:true});choice?.scrollIntoView?.({block:'nearest'})}
 }}
-ql=function(){ft='title';St=null;ur.reset();hr.innerHTML=`${_w()}<section class="title-content demo-title"><div class="eyebrow">CHIPS × MULT · SCORE FEEL TEST</div><h1>ICARUS<span>BUILD YOUR ASCENT</span></h1><p class="intro">Carve your launch.<br>Build the flight you want.</p><p class="title-description">Six automatic weapons. Five trick identities.<br>Watch kills feed chips and tricks build your mult.<br>Land to bank the payout.</p><div class="demo-starters">${['sonic','harpoon','rocket'].map(id=>DemoButton('starter',id,`<b>${Owc[id].name}</b><span>${DEMO.weapons[id].type} · ${DEMO.weapons[id].description}</span>`,false,id===En?'selected':'')).join('')}</div><div class="launch-row">${DemoButton('begin','','BEGIN RUN ↗',false,'demo-primary')}${DemoButton('help','','HOW TO PLAY')}${DemoButton('tune','','SETTINGS')}</div><div id="demo-how" hidden><p><b>Launch:</b> hold W or up to carve upward. Release to ride out. Space boosts. Water is safe and pauses the air clock.</p><p><b>Fight:</b> W A S D / arrows steer within your launch path. Weapons fire automatically. Kills give chips; land to bank. Survive and meet the quota over 20 waves.</p><p><b>Routine:</b> Spout, Front flip, Backflip, Corkscrew, Star pose. Three draws at first, then four/five/six from waves 5/10/15. Every draw completes. Combos use fixed reference odds. No kills keeps the same routine.</p><p><b>Build:</b> choose a level stat, buy weapons/items/charms, and open packs. Combat items change the fight; charms reward what happened. Charms resolve left to right at entry.</p></div></section><footer class="title-footer"><div><b>9</b><span>WEAPONS · SIX SLOTS</span></div><div><b>5</b><span>TRICKS · DRAWS3→6</span></div><div><b>17</b><span>CHARMS · PHASE SCORING</span></div><div><b>10</b><span>COMBAT ITEMS</span></div></footer>`;Kl();DemoBind()};
-function DemoOffer(r,o){let name,text,tag;const d=r.demo;
- if(o.row==='weapon'){const w=DEMO.weapons[o.id];name=Owc[o.id].name;tag=`${w.type} · ${w.cad} · T${o.level}`;text=`${w.description} ${Math.round(DEMO.weaponDamage(r,w,o.level,false))} damage · ${w.range+d.stats.Reach*(w.type==='Close'?.5:1)}m range · ${(DEMO.tier(w.cd,o.level)/60/r.stats.fireRate).toFixed(2)}s cooldown · ${Math.round(wt(DEMO.tier(w.crit,o.level)+d.stats.Crit,0,1)*100)}% crit.`}
- else if(o.row==='charm'){const c=DEMO.charms[o.id];name=c.name;tag='SCORE CHARM';text=c.text+(o.face?' Bound to '+FiveScore.names[o.face]+'.':'')}
- else if(o.row==='item'){const c=FiveCombat.items[o.id];name=c.name;tag='COMBAT ITEM'+(d.itemCounts[o.id]?` · OWN ${d.itemCounts[o.id]}`:'');text=c.text}
- else if(o.row==='stat'){const c=DEMO.items[o.id];name=c.name;tag='STAT ITEM';text=DEMO.statText(c.up,c.value)+(c.down?' · '+DEMO.statText(c.down,-c.loss):'')}
- else if(o.row==='pack'){name=({rehearsal:'Rehearsal',charm:'Charm',routine:'Routine'})[o.id]+' pack';tag=o.mega?'PICK 2 OF 5':'PICK 1 OF 3';text={rehearsal:'Move 5% draw chance between tricks, polish a value, or find a rare Gold/Lucky technique.',charm:'Choose a scoring charm. Reorder your charm row to shape the payout.',routine:'Level a combo group. Repeat+30%, Formation+66%, Variety+250% of its base bonus. Up to four levels.'}[o.id]}
- else{name=({charm:'Charm loop',reroll:'Reroll pass',shelf:'Extra shelf'})[o.id];tag='VOUCHER · PERMANENT';text={charm:'+1 charm slot.',reroll:'Rerolls cost1 less (minimum1).',shelf:'One more shelf slot; total offers capped at6. On voucher waves it replaces one pack.'}[o.id]}
- if(o.fallback)text+=' '+o.fallback;
- const match=o.row==='weapon'&&r.slots.find(g=>g.id===o.id&&g.lvl===o.level&&g.lvl<4);
- const disabled=o.bought||o.price>r.xp||!!d.pack||(o.row==='charm'||o.row==='pack'&&o.id==='charm')&&d.charms.length>=DEMO.charmSlots(r)||o.row==='weapon'&&r.slots.length>=6&&!match;
- return `<article class="demo-offer ${o.bought?'bought':''}"><small>${tag}</small><h3>${name}</h3><p>${text}</p><div>${o.row==='weapon'&&r.slots.length>=6&&!match?DemoButton('weaponChoice',o.uid,o.bought?'ACQUIRED':`CHOOSE REPLACEMENT · ${o.price} BASE`,o.bought||!!d.pack):DemoButton('buy',o.uid,o.bought?'ACQUIRED':`${match&&r.slots.length>=6?'MERGE ↑ · ':''}${o.price} PEARLS`,disabled)}${o.row!=='voucher'?DemoButton('lock',o.uid,o.locked?'■ LOCKED':'□ LOCK',o.bought||!!d.pack):''}</div></article>`;
-}
-function DemoPackChoice(c){if(c.kind==='charm')return `<b>${FiveScore.charms[c.id].name}</b><span>${FiveScore.charms[c.id].text}${c.face?' Bound to '+FiveScore.names[c.face]:''}</span>`;if(c.kind==='routine')return `<b>${c.id} +1 level</b><span>Increases every matching combo in this group.</span>`;if(c.kind==='polish')return `<b>Polish ${FiveScore.names[c.face]}</b><span>+0.5 mult per drawn copy.</span>`;if(c.kind==='technique')return `<b>${c.id==='gold'?'Gold':'Lucky'} ${FiveScore.names[c.face]}</b><span>${c.id==='gold'?'Appearing in a scoring bank marks this wave. Every 2 different waves: +0.25 future value, cap+1.':'25% at bank: repeat the total value of this trick. Positive Luck improves the chance.'}</span>`;return `<b>Practise ${FiveScore.names[c.recipient]}</b><span>Move 5% from ${FiveScore.names[c.donor]} to ${FiveScore.names[c.recipient]}. Total chance stays100%.</span>`}
-Xl=function(){const scroll=document.querySelector('.demo-shop-scrim')?.scrollTop||0;const r=S,d=r.demo,L=d.levelChoices||[],report=r.lastWave;
- const levels=L.length?`<section class="demo-level"><div class="eyebrow">${r.lvup} LEVEL UPGRADE${r.lvup===1?'':'S'} TO CHOOSE</div><div class="demo-level-options">${L.map((c,i)=>DemoButton('level',i,`<small>${DEMO.stats[c.id].group.toUpperCase()}</small><b>${DEMO.statText(c.id,DEMO.stats[c.id].sizes[c.level-1])}</b>`)).join('')}</div></section>`:'';
- const pack=d.pack?`<section class="demo-pack"><h3>Choose ${d.pack.remaining} · ${d.pack.id} pack</h3>${d.pack.fallback?`<p role="status">${DemoEscape(d.pack.fallback)}</p>`:''}<div class="demo-pack-options">${d.pack.choices.map((c,i)=>DemoButton('packPick',i,DemoPackChoice(c),c.used||c.kind==='charm'&&d.charms.length>=DEMO.charmSlots(r))).join('')}</div>${DemoButton('packSkip','','CLOSE PACK · DISCARD UNUSED CHOICES')}</section>`:'';
- const swap=d.offers.find(o=>o.uid===d.weaponChoice&&!o.bought),replacement=swap?`<section class="demo-pack"><h3>Replace one weapon with ${Owc[swap.id].name} T${swap.level}</h3><p>Choose the weapon to sell. Its refund is included in the exact price below.</p><div class="demo-pack-options">${r.slots.map((g,i)=>{const refund=Math.floor((g.paid||0)/2),cost=swap.price-refund;return DemoButton('replaceWeapon',i,`<b>Replace ${Owc[g.id].name} T${g.lvl}</b><span>${cost>=0?'Pay '+cost:'Receive '+(-cost)} pearls · includes ${refund} resale refund</span>`,r.xp<cost)}).join('')}</div>${DemoButton('weaponCancel','','CANCEL')}</section>`:'';
- const shelf=d.offers.filter(o=>!['pack','voucher'].includes(o.row)),packs=d.offers.filter(o=>['pack','voucher'].includes(o.row));
- const gear=r.slots.map((g,i)=>`<div class="demo-inventory-line"><span><b>${Owc[g.id].name}</b> · T${g.lvl} · ${DEMO.weapons[g.id].type}</span><div>${DemoButton('combine',i,'COMBINE ↑',g.lvl>=4||!r.slots.some((a,j)=>j!==i&&a.id===g.id&&a.lvl===g.lvl))}${DemoButton('sell',i,`SELL ${Math.floor((g.paid||0)/2)}`,r.slots.length<=1)}</div></div>`).join('');
- const charms=d.charms.map((id,i)=>`<div class="demo-inventory-line"><span><b>${i+1}. ${FiveScore.charms[id].name}</b><small>${FiveScore.charms[id].text}${d.charmFaces[id]?' Bound to '+FiveScore.names[d.charmFaces[id]]:''}</small></span><div>${DemoButton('charmLeft',i,'←',i===0)}${DemoButton('charmSell',i,`SELL ${Math.floor((d.charmPaid[id]||0)/2)}`)}</div></div>`).join('')||'<p>Charms change score. They resolve left to right at entry.</p>';
- const combat=Object.entries(d.itemCounts).filter(([id,n])=>n>0).map(([id,n])=>`<div class="demo-inventory-line"><span><b>${FiveCombat.items[id].name} ×${n}</b><small>${FiveCombat.items[id].text}</small></span>${DemoButton('itemSell',id,`SELL ${Math.floor((d.itemPaid[id]?.at(-1)||0)/2)}`)}</div>`).join('');
- const rep=FiveScore.faces.map(id=>`<div class="demo-inventory-line"><span><b>${FiveScore.names[id]}</b><small>${d.score.techniques[id]||'No technique'} · Polish ${d.score.polish[id]}/4</small></span><strong>${Math.round(d.score.weights[id]*100)}% · ${DEMO.fmt(FiveScore.value(d.score,id))} mult</strong></div>`).join('');
- const bank=d.last?`<details class="demo-bank-report"><summary>Last bank: ${d.last.chips} × ${DEMO.fmt(d.last.mult)} = ${d.last.score} · see why</summary>${DemoBankBreakdown(d.last)}</details>`:'';
- Ir(`<section class="scrim demo-shop-scrim"><div class="demo-shop"><header class="demo-shop-top"><div><div class="eyebrow">WAVE ${r.wave} COMPLETE</div><h2>Build the next flight.</h2><p>${r.wscore} / ${r.quota} banked · ${report?.pay?.total||0} pearls earned · next flight ${DEMO.cap({...r,wave:r.wave+1})} draws.</p></div><div class="demo-wallet"><small>PEARLS</small><strong>${r.xp}</strong>${DemoButton('next','',`WAVE ${r.wave+1} ↗`,!!r.lvup||!!d.pack||!!d.weaponChoice,'demo-primary')}<small>Next quota ${DEMO.quota(r.wave+1)} · ${DEMO.clock(r.wave+1)}s air</small></div></header>${d.toast?`<p role="status">${DemoEscape(d.toast)}</p>`:''}${levels}<div class="demo-shop-body" ${r.lvup?'hidden':''}>${pack}${replacement}<section class="demo-shop-row"><header><h3>Shelf</h3>${DemoButton('reroll','shelf',`REROLL · ${Math.max(1,2+(d.rerolls.shelf||0)-d.rerollDiscount)}`,!!d.pack||r.xp<Math.max(1,2+(d.rerolls.shelf||0)-d.rerollDiscount))}</header><div class="demo-shelf">${shelf.map(o=>DemoOffer(r,o)).join('')}</div></section><section class="demo-shop-row"><header><h3>Packs & vouchers</h3>${DemoButton('reroll','pack',`REROLL PACKS · ${Math.max(1,2+(d.rerolls.pack||0)-d.rerollDiscount)}`,!!d.pack||r.xp<Math.max(1,2+(d.rerolls.pack||0)-d.rerollDiscount))}</header><div class="demo-shelf">${packs.map(o=>DemoOffer(r,o)).join('')}</div></section><div class="demo-build-grid"><section><h3>Weapons · ${r.slots.length}/6</h3>${gear}<h3>Charm order · ${d.charms.length}/${DEMO.charmSlots(r)}</h3>${charms}<h3>Combat items</h3>${d.itemCounts.I05?`<p class="demo-apex-binding">Apex lens binds ${Owc[DEMO.strongest(r).id].name} (slot ${DEMO.strongest(r).slot+1}). Ascent hits load the four dots; that weapon releases from the apex onward.</p>`:''}${combat||'<p>Items change your attacks, defence or water entry.</p>'}</section><section><h3>Your five tricks</h3>${rep}<h3>Combo levels</h3><p>${Object.entries(d.score.routines).map(([k,n])=>k+' '+n+'/4').join(' · ')}</p><details><summary>Fixed reference odds & combo bonuses</summary><p>Reference: six independent 20% draws. All matching combo types pay once, including nested repeats. Improving your odds never lowers a payout.</p>${FiveScore.combos.map(c=>`<p>${c.name}: +${c.bonus} · ${(c.p*100).toFixed(3)}% reference chance</p>`).join('')}</details></section></div>${bank}<details><summary>Your stats & stat items</summary><div class="demo-stat-list">${Object.entries(d.stats).filter(([k])=>k!=='Drive').map(([k,v])=>`<span>${DEMO.statText(k,v)}</span>`).join('')}</div>${d.statInventory.map(a=>`<p>${DEMO.items[a.id].name} ${DemoButton('statSell',a.uid,`SELL ${Math.floor(a.paid/2)}`)}</p>`).join('')}</details><footer><span>Health restored · locked prices carry over · level choices before launch.</span>${DemoButton('next','',`CONTINUE TO WAVE ${r.wave+1} ↗`,!!r.lvup||!!d.pack||!!d.weaponChoice,'demo-primary')}</footer></div></div></section>`);DemoBind();const pane=document.querySelector('.demo-shop-scrim');if(pane)pane.scrollTop=scroll;
-};
-jl=function(){const won=S.mode==='won';Ir(`<section class="scrim"><div class="summary-panel"><div class="eyebrow">${won?'TWENTY WAVES CLEARED':S.endReason==='quota'?'QUOTA MISSED':'HEALTH DEPLETED'}</div><h2>${won?'An extraordinary ascent.':'Every flight counts.'}</h2><p>Wave ${S.wave} · ${S.wscore} / ${S.quota} banked · ${S.kills} kills.</p><p>${S.endReason==='quota'?'Survived, but missed the quota. Shape your draw chances, combo levels and phase charms.':won?'Your combat and score builds carried the run.':'Improve defence, weapon coverage or your position within the launch path.'}</p><div class="demo-summary-hands">${S.demo.history.slice(-5).map(h=>`<div>${h.chips} × ${DEMO.fmt(h.mult)} = <b>${h.score}</b><small>${h.cards.join(' · ')}</small></div>`).join('')}</div>${DemoButton('home','','BACK TO START',false,'demo-primary')}</div></section>`);DemoBind()};
-ls=function(){if(ft!=='game'||S.mode!=='playing')return;ft='pause';It.clear();Gr=false;je={x:0,y:0};ke=0;Ir(`<section class="scrim"><div class="modal pause-modal"><div class="eyebrow">TAKE A BREATH</div><h2>Your flight can wait.</h2><p>Hold W / up underwater to carve. Release to launch; space boosts. In air, W A S D / arrows steer within the launch path.</p><p>Every drawn trick lands. Score charms resolve at entry. A flight with no kills keeps the same routine.</p><p>Wave ${S.wave} · ${S.wscore} / ${S.quota} banked · ${S.budget.toFixed(1)}s air left.</p><div class="modal-actions">${kt('resume','RESUME FLIGHT ↗','primary')}${kt('end','END RUN')}${DemoButton('tune','','SETTINGS')}</div></div></section>`);DemoBind()};
+ql=function(){ft='title';St=null;ur.reset();hr.innerHTML=`${_w()}<section class="title-content demo-title"><div class="eyebrow">CHIPS × MULT · SCORE FEEL TEST</div><h1>ICARUS<span>BUILD YOUR ASCENT</span></h1><p class="intro">Carve your launch.<br>Build the flight you want.</p><p class="title-description">Automatic weapons turn kills into chips.<br>Your tricks are the reels: they build mult.<br>Get hit and the trick in progress bails. Land to bank.</p><div class="demo-starters">${['sonic','harpoon','rocket'].map(id=>DemoButton('starter',id,`<b>${Owc[id].name}</b><span>${DEMO.weapons[id].type} · ${DEMO.weapons[id].description}</span>`,false,id===En?'selected':'')).join('')}</div><div class="launch-row">${DemoButton('begin','','BEGIN RUN ↗',false,'demo-primary')}${DemoButton('help','','HOW TO PLAY')}${DemoButton('tune','','SETTINGS')}</div><div id="demo-how" hidden><p><b>Launch:</b> hold W or up to carve upward. Release to ride out. Space boosts. Water is safe and pauses the air clock.</p><p><b>Fight:</b> W A S D / arrows steer within your launch path. Weapons fire automatically. Kills give chips, plus bonus chips for multi-kills, apex kills and crits. Land in water to bank chips × mult. Meet every wave's quota for 20 waves; missing one ends the run.</p><p><b>Tricks:</b> each jump draws tricks (3 to start; buy more) that play automatically, like reels. A hit bails the trick in progress: it pays nothing. At 0 HP the jump busts: you fall, bank nothing and come back at half HP. The water's colour as you dive shows how hot your next tricks are.</p><p><b>Build:</b> between waves, buy weapons and gear for chips and survival, charms that rewrite the scoring, and Routine upgrades for your tricks. Charms resolve left to right at the bank.</p></div></section><footer class="title-footer"><div><b>${Object.keys(DEMO.weapons).length}</b><span>WEAPONS · SIX SLOTS</span></div><div><b>5</b><span>TRICKS · DRAWS 3→7</span></div><div><b>${Object.keys(FiveScore.charms).length}</b><span>CHARMS</span></div><div><b>${FiveCombat.catalogue.length}</b><span>COMBAT ITEMS</span></div></footer>`;Kl();DemoBind()};
+jl=function(){const won=S.mode==='won';Ir(`<section class="scrim"><div class="summary-panel"><div class="eyebrow">${won?'TWENTY WAVES CLEARED':'QUOTA MISSED'}</div><h2>${won?'An extraordinary ascent.':'Every flight counts.'}</h2><p>Wave ${S.wave} · ${S.wscore} / ${S.quota} banked · ${S.kills} kills.</p><p>${won?'Your build carried the run.':'Bigger banks come from more chips, more mult or fewer Bails: weapons, charms, Routine upgrades and gear.'}</p><div class="demo-summary-hands">${S.demo.history.slice(-5).map(h=>`<div>${h.busted?'BUST':`${h.chips} × ${DEMO.fmt(h.mult)}`} = <b>${h.score}</b><small>${h.cards.join(' · ')}${h.bails?.length?` · ${h.bails.length} Bail${h.bails.length>1?'s':''}`:''}</small></div>`).join('')}</div>${DemoButton('home','','BACK TO START',false,'demo-primary')}</div></section>`);DemoBind()};
+ls=function(){if(ft!=='game'||S.mode!=='playing')return;ft='pause';It.clear();Gr=false;je={x:0,y:0};ke=0;Ir(`<section class="scrim"><div class="modal pause-modal"><div class="eyebrow">TAKE A BREATH</div><h2>Your flight can wait.</h2><p>Hold W / up underwater to carve. Release to launch; space boosts. In air, W A S D / arrows steer within the launch path.</p><p>Every drawn trick lands unless a hit bails it. At 0 HP the jump busts and banks nothing. Charms resolve at the bank. A flight with no kills keeps the same tricks.</p><p>Wave ${S.wave} · ${S.wscore} / ${S.quota} banked · ${S.budget.toFixed(1)}s air left.</p><div class="modal-actions">${kt('resume','RESUME FLIGHT ↗','primary')}${kt('end','END RUN')}${DemoButton('tune','','SETTINGS')}</div></div></section>`);DemoBind()};
 Owstarter=function(){return ''};
 
 /* Settings: one panel in tabs (T, the backquote key, or SCORE TUNING). Score holds the hand-cap levers (structure doc 5.4,
    kept open to balance in play); the other tabs hold the v3 carve's movement sliders, grouped by what they change. */
 const DemoTuneDefs=[['shake','Screen shake',0,2,.1],['flash','Enemy hit flash',0,1,.1]];
 const DemoTabs=[
-  ['Score',null,'Five tricks; draws 3→6 at waves1/5/10/15. Reference odds and growth caps are fixed.'],
+  ['Score',null,'Each jump draws 3 tricks; buy more in the Routine row. A hit bails the trick in progress; 0 HP busts the jump.'],
   ['Launch',['Forward only','Rocket boost','Carve','Wave schedule'],'The carve and the launch. Launch speed rises5 per wave.'],
   ['Swimming',['Swimming','Boost'],''],
   ['Air',['Air controls','Carried roll','Camera'],''],
   ['Enemies',['Spawning','Pursuit','Boss waves','Overtime','Economy'],'The demo spawns, moves and pays for enemies with its own rules (source/demo.js), so not every slider here has an effect.'],
   ['Look',['Gun ring','Dolphin sprite','Flight path','Brotato scale'],''],
-  ['About',[],'Five trick identities. Draws grow at waves 5, 10 and 15. Reference odds stay fixed. Combat items alter fighting; charms resolve score at water entry.']];
+  ['About',[],'Five trick identities. Kills are chips; tricks, combos and charms are mult. Combat items alter the fight; charms resolve the score at water entry.']];
 let DemoTab='Score';
 function DemoTuneSummary(){return 'Every trick completes. Adjust presentation here; run upgrades live in the shop.'}
 function DemoTabGroups(name){const listed=new Set(DemoTabs.flatMap(t=>t[1]||[]));const tab=DemoTabs.find(t=>t[0]===name);
@@ -529,7 +561,7 @@ globalThis.icarusDemo={version:'scoreboard-S3',catalog:DEMO,get state(){return S
 // The banner (the phase notice): each bank, the quota being met, the clock running out. v3's own notices stay off.
 Ovn=function(S2){if(!S2.demo)return;for(const n of S2.events){
   if(n.kind==='bank'){const met=S2.wscore>=S2.quota&&S2.wscore-n.value<S2.quota;
-    ci=n.value>0?`BANKED ${n.value} · ${n.K} × ${DEMO.fmt(Math.round(n.M*10)/10)}${met?' · QUOTA MET':` · ${S2.wscore} / ${S2.quota}`}`:'NO KILLS · NOTHING BANKED';kr=n.value>0?1.8:1.1}
+    ci=n.busted?`BUST · ${n.value?'SECOND WIND · BANKED '+n.value:'NOTHING BANKED'}`:n.value>0?`BANKED ${n.value} · ${n.K} × ${DEMO.fmt(Math.round(n.M*10)/10)}${met?' · QUOTA MET':` · ${S2.wscore} / ${S2.quota}`}`:'NO KILLS · NOTHING BANKED';kr=n.value>0?1.8:1.1}
   else if(n.kind==='armed'){ci='CLOCK OUT · LAND TO BANK';kr=2.2}}};
 /* Hit feel, from Brotato (brotato-reference, reference only): a white flash on the enemy hit; crits in yellow, larger;
    the camera shakes min(damage / 3, 3) px for 0.1 s per hit dealt (damage in Brotato units: ÷ OwB.hp) and 5 px when you're
@@ -549,7 +581,9 @@ const DemoFx={SHK:K/1920,CHARM:{'+chips':0x5ff2ff,'+mult':0xb98cff,'×mult':0xff
     else if(e.kind==='hit'){this.shk=this.shk||{i:0,t:0};this.shk.i=Math.max(this.shk.i,5*DemoFx.SHK);this.shk.t=Math.max(this.shk.t,.1)}
     else if(e.kind==='itemproc'){const now=S?.time||0;this.itemFxNext??={};if(now>=(this.itemFxNext[e.item]||0)&&this.rings.length<32){this.itemFxNext[e.item]=now+.2;this.rings.push({x:e.pos.x,y:e.pos.y,age:0,life:.35,radius:['I05','I07'].includes(e.item)?4:2,color:{I04:0x5ff2ff,I05:0xffd84d,I07:0x639bff,I08:0x8cf5cf,I10:0x8cf5cf}[e.item]||0xb98cff})}continue}
     else if(e.kind==='charm'){(this.cfx||(this.cfx=[])).push({e,j,delay:DemoFx.gaps(j++)});continue}
-    keep.push(e)}}catch(err){return ev0.call(this,t)}
+    else if(e.kind==='bust')continue;
+    // Combat-item damage is tagged 'item-I0x', which has no weapon colour; the renderer would throw looking it up.
+    keep.push(e.weapon&&!Q[e.weapon]?{...e,weapon:undefined}:e)}}catch(err){return ev0.call(this,t.filter(e=>!e.weapon||Q[e.weapon]))}
   return ev0.call(this,keep)}}
 {const de0=Ul.prototype.drawEnemies;Ul.prototype.drawEnemies=function(t,e,i,Al,dt=.016){const out=de0.call(this,t,e,i,Al,dt);
   try{const F=this.dmFlash,O=this.flashSprites||(this.flashSprites=new Map()),A=DEMO.tune.flash;

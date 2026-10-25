@@ -1,0 +1,293 @@
+{
+  "round": "S4",
+  "buildSha256": "4758476fad7b967313d8dea9163488cc101e7f745f5cf255f7e4d8cb1efa32ff",
+  "scope": "Actual rendered UI/input checks. Constructed shop fixtures are not evidence of natural offer availability; mobile is browser emulation, not physical hardware.",
+  "errors": [],
+  "checks": [
+    {
+      "name": "real controls launch and bottom scoreboard shows only three main components",
+      "passed": true,
+      "detail": {
+        "rect": {
+          "x": 445,
+          "y": 733.6875,
+          "width": 550,
+          "height": 106.3125
+        },
+        "canvas": {
+          "x": 0,
+          "y": 45,
+          "width": 1440,
+          "height": 810
+        },
+        "text": "↺\n◇\n◇\nCHIPS\n0\n×\nMULT\n0.64\n+1 · Backflip\n=\nSCORE\n0",
+        "strong": 3,
+        "background": "rgba(0, 0, 0, 0)",
+        "border": "0px",
+        "visibleSecondary": 0
+      }
+    },
+    {
+      "name": "shop six-slot rack, charm rail and always-visible trick scoreboard",
+      "passed": true,
+      "detail": {
+        "slots": 6,
+        "board": {
+          "rows": 10,
+          "faces": 5,
+          "inDetails": false
+        }
+      }
+    },
+    {
+      "name": "actual DOM duplicate purchase and combine expose honest inventory changes",
+      "passed": true,
+      "detail": {
+        "cash": 480,
+        "slots": 1,
+        "tier": 2
+      }
+    },
+    {
+      "name": "lock and reroll retain the locked offer and exact price",
+      "passed": true,
+      "detail": {
+        "cash": 478,
+        "offer": {
+          "uid": 9102,
+          "row": "weapon",
+          "id": "sonic",
+          "level": 1,
+          "price": 20,
+          "locked": true
+        }
+      }
+    },
+    {
+      "name": "pack purchase/pick, charm purchase/reorder/sell use real DOM actions",
+      "passed": true,
+      "detail": {
+        "packPicked": true,
+        "reordered": true,
+        "sold": true
+      }
+    },
+    {
+      "name": "full-rack replacement cancellation, exact net cost and paid merge work through UI",
+      "passed": true,
+      "detail": {
+        "cash": 0,
+        "slots": 6,
+        "id": "laser"
+      }
+    },
+    {
+      "name": "reused game icons load and shop primary text remains readable",
+      "passed": true,
+      "detail": {
+        "images": [
+          {
+            "loaded": true,
+            "src": "data:image/png;base64,iVBORw0K"
+          },
+          {
+            "loaded": true,
+            "src": "data:image/png;base64,iVBORw0K"
+          },
+          {
+            "loaded": true,
+            "src": "data:image/png;base64,iVBORw0K"
+          }
+        ],
+        "offers": [
+          {
+            "font": 15,
+            "text": "WEAPON · Shot · Steady · T1\nHarpoon\n1 OWNED\n20\nPEARLS\n\nCritical shots pierce enemies.\n\nMatching copy → T2: 65 → 112 damage.\n\nDetails & comparison\nBUY · 20 ◈\nLOCK"
+          },
+          {
+            "font": 15,
+            "text": "WEAPON · Close · Steady · T1\nSonic emitter\nNEW WEAPON\n20\nPEARLS\n\nA wide pulse pushes nearby enemies back. +2 Armour.\n\nAdds one automatic weapon.\n\nDetails & comparison\nBUY · 20 ◈\nLOCK"
+          },
+          {
+            "font": 15,
+            "text": "✚\nCHARM · +MULT\nSignature act\nUNCOMMON\n12\nPEARLS\n\nEach landed Front flip: +3 mult.\n\nFront flip is in 48.8% of 3-trick jumps.\n\nDetails & comparison\nBUY · 12 ◈\nLOCK"
+          },
+          {
+            "font": 15,
+            "text": "✖\nCHARM · ×MULT\nClean take\nUNCOMMON\n12\nPEARLS\n\n×1.5 mult if you weren’t hit this jump.\n\nMultiplies mult: place it late in the row.\n\nDetails & comparison\nBUY · 12 ◈\nLOCK"
+          },
+          {
+            "font": 15,
+            "text": "≡\nPACK · CHOOSE 1 OF 3\nRoutine pack\n8\nPEARLS\n\nChoose a trick upgrade.\n\nValues, combos, odds, draws or techniques.\n\nDetails & comparison\nBUY · 8 ◈\nLOCK"
+          }
+        ],
+        "rail": {
+          "x": 1075,
+          "y": 228.796875,
+          "width": 340,
+          "height": 606.203125,
+          "top": 228.796875,
+          "right": 1415,
+          "bottom": 835,
+          "left": 1075
+        }
+      }
+    },
+    {
+      "name": "landscape phone shop keeps six slots accessible and primary text/buttons usable",
+      "passed": true,
+      "detail": {
+        "overflow": false,
+        "slots": [
+          {
+            "x": 520.65625,
+            "y": 141.296875,
+            "width": 73,
+            "height": 64.28125,
+            "top": 141.296875,
+            "right": 593.65625,
+            "bottom": 205.578125,
+            "left": 520.65625
+          },
+          {
+            "x": 597.65625,
+            "y": 141.296875,
+            "width": 73,
+            "height": 64.28125,
+            "top": 141.296875,
+            "right": 670.65625,
+            "bottom": 205.578125,
+            "left": 597.65625
+          },
+          {
+            "x": 674.65625,
+            "y": 141.296875,
+            "width": 73,
+            "height": 64.28125,
+            "top": 141.296875,
+            "right": 747.65625,
+            "bottom": 205.578125,
+            "left": 674.65625
+          },
+          {
+            "x": 520.65625,
+            "y": 209.578125,
+            "width": 73,
+            "height": 58,
+            "top": 209.578125,
+            "right": 593.65625,
+            "bottom": 267.578125,
+            "left": 520.65625
+          },
+          {
+            "x": 597.65625,
+            "y": 209.578125,
+            "width": 73,
+            "height": 58,
+            "top": 209.578125,
+            "right": 670.65625,
+            "bottom": 267.578125,
+            "left": 597.65625
+          },
+          {
+            "x": 674.65625,
+            "y": 209.578125,
+            "width": 73,
+            "height": 58,
+            "top": 209.578125,
+            "right": 747.65625,
+            "bottom": 267.578125,
+            "left": 674.65625
+          }
+        ],
+        "rail": {
+          "x": 511.65625,
+          "y": 116.296875,
+          "width": 245,
+          "height": 265.703125,
+          "top": 116.296875,
+          "right": 756.65625,
+          "bottom": 382,
+          "left": 511.65625
+        },
+        "buy": {
+          "x": 98.328125,
+          "y": 374.171875,
+          "width": 127.65625,
+          "height": 40,
+          "top": 374.171875,
+          "right": 225.984375,
+          "bottom": 414.171875,
+          "left": 98.328125
+        },
+        "textFont": 13
+      }
+    },
+    {
+      "name": "landscape phone score clears health, weapon tray and touch controls",
+      "passed": true,
+      "detail": {
+        "score": {
+          "x": 257,
+          "y": 310.125,
+          "width": 330,
+          "height": 67.875,
+          "top": 310.125,
+          "right": 587,
+          "bottom": 378,
+          "left": 257
+        },
+        "health": {
+          "x": 99.59375,
+          "y": 329.671875,
+          "width": 125,
+          "height": 28.78125,
+          "top": 329.671875,
+          "right": 224.59375,
+          "bottom": 358.453125,
+          "left": 99.59375
+        },
+        "tray": {
+          "x": 322,
+          "y": 10,
+          "width": 200,
+          "height": 32,
+          "top": 10,
+          "right": 522,
+          "bottom": 42,
+          "left": 322
+        },
+        "boost": {
+          "x": 685.484375,
+          "y": 256.546875,
+          "width": 55.453125,
+          "height": 55.453125,
+          "top": 256.546875,
+          "right": 740.9375,
+          "bottom": 312,
+          "left": 685.484375
+        },
+        "overflow": false
+      }
+    },
+    {
+      "name": "real combat item secondary damage renders without stopping the game",
+      "passed": true,
+      "detail": {
+        "seen": {
+          "weapon": "item-I04",
+          "value": 826.4666666666667,
+          "time": 0.008333333333333333
+        },
+        "continuedTime": 0.4000000000000004
+      }
+    },
+    {
+      "name": "bounded15-second rendered100-enemy scoring stress",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: main combat simulation must actually keep running {\"activeAir\":4.433333333333343,\"simulatedSeconds\":4.433333333333343,\"frames\":89,\"frameIntervalMs\":{\"median\":16.700000000000728,\"p95\":899.9000000000015,\"p99\":2583.2000000000007,\"max\":2583.2000000000007},\"attacks\":78}\n    at /home/user/icarus/qa/product-review.cjs:38:1712\n    at async test (/home/user/icarus/qa/product-review.cjs:22:47)\n    at async /home/user/icarus/qa/product-review.cjs:35:1"
+    }
+  ],
+  "passed": 10,
+  "failed": 1
+}

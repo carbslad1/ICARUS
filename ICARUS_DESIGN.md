@@ -388,7 +388,7 @@ These are binding design constraints, not aspirations. A slot-machine structure 
 
 ## 4.16 Open questions
 
-1. How much of the existing 17-charm list and the 10 combat items survive the two-line standard in §4.8.
+1. Resolved in build S4: all 17 original charms were rewritten to the two-line standard and 20 new charms added (37 in total); the 10 combat items have two-line text, with stacking details moved to the details panel.
 
 Fall speed, the quota curve and the heat bands are tuning, marked **[TUNE]** where they appear. They are not open design questions.
 

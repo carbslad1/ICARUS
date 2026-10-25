@@ -1,7 +1,7 @@
 {
-  "buildSha256": "b2ac5bc779422c0558f39b4bbf9efc827cc4337d5edb634812887f1ba3a221b7",
+  "buildSha256": "ecc17d8588f565f256f538376254a789121ccde0ceb4932312ea1f39b1bc59dc",
   "scope": "Actual scoring cue rules and original-versus-edited simulation parity; no player satisfaction claim.",
-  "passed": 5,
+  "passed": 6,
   "failed": 0,
   "checks": [
     {
@@ -28,9 +28,9 @@
       "name": "Lucky, ordered charms and Gold growth use authoritative pre-growth bank values",
       "passed": true,
       "detail": {
-        "mult": 16.5,
-        "score": 198,
-        "cues": 13
+        "mult": 20.5,
+        "score": 246,
+        "cues": 12
       }
     },
     {
@@ -41,27 +41,19 @@
       }
     },
     {
-      "name": "three pre-deadline scoring simulations preserve the original chips and multiplier math",
+      "name": "a bailed trick reveals as a Bail, adds nothing and the final cue equals the bank",
+      "passed": true,
+      "detail": {
+        "mult": 3,
+        "score": 12
+      }
+    },
+    {
+      "name": "a bust stops the reels and banks zero (half with Second wind) through the same cue",
       "passed": true,
       "detail": [
-        {
-          "style": "low-keep",
-          "score": 71,
-          "kills": 20,
-          "mode": "playing"
-        },
-        {
-          "style": "mid-keep",
-          "score": 75,
-          "kills": 20,
-          "mode": "playing"
-        },
-        {
-          "style": "high-keep",
-          "score": 64,
-          "kills": 20,
-          "mode": "playing"
-        }
+        0,
+        12
       ]
     }
   ]

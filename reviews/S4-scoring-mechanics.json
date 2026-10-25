@@ -1,0 +1,126 @@
+{
+  "round": "S4",
+  "buildSha256": "4758476fad7b967313d8dea9163488cc101e7f745f5cf255f7e4d8cb1efa32ff",
+  "scope": "Actual built simulation with constructed branch fixtures; no human balance or Android claim.",
+  "passed": 9,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "timer crossing keeps full-tick combat, vulnerability and scoring live",
+      "passed": true,
+      "details": {
+        "activeAir": 0.008333333333333333,
+        "afterClockChips": 1,
+        "hp": 99
+      }
+    },
+    {
+      "name": "actual scheduled spawns continue several seconds past zero and finite exhausted lanes recycle their own roster",
+      "passed": true,
+      "details": {
+        "activeAir": 5.000000000000038,
+        "maxEnemies": 6,
+        "recycled": 1
+      }
+    },
+    {
+      "name": "landing after clock banks exactly once then clears or fails quota, without extra air ticks in water",
+      "passed": true,
+      "details": {
+        "score": 8,
+        "banks": 1,
+        "mode": "shop"
+      }
+    },
+    {
+      "name": "meeting quota does not prematurely finish a wave before the timer",
+      "passed": true,
+      "details": {
+        "mode": "playing",
+        "airRemaining": 9.999950000937678,
+        "score": 8
+      }
+    },
+    {
+      "name": "water-entry item damage remains eligible during overtime and contributes to the final bank",
+      "passed": true,
+      "details": {
+        "entryKills": 1,
+        "chips": 2,
+        "bank": 8
+      }
+    },
+    {
+      "name": "boss culling restores the same living body and HP without a kill award",
+      "passed": true,
+      "details": {
+        "hp": 100000,
+        "recoveries": 1
+      }
+    },
+    {
+      "name": "full cap delays the boss until there is an actual free shared slot",
+      "passed": true,
+      "details": {
+        "bossSpawned": true,
+        "live": 100
+      }
+    },
+    {
+      "name": "Relay earned by a clean bank survives the actual next-wave reset",
+      "passed": true,
+      "details": {
+        "wave": 2,
+        "relay": true
+      }
+    },
+    {
+      "name": "0 HP busts the jump instead of ending the run; a quota failure reports hits and busts",
+      "passed": true,
+      "details": {
+        "wave": 1,
+        "reason": "quota",
+        "score": 0,
+        "quota": 70,
+        "quotaRatio": 0,
+        "quotaMet": false,
+        "hp": 50,
+        "maxHp": 100,
+        "armour": 0,
+        "regen": 0,
+        "activeAir": 0,
+        "airRemaining": 0,
+        "overtime": false,
+        "overtimeAir": 0,
+        "damageTaken": 10,
+        "acceptedHits": 1,
+        "primaryApplied": 0,
+        "secondaryApplied": 0,
+        "chips": 0,
+        "bankedFlights": 1,
+        "busts": 1,
+        "bails": 1,
+        "unbankedChips": 0,
+        "unbankedBaseEstimate": 0,
+        "slots": [
+          {
+            "id": "harpoon",
+            "tier": 1
+          }
+        ],
+        "lastHits": [
+          {
+            "air": 0,
+            "value": 10,
+            "hp": 0,
+            "phase": "ascent",
+            "enemies": 0
+          }
+        ],
+        "bossSpawned": false,
+        "bossDefeated": false,
+        "bossRecoveries": 0
+      }
+    }
+  ]
+}

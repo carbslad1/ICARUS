@@ -58,6 +58,17 @@
 
 .budget-block.in-overtime #budget-label,.budget-block.in-overtime #budget-value{color:#ffe3a0!important}.budget-block.in-overtime .budget-track{box-shadow:0 0 9px #ffd37833}
 
+/* Reels: drawn tricks for this jump. A Bail shows as a red cross the moment you are hit; a bust darkens the row. */
+.ss-reels{display:flex;justify-content:center;gap:6px;margin-bottom:4px;min-height:22px}.ss-reels span{font-size:18px;line-height:22px;width:22px;text-align:center;color:#58707a;text-shadow:0 2px 6px #02070e}.ss-reels span.revealed{color:#ff9dce;text-shadow:0 0 10px #ff8dbd}.ss-reels span.bailed{color:#ff5a5a;font-weight:900;text-shadow:0 0 10px #ff3b3b}.ss-reels.is-bust span{color:#3c464c;text-shadow:none}
+#score-hero.is-bust .ss-total strong,#score-hero.is-bust .ss-mult strong{color:#ff6b6b;text-shadow:0 2px 8px #02070e,0 0 18px #ff3b3b}.ss-particle.bail{color:#ff6b6b;font-size:26px}
+/* Heat cue: a colour wash at the screen edges during the dive, plus a one-word label. */
+#heat-cue{position:fixed;inset:0;z-index:20;pointer-events:none;transition:opacity .25s}#heat-cue[hidden]{display:none!important}#heat-cue #heat-word{position:absolute;left:50%;bottom:max(150px,calc((100vh - min(100vh,56.25vw))/2 + 150px));transform:translateX(-50%);font:900 15px/1 Arial,Helvetica,sans-serif;letter-spacing:.24em;text-shadow:0 2px 8px #02070e}
+#heat-cue.heat-cold{box-shadow:inset 0 0 120px 30px #3a7bd566}#heat-cue.heat-cold #heat-word{color:#8fc3ff}
+#heat-cue.heat-warm{box-shadow:inset 0 0 120px 30px #f0b44c55}#heat-cue.heat-warm #heat-word{color:#ffd58a}
+#heat-cue.heat-hot{box-shadow:inset 0 0 140px 40px #ff6a3d77}#heat-cue.heat-hot #heat-word{color:#ff9a6b}
+#heat-cue.heat-jackpot{box-shadow:inset 0 0 160px 50px #ff4fd899}#heat-cue.heat-jackpot #heat-word{color:#ffd1f4;font-size:18px}
+@media(max-height:550px){#heat-cue #heat-word{font-size:12px;bottom:100px}.ss-reels{min-height:16px;margin-bottom:2px}.ss-reels span{font-size:13px;line-height:16px;width:16px}}
+
 #run-guide{position:fixed;left:50%;transform:translateX(-50%);top:max(105px,calc((100vh - min(100vh,56.25vw))/2 + 90px));z-index:25;width:min(650px,calc(100vw - 420px));display:flex;align-items:flex-start;gap:12px;color:#d3e5e4;pointer-events:none;text-align:center;text-shadow:0 2px 9px #02070e;font-family:Arial,Helvetica,sans-serif}#run-guide[hidden]{display:none!important}#run-guide-text{flex:1;font-size:14px;line-height:1.5}#run-guide b{display:block;font-size:10px;letter-spacing:.15em;margin-bottom:4px;color:#b5d9d3}#run-guide em{font-style:normal;font-weight:700}.guide-chips{color:#75d9ff}.guide-mult{color:#ff9fc9}.guide-score{color:#ffe3a0}#run-guide button{pointer-events:auto;border:1px solid #69878065;border-radius:50%;background:#07192488;color:#b3ceca;font-size:17px;width:26px;height:26px;cursor:pointer}#run-guide button:focus-visible{outline:2px solid #ffe3a0}
 @media(max-width:1000px){#run-guide{width:480px;top:90px}#run-guide-text{font-size:13px}}
 @media(max-height:550px) and (min-width:600px){#run-guide{top:60px;width:min(480px,calc(100vw - 270px));gap:5px}#run-guide-text{font-size:12px;line-height:1.4}#run-guide b{font-size:9px;margin-bottom:2px}#run-guide button{width:22px;height:22px;font-size:14px}.hud .phase-notice{display:none!important}}
@@ -70,8 +81,23 @@
 @media(min-width:1600px){.shop-main{grid-template-columns:minmax(0,1fr) 370px}.shop-offer h3{font-size:20px}.shop-effect{font-size:16px}.shop-slot-name b{font-size:13px}}
 @media(max-width:1150px){.shop-scrim{padding:14px!important}.shop-shell{max-height:calc(100vh - 28px)}.shop-main{grid-template-columns:minmax(0,1fr) 280px;gap:14px}.shop-offer-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.shop-offer-top{grid-template-columns:54px minmax(0,1fr) auto}.shop-art{height:48px}.shop-offer h3{font-size:17px}.shop-price{font-size:20px}.shop-build-rail{padding:10px}.shop-slot{grid-template-columns:32px minmax(0,1fr);padding:5px}.shop-slot-name b{font-size:10px}.shop-pack-options{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px) and (min-height:551px){.shop-scrim{padding:10px!important}.shop-shell{max-height:calc(100vh - 20px)}.shop-header{gap:10px;align-items:flex-start;padding-bottom:12px}.shop-header h2{font-size:23px}.shop-header p{font-size:11px}.shop-wallet{grid-template-columns:1fr;gap:5px}.shop-wallet b{font-size:25px}.shop-wallet>small{font-size:9px;max-width:140px}.shop-launch{padding:9px 11px!important;font-size:10px!important;min-height:40px}.shop-main{display:flex;flex-direction:column;gap:10px;padding-top:10px}.shop-build-rail{order:-1;display:grid;grid-template-columns:1fr;max-height:230px;flex-shrink:0}.shop-rail-core{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}.shop-rail-core>.shop-section-caption{grid-column:1}.shop-weapon-grid{grid-column:1;grid-row:2/4;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;margin-bottom:0}.shop-slot{min-height:58px;display:flex;flex-direction:column;gap:2px;padding:4px}.shop-slot-art{height:20px;width:100%}.shop-slot-name b{font-size:8px;text-align:center;max-width:70px}.shop-slot-name small{font-size:8px;text-align:center}.shop-slot-actions{width:100%;justify-content:center}.shop-slot-actions .demo-button{min-height:26px;width:28px;font-size:15px!important}.shop-slot.empty{min-height:58px}.shop-charms{grid-column:2;grid-row:1/4}.shop-charm-row{flex-wrap:wrap}.shop-charm-slot{min-width:30px;max-width:40px;height:38px}.shop-charms .shop-section-caption{display:block;line-height:1.5}.shop-empty-note{grid-column:2;font-size:10px;margin-top:0}.shop-rail-details{max-height:50px}.shop-charm-selected>p,.shop-charm-selected .shop-inspect{display:none}.shop-charm-selected{padding-top:5px;margin:0;display:flex;justify-content:space-between;align-items:center;gap:10px}.shop-charm-selected>b{font-size:11px}.shop-charm-selected .demo-button{min-height:32px;font-size:9px}.shop-build-details{padding:7px 0}.shop-offers{flex:1;min-height:0;padding-right:2px}.shop-offer-grid{grid-template-columns:1fr}.shop-offer-top{grid-template-columns:72px 1fr auto}.shop-offer h3{font-size:20px}.shop-effect{font-size:16px;min-height:0}.shop-fit{min-height:0;font-size:13px}.shop-pack-options,.shop-replacements{grid-template-columns:1fr}.shop-level-options{grid-template-columns:1fr}.shop-level-options .demo-button{min-height:72px}.shop-level-options b{font-size:18px;margin-top:5px}.shop-onboard,.shop-toast{font-size:11px;padding:8px 10px}.shop-market-row h3{font-size:18px}.shop-reroll{font-size:10px!important;padding:8px!important}}
-@media(max-height:550px) and (min-width:600px){.shop-scrim{padding:8px 12px!important}.shop-shell{max-height:calc(100vh - 16px)}.shop-header{padding-bottom:8px;gap:14px}.shop-header h2{font-size:22px;margin:3px 0}.shop-header .shop-tag{font-size:8px}.shop-header p{font-size:10px}.shop-wallet{gap:2px 12px}.shop-wallet b{font-size:26px}.shop-wallet>small{font-size:9px}.shop-launch{min-height:38px;padding:9px 12px!important;font-size:10px!important}.shop-main{grid-template-columns:minmax(0,1fr) 245px;gap:12px;padding-top:8px}.shop-offer-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.shop-offer{padding:10px}.shop-offer-top{grid-template-columns:44px minmax(0,1fr) auto;gap:6px;min-height:45px}.shop-art{height:39px}.shop-offer h3{font-size:15px;margin:3px 0}.shop-offer .shop-tag{font-size:8px;letter-spacing:.04em}.shop-price{font-size:18px}.shop-price small{font-size:7px}.shop-owned{font-size:8px}.shop-effect{font-size:13px;min-height:36px;margin-top:9px}.shop-fit{font-size:11px;min-height:30px;margin-bottom:8px}.shop-inspect summary{font-size:10px}.shop-buy{min-height:38px;font-size:10px!important}.shop-lock{min-width:42px;min-height:38px;padding:7px!important;font-size:8px!important}.shop-build-rail{padding:8px}.shop-section-caption{margin:0 0 5px;font-size:9px}.shop-section-caption b{font-size:9px}.shop-section-caption span{font-size:8px}.shop-weapon-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;margin-bottom:8px}.shop-slot{min-height:64px;display:flex;flex-direction:column;gap:1px;padding:4px}.shop-slot-art{height:20px;width:100%}.shop-slot-name b{font-size:8px;text-align:center;max-width:65px;line-height:1.1}.shop-slot-name small{font-size:7px;text-align:center;margin-top:2px}.shop-slot-actions{gap:4px;justify-content:center;width:100%}.shop-slot-actions .demo-button{min-height:24px;width:27px;font-size:14px!important}.shop-slot.empty{min-height:64px}.shop-charm-row{gap:4px;margin-bottom:7px}.shop-charm-slot{height:31px;max-width:38px}.shop-charm-slot .shop-symbol{font-size:19px}.shop-charm-selected{padding-top:6px;margin-bottom:7px}.shop-charm-selected>b{font-size:11px}.shop-charm-selected>p{font-size:10px;margin:3px 0 5px}.shop-charm-selected .demo-button{font-size:8px;min-height:29px;padding:4px 6px}.shop-empty-note{font-size:9px;margin:0 0 5px}.shop-build-details{padding:8px 0}.shop-build-details>summary{font-size:10px}.shop-build-details>summary small{font-size:8px}.shop-onboard,.shop-toast{font-size:10px;line-height:1.3;margin-top:6px;padding:6px 9px}.shop-market-row>header{margin-bottom:8px;gap:8px}.shop-market-row h3{font-size:15px}.shop-market-row header p{font-size:10px}.shop-reroll{min-height:32px;font-size:9px!important;padding:6px 8px!important}.shop-pack-options{grid-template-columns:repeat(2,minmax(0,1fr))}.shop-pack-choice{padding:10px}.shop-choice-name{grid-template-columns:30px 1fr;gap:7px}.shop-choice-name .shop-art{height:32px}.shop-choice-name h4{font-size:13px}.shop-pack-choice .shop-effect{font-size:12px}.shop-choice-panel{padding:12px}.shop-choice-panel>header h3{font-size:20px}.shop-replacements{grid-template-columns:repeat(2,minmax(0,1fr))}.shop-levels{padding:14px}.shop-levels h3{font-size:20px}.shop-levels>p{font-size:12px}.shop-level-options{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.shop-level-options .demo-button{min-height:85px;padding:10px}.shop-level-options b{font-size:16px;margin-top:7px}}
+@media(max-height:550px) and (min-width:600px){.shop-scrim{padding:8px 12px!important}.shop-shell{max-height:calc(100vh - 16px)}.shop-header{padding-bottom:8px;gap:14px}.shop-header h2{font-size:22px;margin:3px 0}.shop-header .shop-tag{font-size:8px}.shop-header p{font-size:10px}.shop-wallet{gap:2px 12px}.shop-wallet b{font-size:26px}.shop-wallet>small{font-size:9px}.shop-launch{min-height:38px;padding:9px 12px!important;font-size:10px!important}.shop-main{grid-template-columns:minmax(0,1fr) 245px;gap:12px;padding-top:8px}.shop-offer-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.shop-offer{padding:10px}.shop-offer-top{grid-template-columns:44px minmax(0,1fr) auto;gap:6px;min-height:45px}.shop-art{height:39px}.shop-offer h3{font-size:15px;margin:3px 0}.shop-offer .shop-tag{font-size:8px;letter-spacing:.04em}.shop-price{font-size:18px}.shop-price small{font-size:7px}.shop-owned{font-size:8px}.shop-effect{font-size:13px;min-height:36px;margin-top:9px}.shop-fit{font-size:11px;min-height:30px;margin-bottom:8px}.shop-inspect summary{font-size:10px}.shop-buy{min-height:40px;font-size:10px!important}.shop-lock{min-width:42px;min-height:38px;padding:7px!important;font-size:8px!important}.shop-build-rail{padding:8px}.shop-section-caption{margin:0 0 5px;font-size:9px}.shop-section-caption b{font-size:9px}.shop-section-caption span{font-size:8px}.shop-weapon-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;margin-bottom:8px}.shop-slot{min-height:64px;display:flex;flex-direction:column;gap:1px;padding:4px}.shop-slot-art{height:20px;width:100%}.shop-slot-name b{font-size:8px;text-align:center;max-width:65px;line-height:1.1}.shop-slot-name small{font-size:7px;text-align:center;margin-top:2px}.shop-slot-actions{gap:4px;justify-content:center;width:100%}.shop-slot-actions .demo-button{min-height:24px;width:27px;font-size:14px!important}.shop-slot.empty{min-height:64px}.shop-charm-row{gap:4px;margin-bottom:7px}.shop-charm-slot{height:31px;max-width:38px}.shop-charm-slot .shop-symbol{font-size:19px}.shop-charm-selected{padding-top:6px;margin-bottom:7px}.shop-charm-selected>b{font-size:11px}.shop-charm-selected>p{font-size:10px;margin:3px 0 5px}.shop-charm-selected .demo-button{font-size:8px;min-height:29px;padding:4px 6px}.shop-empty-note{font-size:9px;margin:0 0 5px}.shop-build-details{padding:8px 0}.shop-build-details>summary{font-size:10px}.shop-build-details>summary small{font-size:8px}.shop-onboard,.shop-toast{font-size:10px;line-height:1.3;margin-top:6px;padding:6px 9px}.shop-market-row>header{margin-bottom:8px;gap:8px}.shop-market-row h3{font-size:15px}.shop-market-row header p{font-size:10px}.shop-reroll{min-height:32px;font-size:9px!important;padding:6px 8px!important}.shop-pack-options{grid-template-columns:repeat(2,minmax(0,1fr))}.shop-pack-choice{padding:10px}.shop-choice-name{grid-template-columns:30px 1fr;gap:7px}.shop-choice-name .shop-art{height:32px}.shop-choice-name h4{font-size:13px}.shop-pack-choice .shop-effect{font-size:12px}.shop-choice-panel{padding:12px}.shop-choice-panel>header h3{font-size:20px}.shop-replacements{grid-template-columns:repeat(2,minmax(0,1fr))}.shop-levels{padding:14px}.shop-levels h3{font-size:20px}.shop-levels>p{font-size:12px}.shop-level-options{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.shop-level-options .demo-button{min-height:85px;padding:10px}.shop-level-options b{font-size:16px;margin-top:7px}}
 @media(prefers-reduced-motion:reduce){.shop-scrim *{scroll-behavior:auto}}
+
+/* Rack inspection keeps touch actions large instead of fitting tiny buttons inside each slot. */
+button.shop-slot{color:#e3eff0;font:inherit;cursor:pointer;text-align:left;touch-action:manipulation;grid-template-columns:44px minmax(0,1fr);min-height:66px}button.shop-slot.selected{border-color:#9fdced;background:#193b49;box-shadow:inset 0 0 0 1px #96cee733}button.shop-slot:focus-visible{outline:2px solid #ffe3a0;outline-offset:2px}.shop-slot-name b{font-size:13px}.shop-slot-name small{font-size:11px}.shop-slot.empty{min-height:66px}.shop-weapon-selected{margin:0 0 13px}.shop-weapon-selected>p{font-size:11px;line-height:1.4;color:#adc8d0;margin:0 0 7px}.shop-weapon-selected>p b{color:#d4edf0}.shop-weapon-actions{display:flex;gap:7px}.shop-weapon-actions .demo-button{flex:1;min-height:40px;font-size:10px;padding:7px}.shop-charm-selected .demo-button{min-height:40px;font-size:10px;padding:7px 9px}
+@media(max-height:550px) and (min-width:600px){button.shop-slot{display:grid;grid-template-columns:24px minmax(0,1fr);min-height:58px;padding:5px;gap:4px}.shop-slot-art{width:24px;height:24px;grid-column:1;grid-row:1}.shop-slot-name{grid-column:2;grid-row:1}.shop-slot-name b{font-size:11px;line-height:1.15;text-align:left;max-width:none}.shop-slot-name small{font-size:10px;line-height:1.2;text-align:left;margin-top:3px}.shop-slot.empty{min-height:58px}.shop-weapon-selected{margin-bottom:9px}.shop-weapon-selected>p{font-size:10px;line-height:1.3;margin-bottom:5px}.shop-weapon-actions{gap:5px}.shop-weapon-actions .demo-button{min-height:40px;font-size:9px;padding:5px}.shop-charm-slot{height:36px}.shop-charm-slot .shop-symbol{font-size:22px}.shop-charm-selected>b{font-size:12px}.shop-charm-selected>p{font-size:11px}.shop-charm-selected .demo-button{font-size:10px;min-height:40px;padding:6px}.shop-section-caption b{font-size:10px}.shop-section-caption span{font-size:9px}.shop-build-details>summary{font-size:11px}}
+@media(max-width:700px) and (min-height:551px){button.shop-slot{display:flex;min-height:64px;padding:5px;gap:3px}.shop-slot-art{width:100%;height:22px}.shop-slot-name b{font-size:11px;line-height:1.15;text-align:center;max-width:72px}.shop-slot-name small{font-size:10px;line-height:1.1;text-align:center}.shop-slot.empty{min-height:64px}.shop-weapon-selected{grid-column:1/-1;margin:6px 0 0}.shop-weapon-selected>p{font-size:11px}.shop-weapon-actions .demo-button{min-height:40px;font-size:10px}.shop-charm-selected .demo-button{min-height:40px;font-size:10px}.shop-rail-details{max-height:72px}.shop-build-rail{max-height:300px}}
+
+/* Rarity sets offer frequency and has a visible colour (design doc §4.10). */
+.shop-offer.rarity-2{box-shadow:inset 0 0 0 1px #5ab0ff88}.shop-offer.rarity-2 .shop-owned{color:#8fcbff}
+.shop-offer.rarity-3{box-shadow:inset 0 0 0 2px #ffc45acc,0 0 14px #ffc45a33}.shop-offer.rarity-3 .shop-owned{color:#ffd58a}
+/* Always-visible trick scoreboard. */
+.shop-trick-board{padding:10px 0 4px;border-bottom:1px solid #29414e;margin-bottom:8px}.shop-repertoire-face b small{font-size:9px;color:#ffd58a;letter-spacing:.08em}
+.shop-combo-table{display:grid;gap:1px;margin-top:10px;font-size:11px}.shop-combo-row{display:grid;grid-template-columns:1fr auto 54px;gap:8px;padding:3px 0;border-bottom:1px solid #1d2e38}.shop-combo-row b{color:#ff9dce}.shop-combo-row small{text-align:right;color:#9bb3bd}.shop-combo-row.head{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#9bb3bd}.shop-combo-row.head b{color:#9bb3bd}
+.shop-board-note{font-size:10px;line-height:1.4;color:#9bb3bd;margin:6px 0 0}
+/* Last-flight breakdown: bailed tricks and busts. */
+.demo-drawn .bailed{color:#ff6b6b;text-decoration:line-through}.demo-drawn .landed{color:#f4c6dd}.demo-bust{color:#ff6b6b;font-weight:800}
 </style></head><body><main id="app"><div id="stage"></div><div id="ui"></div></main><script>/* ICARUS v3 Carve keeps its own saves (icarus.scoreshow.v3carve.*). The first time it opens it copies v3's, then the two never touch. */
 (function(){try{var P="icarus.scoreshow.v3.",Q="icarus.scoreshow.v3carve.",ls=window.localStorage,St=Storage.prototype,g=St.getItem,s=St.setItem,rm=St.removeItem;
 if(g.call(ls,Q+"__init")==null){var K=[];for(var i=0;i<ls.length;i++)K.push(ls.key(i));
@@ -3920,10 +3946,12 @@ var FiveScore = (function () {
   'use strict';
   var faces = ['spout', 'front', 'back', 'cork', 'star'];
   var names = {spout:'Spout', front:'Front flip', back:'Backflip', cork:'Corkscrew', star:'Star pose'};
+  // Each combo-group level adds `gain` × the combo's base bonus. Tuning values (design doc §4.9): Repeat suits one-trick
+  // builds, Formation two- and three-trick builds, Variety an even spread with many draws.
   var groups = {
-    Repeat:{gain:0.30, ids:['pair','triple','four','five','six']},
-    Formation:{gain:0.66, ids:['twoPair','house','threePair','doubleTriple']},
-    Variety:{gain:2.50, ids:['show']}
+    Repeat:{gain:0.50, ids:['pair','triple','four','five','six']},
+    Formation:{gain:1.00, ids:['twoPair','house','threePair','doubleTriple']},
+    Variety:{gain:4.00, ids:['show']}
   };
   var combos = [
     {id:'pair',name:'Pair',p:1,bonus:1,group:'Repeat'},
@@ -3937,33 +3965,67 @@ var FiveScore = (function () {
     {id:'five',name:'Five of a Kind',p:0.008,bonus:14,group:'Repeat'},
     {id:'six',name:'Six of a Kind',p:0.00032,bonus:24,group:'Repeat'}
   ];
+  // Tuning values (design doc §4.4, §4.9).
+  var tune = {baseDraws:3, maxBought:6, maxDraws:7, polishStep:1, polishCap:4, routineCap:4, transfer:0.10, weightCap:0.60, goldStep:0.5, goldCap:2};
+  // Chips paid on top of kill value for how a kill happened (design doc §4.2). Score only; never weapon damage.
+  var chipBonus = {multi:1, apex:2, crit:1};
+  var prices = {Common:12, Uncommon:18, Rare:30};
+  // Every charm reads in two lines and has at most one condition (design doc §4.8). {trick} is the bound trick.
   var charms = {
-    S01:{name:'Signature act',text:'Bound trick drawn: +its value per kill phase (up to 3).',rarity:'Common',price:12},
-    S02:{name:'Shared billing',text:'Kills in 2 phases: +1 per distinct trick.',rarity:'Common',price:12},
-    S03:{name:'Crowd chorus',text:'Primary multi-kill: +1 per victim, up to 3. Two Pair doubles it.',rarity:'Common',price:12},
-    S04:{name:'Clean take',text:'A kill-bearing flight without an accepted hit: ×1.25.',rarity:'Uncommon',price:18},
-    S05:{name:'House lights',text:'Primary damage from 2 weapon types: +2 mult. Full Show then gives ×2.5.',rarity:'Rare',price:30},
-    S06:{name:'Counterpoint',text:'Primary multi-kill: +2 per repeated identity (up to 6).',rarity:'Uncommon',price:18},
-    S07:{name:'Opening contract',text:'Spout and 40% of chips in opening: +4. Need 3 chips.',rarity:'Common',price:12},
-    S08:{name:'Rising signature',text:'Front flip and 60% ascent chips: ×1.3. Need 3 chips.',rarity:'Uncommon',price:18},
-    S09:{name:'Falling signature',text:'Backflip and 60% descent chips: ×1.3. Need 3 chips.',rarity:'Uncommon',price:18},
-    S10:{name:'Apex refrain',text:'Star and 2 apex chips: repeat largest combo bonus (up to 14).',rarity:'Rare',price:30},
-    S11:{name:'Understudy',text:'Corkscrew and 50% chips from 4m below targets: +4. Need 3 chips.',rarity:'Common',price:12},
-    S12:{name:'Late reservation',text:'Star, 30% late chips and 85% predicted flight: +1 per identity.',rarity:'Common',price:12},
-    S13:{name:'Splash choir',text:'Water hammer kill: +2 per distinct trick (up to 10).',rarity:'Uncommon',price:18},
-    S14:{name:'Relay baton',text:'Spend old +3 token. Both flips and 2 kill phases load next-bank token.',rarity:'Uncommon',price:18},
-    S15:{name:'Floor act',text:'3 chips: raise largest combo bonus to 3, or add 3 without a combo.',rarity:'Common',price:12},
-    S16:{name:'Flight recorder',text:'+1. First strong combo each wave grows future banks by +0.5 (cap +4).',rarity:'Rare',price:30},
-    S17:{name:'Chorus chance',text:'Corkscrew: 25% chance to repeat highest identity value (up to 6). Luck helps.',rarity:'Uncommon',price:18}
+    S01:{name:'Signature act',kind:'+mult',rarity:'Uncommon',bound:true,text:'Each landed {trick}: +3 mult.'},
+    S02:{name:'Shared billing',kind:'+mult',rarity:'Common',text:'+2 mult for each different trick that lands.'},
+    S03:{name:'Crowd chorus',kind:'+mult',rarity:'Common',text:'+1 mult per victim of your biggest multi-kill (max +6).'},
+    S04:{name:'Clean take',kind:'×mult',rarity:'Uncommon',text:'×1.5 mult if you weren’t hit this jump.'},
+    S05:{name:'House lights',kind:'×mult',rarity:'Rare',text:'×2.5 mult if all five tricks land (Full Show).'},
+    S06:{name:'Counterpoint',kind:'+mult',rarity:'Common',text:'+3 mult for each trick that lands twice or more.'},
+    S07:{name:'Opening contract',kind:'+chips',rarity:'Common',text:'+2 chips per kill in your first second of flight.'},
+    S08:{name:'Rising signature',kind:'×mult',rarity:'Uncommon',text:'×1.5 mult if most of your kills came while climbing.'},
+    S09:{name:'Falling signature',kind:'×mult',rarity:'Uncommon',text:'×1.5 mult if most of your kills came while falling.'},
+    S10:{name:'Apex refrain',kind:'+mult',rarity:'Rare',text:'A kill at the apex repeats your largest combo bonus.'},
+    S11:{name:'Understudy',kind:'+chips',rarity:'Common',text:'+2 chips per kill on an enemy above you.'},
+    S12:{name:'Late reservation',kind:'+chips',rarity:'Common',text:'+3 chips per kill in your last second before splashdown.'},
+    S13:{name:'Splash choir',kind:'+mult',rarity:'Uncommon',requires:'I07',text:'+4 mult per Water Hammer kill.'},
+    S14:{name:'Relay baton',kind:'+mult',rarity:'Uncommon',text:'+4 mult if your previous jump had no Bails.'},
+    S15:{name:'Floor act',kind:'+mult',rarity:'Common',text:'Your largest combo pays at least +5.'},
+    S16:{name:'Flight recorder',kind:'+mult',rarity:'Common',text:'+1 mult per jump already banked this wave.'},
+    S17:{name:'Chorus chance',kind:'+mult',rarity:'Uncommon',text:'1 in 4 chance your best trick pays again. Luck helps.'},
+    N01:{name:'Apex hunter',kind:'+chips',rarity:'Common',text:'+3 chips per kill at the apex.'},
+    N02:{name:'Bail money',kind:'+chips',rarity:'Common',text:'+3 chips for every Bail this jump.'},
+    N03:{name:'Sharpshooter',kind:'+chips',rarity:'Common',text:'+2 chips per critical-hit kill.'},
+    N04:{name:'Close quarters',kind:'+chips',rarity:'Common',text:'+1 chip per kill for each Close weapon you own.'},
+    N05:{name:'Long haul',kind:'+mult',rarity:'Common',text:'+1 mult per full second of flight this jump.'},
+    N06:{name:'Short hop',kind:'+mult',rarity:'Common',text:'+6 mult on a low launch (below 35\u00b0).'},
+    N07:{name:'High roller',kind:'×mult',rarity:'Uncommon',text:'×1.5 mult if this jump has 20 or more chips.'},
+    N08:{name:'Healthy glow',kind:'×mult',rarity:'Uncommon',text:'×1.5 mult while you are above 75% HP.'},
+    N09:{name:'Triple threat',kind:'×mult',rarity:'Rare',text:'×2 mult if a Triple or better lands.'},
+    N10:{name:'Wildcard',kind:'rule',rarity:'Rare',bound:true,text:'Your {trick} counts as any trick for combos.'},
+    N11:{name:'Opening number',kind:'+mult',rarity:'Uncommon',text:'Your first trick pays its value again if it lands.'},
+    N12:{name:'Repeat rehearsal',kind:'rule',rarity:'Uncommon',text:'Repeat combos (Pair, Triple, Four…) pay double.'},
+    N13:{name:'Formation dance',kind:'rule',rarity:'Uncommon',text:'Formation combos (Two Pair, Full House…) pay double.'},
+    N14:{name:'Second wind',kind:'rule',rarity:'Rare',text:'A bust banks half its score instead of nothing.'},
+    N15:{name:'Safety net',kind:'rule',rarity:'Uncommon',text:'Your first hit each jump doesn’t cause a Bail.'},
+    N16:{name:'Loaded reels',kind:'rule',rarity:'Rare',text:'+1 trick drawn every jump (up to 7).'},
+    N17:{name:'Tip jar',kind:'pearls',rarity:'Common',text:'+1 pearl for each jump that banks 15+ chips.'},
+    N18:{name:'Golden handshake',kind:'pearls',rarity:'Uncommon',text:'+3 pearls when Four of a Kind or better lands.'},
+    N19:{name:'Bail bond',kind:'pearls',rarity:'Common',text:'+1 pearl for every Bail.'},
+    N20:{name:'Lucky charm',kind:'rule',rarity:'Uncommon',text:'+15% chance on every Lucky trick and Chorus roll.'}
   };
-  Object.keys(charms).forEach(function(id){charms[id].rarityName=charms[id].rarity;charms[id].rarity={Common:1,Uncommon:2,Rare:3}[charms[id].rarity];});
+  Object.keys(charms).forEach(function(id){var c=charms[id];c.rarityName=c.rarity;c.price=prices[c.rarity];c.rarity={Common:1,Uncommon:2,Rare:3}[c.rarity];});
+  function charmText(id,face){var c=charms[id];return c?c.text.replace('{trick}',face?names[face]:'bound trick'):'';}
   function filled(v) { var x={}; faces.forEach(function(f){x[f]=v;}); return x; }
   function create() {
-    return {weights:filled(0.2),polish:filled(0),techniques:{},gold:{},routines:{Repeat:0,Formation:0,Variety:0},relay:0,recorder:{value:1,lastWave:-1},luck:0,_banks:{}};
+    return {weights:filled(0.2),polish:filled(0),techniques:{},gold:{},routines:{Repeat:0,Formation:0,Variety:0},draws:tune.baseDraws,focus:false,relay:false,luck:0,_banks:{}};
   }
   function clone(x) { return JSON.parse(JSON.stringify(x)); }
   function num(x,d) { return Number.isFinite(Number(x)) ? Number(x) : (d||0); }
-  function draws(wave) { return Math.min(6,3+Math.floor(Math.max(0,num(wave,1))/5)); }
+  function ownedList(equipped) { return (equipped||[]).map(function(x){return typeof x==='string'?{id:x}:x;}).filter(function(x){return x&&charms[x.id];}); }
+  // Draws per jump: bought draws, plus Loaded reels.
+  function draws(state,equipped) {
+    var n=Math.max(1,Math.min(tune.maxBought,Math.floor(num(state&&state.draws,tune.baseDraws))));
+    if(ownedList(equipped).some(function(x){return x.id==='N16';}))n++;
+    return Math.min(tune.maxDraws,n);
+  }
+  function addDraw(state) { if(num(state.draws,tune.baseDraws)>=tune.maxBought)return false; state.draws=num(state.draws,tune.baseDraws)+1; return true; }
   function draw(state,n,rng) {
     rng=rng||Math.random; var out=[], weights=state.weights||filled(.2);
     var total=faces.reduce(function(s,f){return s+Math.max(0,num(weights[f]));},0);
@@ -3975,26 +4037,26 @@ var FiveScore = (function () {
   }
   function value(state,face) {
     var gold=(state.techniques||{})[face]==='gold' ? num((state.gold||{})[face]&&state.gold[face].bonus) : 0;
-    return 1+0.5*num((state.polish||{})[face])+gold;
+    return 1+tune.polishStep*num((state.polish||{})[face])+gold;
   }
   function counts(hand) { var c=filled(0); (hand||[]).forEach(function(f){if(faces.indexOf(f)>=0)c[f]++;});return c; }
   function match(id,c) {
     var s=Object.keys(c).map(function(k){return c[k];}).sort(function(a,b){return b-a;});
     return id==='pair'?s[0]>=2:id==='twoPair'?s[1]>=2:id==='triple'?s[0]>=3:id==='house'?s[0]>=3&&s[1]>=2:id==='show'?s[4]>=1:id==='four'?s[0]>=4:id==='threePair'?s[2]>=2:id==='doubleTriple'?s[1]>=3:id==='five'?s[0]>=5:id==='six'?s[0]>=6:false;
   }
-  function chance(luck) { return 1-Math.pow(.75,1+Math.max(0,num(luck))/100); }
+  function chance(luck,extra) { return Math.min(.95,1-Math.pow(.75,1+Math.max(0,num(luck))/100)+Math.max(0,num(extra))); }
   function transfer(state,donor,recipient) {
     if(faces.indexOf(donor)<0||faces.indexOf(recipient)<0||donor===recipient)return false;
-    if(state.weights[donor]<.1-1e-8||state.weights[recipient]>.45+1e-8)return false;
-    state.weights[donor]=Math.round((state.weights[donor]-.05)*100)/100;
-    state.weights[recipient]=Math.round((state.weights[recipient]+.05)*100)/100;return true;
+    if(state.weights[donor]<tune.transfer-1e-8||state.weights[recipient]+tune.transfer>tune.weightCap+1e-8)return false;
+    state.weights[donor]=Math.round((state.weights[donor]-tune.transfer)*100)/100;
+    state.weights[recipient]=Math.round((state.weights[recipient]+tune.transfer)*100)/100;return true;
   }
   function polish(state,face) {
-    if(faces.indexOf(face)<0||num(state.polish[face])>=4)return false;
+    if(faces.indexOf(face)<0||num(state.polish[face])>=tune.polishCap)return false;
     state.polish[face]=num(state.polish[face])+1;return true;
   }
   function routine(state,group) {
-    if(!groups[group]||num(state.routines[group])>=4)return false;
+    if(!groups[group]||num(state.routines[group])>=tune.routineCap)return false;
     state.routines[group]=num(state.routines[group])+1;return true;
   }
   function technique(state,face,kind) {
@@ -4005,111 +4067,141 @@ var FiveScore = (function () {
     if(kind===null)delete state.techniques[face];else state.techniques[face]=kind;
     if(kind==='gold')state.gold[face]={marks:0,bonus:0,lastWave:-1};return true;
   }
-  function resetWave(state,wave) {state.relay=0;state._banks={};if(wave!==undefined)state.wave=wave;}
-  function sellCharm(state,id) {if(id==='S14')state.relay=0;if(id==='S16')state.recorder={value:1,lastWave:-1};}
+  function resetWave(state,wave) {state.relay=false;state._banks={};if(wave!==undefined)state.wave=wave;}
+  function sellCharm(state,id) {if(id==='S14')state.relay=false;}
   function ledgerFacts(ledger) {
-    ledger=ledger||{};var K=Math.max(0,num(ledger.K)),ph={ascent:0,apex:0,descent:0},types={},attacks={},derivedOpening=0,derivedLate=0,derivedBelow=0,derivedEntry=0;
-    (ledger.kills||[]).forEach(function(k){var kv=Math.max(0,num(k.kv,1));if(ph[k.phase]!==undefined)ph[k.phase]+=kv;
-      if(k.primary!==false&&k.attackId!==undefined){attacks[k.attackId]=num(attacks[k.attackId])+1;}
-      if(k.opening)derivedOpening+=kv;if(k.late)derivedLate+=kv;if(k.below===true||num(k.below)>=4)derivedBelow+=kv;if(k.entry)derivedEntry++;
-    });
-    if(ledger.phases){['ascent','apex','descent'].forEach(function(p,i){ph[p]=num(Array.isArray(ledger.phases)?ledger.phases[i]:ledger.phases[p]);});}
-    if(Array.isArray(ledger.primaryTypes))ledger.primaryTypes.forEach(function(t){types[t]=true;});
-    else Object.keys(ledger.primaryTypes||{}).forEach(function(t){if(ledger.primaryTypes[t])types[t]=true;});
-    var multi=Object.keys(attacks).reduce(function(m,id){return Math.max(m,attacks[id]);},num(ledger.maxMulti));
-    return {K:K,ph:ph,phaseCount:Object.keys(ph).filter(function(p){return ph[p]>0;}).length,hits:Math.max(0,num(ledger.hits)),opening:num(ledger.openingK,derivedOpening),late:num(ledger.lateK,derivedLate),below:num(ledger.belowK,derivedBelow),entry:num(ledger.entryKills,derivedEntry),air:Math.max(0,num(ledger.air)),predAir:Math.max(0,num(ledger.predAir)),types:Object.keys(types).length,multi:multi,wave:num(ledger.wave,1)};
+    ledger=ledger||{};var kills=ledger.kills||[],attacks={},f={K:Math.max(0,num(ledger.K)),kills:kills.length,ascent:0,apex:0,descent:0,opening:0,late:0,above:0,crit:0,entry:0};
+    kills.forEach(function(k){if(f[k.phase]!==undefined&&['ascent','apex','descent'].indexOf(k.phase)>=0)f[k.phase]++;
+      if(k.opening)f.opening++;if(k.late)f.late++;if(k.above)f.above++;if(k.crit)f.crit++;if(k.entry)f.entry++;
+      if(k.primary!==false&&k.attackId!==undefined)attacks[k.attackId]=num(attacks[k.attackId])+1;});
+    f.multi=Object.keys(attacks).reduce(function(m,id){return Math.max(m,attacks[id]);},num(ledger.maxMulti));
+    f.hits=Math.max(0,num(ledger.hits));f.air=Math.max(0,num(ledger.air));f.hpFrac=ledger.hpFrac===undefined?1:num(ledger.hpFrac);
+    f.banked=Math.max(0,num(ledger.banked));f.closeWeapons=Math.max(0,num(ledger.closeWeapons));f.wave=num(ledger.wave,1);
+    f.busted=!!ledger.busted;f.netUsed=!!ledger.netUsed;f.angle=ledger.angle===undefined?null:num(ledger.angle);return f;
   }
+  function bailList(ledger,n) {var seen={};return (ledger&&ledger.bails||[]).map(Number).filter(function(i){if(!(i>=0&&i<n)||seen[i])return false;seen[i]=1;return true;}).sort(function(a,b){return a-b;});}
   function evaluate(state,hand,ledger,equipped,rng) {
-    ledger=ledger||{};equipped=equipped||[];rng=rng||Math.random;
+    ledger=ledger||{};rng=rng||Math.random;hand=hand||[];
     var bankKey=ledger.bankId!==undefined?String(ledger.wave||1)+':'+String(ledger.bankId):null;
     if(!ledger.preview&&bankKey&&state._banks&&state._banks[bankKey])return clone(state._banks[bankKey]);
-    var factual=ledgerFacts(ledger),actual=counts(hand),distinct=faces.filter(function(f){return actual[f]>0;}).length;
-    var owned=equipped.map(function(x){return typeof x==='string'?{id:x}:x;}).filter(function(x){return x&&charms[x.id];});
-    var values={},base=0;faces.forEach(function(f){values[f]=value(state,f);base+=actual[f]*values[f];});
-    var canCommit=factual.K>0&&!ledger.preview,rolls={},rollChance=chance(ledger.luck===undefined?state.luck:ledger.luck);
-    // Empty flights never consume random rolls. Previews never consume the supplied RNG.
-    if(factual.K>0&&!ledger.preview){faces.forEach(function(f){if(actual[f]&&(state.techniques||{})[f]==='lucky')rolls[f]=rng()<rollChance;});
-      if(actual.cork&&owned.some(function(x){return x.id==='S17';}))rolls.chorus=rng()<rollChance;
+    var f=ledgerFacts(ledger),owned=ownedList(equipped),has=function(id){return owned.some(function(x){return x.id===id;});};
+    var bails=bailList(ledger,hand.length),landed=hand.filter(function(x,i){return bails.indexOf(i)<0;});
+    var actual=counts(landed),distinct=faces.filter(function(x){return actual[x]>0;}).length;
+    var values={},base=0;faces.forEach(function(x){values[x]=value(state,x);base+=actual[x]*values[x];});
+    var commit=f.K>0&&!ledger.preview&&!f.busted,extra=has('N20')?.15:0,rollChance=chance(ledger.luck===undefined?state.luck:ledger.luck,extra),rolls={};
+    var firstLanded=hand.length>0&&bails.indexOf(0)<0?hand[0]:null;
+    var best=landed.reduce(function(m,x){return Math.max(m,values[x]);},0);
+    // Only committed, kill-bearing banks consume random rolls. Previews and busts never do.
+    if(commit){faces.forEach(function(x){if(actual[x]&&(state.techniques||{})[x]==='lucky')rolls[x]=rng()<rollChance;});
+      if(landed.length&&has('S17'))rolls.chorus=rng()<rollChance;}
+    var payline={Repeat:has('N12')?2:1,Formation:has('N13')?2:1,Variety:1};
+    var wild=owned.filter(function(x){return x.id==='N10';}).map(function(x){return x.face||'star';})[0];
+    function paidFor(c){return combos.filter(function(x){return match(x.id,c);}).map(function(x){return {id:x.id,name:x.name,value:x.bonus*(1+groups[x.group].gain*num((state.routines||{})[x.group]))*payline[x.group],base:x.bonus,p:x.p,group:x.group};});}
+    function total(p){return p.reduce(function(s,x){return s+x.value;},0);}
+    // Wildcard: up to four landed copies of the bound trick may stand in for any identity.
+    function bestPaid(c){
+      var paid=paidFor(c);if(!wild||!c[wild])return paid;
+      var k=Math.min(4,c[wild]),n=Math.pow(5,k);
+      for(var code=0;code<n;code++){var t=Object.assign({},c),q=code;t[wild]-=k;for(var j=0;j<k;j++){t[faces[q%5]]++;q=Math.floor(q/5);}var p=paidFor(t);if(total(p)>total(paid)+1e-10)paid=p;}
+      return paid;
     }
     function scoreWith(virtualFace){
       var c=Object.assign({},actual);if(virtualFace)c[virtualFace]++;
-      var paid=combos.filter(function(x){return match(x.id,c);}).map(function(x){return {id:x.id,name:x.name,value:x.bonus*(1+groups[x.group].gain*num((state.routines||{})[x.group])),base:x.bonus,p:x.p,group:x.group};});
-      var mult=base+paid.reduce(function(s,x){return s+x.value;},0),techniqueLog=[],charmLog=[];
-      faces.forEach(function(f){if(rolls[f]){var add=actual[f]*values[f];mult+=add;techniqueLog.push({face:f,kind:'lucky',value:add});}});
-      var largest=paid.reduce(function(m,x){return Math.max(m,x.value);},0),has=function(id){return paid.some(function(x){return x.id===id;});};
-      function explainCharm(ch){
-        var checks=[],notes=[];
-        function number(x){return Math.round(x*100)/100;}
-        function add(label,met,current,target,text){checks.push({label:label,met:!!met,current:current,target:target,text:text});}
-        function drawn(face){add(names[face]+' drawn',actual[face]>0,actual[face],1,names[face]+' drawn: '+(actual[face]>0?'yes':'no'));}
-        function atLeast(label,current,target,unit){add(label,current>=target,current,target,label+': '+number(current)+'/'+number(target)+(unit?' '+unit:''));}
-        function ratio(label,current,fraction){add(label,current>=fraction*factual.K,current,fraction*factual.K,label+': '+number(current)+'/'+number(factual.K)+' chips (need '+number(fraction*100)+'%)');}
-        var repeats=faces.filter(function(f){return actual[f]>=2;}).length;
+      var paid=bestPaid(c),mult=base+total(paid),techniqueLog=[],charmLog=[],chips=f.K,pearls=0;
+      faces.forEach(function(x){if(rolls[x]){var add=actual[x]*values[x];mult+=add;techniqueLog.push({face:x,kind:'lucky',value:add});}});
+      var largest=paid.reduce(function(m,x){return Math.max(m,x.value);},0),hasCombo=function(ids){return paid.some(function(x){return ids.indexOf(x.id)>=0;});};
+      owned.forEach(function(ch){
+        var before=mult,add=0,factor=1,gain=0,cash=0,met=false,reason='',num2=function(x){return Math.round(x*100)/100;};
         switch(ch.id){
-          case 'S01':drawn(ch.face||'front');add('Kill phases',factual.phaseCount>=1,factual.phaseCount,1,'Kill phases: '+factual.phaseCount+'/3 (need at least 1)');notes.push('Pays bound trick value '+number(values[ch.face||'front'])+' per kill phase');break;
-          case 'S02':atLeast('Kill phases',factual.phaseCount,2);notes.push(distinct+' distinct tricks');break;
-          case 'S03':atLeast('Largest primary multi-kill',factual.multi,2,'victims');notes.push(has('twoPair')?'Two Pair doubles this addition':'Two Pair would double this addition');break;
-          case 'S04':add('Accepted hits',factual.hits===0,factual.hits,0,'Accepted hits: '+factual.hits+' (need 0)');break;
-          case 'S05':atLeast('Primary weapon damage types',factual.types,2);atLeast('Full Show identities',distinct,5);notes.push('Two damage types add +2; Full Show then multiplies by 2.5');break;
-          case 'S06':atLeast('Largest primary multi-kill',factual.multi,2,'victims');atLeast('Repeated identities',repeats,1);break;
-          case 'S07':drawn('spout');atLeast('Kill chips',factual.K,3);ratio('Opening',factual.opening,.4);break;
-          case 'S08':drawn('front');atLeast('Kill chips',factual.K,3);ratio('Ascent',factual.ph.ascent,.6);break;
-          case 'S09':drawn('back');atLeast('Kill chips',factual.K,3);ratio('Descent',factual.ph.descent,.6);break;
-          case 'S10':drawn('star');atLeast('Apex chips',factual.ph.apex,2);add('Combo to repeat',largest>0,largest,0,'Largest combo: +'+number(largest)+' (repeat capped at 14)');break;
-          case 'S11':drawn('cork');atLeast('Kill chips',factual.K,3);ratio('Kills from 4m below',factual.below,.5);break;
-          case 'S12':drawn('star');atLeast('Kill chips',factual.K,3);ratio('Late',factual.late,.3);add('Flight duration',factual.predAir>0&&factual.air>=.85*factual.predAir,factual.air,.85*factual.predAir,'Active flight: '+number(factual.air)+'/'+number(factual.predAir)+'s (need 85%)');break;
-          case 'S13':atLeast('Water hammer kills',factual.entry,1);notes.push(distinct+' distinct tricks');break;
-          case 'S14':atLeast('Prior-bank token',num(state.relay),1);notes.push('Next token: '+(actual.front&&actual.back&&factual.phaseCount>=2?'loaded by both flips and two kill phases':'needs both flips and two kill phases'));break;
-          case 'S15':atLeast('Kill chips',factual.K,3);add('Floor needed',largest<3,largest,3,'Largest combo: +'+number(largest)+(largest>=3?' (floor already met)':' (floor raises it to 3)'));break;
-          case 'S16':atLeast('Kill chips',factual.K,1);notes.push('Current recorder: +'+number(Math.max(1,Math.min(4,num(state.recorder&&state.recorder.value,1)))));
-            notes.push(state.recorder&&state.recorder.value>=4?'Growth cap reached (+4)':state.recorder&&state.recorder.lastWave===factual.wave?'Growth already used this wave':paid.some(function(x){return ['four','show','threePair','doubleTriple'].indexOf(x.id)>=0;})?'Strong combo grows future banks (cap +4)':'Future growth needs Four, Full Show, Three Pairs or Double Triple');break;
-          case 'S17':drawn('cork');add('Chance roll',rolls.chorus===true,rolls.chorus===true?1:0,1,'Chance: '+number(rollChance*100)+'% ('+(!actual.cork?'not rolled; Corkscrew absent':ledger.preview?'pending at bank':rolls.chorus?'paid':'missed')+')');break;
+          case 'S01':{var b=ch.face||'front';add=3*actual[b];met=add>0;reason=names[b]+' landed ×'+actual[b];break;}
+          case 'S02':add=2*distinct;met=add>0;reason=distinct+' different tricks landed';break;
+          case 'S03':add=f.multi>=2?Math.min(6,f.multi):0;met=add>0;reason='Biggest multi-kill: '+f.multi;break;
+          case 'S04':met=f.hits===0;factor=met?1.5:1;reason=f.hits+' hits taken';break;
+          case 'S05':met=distinct===5;factor=met?2.5:1;reason=distinct+'/5 different tricks landed';break;
+          case 'S06':{var reps=faces.filter(function(x){return actual[x]>=2;}).length;add=3*reps;met=add>0;reason=reps+' tricks landed twice or more';break;}
+          case 'S07':gain=2*f.opening;met=gain>0;reason=f.opening+' kills in the first second';break;
+          case 'S08':met=f.kills>0&&f.ascent>f.kills/2;factor=met?1.5:1;reason=f.ascent+'/'+f.kills+' kills while climbing';break;
+          case 'S09':met=f.kills>0&&f.descent>f.kills/2;factor=met?1.5:1;reason=f.descent+'/'+f.kills+' kills while falling';break;
+          case 'S10':met=f.apex>0&&largest>0;add=met?largest:0;reason=f.apex+' apex kills · largest combo +'+num2(largest);break;
+          case 'S11':gain=2*f.above;met=gain>0;reason=f.above+' kills on enemies above you';break;
+          case 'S12':gain=3*f.late;met=gain>0;reason=f.late+' kills in the last second';break;
+          case 'S13':add=4*f.entry;met=add>0;reason=f.entry+' Water Hammer kills';break;
+          case 'S14':met=!!state.relay;add=met?4:0;reason=met?'Previous jump was clean':'Previous jump had a Bail or no bank';break;
+          case 'S15':add=Math.max(0,5-largest);met=add>0;reason='Largest combo +'+num2(largest)+(met?' raised to +5':' (already +5 or more)');break;
+          case 'S16':add=f.banked;met=add>0;reason=f.banked+' jumps banked this wave';break;
+          case 'S17':met=rolls.chorus===true;add=met?best:0;reason='Chance '+num2(rollChance*100)+'% · '+(ledger.preview?'rolls at the bank':met?'paid':'missed');break;
+          case 'N01':gain=3*f.apex;met=gain>0;reason=f.apex+' apex kills';break;
+          case 'N02':gain=3*bails.length;met=gain>0;reason=bails.length+' Bails';break;
+          case 'N03':gain=2*f.crit;met=gain>0;reason=f.crit+' critical-hit kills';break;
+          case 'N04':gain=f.kills*f.closeWeapons;met=gain>0;reason=f.kills+' kills × '+f.closeWeapons+' Close weapons';break;
+          case 'N05':add=Math.floor(f.air);met=add>0;reason=num2(f.air)+'s of flight';break;
+          case 'N06':met=f.angle!==null&&f.angle<35;add=met?6:0;reason=(f.angle===null?'No launch':'Launched at '+Math.round(f.angle)+'\u00b0')+' (need below 35\u00b0)';break;
+          case 'N07':met=chips>=20;factor=met?1.5:1;reason=chips+' chips (need 20)';break;
+          case 'N08':met=f.hpFrac>.75;factor=met?1.5:1;reason=Math.round(f.hpFrac*100)+'% HP (need above 75%)';break;
+          case 'N09':met=hasCombo(['triple','house','four','doubleTriple','five','six']);factor=met?2:1;reason=met?'Triple or better landed':'No Triple or better';break;
+          case 'N10':met=!!(wild&&actual[wild]);reason=met?names[wild]+' played wild':names[wild||'star']+' did not land';break;
+          case 'N11':met=!!firstLanded;add=met?values[firstLanded]:0;reason=met?names[firstLanded]+' pays again':'First trick bailed';break;
+          case 'N12':met=paid.some(function(x){return x.group==='Repeat';});reason=met?'Repeat combos doubled':'No Repeat combo';break;
+          case 'N13':met=paid.some(function(x){return x.group==='Formation';});reason=met?'Formation combos doubled':'No Formation combo';break;
+          case 'N14':met=f.busted;reason=met?'Bust banks half':'No bust';break;
+          case 'N15':met=f.netUsed;reason=met?'Caught your first hit':'Not needed';break;
+          case 'N16':met=true;reason='Drawing '+hand.length+' tricks';break;
+          case 'N17':met=f.K>=15;cash=met?1:0;reason=f.K+' chips (need 15)';break;
+          case 'N18':met=hasCombo(['four','five','six']);cash=met?3:0;reason=met?'Four of a Kind or better':'No Four of a Kind';break;
+          case 'N19':cash=bails.length;met=cash>0;reason=bails.length+' Bails';break;
+          case 'N20':met=true;reason='Lucky and Chorus chance '+num2(rollChance*100)+'%';break;
         }
-        return {reason:checks.map(function(c){return c.text;}).concat(notes).join('; '),conditions:{met:checks.filter(function(c){return c.met;}).length,total:checks.length},checks:checks};
-      }
-      if(factual.K>0)owned.forEach(function(ch){
-        var before=mult,add=0,factor=1;
-        switch(ch.id){
-          case 'S01':if(actual[ch.face||'front'])add=values[ch.face||'front']*Math.min(3,factual.phaseCount);break;
-          case 'S02':if(factual.phaseCount>=2)add=Math.min(5,distinct);break;
-          case 'S03':if(factual.multi>=2)add=Math.min(3,factual.multi)*(has('twoPair')?2:1);break;
-          case 'S04':if(factual.hits===0)factor=1.25;break;
-          case 'S05':if(factual.types>=2){add=2;if(distinct===5)factor=2.5;}break;
-          case 'S06':if(factual.multi>=2)add=Math.min(6,faces.filter(function(f){return actual[f]>=2;}).length*2);break;
-          case 'S07':if(actual.spout&&factual.K>=3&&factual.opening>=.4*factual.K)add=4;break;
-          case 'S08':if(actual.front&&factual.K>=3&&factual.ph.ascent>=.6*factual.K)factor=1.3;break;
-          case 'S09':if(actual.back&&factual.K>=3&&factual.ph.descent>=.6*factual.K)factor=1.3;break;
-          case 'S10':if(actual.star&&factual.ph.apex>=2)add=Math.min(14,largest);break;
-          case 'S11':if(actual.cork&&factual.K>=3&&factual.below>=.5*factual.K)add=4;break;
-          case 'S12':if(actual.star&&factual.K>=3&&factual.late>=.3*factual.K&&factual.predAir>0&&factual.air>=.85*factual.predAir)add=Math.min(5,distinct);break;
-          case 'S13':if(factual.entry>=1)add=Math.min(10,2*distinct);break;
-          case 'S14':add=Math.min(3,Math.max(0,num(state.relay)));break;
-          case 'S15':if(factual.K>=3)add=Math.max(0,3-largest);break;
-          case 'S16':add=Math.max(1,Math.min(4,num(state.recorder&&state.recorder.value,1)));break;
-          case 'S17':if(actual.cork&&rolls.chorus)add=Math.min(6,faces.reduce(function(m,f){return Math.max(m,actual[f]*values[f]);},0));break;
-        }
-        mult=(mult+add)*factor;charmLog.push(Object.assign({id:ch.id,name:charms[ch.id].name,before:before,after:mult,add:add,factor:factor,active:mult!==before},explainCharm(ch)));
+        mult=(mult+add)*factor;chips+=gain;pearls+=cash;
+        charmLog.push({id:ch.id,name:charms[ch.id].name,kind:charms[ch.id].kind,before:before,after:mult,add:add,factor:factor,chips:gain,pearls:cash,active:met,reason:reason});
       });
-      return {mult:mult,base:base,combos:paid,charmLog:charmLog,techniqueLog:techniqueLog,echo:virtualFace||null,counts:actual,values:values,score:Math.round(factual.K*mult),chips:factual.K,preview:!!ledger.preview};
+      return {mult:mult,base:base,combos:paid,charmLog:charmLog,techniqueLog:techniqueLog,echo:virtualFace||null,counts:actual,values:values,chips:chips,kills:f.K,pearls:pearls,bails:bails,landed:landed.length,preview:!!ledger.preview};
     }
     var result=scoreWith(null);
-    faces.forEach(function(f){if(actual[f]&&(state.techniques||{})[f]==='echo'){var next=scoreWith(f);if(next.mult>result.mult+1e-10)result=next;}});
-    if(canCommit){
-      faces.forEach(function(f){if(actual[f]&&(state.techniques||{})[f]==='gold'){
-        var g=state.gold[f]||(state.gold[f]={marks:0,bonus:0,lastWave:-1});
-        if(g.lastWave!==factual.wave){g.lastWave=factual.wave;g.marks=Math.min(8,num(g.marks)+1);g.bonus=Math.min(1,Math.floor(g.marks/2)*.25);}
+    faces.forEach(function(x){if(actual[x]&&(state.techniques||{})[x]==='echo'){var next=scoreWith(x);if(next.mult>result.mult+1e-10)result=next;}});
+    result.busted=f.busted;
+    result.score=f.busted?(has('N14')?Math.round(result.chips*result.mult/2):0):Math.round(result.chips*result.mult);
+    if(f.busted)result.pearls=0;
+    if(!ledger.preview&&(f.K>0||f.busted)){
+      if(commit)faces.forEach(function(x){if(actual[x]&&(state.techniques||{})[x]==='gold'){
+        var g=state.gold[x]||(state.gold[x]={marks:0,bonus:0,lastWave:-1});
+        if(g.lastWave!==f.wave){g.lastWave=f.wave;g.marks=Math.min(8,num(g.marks)+1);g.bonus=Math.min(tune.goldCap,Math.floor(g.marks/2)*tune.goldStep);}
       }});
-      if(owned.some(function(x){return x.id==='S14';}))state.relay=actual.front&&actual.back&&factual.phaseCount>=2?3:0;
-      else state.relay=0;
-      if(owned.some(function(x){return x.id==='S16';})){
-        var r=state.recorder||(state.recorder={value:1,lastWave:-1});
-        if(r.lastWave!==factual.wave&&result.combos.some(function(x){return ['four','show','threePair','doubleTriple'].indexOf(x.id)>=0;})){r.value=Math.min(4,num(r.value,1)+.5);r.lastWave=factual.wave;}
-      } else state.recorder={value:1,lastWave:-1};
+      state.relay=!f.busted&&bails.length===0;
       if(bankKey){state._banks=state._banks||{};state._banks[bankKey]=clone(result);var keys=Object.keys(state._banks);if(keys.length>150)delete state._banks[keys[0]];}
     }
     return result;
   }
-  return {faces:faces,names:names,combos:combos,charms:charms,groups:groups,create:create,draws:draws,draw:draw,evaluate:evaluate,transfer:transfer,polish:polish,routine:routine,technique:technique,resetWave:resetWave,sellCharm:sellCharm,value:value,chance:chance,counts:counts,reference:{draws:6,probability:.2},version:'five-trick-demo-1'};
+  // Average mult of a jump before charms, over every possible draw; Lucky is counted at its expected value.
+  var expectCache={};
+  function factorial(n){var x=1;for(var i=2;i<=n;i++)x*=i;return x;}
+  function expect(state,n,luck){
+    n=Math.min(tune.maxDraws,Math.max(1,n));luck=luck===undefined?state.luck||0:luck;
+    var key=JSON.stringify([n,state.weights,state.polish,state.techniques,state.gold,state.routines,luck]);if(expectCache[key])return expectCache[key];
+    var odds={},w=faces.map(function(x){return Math.max(0,num(state.weights[x]));}),sum=w.reduce(function(a,b){return a+b;},0),mean=0,mass=0,strong=0;
+    combos.forEach(function(c){odds[c.id]=0;});
+    (function visit(i,left,c){
+      if(i<4){for(var k=0;k<=left;k++)visit(i+1,left-k,c.concat([k]));return;}
+      c=c.concat([left]);var p=factorial(n),hand=[];
+      for(var j=0;j<5;j++){p*=Math.pow(w[j]/sum,c[j])/factorial(c[j]);for(var m=0;m<c[j];m++)hand.push(faces[j]);}
+      if(!p)return;var v=evaluate(state,hand,{K:0,preview:true},[],function(){return 1;}),val=v.mult;
+      for(var q=0;q<5;q++)if(state.techniques[faces[q]]==='lucky')val+=c[q]*value(state,faces[q])*chance(luck);
+      mean+=p*val;mass+=p;v.combos.forEach(function(x){odds[x.id]+=p;});
+      if(v.combos.some(function(x){return ['four','show','threePair','doubleTriple','five','six'].indexOf(x.id)>=0;}))strong+=p;
+    })(0,n,[]);
+    var out={draws:n,meanMult:mean/mass,comboOdds:odds,strongChance:strong/mass};
+    var keys=Object.keys(expectCache);if(keys.length>128)delete expectCache[keys[0]];
+    return expectCache[key]=out;
+  }
+  // The pre-launch heat cue: this hand's mult before charms against the average hand of the same size.
+  var heatBands=[{id:'cold',below:.9},{id:'warm',below:1.3},{id:'hot',below:1.9},{id:'jackpot',below:Infinity}];
+  function heat(state,hand,luck){
+    if(!hand||!hand.length)return {band:'cold',ratio:0,mult:0,mean:0};
+    var v=evaluate(state,hand,{K:0,preview:true},[],function(){return 1;}).mult,c=counts(hand);
+    faces.forEach(function(x){if(state.techniques[x]==='lucky')v+=c[x]*value(state,x)*chance(luck);});
+    var mean=expect(state,hand.length,luck).meanMult,ratio=mean>0?v/mean:1;
+    return {band:heatBands.filter(function(b){return ratio<b.below;})[0].id,ratio:ratio,mult:v,mean:mean};
+  }
+  return {faces:faces,names:names,combos:combos,charms:charms,charmText:charmText,groups:groups,tune:tune,chipBonus:chipBonus,prices:prices,create:create,draws:draws,addDraw:addDraw,draw:draw,evaluate:evaluate,expect:expect,heat:heat,heatBands:heatBands,transfer:transfer,polish:polish,routine:routine,technique:technique,resetWave:resetWave,sellCharm:sellCharm,value:value,chance:chance,counts:counts,match:match,version:'five-trick-slot-1'};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=FiveScore;
 
@@ -4117,23 +4209,24 @@ if(typeof module!=='undefined'&&module.exports)module.exports=FiveScore;
 var FiveCombat = (function () {
   'use strict';
   var hooks = {}, IDS = ['I01','I02','I03','I04','I05','I06','I07','I08','I09','I10'];
+  // Shop text is two lines at most (design doc §4.8); `copies` explains stacking in the details panel.
   var catalogue = [
-    {id:'I01',name:'Overkill reservoir',price:18,rarity:2,text:'Bank 25% of wasted primary damage; release it on the next surviving target. +15% per copy, up to 75%.'},
-    {id:'I02',name:'Slow wound',price:10,rarity:1,text:'First target of each attack takes 15% noncrit damage over 2 active-air seconds. +10% per copy.'},
-    {id:'I03',name:'Wake collector',price:18,rarity:2,text:'Three safe projectile grazes load a 50% arc to a nearby second target. +25% per copy.'},
-    {id:'I04',name:'Opening reserve',price:18,rarity:2,text:'After a ready breach, the first hit with another target sends a forward 35% cone from its impact, radius6m, to up to three other enemies. Holds its charge until useful. 4 active-air seconds recharge. +20% per copy.'},
-    {id:'I05',name:'Apex lens',price:30,rarity:3,minWave:5,text:'Ascent attacks load four charges. From apex onward, your displayed strongest slot releases +15% per charge on its first surviving victim. Killing blows preserve the charge. 6 air seconds recharge. +10% per copy.'},
-    {id:'I06',name:'Paired circuit',price:18,rarity:2,text:'Link two living nearby targets for 2 seconds; later attacks echo 20%. 6 air seconds recharge. +10% per copy, up to 50%.'},
-    {id:'I07',name:'Water hammer',price:30,rarity:3,text:'After a kill, real water contact blasts nearby enemies for 75% of your strongest attack. 6 air seconds recharge. +35% per copy.'},
-    {id:'I08',name:'Repulsor hull',price:10,rarity:1,text:'A ready accepted hit deals 25% less and pushes up to eight nearby enemies. 8 air seconds recharge. +10% per copy, up to 55%.'},
-    {id:'I09',name:'Sinking mark',price:10,rarity:1,text:'First target of an attack moves 20% slower for 1.5 air seconds. One mark; half effect on bosses. +10% per copy, up to 40%.'},
-    {id:'I10',name:'Entry membrane',price:18,rarity:2,text:'A kill-bearing entry stores a 10%-HP shield for the next flight. 8 air seconds recharge. +5% per copy, up to 25%.'}
+    {id:'I01',name:'Overkill reservoir',price:18,rarity:2,text:'Wasted kill damage (25%) strikes your next target.',copies:'+15% per copy, up to 75%.'},
+    {id:'I02',name:'Slow wound',price:10,rarity:1,text:'Each attack\u2019s first target bleeds 15% over 2 s.',copies:'+10% per copy.'},
+    {id:'I03',name:'Wake collector',price:18,rarity:2,text:'Three near-miss grazes charge a 50% arc to a second target.',copies:'+25% per copy.'},
+    {id:'I04',name:'Opening reserve',price:18,rarity:2,text:'After breach, your first hit sprays 35% to 3 enemies beyond it.',copies:'+20% per copy. Recharges in 4 s.'},
+    {id:'I05',name:'Apex lens',price:30,rarity:3,minWave:5,text:'Climbing hits charge your strongest weapon for the apex (+15% each).',copies:'+10% per copy. Recharges in 6 s.'},
+    {id:'I06',name:'Paired circuit',price:18,rarity:2,text:'Links two nearby enemies; hitting one echoes 20% to the other.',copies:'+10% per copy, up to 50%. Recharges in 6 s.'},
+    {id:'I07',name:'Water hammer',price:30,rarity:3,text:'After a kill, splashdown blasts nearby enemies for 75% of your best hit.',copies:'+35% per copy. Recharges in 6 s.'},
+    {id:'I08',name:'Repulsor hull',price:10,rarity:1,text:'A hit deals 25% less and shoves nearby enemies away.',copies:'+10% per copy, up to 55%. Recharges in 8 s.'},
+    {id:'I09',name:'Sinking mark',price:10,rarity:1,text:'Each attack\u2019s first target moves 20% slower for 1.5 s.',copies:'+10% per copy, up to 40%. Half effect on bosses.'},
+    {id:'I10',name:'Entry membrane',price:18,rarity:2,text:'Splashdown with kills: a 10% HP shield on your next jump.',copies:'+5% per copy, up to 25%. Recharges in 8 s.'}
   ];
   function configure(next) { hooks = Object.assign({}, hooks, next || {}); return api; }
   function create() { return {time:0,cooldowns:{I04:0,I05:0,I06:0,I07:0,I08:0,I10:0},reservoir:0,reservoirAttack:null,wounds:{},graze:{},grazeCharges:0,grazeNext:0,opening:false,apex:{slot:-1,id:null,amount:0,charges:0,released:false},pair:null,mark:null,shield:0,storedShield:0,attacks:{},attackOrder:[],triggers:{},entryDone:false}; }
   function state(r) { if (!r.demo) r.demo={}; if (!r.demo.itemCounts) r.demo.itemCounts={}; return r.demo.itemState || (r.demo.itemState=create()); }
   function count(r,id) { return Math.max(0,Math.floor(Number(r.demo && r.demo.itemCounts && r.demo.itemCounts[id])||0)); }
-  function live(r) { return r.mode==='playing' && r.medium && r.medium.kind==='air' && !r.armed; }
+  function live(r) { return r.mode==='playing' && r.medium && r.medium.kind==='air' && !r.armed && !(r.hand && r.hand.busted); }
   function alive(r,e) { return !!e && e.hp>0 && (r.enemies||[]).includes(e); }
   function position(r) { return hooks.position ? hooks.position(r) : r.medium && r.medium.local || {x:0,y:0}; }
   function world(r,p) { var o=r.medium && r.medium.origin || {x:0,y:0}; return {x:o.x+p.x,y:o.y+p.y}; }
@@ -4210,14 +4303,20 @@ var ScoreCues = (function () {
     h.scoreShow={count:0,mult:0,base:0,combos:[],snapshot:clone(r.demo.score),finished:false};
     emit(r,'start',{chips:0,mult:0,draws:h.drawn.length,quota:r.quota,waveScore:r.wscore});
   }
-  function chips(r,amount,pos) {
-    emit(r,'chips',{amount,chips:r.hand.K,pos:pos?{...pos}:null});
+  function chips(r,amount,pos,bonus) {
+    emit(r,'chips',{amount,chips:r.hand.K,pos:pos?{...pos}:null,bonus:bonus||null});
   }
+  // A hit bailed trick `index` before it was revealed; it will reveal as a Bail and pay nothing.
+  function bail(r,index) {const h=r.hand;emit(r,'bail',{face:h.drawn[index],name:F.names[h.drawn[index]],index});}
+  function saved(r,index) {const h=r.hand;emit(r,'saved',{face:h.drawn[index],name:F.names[h.drawn[index]],index});}
+  function bust(r) {const p=r.hand?.scoreShow;if(p)p.busted=true;emit(r,'bust',{chips:r.hand.K});}
   function advance(r,count) {
     const h=r.hand,p=h?.scoreShow;if(!p||p.finished)return;
     const target=Math.min(h.drawn.length,Math.max(p.count,count));
     while(p.count<target) {
-      const face=h.drawn[p.count++],next=F.evaluate(p.snapshot,h.drawn.slice(0,p.count),{K:0,wave:r.wave},[],()=>1);
+      const index=p.count++,face=h.drawn[index];
+      if((h.bails||[]).includes(index)){emit(r,'trick',{face,name:F.names[face],amount:0,mult:p.mult,count:p.count,draws:h.drawn.length,bailed:true});continue;}
+      const next=F.evaluate(p.snapshot,h.drawn.slice(0,p.count),{K:0,wave:r.wave,preview:true,bails:(h.bails||[]).filter(i=>i<p.count)},[],()=>1);
       const value=F.value(p.snapshot,face),before=p.mult;
       p.mult+=value;p.base+=value;
       emit(r,'trick',{face,name:F.names[face],amount:value,mult:p.mult,count:p.count,draws:h.drawn.length});
@@ -4234,22 +4333,24 @@ var ScoreCues = (function () {
     }
   }
   function tick(r) {
-    const h=r.hand;if(!h?.open)return;
+    const h=r.hand;if(!h?.open||h.busted)return;
     advance(r,Math.floor(h.air/Math.max(.1,h.pred.air)*h.drawn.length));
   }
   function finish(r,result) {
     const h=r.hand,p=h?.scoreShow;if(!p||p.finished)return;
-    advance(r,h.drawn.length);
-    for(const t of result.techniqueLog||[])if(t.value){p.mult+=t.value;emit(r,'lucky',{name:F.names[t.face],amount:t.value,mult:p.mult});}
-    for(const c of result.charmLog||[])if(c.active){
-      if(Math.abs(c.before-p.mult)>1e-7){p.mult=c.before;emit(r,'combo',{name:'Routine',mult:p.mult,amount:0});}
-      p.mult=c.after;emit(r,'charm',{name:c.name,amount:c.add,factor:c.factor,mult:p.mult});
+    if(!h.busted)advance(r,h.drawn.length);
+    if(!h.busted){
+      for(const t of result.techniqueLog||[])if(t.value){p.mult+=t.value;emit(r,'lucky',{name:F.names[t.face],amount:t.value,mult:p.mult});}
+      for(const c of result.charmLog||[])if(c.active&&(c.after!==c.before||c.chips)){
+        if(Math.abs(c.before-p.mult)>1e-7){p.mult=c.before;emit(r,'combo',{name:'Routine',mult:p.mult,amount:0});}
+        p.mult=c.after;emit(r,'charm',{name:c.name,amount:c.add,factor:c.factor,chipsAdded:c.chips||0,mult:p.mult});
+      }
+      if(Math.abs(result.mult-p.mult)>1e-7){const add=result.mult-p.mult;p.mult=result.mult;emit(r,'combo',{name:'Routine',amount:add,mult:p.mult});}
     }
-    if(Math.abs(result.mult-p.mult)>1e-7){const add=result.mult-p.mult;p.mult=result.mult;emit(r,'combo',{name:'Routine',amount:add,mult:p.mult});}
     p.finished=true;
-    emit(r,'bank',{chips:h.K,mult:result.mult,score:Math.round(h.K*result.mult),waveScore:r.wscore,quota:r.quota,met:r.wscore>=r.quota});
+    emit(r,'bank',{chips:result.chips,mult:result.mult,score:result.score,busted:!!h.busted,waveScore:r.wscore,quota:r.quota,met:r.wscore>=r.quota});
   }
-  return {begin,chips,advance,tick,finish};
+  return {begin,chips,bail,saved,bust,advance,tick,finish};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=ScoreCues;
 
@@ -4303,7 +4404,7 @@ var DEMO = (() => {
     Reach:{group:'combat',sizes:[1,2,3,4]},Area:{group:'combat',sizes:[.05,.10,.15,.20]},
     'Max HP':{group:'defence',sizes:[3,6,9,12]},Armour:{group:'defence',sizes:[1,2,3,4]},Regen:{group:'defence',sizes:[2,3,4,5]},
     Lift:{group:'flight',sizes:[1,2,3,4]},Hang:{group:'flight',sizes:[1,2,3,4]},Drive:{group:'flight',sizes:[1,2,3,4]},'Air steering':{group:'flight',sizes:[.03,.06,.09,.12]},
-    Pickup:{group:'economy',sizes:[1,2,3,4]},Luck:{group:'economy',sizes:[5,10,15,20]},'XP gain':{group:'economy',sizes:[.05,.10,.15,.20]}
+    Luck:{group:'economy',sizes:[5,10,15,20]}
   };
   const items = [
     {name:'Close training',up:'Close',value:3,down:'Shot',loss:1}, {name:'Sight glass',up:'Shot',value:3,down:'Armour',loss:1},
@@ -4313,9 +4414,10 @@ var DEMO = (() => {
     {name:'Reinforced scales',up:'Max HP',value:9,down:'Damage %',loss:.04}, {name:'Shell weave',up:'Armour',value:3},
     {name:'Recovery tissue',up:'Regen',value:3}, {name:'Rising fin',up:'Lift',value:3},
     {name:'Floating fin',up:'Hang',value:3}, {name:'Driving fin',up:'Drive',value:3},
-    {name:'Collector',up:'Pickup',value:3}, {name:'Lucky shell',up:'Luck',value:10}, {name:'Fast learner',up:'XP gain',value:.15},
-    {name:'Routine space',rule:'hand',text:'+1 hand size.'}, {name:'Charm loop',rule:'charm',text:'+1 charm slot.'}
+    {name:'Lucky shell',up:'Luck',value:10}, {name:'Steering fin',up:'Air steering',value:.09}
   ];
+  // Gear is the only source of stats (design doc §4.10): no XP or level-ups. Driving fin stays out of offers, as before.
+  const gearStats=items.map((x,i)=>i).filter(i=>items[i].up!=='Drive');
   const tier=(v,l)=>Array.isArray(v)?v[l-1]:v;
   const choose=(r,a)=>a[Math.floor(ce(r)*a.length)];
   const shuffle=(r,a)=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(ce(r)*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
@@ -4330,12 +4432,15 @@ var DEMO = (() => {
     let time=g[0],interval=g[2],left=g[1],first=true;
     while(time<clock(w)){for(const u of g[9])total+=(u[1]+u[2])/2*u[3]*(Obt[u[0]]?.[2]||1)*(first?g[5]:1);if(left--<=0)break;time+=interval;interval=Math.max(g[4],interval-g[3]);first=false;if(interval<=0)break}
   }return total+(w%10===0?25:0)}
-  const quota=w=>Math.max(1,Math.ceil(expectedChips(w)*(1.65+.50*(w-1))));
-  const cap=r=>FiveScore.draws(r.wave);
+  // The required mult grows geometrically, like a blind ladder, because the score machine now compounds (§4.3). [TUNE]
+  const quota=w=>Math.max(1,Math.ceil(expectedChips(w)*2.2*Math.pow(1.23,w-1)));
+  const cap=r=>FiveScore.draws(r.demo.score,r.demo.charms);
+  // A hit bails the trick in progress; 0 HP busts the jump (design doc §4.6). Tuning values.
+  const BUST={fall:24,revive:.5};
   const charmSlots=r=>5+(r.demo.charmBonus||0);
   function phase(r){const h=r.hand,t=h?.activeAir||0,p=h?.pred||{air:1,apex:.5};return t<p.apex-p.air*.1?'ascent':t<=p.apex+p.air*.1?'apex':'descent'}
   function strongest(r){return r.slots.map((g,slot)=>({id:g.id,slot,amount:weaponDamage(r,weapons[g.id],g.lvl,false)})).sort((a,b)=>b.amount-a.amount||a.slot-b.slot)[0]||{id:'',slot:-1,amount:0}}
-  function ledger(r){const h=r.hand;return {K:h.K,kills:h.kills,hits:h.hits,air:h.activeAir,predAir:h.pred.air,phases:h.phaseChips,openingK:h.openingK,lateK:h.lateK,belowK:h.belowK,entryKills:h.entryKills,primaryTypes:[...h.primaryTypes],maxMulti:h.maxMulti,wave:r.wave,bankId:h.n}}
+  function ledger(r){const h=r.hand;return {K:h.K,kills:h.kills,hits:h.hits,air:h.activeAir,bails:h.bails,busted:!!h.busted,netUsed:!!h.netUsed,hpFrac:r.hp/Math.max(1,r.stats.maxHp),banked:r.demo.history.filter(x=>x.score>0).length,closeWeapons:r.slots.filter(g=>weapons[g.id]?.type==='Close').length,maxMulti:h.maxMulti,wave:r.wave,bankId:h.n,luck:r.demo.stats.Luck,angle:Math.abs(Math.atan2(Math.sin(h.launch.angle),Math.abs(Math.cos(h.launch.angle))))*180/Math.PI}}
   function returnBoss(r,e,pursuer=null){
     if(!e||e.hp<=0||r.demo.bossDefeated)return;
     if(r.enemies.some(q=>q.id===e.id)||(r.pursuers||[]).some(q=>q.id===e.id))return;
@@ -4347,18 +4452,20 @@ var DEMO = (() => {
     r.demo.bossRecoveries=(r.demo.bossRecoveries||0)+1;
   }
   function bossAlive(r){return r.enemies.some(e=>e.role==='boss'&&e.hp>0)||(r.pursuers||[]).some(p=>p.e?.role==='boss'&&p.e.hp>0)}
-  function diagnosis(r){const t=r.demo.waveTelemetry||{},h=r.hand;return {wave:r.wave,reason:r.endReason||null,score:r.wscore,quota:r.quota,quotaRatio:r.wscore/Math.max(1,r.quota),quotaMet:r.wscore>=r.quota,hp:r.hp,maxHp:r.stats.maxHp,armour:r.stats.armour,regen:r.demo.stats.Regen,activeAir:r.demo.air,airRemaining:r.budget,overtime:!!r.demo.overtime,overtimeAir:r.demo.overtimeAir||0,damageTaken:t.damageTaken||0,acceptedHits:t.hits||0,primaryApplied:t.primaryApplied||0,secondaryApplied:t.secondaryApplied||0,chips:r.wkill,bankedFlights:r.demo.history.length,unbankedChips:h?.open?h.K:0,unbankedBaseEstimate:h?.open?Math.round(h.K*h.mult):0,slots:r.slots.map(g=>({id:g.id,tier:g.lvl})),lastHits:(t.lastHits||[]).slice(-6),bossSpawned:!!r.demo.bossSpawned,bossDefeated:!!r.demo.bossDefeated,bossRecoveries:r.demo.bossRecoveries||0};}
-  function recordKill(r,e,ctx){const h=r.hand;if(!h)return;const t=h.activeAir,ph=phase(r),kv=e.kv||1,below=e.pos.y-r.medium.local.y>=4;
-    h.K+=kv;h.phaseChips[ph]+=kv;if(t<=Math.min(1,.2*h.pred.air))h.openingK+=kv;if(t>=.75*h.pred.air)h.lateK+=kv;if(below)h.belowK+=kv;if(ctx.item==='I07')h.entryKills++;
-    ScoreCues.chips(r,kv,Mr(r.medium.origin,e.pos));
-    h.kills.push({t,phase:ph,kv,weaponType:weapons[ctx.weapon]?.type,primary:ctx.primary,attackId:ctx.attackId,below,entry:ctx.item==='I07'});
-    if(ctx.primary){const id=ctx.attackId||0;h.attackKills[id]=(h.attackKills[id]||0)+1;h.maxMulti=Math.max(h.maxMulti,h.attackKills[id])}
+  function diagnosis(r){const t=r.demo.waveTelemetry||{},h=r.hand;return {wave:r.wave,reason:r.endReason||null,score:r.wscore,quota:r.quota,quotaRatio:r.wscore/Math.max(1,r.quota),quotaMet:r.wscore>=r.quota,hp:r.hp,maxHp:r.stats.maxHp,armour:r.stats.armour,regen:r.demo.stats.Regen,activeAir:r.demo.air,airRemaining:r.budget,overtime:!!r.demo.overtime,overtimeAir:r.demo.overtimeAir||0,damageTaken:t.damageTaken||0,acceptedHits:t.hits||0,primaryApplied:t.primaryApplied||0,secondaryApplied:t.secondaryApplied||0,chips:r.wkill,bankedFlights:r.demo.history.length,busts:t.busts||0,bails:t.bails||0,unbankedChips:h?.open?h.K:0,unbankedBaseEstimate:h?.open?Math.round(h.K*h.mult):0,slots:r.slots.map(g=>({id:g.id,tier:g.lvl})),lastHits:(t.lastHits||[]).slice(-6),bossSpawned:!!r.demo.bossSpawned,bossDefeated:!!r.demo.bossDefeated,bossRecoveries:r.demo.bossRecoveries||0};}
+  // Kills are chips, plus chip bonuses for how they happened (design doc §4.2). Score only; damage is untouched.
+  function recordKill(r,e,ctx){const h=r.hand;if(!h)return;const t=h.activeAir,ph=phase(r),kv=e.kv||1,B=FiveScore.chipBonus;
+    let multi=0;if(ctx.primary){const id=ctx.attackId||0;h.attackKills[id]=(h.attackKills[id]||0)+1;h.maxMulti=Math.max(h.maxMulti,h.attackKills[id]);if(h.attackKills[id]>=2)multi=B.multi}
+    const apex=ph==='apex'?B.apex:0,crit=ctx.crit?B.crit:0,bonus=multi+apex+crit;
+    h.K+=kv+bonus;h.phaseChips[ph]+=kv+bonus;h.bonus.multi+=multi;h.bonus.apex+=apex;h.bonus.crit+=crit;
+    ScoreCues.chips(r,kv+bonus,Mr(r.medium.origin,e.pos),bonus?{multi,apex,crit}:null);
+    h.kills.push({t,phase:ph,kv,bonus,weaponType:weapons[ctx.weapon]?.type,primary:ctx.primary,attackId:ctx.attackId,above:e.pos.y-r.medium.local.y>=2,crit:!!ctx.crit,opening:t<=1,late:h.pred.air-t<=1,entry:ctx.item==='I07'});
   }
   function sync(r){
     const s=r.demo.stats;
     r.stats.damage=Math.max(.05,1+s['Damage %']);r.stats.fireRate=Math.max(.1,1+s['Attack speed']);
     r.stats.armour=s.Armour+2*r.slots.filter(g=>weapons[g.id]?.type==='Close').length;
-    r.stats.maxHp=100+((r.lvl||0)+s['Max HP'])*hpScale();r.stats.magnet=13+s.Pickup;r.stats.xpRate=Math.max(.1,1+s['XP gain']);
+    r.stats.maxHp=100+s['Max HP']*hpScale();r.stats.magnet=13;r.stats.xpRate=1;
     r.hp=Math.min(r.hp,r.stats.maxHp);
   }
   function init(r,starter){
@@ -4375,44 +4482,59 @@ var DEMO = (() => {
     
     r.enemies=[];r.pursuers=[];r.shots=[];r.wshots=[];r.eorbs=[];r.departing=[];r.warns=[];r.bw=-1;r.bq=[];r.spawnRemaining=0;r.boss=null;
     r.medium={kind:'water',pos:se(0,-10.5),heading:-Math.PI/4,velocity:{x:18,y:-18}};r.cam=se(0,-10.5);r.camV=se(0,0);r.row=false;r.tkq=null;
+    drawNext(r);
   }
+  // The next jump's tricks are drawn as soon as the previous jump banks or busts, so the dive can show their heat (§4.4).
+  function drawNext(r){const d=r.demo;d.heldHand=FiveScore.draw(d.score,cap(r),()=>ce(r));d.handSeq=(d.handSeq||0)+1;d.heat=FiveScore.heat(d.score,d.heldHand,d.stats.Luck)}
   function forecast(r,m){const s=r.demo.stats,vy=Math.max(.1,m.vy),g=15*Math.max(.4,1-.025*s.Hang),air=vy/15+Math.sqrt((vy*vy/15)/g);return{height:vy*vy/30,air,apex:vy/15,distance:Math.abs(m.vx)*air,turned:r.demo.lastDir!==0&&r.demo.lastDir!==Math.sign(m.vx)}};
   function open(r){const d=r.demo,m=r.medium,s=d.stats;m.vx*=Math.max(.25,1+.03*s.Drive);m.vy*=Math.max(.25,1+.03*s.Lift);
-    const pred=forecast(r,m),hand=d.heldHand||FiveScore.draw(d.score,cap(r),()=>ce(r));d.heldHand=hand;
-    const raw=FiveScore.evaluate(structuredClone(d.score),hand,{K:0,wave:r.wave},[],()=>.5);
+    if(!d.heldHand)drawNext(r);const pred=forecast(r,m),hand=d.heldHand;
+    const raw=FiveScore.evaluate(d.score,hand,{K:0,wave:r.wave,preview:true},[],()=>.5);
     r.hand={n:d.history.length+1,open:1,K:0,M:raw.mult,mult:raw.mult,banked:0,drawn:hand.slice(),parts:[],trick:'plain',kills:[],completed:hand.map(id=>({id,name:cards[id].name,family:cards[id].family})),controls:[],slots:hand.length,cap:cap(r),air:0,activeAir:0,airAll:0,t0:r.time,x0:m.origin.x,peak:0,dist:0,hits:0,hpLost:0,
-      launch:{angle:Math.atan2(m.vy,m.vx),speed:Math.hypot(m.vx,m.vy)},pred,ref:standard(r.wave),apex:false,active:null,held:[],lit:[],fizzles:[],phaseChips:{ascent:0,apex:0,descent:0},openingK:0,lateK:0,belowK:0,entryKills:0,primaryTypes:new Set(),attackKills:{},maxMulti:0};
+      launch:{angle:Math.atan2(m.vy,m.vx),speed:Math.hypot(m.vx,m.vy)},pred,ref:standard(r.wave),apex:false,active:null,held:[],lit:[],fizzles:[],phaseChips:{ascent:0,apex:0,descent:0},bonus:{multi:0,apex:0,crit:0},bails:[],busted:false,netUsed:false,attackKills:{},maxMulti:0};
     ScoreCues.begin(r);FiveCombat.breach(r);r.hand.itemStart={...r.demo.itemState.triggers};
   }
   function fireCharms(){} // Phase facts are accumulated in combat; score charms resolve exactly once at entry.
   function nextCard(){}
-  function tickCards(r){const h=r.hand;if(!h?.open)return;ScoreCues.tick(r);const n=h.drawn.length,i=Math.min(n-1,Math.floor(h.air/Math.max(.1,h.pred.air)*n)),id=h.drawn[i];h.active={list:[{id}],elapsed:(h.air/Math.max(.1,h.pred.air)*n)%1,time:1};h.parts=[{spout:'spout',front:'front',back:'front',cork:'cork',star:'pose'}[id]]}
+  function tickCards(r){const h=r.hand;if(!h?.open)return;if(h.busted){h.active=null;return}ScoreCues.tick(r);const n=h.drawn.length,i=Math.min(n-1,Math.floor(h.air/Math.max(.1,h.pred.air)*n)),id=h.drawn[i];h.active={list:[{id}],elapsed:(h.air/Math.max(.1,h.pred.air)*n)%1,time:1};h.parts=[{spout:'spout',front:'front',back:'front',cork:'cork',star:'pose'}[id]]}
   function bank(r){const h=r.hand;if(!h?.open)return;const d=r.demo;d.score.luck=d.stats.Luck;
     const result=FiveScore.evaluate(d.score,h.drawn,ledger(r),d.charms.map(id=>({id,face:d.charmFaces[id]})),()=>ce(r));
-    h.active=null;h.open=0;h.M=h.mult=result.mult;h.banked=Math.round(h.K*h.mult);r.wscore+=h.banked;if(h.K>0)d.heldHand=null;
+    h.active=null;h.open=0;h.M=h.mult=result.mult;h.chips=result.chips;h.banked=result.score;r.wscore+=h.banked;d.pendingPearls=(d.pendingPearls||0)+(result.pearls||0);
+    if(h.busted)r.hp=Math.max(1,Math.round(r.stats.maxHp*BUST.revive));
     ScoreCues.finish(r,result);
     const items=Object.entries(d.itemState.triggers).map(([id,n])=>({id,name:FiveCombat.items[id].name,count:n-(h.itemStart[id]||0)})).filter(x=>x.count>0);
-    d.history.push({base:result.base,items,techniqueLog:result.techniqueLog,predAir:h.pred.air,apexWeapon:d.itemState.apex.id,chips:h.K,mult:h.mult,score:h.banked,cards:h.drawn.map(id=>cards[id].name),drawn:h.drawn.slice(),combos:result.combos,charmLog:result.charmLog,kills:h.kills.length,air:h.activeAir,physicalAir:h.air,peak:h.peak,hits:h.hits,hpLost:h.hpLost,launch:{...h.launch},slots:h.slots,cap:h.cap,phases:{...h.phaseChips},openingK:h.openingK,lateK:h.lateK,entryKills:h.entryKills});d.last=d.history.at(-1);
-    for(const c of result.charmLog||[])if(c.after!==c.before){const effect=c.factor>1?'×mult':'+mult',amount=c.factor>1?c.factor:c.after-c.before;d.lastCharm={name:c.name,effect,value:amount,t:r.time};r.events.push({kind:'charm',pos:he(r),name:c.name,effect,value:amount,seq:(r.events.filter(e=>e.kind==='charm').length+1)})}
-    r.events.push({kind:'bank',pos:he(r),value:h.banked,K:h.K,M:h.mult,n:h.drawn.length,trick:'plain'});
+    d.history.push({base:result.base,items,techniqueLog:result.techniqueLog,predAir:h.pred.air,apexWeapon:d.itemState.apex.id,chips:result.chips,killChips:h.K,bonus:{...h.bonus},mult:h.mult,score:h.banked,pearls:result.pearls||0,busted:!!h.busted,bails:result.bails.slice(),cards:h.drawn.map(id=>cards[id].name),drawn:h.drawn.slice(),combos:result.combos,charmLog:result.charmLog,kills:h.kills.length,air:h.activeAir,physicalAir:h.air,peak:h.peak,hits:h.hits,hpLost:h.hpLost,launch:{...h.launch},slots:h.slots,cap:h.cap,phases:{...h.phaseChips},entryKills:h.kills.filter(k=>k.entry).length});d.last=d.history.at(-1);
+    for(const c of result.charmLog||[])if(c.active){const effect=c.factor>1?'×mult':c.chips?'+chips':c.pearls?'pearls':c.after!==c.before?'+mult':null,amount=c.factor>1?c.factor:c.chips||c.pearls||c.after-c.before;if(!effect)continue;d.lastCharm={name:c.name,effect,value:amount,t:r.time};r.events.push({kind:'charm',pos:he(r),name:c.name,effect,value:amount,seq:(r.events.filter(e=>e.kind==='charm').length+1)})}
+    r.events.push({kind:'bank',pos:he(r),value:h.banked,K:result.chips,M:h.mult,n:h.drawn.length,busted:!!h.busted,trick:'plain'});
+    if(h.K>0||h.busted)drawNext(r);
   }
   function damage(r,e,amount,weapon,dx=0,dy=0,kb=0,crit=false,ctx=null){
-    if(r.mode!=='playing'||r.medium.kind!=='air'||r.armed||!r.enemies.includes(e)||e.hp<=0)return;
-    ctx={...(ctx||r.demo.currentAttack||{primary:false,weapon,base:amount}),beforeHP:e.hp,amount};if(ctx.primary&&r.hand)r.hand.primaryTypes.add(weapons[ctx.weapon]?.type);
+    if(r.mode!=='playing'||r.medium.kind!=='air'||r.armed||r.hand?.busted||!r.enemies.includes(e)||e.hp<=0)return;
+    ctx={...(ctx||r.demo.currentAttack||{primary:false,weapon,base:amount}),beforeHP:e.hp,amount};
     amount=FiveCombat.beforeDamage(r,e,amount,ctx);e.hp-=amount;ctx.amount=amount;ctx.killed=e.hp<=0;const applied=Math.min(ctx.beforeHP,amount);if(r.demo.waveTelemetry)r.demo.waveTelemetry[ctx.primary?'primaryApplied':'secondaryApplied']+=applied;r.events.push({kind:'damage',pos:Mr(r.medium.origin,e.pos),value:amount,applied:Math.min(ctx.beforeHP,amount),primary:ctx.primary,item:ctx.item,weapon,id:e.id,crit:!!crit});
     if(e.hp>0){e.velocity.x+=dx*kb;e.velocity.y+=dy*kb;FiveCombat.afterDamage(r,e,ctx);return}
     r.enemies=r.enemies.filter(x=>x!==e);r.kills++;r.flightKills++;r.wkill+=e.kv;r.waveKills++;
     // as v3's kill (lw): a splitter breaks into two swarmers
     if(e.kind==='splitter')for(let s=0;s<2&&r.enemies.length+(r.pursuers?.length||0)<100;s++){const o=6*Ld(r.wave);r.enemies.push({...e,id:++r.id,kind:'swarmer',xp:Osp.xp,tint:0,pos:ye(e.pos.x+(s?1.3:-1.3),e.pos.y+1.5),hp:o,maxHp:o,radius:ObR(1),age:0,velocity:{x:s?12:-12,y:8}})}
     if(e.role==='boss')r.demo.bossDefeated=true;recordKill(r,e,ctx);FiveCombat.afterDamage(r,e,ctx);
-    Oxedrop(r,r.medium,e);r.events.push({kind:'kill',pos:Mr(r.medium.origin,e.pos),enemy:e.kind,weapon,value:e.kv});
+    r.events.push({kind:'kill',pos:Mr(r.medium.origin,e.pos),enemy:e.kind,weapon,value:e.kv});
   }
   function hit(r,amount){
-    if(r.medium.kind!=='air'||r.armed||r.hurt>0||r.medium.elapsed<.3)return;
+    if(r.medium.kind!=='air'||r.armed||r.hand?.busted||r.hurt>0||r.medium.elapsed<.3)return;
     const a=r.stats.armour,f=a>=0?15/(15+a):1-a/15,value=FiveCombat.acceptedHit(r,amount*f);
     r.hp=Math.max(0,r.hp-value);r.hurt=tune.bro?Math.min(.4,Math.max(.2,value/Math.max(1,r.stats.maxHp)*.4/.15)):.7;r.metrics.hits++;if(r.hand){r.hand.hits++;r.hand.hpLost+=value}
     const t=r.demo.waveTelemetry;if(t){t.damageTaken+=value;t.hits++;t.lastHits.push({air:r.demo.air,value,hp:r.hp,phase:r.hand?phase(r):'air',enemies:r.enemies.length});if(t.lastHits.length>12)t.lastHits.shift();}
-    r.events.push({kind:'hit',pos:he(r),value});if(r.hp<=0){r.mode='dead';r.endReason='health';r.demo.lastFailure=diagnosis(r)}
+    r.events.push({kind:'hit',pos:he(r),value});if(value>0)bail(r);if(r.hp<=0)bust(r);
+  }
+  // A hit bails the trick in progress: it pays nothing and does not count for combos. Landed tricks keep their value.
+  function bail(r){const h=r.hand;if(!h?.open||h.busted)return;const n=h.drawn.length,i=Math.floor(h.air/Math.max(.1,h.pred.air)*n);
+    if(i>=n||i<(h.scoreShow?.count||0)||h.bails.includes(i))return;
+    if(r.demo.charms.includes('N15')&&!h.netUsed){h.netUsed=true;ScoreCues.saved(r,i);return}
+    h.bails.push(i);r.demo.waveTelemetry&&(r.demo.waveTelemetry.bails=(r.demo.waveTelemetry.bails||0)+1);ScoreCues.bail(r,i);
+  }
+  // 0 HP busts the jump: out of combat, the dolphin falls from where it is, spending air clock; it banks nothing at the water.
+  function bust(r){const h=r.hand,m=r.medium;r.hp=0;if(!h?.open||h.busted)return;h.busted=true;h.active=null;m.vy=Math.min(m.vy,-BUST.fall);m.vx*=.4;
+    r.demo.waveTelemetry&&(r.demo.waveTelemetry.busts=(r.demo.waveTelemetry.busts||0)+1);r.events.push({kind:'bust',pos:he(r)});ScoreCues.bust(r);
   }
   // Enemies are v3 carve's: its spawn schedule (Obs, called from ME), bodies, health and movement. spawn() is for the
   // demo's boss and for tests; an ordinary enemy is made by v3's own Ospw, just outside the view's edge as v3's Obq does.
@@ -4438,7 +4560,7 @@ var DEMO = (() => {
       const range=d.range+s.Reach*(d.type==='Close'?.5:1),dist=e=>Math.hypot(e.pos.x-me.x,e.pos.y-me.y),near=T.find(e=>e.hp>0&&dist(e)<=range+8+e.radius);
       const held=g.tg&&near&&near.id!==g.tg?T.find(e=>e.id===g.tg&&e.hp>0&&dist(e)<=range+8+e.radius):null;
       g.tg=held&&dist(near)>dist(held)*.8?held.id:near?near.id:0;
-      if(!air||r.armed||g.cd>0)continue;
+      if(!air||r.armed||r.hand?.busted||g.cd>0)continue;
       const tgt=g.tg&&T.find(e=>e.id===g.tg&&e.hp>0&&dist(e)<=range+e.radius),target=tgt||T.find(e=>e.hp>0&&dist(e)<=range+e.radius);if(!target)continue;  // hp>0: an earlier weapon this tick may have killed it
       const angle=Math.atan2(target.pos.y-me.y,target.pos.x-me.x),c=Math.cos(angle),sn=Math.sin(angle),crit=ce(r)<wt(tier(d.crit,l)+s.Crit,0,1),amount=weaponDamage(r,d,l,crit);
       r.demo.currentAttack={primary:true,attackId:++r.demo.attackSeq,weapon:g.id,slot:r.slots.indexOf(g),base:weaponDamage(r,d,l,false),crit};
@@ -4497,7 +4619,7 @@ var DEMO = (() => {
     if(!d.bossSpawned&&r.wave%10===0&&d.air>=clock(r.wave)*.3){spawn(r,true);d.bossSpawned=bossAlive(r)}
     fire(r,dt);enemies(r,m,input,dt);if(r.mode!=='playing')return;shots(r,dt,true);
     Oxeair(r,m,dt);
-    if(tune.bro){const R=d.stats.Regen;if(R>0&&r.hp<r.stats.maxHp){d.regenT=(d.regenT||0)+dt;const period=5/(1+(R-1)/2.25);
+    if(r.hand?.busted){}else if(tune.bro){const R=d.stats.Regen;if(R>0&&r.hp<r.stats.maxHp){d.regenT=(d.regenT||0)+dt;const period=5/(1+(R-1)/2.25);
       while(d.regenT>=period){d.regenT-=period;r.hp=Math.min(r.stats.maxHp,r.hp+hpScale())}}else d.regenT=0}
     else r.hp=Math.min(r.stats.maxHp,r.hp+Math.max(0,d.stats.Regen)*dt/5);r.metrics.peakEnemies=Math.max(r.metrics.peakEnemies,r.enemies.length);
   }
@@ -4506,69 +4628,102 @@ var DEMO = (() => {
   function finish(r){
     if(r.mode!=='playing')return;const d=r.demo;const report={wave:r.wave,score:r.wscore,quota:r.quota,killed:r.wkill,hands:d.history.length,diagnosis:diagnosis(r)};r.lastWave=report;
     if(r.wscore<r.quota){r.mode='dead';r.endReason='quota';d.lastFailure=diagnosis(r);return}
-    const base=24+r.wave*4,bonus=Math.min(24,Math.floor(base*.3*Math.max(0,r.wscore/r.quota-1))),interest=Math.min(8,Math.floor(r.xp*.1)),extra=d.pendingPearls||0;
+    // Overscore funds the build: half the base pay per full quota beaten, up to one more base pay (design doc §4.10). [TUNE]
+    const base=24+r.wave*4,bonus=Math.min(base,Math.floor(base*.5*Math.max(0,r.wscore/r.quota-1))),interest=Math.min(8,Math.floor(r.xp*.1)),extra=d.pendingPearls||0;
     report.pay={clear:base,score:bonus,interest,charms:extra,total:base+bonus+interest+extra};d.pendingPearls=0;r.xp+=report.pay.total;r.earned+=report.pay.total;r.hp=r.stats.maxHp;
-    if(r.wave===20){r.mode='won';r.milestones.victory=true}else{r.mode='shop';shop(r);levelChoices(r)}
+    r.lvup=0;if(r.wave===20){r.mode='won';r.milestones.victory=true}else{r.mode='shop';shop(r)}
   }
   function rarity(r){const a=ce(r),luck=Math.max(0,r.demo.stats.Luck)*.001;return a<.015+r.wave*.002+luck?4:a<.10+r.wave*.007+luck?3:a<.35+r.wave*.01+luck?2:1}
   const price=(r,base)=>Math.max(1,Math.floor((base+r.wave+.1*base*r.wave)*r.demo.shopMultiplier));
-  function charmPool(r){const d=r.demo,n=cap(r),types=new Set(r.slots.map(g=>weapons[g.id].type));return Object.keys(charms).filter(id=>!d.charms.includes(id)&&!d.offers.some(o=>!o.bought&&o.row==='charm'&&o.id===id)&&!(id==='S05'&&(n<5||types.size<2))&&!(id==='S06'&&n<4)&&!(id==='S13'&&!d.itemCounts.I07)&&!(id==='S16'&&(n<5||r.wave>=17)))}
+  // Rarity sets how often an offer appears, not only its price (design doc §4.10). Luck and later waves lift rarer odds.
+  function rarityWeight(r,level){const luck=Math.max(0,r.demo.stats.Luck)*.002,late=Math.min(.3,.015*r.wave);return level>=3?.2+late+luck:level===2?.55+late/2+luck:1}
+  function weighted(r,list,weight){const ws=list.map(weight),sum=ws.reduce((a,b)=>a+b,0);if(!list.length||!(sum>0))return undefined;let q=ce(r)*sum;for(let i=0;i<list.length;i++){q-=ws[i];if(q<0)return list[i]}return list.at(-1)}
+  const types=r=>new Set(r.slots.map(g=>weapons[g.id].type));
+  // After the commit offer, Routine offers favour the most-drawn trick.
+  function routineFace(r){const s=r.demo.score;if(s.focus&&ce(r)<.65)return FiveScore.faces.reduce((a,b)=>s.weights[b]>s.weights[a]?b:a);return choose(r,FiveScore.faces)}
+  function boundFace(r){const s=r.demo.score;return weighted(r,FiveScore.faces,f=>s.weights[f]+.05)}
+  // Charm and gear offers lean towards the held build (design doc §4.10).
+  function charmFit(r,id){const d=r.demo,s=d.score,top=Math.max(...FiveScore.faces.map(f=>s.weights[f]));
+    if(['N12','S06','N09'].includes(id))return top>=.4||s.routines.Repeat>0?2:1;
+    if(id==='N13')return s.routines.Formation>0?2:1;
+    if(['S05','S02'].includes(id))return s.routines.Variety>0?2:1;
+    if(['S13','N04'].includes(id))return 2;
+    if(['S10','N01'].includes(id))return d.itemCounts.I05?2:1;
+    return 1}
+  function charmPool(r){const d=r.demo,n=cap(r),t=types(r);return Object.keys(charms).filter(id=>!d.charms.includes(id)&&!d.offers.some(o=>!o.bought&&o.row==='charm'&&o.id===id)&&!(id==='S05'&&n<5)&&!(charms[id].requires&&!d.itemCounts[charms[id].requires])&&!(id==='N04'&&!t.has('Close'))&&!(id==='N16'&&n>=FiveScore.tune.maxDraws))}
+  // Defence gear is the only way to buy survival now that levels are gone, so it is offered more often.
+  function gearFit(r,kind,id){const t=types(r),d=r.demo;if(kind==='stat'){const x=items[id];return (t.has(x.up)?2:x.down&&t.has(x.down)?.5:1)*(stats[x.up]?.group==='defence'?2:1)}
+    return id==='I07'&&d.charms.includes('S13')||id==='I05'&&(d.charms.includes('S10')||d.charms.includes('N01'))?2:1}
+  // One Routine upgrade: trick value, combo level, draw odds, an extra draw, a technique or the commit offer (design doc §4.9).
+  function routineChoice(r){const d=r.demo,s=d.score,T=FiveScore.tune,kinds=[['polish',3],['routine',2],['transfer',2]];
+    if(s.draws<T.maxBought)kinds.push(['draw',1.4]);if(r.wave>=4)kinds.push(['technique',.7]);if(!s.focus&&r.wave>=3)kinds.push(['focus',.25]);
+    const kind=weighted(r,kinds,k=>k[1])[0],face=routineFace(r);
+    if(kind==='routine'){const id=choose(r,['Repeat','Formation','Variety'].filter(g=>s.routines[g]<T.routineCap));if(id)return {kind,id}}
+    if(kind==='draw'||kind==='focus')return {kind};
+    if(kind==='technique'){const open=FiveScore.faces.filter(f=>!s.techniques[f]);if(open.length)return {kind,face:open.includes(face)?face:choose(r,open),id:choose(r,['lucky','gold','echo'])}}
+    if(kind==='transfer'){const recipients=FiveScore.faces.filter(f=>s.weights[f]+T.transfer<=T.weightCap+1e-8),recipient=recipients.includes(face)?face:choose(r,recipients),donor=choose(r,FiveScore.faces.filter(f=>f!==recipient&&s.weights[f]>=T.transfer-1e-8));if(recipient&&donor)return {kind,donor,recipient}}
+    const open=FiveScore.faces.filter(f=>s.polish[f]<T.polishCap);return {kind:'polish',face:open.includes(face)?face:choose(r,open)||face}}
+  const routinePrice={polish:6,routine:8,transfer:5,technique:14,focus:18};
+  function choicePrice(r,c){return c.kind==='draw'?22+12*(r.demo.score.draws-FiveScore.tune.baseDraws):routinePrice[c.kind]||8}
+  function applyChoice(r,c){const s=r.demo.score;
+    if(c.kind==='routine')return FiveScore.routine(s,c.id);if(c.kind==='polish')return FiveScore.polish(s,c.face);if(c.kind==='transfer')return FiveScore.transfer(s,c.donor,c.recipient);
+    if(c.kind==='technique')return FiveScore.technique(s,c.face,c.id);if(c.kind==='draw')return FiveScore.addDraw(s);if(c.kind==='focus'){if(s.focus)return false;s.focus=true;return true}return false}
+  const ruleIds=r=>['charm','reroll',...(r.demo.shelfBonus<1?['shelf']:[])];
   function offer(r,row){const d=r.demo,uid=++d.uid;
     if(row==='weapon'){const owned=r.slots.map(g=>g.id),types=r.slots.map(g=>weapons[g.id].type),pool=Object.keys(weapons),q=ce(r),id=q<.35?choose(r,owned):q<.7?choose(r,pool.filter(k=>types.includes(weapons[k].type))):choose(r,pool),level=q<.35&&ce(r)<.7?choose(r,r.slots.filter(g=>g.id===id&&g.lvl<4).map(g=>g.lvl))||Math.min(rarity(r),1+Math.floor(r.wave/4)):Math.min(rarity(r),1+Math.floor(r.wave/4));return {uid,row,id,level,price:price(r,[12,24,48,96][level-1])}}
-    if(row==='charm'){const id=choose(r,charmPool(r));if(!id)return offer(r,'item');return {uid,row,id,face:id==='S01'?choose(r,FiveScore.faces):null,price:price(r,charms[id].price||18)}}
-    if(row==='item'){const pool=Object.keys(FiveCombat.items).filter(id=>!(id==='I05'&&r.wave<5)&&!(id==='I07'&&r.wave<3));const id=choose(r,pool);return {uid,row,id,price:price(r,FiveCombat.items[id].price||18)}}
-    if(row==='stat'){const id=Math.floor(ce(r)*(items.length-2));if(items[id].up==='Drive')return offer(r,'item');return {uid,row,id,price:price(r,10)}}
-    if(row==='pack'){let id=d.offers.some(o=>o.row==='pack')?(r.wave>=10&&ce(r)<.55?'routine':'charm'):'rehearsal';const mega=r.wave>=10&&ce(r)<.25;let fallback='';
-      if(id==='charm'&&(d.charms.length+(mega?2:1)>charmSlots(r)||!charmPool(r).length)){id='rehearsal';fallback='Charm choices unavailable: this is a Rehearsal pack instead.'}
-      return {uid,row,id,mega,fallback,price:price(r,mega?12:7)}}
-    return {uid,row:'voucher',id:choose(r,['charm','reroll',...(d.shelfBonus<1?['shelf']:[])]),price:price(r,35)};
+    if(row==='charm'){const id=weighted(r,charmPool(r),id=>rarityWeight(r,charms[id].rarity)*charmFit(r,id));if(!id)return offer(r,'gear');return {uid,row,id,face:charms[id].bound?boundFace(r):null,price:price(r,charms[id].price)}}
+    if(row==='gear')return offer(r,ce(r)<.45?'item':'stat');
+    if(row==='item'){const pool=Object.keys(FiveCombat.items).filter(id=>!(id==='I05'&&r.wave<5)&&!(id==='I07'&&r.wave<3));const id=weighted(r,pool,id=>rarityWeight(r,FiveCombat.items[id].rarity)*gearFit(r,'item',id));return {uid,row,id,price:price(r,FiveCombat.items[id].price||18)}}
+    if(row==='stat'){const id=weighted(r,gearStats,i=>gearFit(r,'stat',i));return {uid,row,id,price:price(r,10)}}
+    if(row==='routine'){const choice=routineChoice(r);return {uid,row,id:choice.kind,choice,price:price(r,choicePrice(r,choice))}}
+    if(row==='pack'){const mega=r.wave>=8&&ce(r)<.25,charmOk=d.charms.length+(mega?2:1)<=charmSlots(r)&&charmPool(r).length>0;return {uid,row,id:charmOk&&ce(r)<.4?'charm':'routine',mega,fallback:'',price:price(r,mega?12:7)}}
+    return {uid,row:'voucher',id:choose(r,ruleIds(r)),price:price(r,35)};
   }
+  // Shelf: weapon, gear, charm (+1 with the extra shelf); permanent run rules appear there as rare offers. Routine row: two offers.
+  const inRoutineRow=o=>o.row==='routine'||o.row==='pack';
+  function shelfOffer(r,i){if(r.wave>=2&&i>0&&ce(r)<.07)return offer(r,'voucher');return offer(r,i===0?'weapon':i===1?'gear':i===2?'charm':choose(r,['weapon','gear','charm']))}
+  function routineOffer(r,i){return offer(r,i===0||ce(r)<.5?'routine':'pack')}
   function shop(r){const d=r.demo,held=[...new Map([...d.offers,...(d.deferredOffers||[])].filter(o=>o.locked&&!o.bought&&o.row!=='voucher').map(o=>[o.uid,o])).values()];
     d.offers=held.slice(0,6);d.deferredOffers=held.slice(6);d.pack=null;d.weaponChoice=null;d.rerolls={shelf:0,pack:0};
-    const shelves=3+d.shelfBonus;for(let i=d.offers.filter(o=>!['pack','voucher'].includes(o.row)).length;i<shelves&&d.offers.length<6;i++){let row=i===0?'weapon':i===1?(ce(r)<.6?'weapon':'item'):(ce(r)<.55?'charm':ce(r)<.6?'item':'stat');d.offers.push(offer(r,row))}
-    for(let i=d.offers.filter(o=>o.row==='pack').length;i<2&&d.offers.length<6;i++)d.offers.push(offer(r,'pack'));
-    if([5,10,15].includes(r.wave)){if(d.offers.length>=6){let j=d.offers.findLastIndex(o=>o.row==='pack'&&!o.locked);if(j<0)j=d.offers.findLastIndex(o=>o.row==='pack');if(j<0)j=d.offers.length-1;
-      const removed=d.offers.splice(j,1)[0];if(removed.locked){d.deferredOffers.push(removed);d.toast='A locked offer is held at its original price for the next shop so this wave can show its voucher.'}}
-      d.offers.push(offer(r,'voucher'))}
+    const shelves=3+d.shelfBonus;for(let i=d.offers.filter(o=>!inRoutineRow(o)).length;i<shelves&&d.offers.length<6;i++)d.offers.push(shelfOffer(r,i));
+    for(let i=d.offers.filter(inRoutineRow).length;i<2&&d.offers.length<6;i++)d.offers.push(routineOffer(r,i));
   }
-  function levelChoices(r){if(!r.lvup){r.demo.levelChoices=[];return}const types=new Set(r.slots.map(g=>weapons[g.id].type)),all=Object.keys(stats).filter(k=>k!=='Drive');r.demo.levelChoices=['combat','defence','flight'].map(group=>{const pool=all.filter(k=>(stats[k].group===group||group==='flight'&&stats[k].group==='economy')&&(!['Close','Shot','Blast'].includes(k)||types.has(k)));return{id:choose(r,pool),level:rarity(r)}})}
   function addStat(r,k,v){r.demo.stats[k]+=v;sync(r);if(k==='Max HP'&&v>0)r.hp=Math.min(r.stats.maxHp,r.hp+v*hpScale())}
+  const choiceKey=c=>[c.kind,c.id||'',c.face||'',c.donor||'',c.recipient||''].join(':');
   function packChoices(r,o){const d=r.demo,out=[],n=o.mega?5:3;
-    for(let i=0;i<n;i++){if(o.id==='charm'){const ids=charmPool(r).filter(id=>!out.some(c=>c.id===id));const id=choose(r,ids);if(id){out.push({kind:'charm',id,face:id==='S01'?choose(r,FiveScore.faces):null});continue}}
-      if(o.id==='routine'){const id=choose(r,['Repeat','Formation','Variety'].filter(g=>d.score.routines[g]<4&&!out.some(c=>c.id===g)));if(id){out.push({kind:'routine',id});continue}}
-      const face=choose(r,FiveScore.faces),q=ce(r);
-      if(r.wave>=5&&q<.15&&!d.score.techniques[face]){out.push({kind:'technique',face,id:ce(r)<.5?'lucky':'gold'});continue}
-      if(q<.55&&d.score.polish[face]<4){out.push({kind:'polish',face});continue}
-      const donors=FiveScore.faces.filter(f=>d.score.weights[f]>=.10-.00001),recipients=FiveScore.faces.filter(f=>d.score.weights[f]<=.45+.00001),donor=choose(r,donors),recipient=choose(r,recipients.filter(f=>f!==donor));if(recipient)out.push({kind:'transfer',donor,recipient});else out.push({kind:'polish',face})
-    }return out;
+    for(let tries=0;out.length<n&&tries<60;tries++){let c=null;
+      if(o.id==='charm'){const id=weighted(r,charmPool(r).filter(id=>!out.some(x=>x.id===id)),id=>rarityWeight(r,charms[id].rarity)*charmFit(r,id));if(id)c={kind:'charm',id,face:charms[id].bound?boundFace(r):null}}
+      if(!c)c=routineChoice(r);
+      if(!out.some(x=>choiceKey(x)===choiceKey(c)))out.push(c)}
+    return out;
   }
-  function packChoiceValid(r,c){const d=r.demo,s=d.score;if(!c||c.used)return false;
+  function packChoiceValid(r,c){const d=r.demo,s=d.score,T=FiveScore.tune;if(!c||c.used)return false;
     if(c.kind==='charm')return d.charms.length<charmSlots(r)&&!d.charms.includes(c.id);
-    if(c.kind==='routine')return (s.routines[c.id]||0)<4;
-    if(c.kind==='polish')return (s.polish[c.face]||0)<4;
-    if(c.kind==='transfer')return c.donor!==c.recipient&&s.weights[c.donor]>=.10-.00001&&s.weights[c.recipient]<=.45+.00001;
-    if(c.kind==='technique')return r.wave>=5&&['gold','lucky'].includes(c.id)&&s.techniques[c.face]!==c.id;
+    if(c.kind==='routine')return (s.routines[c.id]||0)<T.routineCap;
+    if(c.kind==='polish')return (s.polish[c.face]||0)<T.polishCap;
+    if(c.kind==='transfer')return c.donor!==c.recipient&&s.weights[c.donor]>=T.transfer-1e-5&&s.weights[c.recipient]+T.transfer<=T.weightCap+1e-5;
+    if(c.kind==='technique')return ['gold','lucky','echo'].includes(c.id)&&s.techniques[c.face]!==c.id;
+    if(c.kind==='draw')return s.draws<T.maxBought;
+    if(c.kind==='focus')return !s.focus;
     return false;
   }
-  function repairPack(r,p){const d=r.demo,s=d.score,all=[];
-    if(p.id==='charm')for(const id of charmPool(r))all.push({kind:'charm',id,face:id==='S01'?choose(r,FiveScore.faces):null});
-    if(p.id==='routine')for(const id of ['Repeat','Formation','Variety'])if(s.routines[id]<4)all.push({kind:'routine',id});
-    const rehearsal=[];for(const face of FiveScore.faces){if(s.polish[face]<4)rehearsal.push({kind:'polish',face});
-      if(r.wave>=5&&!s.techniques[face])for(const id of ['lucky','gold'])rehearsal.push({kind:'technique',face,id});
-      for(const recipient of FiveScore.faces)if(face!==recipient&&s.weights[face]>=.10-.00001&&s.weights[recipient]<=.45+.00001)rehearsal.push({kind:'transfer',donor:face,recipient})}
-    const key=c=>[c.kind,c.id||'',c.face||'',c.donor||'',c.recipient||''].join(':');
-    const used=new Set(p.choices.filter(c=>c.used||packChoiceValid(r,c)).map(key)),seen=new Set();
-    for(let i=0;i<p.choices.length;i++){const current=p.choices[i],k=key(current);if(current.used){seen.add(k);continue}if(packChoiceValid(r,current)&&!seen.has(k)){seen.add(k);continue}
-      let pool=all.filter(c=>packChoiceValid(r,c)&&!used.has(key(c)));
-      if(!pool.length){pool=rehearsal.filter(c=>packChoiceValid(r,c)&&!used.has(key(c)));if(p.id!=='rehearsal'&&pool.length)p.fallback='Unavailable choices have become Rehearsal options; your remaining pick is preserved.'}
-      if(pool.length){p.choices[i]=choose(r,pool);used.add(key(p.choices[i]));seen.add(key(p.choices[i]))}
+  function repairPack(r,p){const all=[];
+    if(p.id==='charm')for(const id of charmPool(r))all.push({kind:'charm',id,face:charms[id].bound?boundFace(r):null});
+    const routine=[{kind:'draw'},{kind:'focus'},...['Repeat','Formation','Variety'].map(id=>({kind:'routine',id}))];
+    for(const face of FiveScore.faces){routine.push({kind:'polish',face});for(const id of ['lucky','gold','echo'])routine.push({kind:'technique',face,id});
+      for(const recipient of FiveScore.faces)if(face!==recipient)routine.push({kind:'transfer',donor:face,recipient})}
+    if(p.id!=='charm')all.push(...routine);
+    const used=new Set(p.choices.filter(c=>c.used||packChoiceValid(r,c)).map(choiceKey)),seen=new Set();
+    for(let i=0;i<p.choices.length;i++){const current=p.choices[i],k=choiceKey(current);if(current.used){seen.add(k);continue}if(packChoiceValid(r,current)&&!seen.has(k)){seen.add(k);continue}
+      let pool=all.filter(c=>packChoiceValid(r,c)&&!used.has(choiceKey(c)));
+      if(!pool.length){pool=routine.filter(c=>packChoiceValid(r,c)&&!used.has(choiceKey(c)));if(p.id==='charm'&&pool.length)p.fallback='No charm can be added now, so the remaining choices are Routine upgrades.'}
+      if(pool.length){p.choices[i]=choose(r,pool);used.add(choiceKey(p.choices[i]));seen.add(choiceKey(p.choices[i]))}
     }
   }
-  function command(r,action,index){const d=r.demo;if(r.mode!=='shop')return false;d.toast='';if(r.lvup&&action!=='level'){d.toast='Choose your level upgrades first.';return false}
-    if(action==='level'){const c=d.levelChoices[index];if(!c||!r.lvup)return false;addStat(r,c.id,stats[c.id].sizes[c.level-1]);r.lvup--;levelChoices(r);return true}
-    if(action==='next'){if(r.lvup||d.pack||d.weaponChoice){d.toast=r.lvup?'Choose your level upgrades first.':d.pack?'Finish choosing from your open pack.':'Choose a replacement or cancel it first.';return false}r.wave++;wave(r);sync(r);r.mode='playing';return true}
+  function command(r,action,index){const d=r.demo;if(r.mode!=='shop')return false;d.toast='';
+    if(action==='next'){if(d.pack||d.weaponChoice){d.toast=d.pack?'Finish choosing from your open pack.':'Choose a replacement or cancel it first.';return false}r.wave++;wave(r);sync(r);r.mode='playing';return true}
     if(action==='lock'){const o=d.offers.find(x=>x.uid===+index);if(!o||o.bought||o.row==='voucher')return false;o.locked=!o.locked;return true}
-    if(action==='reroll'){const row=index==='weapon'?'shelf':index,cost=Math.max(1,2+(d.rerolls[row]||0)-d.rerollDiscount);if(!['shelf','pack'].includes(row)||r.xp<cost||d.pack)return false;const canChange=d.offers.some(o=>(row==='pack'?o.row==='pack':!['pack','voucher'].includes(o.row))&&(!o.locked||o.bought));if(!canChange){d.toast='Unlock an offer before rerolling this row.';return false}d.weaponChoice=null;r.xp-=cost;d.rerolls[row]=(d.rerolls[row]||0)+1;const pred=o=>row==='pack'?o.row==='pack':!['pack','voucher'].includes(o.row),n=d.offers.filter(pred).length;d.offers=d.offers.filter(o=>!pred(o)||o.locked&&!o.bought);for(let i=d.offers.filter(pred).length;i<n;i++)d.offers.push(offer(r,row==='pack'?'pack':i===0?'weapon':choose(r,['weapon','item','charm','stat'])));return true}
+    if(action==='reroll'){const row=index==='weapon'?'shelf':index,cost=Math.max(1,2+(d.rerolls[row]||0)-d.rerollDiscount);if(!['shelf','pack'].includes(row)||r.xp<cost||d.pack)return false;const pred=o=>row==='pack'?inRoutineRow(o):!inRoutineRow(o),canChange=d.offers.some(o=>pred(o)&&(!o.locked||o.bought));if(!canChange){d.toast='Unlock an offer before rerolling this row.';return false}d.weaponChoice=null;r.xp-=cost;d.rerolls[row]=(d.rerolls[row]||0)+1;const n=d.offers.filter(pred).length;d.offers=d.offers.filter(o=>!pred(o)||o.locked&&!o.bought);for(let i=d.offers.filter(pred).length;i<n;i++)d.offers.push(row==='pack'?routineOffer(r,i):shelfOffer(r,i));return true}
     if(action==='weaponChoice'){const o=d.offers.find(x=>x.uid===+index);if(!o||o.bought||o.row!=='weapon'||d.pack||r.slots.length!==6)return false;d.weaponChoice=o.uid;return true}
     if(action==='weaponCancel'){d.weaponChoice=null;return true}
     if(action==='replaceWeapon'){const i=+index,o=d.offers.find(x=>x.uid===d.weaponChoice),g=r.slots[i];if(!g||!o||o.bought||o.row!=='weapon'||d.pack)return false;const refund=Math.floor((g.paid||0)/2),cost=o.price-refund;if(r.xp<cost)return false;const next=Owslot(o.id,o.level,++d.uid);next.paid=o.price;next.cd=0;r.slots[i]=next;r.xp-=cost;o.bought=true;o.locked=false;d.weaponChoice=null;sync(r);return true}
@@ -4578,13 +4733,14 @@ var DEMO = (() => {
       else if(o.row==='charm'){if(d.charms.length>=charmSlots(r)||d.charms.includes(o.id))return false;d.charms.push(o.id);d.charmPaid[o.id]=o.price;d.charmFaces[o.id]=o.face}
       else if(o.row==='item'){FiveCombat.buy(r,o.id);(d.itemPaid??={})[o.id]=[...(d.itemPaid?.[o.id]||[]),o.price]}
       else if(o.row==='stat'){const a=items[o.id];addStat(r,a.up,a.value);if(a.down)addStat(r,a.down,-a.loss);d.statInventory.push({id:o.id,paid:o.price,uid:o.uid})}
+      else if(o.row==='routine'){if(!packChoiceValid(r,o.choice)){d.toast='That upgrade is already at its cap.';return false}applyChoice(r,o.choice)}
       else if(o.row==='voucher'){if(o.id==='shelf'&&d.shelfBonus>=1){d.toast='Your extra shelf is already active.';return false}if(o.id==='charm')d.charmBonus++;if(o.id==='reroll')d.rerollDiscount++;if(o.id==='shelf')d.shelfBonus=Math.min(1,d.shelfBonus+1)}
       else if(o.row==='pack'){d.pack={id:o.id,remaining:o.mega?2:1,picks:o.mega?2:1,taken:0,price:o.price,choices:packChoices(r,o)};repairPack(r,d.pack)};
       r.xp-=o.price;o.bought=true;o.locked=false;sync(r);return true;
     }
     if(action==='packPick'){const p=d.pack,c=p?.choices[+index];if(!c||c.used)return false;let ok=false;
       if(c.kind==='charm'){if(d.charms.length>=charmSlots(r)||d.charms.includes(c.id))return false;d.charms.push(c.id);d.charmPaid[c.id]=Math.floor(p.price/p.picks)+(p.taken<p.price%p.picks?1:0);d.charmFaces[c.id]=c.face;ok=true}
-      if(c.kind==='routine')ok=FiveScore.routine(d.score,c.id);if(c.kind==='polish')ok=FiveScore.polish(d.score,c.face);if(c.kind==='transfer')ok=FiveScore.transfer(d.score,c.donor,c.recipient);if(c.kind==='technique')ok=FiveScore.technique(d.score,c.face,c.id);
+      else ok=packChoiceValid(r,c)&&applyChoice(r,c);
       if(!ok){d.toast='That choice is at its cap; choose another.';repairPack(r,p);return false}c.used=true;p.taken++;p.remaining--;if(!p.remaining)d.pack=null;else repairPack(r,p);return true;
     }
     if(action==='packSkip'){if(!d.pack)return false;d.pack=null;return true}
@@ -4598,13 +4754,14 @@ var DEMO = (() => {
   }
   function preview(r){return null}
 
-  return {broEnemy,withContact,hpScale,tune,TUNE_DEFAULT,saveTune,charmSlots,weapons,cards,charms,stats,items,tier,fmt,phase,strongest,ledger,diagnosis,bossAlive,returnBoss,continueSchedule,statText,standard,clock,quota,expectedChips,cap,init,wave,sync,open,fireCharms,nextCard,tickCards,bank,damage,hit,spawn,fire,weaponDamage,combat,drift,finish,shop,levelChoices,command,preview};
+  return {broEnemy,withContact,hpScale,tune,TUNE_DEFAULT,saveTune,charmSlots,weapons,cards,charms,stats,items,tier,fmt,phase,strongest,ledger,diagnosis,bossAlive,returnBoss,continueSchedule,statText,standard,clock,quota,expectedChips,cap,init,wave,sync,open,fireCharms,nextCard,tickCards,bank,damage,hit,spawn,fire,weaponDamage,combat,drift,finish,shop,command,preview,drawNext,applyChoice,packChoiceValid,routineChoice,charmPool,BUST};
 })();
 
 /* The existing simulation entry points now use the vertical slice. */
 FiveCombat.configure({damage:(r,e,a,c)=>DEMO.damage(r,e,a,c.weapon||('item-'+c.item),0,0,0,false,c),strongest:r=>DEMO.strongest(r),phase:r=>DEMO.phase(r),position:r=>r.medium.local});
 // Match automatic XP level gains to the same HP scale as explicit upgrades.
-{const xp0=Oxepay;Oxepay=function(r,m,pos){const before=r.lvl||0;xp0(r,m,pos);if(r.demo){const gained=(r.lvl||0)-before;r.hp+=gained*(DEMO.hpScale()-1);DEMO.sync(r)}}}
+// No XP or level-ups (design doc §4.10): Gear is the only stat stream. Kills drop no orbs, and any orb pays nothing.
+Oxepay=function(){};
 var DemoHd=Hd;
 Hd=function(seed,starter='harpoon',record=0){return DEMO.init(DemoHd(seed,starter,record),starter)};
 Owsetup=function(r){r.world='open';r.diff='standard';return r};
@@ -4642,7 +4799,7 @@ SE=function(r,m,input,dt,depth){
   if(r.mode!=='playing')return;
   if(apex!==null&&apex<=t+1e-9&&!h.apex){h.apex=true;if(!r.armed)DEMO.fireCharms(r,'apex');r.events.push({kind:'apex',pos:he(r)});if(dt-t>1e-9)Il(r,input,dt-t,depth+1);return}
   if(land!==null&&land<=t+1e-9){
-    const pos=he(r);if(!r.armed)FiveCombat.entry(r);DEMO.bank(r);Oxebag(r,pos,m);r.shots=[];
+    const pos=he(r);if(!r.armed&&!r.hand?.busted)FiveCombat.entry(r);DEMO.bank(r);Oxebag(r,pos,m);r.shots=[];
     // as v3 carve: at the entry every enemy becomes a pursuer (or flies off, with pursuit off). Pursuers hold above the
     // sea while you swim and come back as enemies at the breach (Zq).
     for(const E of [...r.enemies])Qz.on?Pz(r,m,E):nw(r,m,E);r.enemies=[];
@@ -4677,8 +4834,9 @@ function DemoButton(action,index,label,disabled=false,extra=''){return `<button 
 function DemoCap(n){return n}
 function DemoSet(id,text){const el=document.getElementById(id);if(el&&el.textContent!==text)el.textContent=text}
 function DemoCharmText(e,v){return (e==='×mult'?'×':'+')+DEMO.fmt(v)+' MULT'}
-function DemoPhaseSummary(last){return `<div class="demo-phases" aria-label="Chips by flight phase">${['ascent','apex','descent'].map((p,i)=>`<span class="phase-${p}"><i style="width:${100*(last.phases[p]||0)/Math.max(1,last.chips)}%"></i><b>${p[0].toUpperCase()+p.slice(1)}</b> ${last.phases[p]||0}</span>`).join('')}</div>`}
-function DemoBankBreakdown(last){return `<div class="demo-bank-detail"><p class="demo-drawn">${last.cards.map(DemoEscape).join(' · ')}</p><p>Tricks +${DEMO.fmt(last.base||0)} · Combos +${DEMO.fmt((last.combos||[]).reduce((s,c)=>s+c.value,0))}${last.techniqueLog?.length?' · Lucky +'+DEMO.fmt(last.techniqueLog.reduce((s,t)=>s+t.value,0)):''}</p><div class="demo-combo-line">${(last.combos||[]).map(c=>`<span>${c.name} +${DEMO.fmt(c.value)}</span>`).join('')||'No matching combo'}</div>${DemoPhaseSummary(last)}<p>${last.air.toFixed(1)}s active flight / ${Number(last.predAir||0).toFixed(1)}s predicted · ${last.hits} accepted hits</p><div class="demo-charm-report">${(last.charmLog||[]).map(c=>`<div class="${c.active?'paid':'missed'}"><b>${c.active?'PAID':'MISSED'} · ${DemoEscape(c.name)}</b><strong>${DEMO.fmt(c.before)} → ${DEMO.fmt(c.after)}</strong><span>${DemoEscape(c.reason||'')}</span></div>`).join('')}</div><p>Items this flight: ${(last.items||[]).map(x=>x.name+' ×'+x.count).join(' · ')||'none activated'}.</p></div>`}
+function DemoPhaseSummary(last){const total=Math.max(1,last.killChips??last.chips);return `<div class="demo-phases" aria-label="Chips by flight phase">${['ascent','apex','descent'].map(p=>`<span class="phase-${p}"><i style="width:${100*(last.phases?.[p]||0)/total}%"></i><b>${p[0].toUpperCase()+p.slice(1)}</b> ${last.phases?.[p]||0}</span>`).join('')}</div>`}
+function DemoBankBreakdown(last){const b=last.bonus||{},extra=(b.multi||0)+(b.apex||0)+(b.crit||0),charmChips=(last.charmLog||[]).reduce((s,c)=>s+(c.chips||0),0),bails=last.bails||[];
+  return `<div class="demo-bank-detail">${last.busted?`<p class="demo-bust"><b>BUST</b> · 0 HP · banked ${last.score}</p>`:''}<p class="demo-drawn">${(last.drawn||[]).map((id,i)=>`<span class="${bails.includes(i)?'bailed':'landed'}">${DemoEscape(FiveScore.names[id])}${bails.includes(i)?' · BAIL':''}</span>`).join(' · ')}</p><p>Chips ${DEMO.fmt(last.chips)}: kills ${DEMO.fmt((last.killChips??last.chips)-extra)} · multi-kill +${b.multi||0} · apex +${b.apex||0} · crit +${b.crit||0}${charmChips?' · charms +'+DEMO.fmt(charmChips):''}</p><p>Tricks +${DEMO.fmt(last.base||0)} · Combos +${DEMO.fmt((last.combos||[]).reduce((s,c)=>s+c.value,0))}${last.techniqueLog?.length?' · Lucky +'+DEMO.fmt(last.techniqueLog.reduce((s,t)=>s+t.value,0)):''}</p><div class="demo-combo-line">${(last.combos||[]).map(c=>`<span>${c.name} +${DEMO.fmt(c.value)}</span>`).join('')||'No matching combo'}</div>${DemoPhaseSummary(last)}<p>${(last.air||0).toFixed(1)}s of flight · ${last.hits||0} hits · ${bails.length} Bail${bails.length===1?'':'s'}${last.pearls?` · +${last.pearls} pearls`:''}</p><div class="demo-charm-report">${(last.charmLog||[]).map(c=>`<div class="${c.active?'paid':'missed'}"><b>${c.active?'PAID':'MISSED'} · ${DemoEscape(c.name)}</b><strong>${c.chips?'+'+DEMO.fmt(c.chips)+' chips':c.pearls?'+'+c.pearls+' pearls':DEMO.fmt(c.before)+' → '+DEMO.fmt(c.after)}</strong><span>${DemoEscape(c.reason||'')}</span></div>`).join('')}</div><p>Items this flight: ${(last.items||[]).map(x=>x.name+' ×'+x.count).join(' · ')||'none activated'}.</p></div>`}
 
 of=function(){if(!S?.demo||!document.getElementById('wave-number'))return;DemoOf();const d=S.demo,h=S.hand,air=S.medium.kind==='air',last=d.last;
   DemoSet('phase-label',S.armed?'CLOCK OUT · LAND TO BANK':air?'AIRBORNE':'SAFE WATER');DemoSet('budget-label','AIR REMAINING');DemoSet('budget-value',Math.max(0,S.budget).toFixed(1)+'s');DemoSet('budget-caption',`BANKED ${Math.round(S.wscore)} / ${S.quota} · ${S.wscore>=S.quota?'QUOTA MET':'QUOTA'}`);
@@ -4692,47 +4850,22 @@ function DemoBind(){for(const b of hr.querySelectorAll('[data-demo]'))b.onclick=
   if(a==='starter'){En=i;ql();return}if(a==='begin'){Zd(En);return}if(a==='tune'){document.getElementById('tune')?DemoPanel(false):DemoTune(true);return}if(a==='help'){const el=document.getElementById('demo-how');if(el)el.hidden=!el.hidden;return}if(a==='home'){ql();return}
   if(a==='next'){if(DEMO.command(S,a,i)){ke=0;as=Br(S);sf()}else Xl();return}DEMO.command(S,a,i);Xl();if(a==='level'){(hr.querySelector('[data-demo=level]:not(:disabled)')||hr.querySelector('[data-demo=buy]:not(:disabled)'))?.focus({preventScroll:true})}else if(S.demo.pack){const choice=hr.querySelector('[data-demo=packPick]:not(:disabled)');choice?.focus({preventScroll:true});choice?.scrollIntoView?.({block:'nearest'})}
 }}
-ql=function(){ft='title';St=null;ur.reset();hr.innerHTML=`${_w()}<section class="title-content demo-title"><div class="eyebrow">CHIPS × MULT · SCORE FEEL TEST</div><h1>ICARUS<span>BUILD YOUR ASCENT</span></h1><p class="intro">Carve your launch.<br>Build the flight you want.</p><p class="title-description">Six automatic weapons. Five trick identities.<br>Watch kills feed chips and tricks build your mult.<br>Land to bank the payout.</p><div class="demo-starters">${['sonic','harpoon','rocket'].map(id=>DemoButton('starter',id,`<b>${Owc[id].name}</b><span>${DEMO.weapons[id].type} · ${DEMO.weapons[id].description}</span>`,false,id===En?'selected':'')).join('')}</div><div class="launch-row">${DemoButton('begin','','BEGIN RUN ↗',false,'demo-primary')}${DemoButton('help','','HOW TO PLAY')}${DemoButton('tune','','SETTINGS')}</div><div id="demo-how" hidden><p><b>Launch:</b> hold W or up to carve upward. Release to ride out. Space boosts. Water is safe and pauses the air clock.</p><p><b>Fight:</b> W A S D / arrows steer within your launch path. Weapons fire automatically. Kills give chips; land to bank. Survive and meet the quota over 20 waves.</p><p><b>Routine:</b> Spout, Front flip, Backflip, Corkscrew, Star pose. Three draws at first, then four/five/six from waves 5/10/15. Every draw completes. Combos use fixed reference odds. No kills keeps the same routine.</p><p><b>Build:</b> choose a level stat, buy weapons/items/charms, and open packs. Combat items change the fight; charms reward what happened. Charms resolve left to right at entry.</p></div></section><footer class="title-footer"><div><b>9</b><span>WEAPONS · SIX SLOTS</span></div><div><b>5</b><span>TRICKS · DRAWS3→6</span></div><div><b>17</b><span>CHARMS · PHASE SCORING</span></div><div><b>10</b><span>COMBAT ITEMS</span></div></footer>`;Kl();DemoBind()};
-function DemoOffer(r,o){let name,text,tag;const d=r.demo;
- if(o.row==='weapon'){const w=DEMO.weapons[o.id];name=Owc[o.id].name;tag=`${w.type} · ${w.cad} · T${o.level}`;text=`${w.description} ${Math.round(DEMO.weaponDamage(r,w,o.level,false))} damage · ${w.range+d.stats.Reach*(w.type==='Close'?.5:1)}m range · ${(DEMO.tier(w.cd,o.level)/60/r.stats.fireRate).toFixed(2)}s cooldown · ${Math.round(wt(DEMO.tier(w.crit,o.level)+d.stats.Crit,0,1)*100)}% crit.`}
- else if(o.row==='charm'){const c=DEMO.charms[o.id];name=c.name;tag='SCORE CHARM';text=c.text+(o.face?' Bound to '+FiveScore.names[o.face]+'.':'')}
- else if(o.row==='item'){const c=FiveCombat.items[o.id];name=c.name;tag='COMBAT ITEM'+(d.itemCounts[o.id]?` · OWN ${d.itemCounts[o.id]}`:'');text=c.text}
- else if(o.row==='stat'){const c=DEMO.items[o.id];name=c.name;tag='STAT ITEM';text=DEMO.statText(c.up,c.value)+(c.down?' · '+DEMO.statText(c.down,-c.loss):'')}
- else if(o.row==='pack'){name=({rehearsal:'Rehearsal',charm:'Charm',routine:'Routine'})[o.id]+' pack';tag=o.mega?'PICK 2 OF 5':'PICK 1 OF 3';text={rehearsal:'Move 5% draw chance between tricks, polish a value, or find a rare Gold/Lucky technique.',charm:'Choose a scoring charm. Reorder your charm row to shape the payout.',routine:'Level a combo group. Repeat+30%, Formation+66%, Variety+250% of its base bonus. Up to four levels.'}[o.id]}
- else{name=({charm:'Charm loop',reroll:'Reroll pass',shelf:'Extra shelf'})[o.id];tag='VOUCHER · PERMANENT';text={charm:'+1 charm slot.',reroll:'Rerolls cost1 less (minimum1).',shelf:'One more shelf slot; total offers capped at6. On voucher waves it replaces one pack.'}[o.id]}
- if(o.fallback)text+=' '+o.fallback;
- const match=o.row==='weapon'&&r.slots.find(g=>g.id===o.id&&g.lvl===o.level&&g.lvl<4);
- const disabled=o.bought||o.price>r.xp||!!d.pack||(o.row==='charm'||o.row==='pack'&&o.id==='charm')&&d.charms.length>=DEMO.charmSlots(r)||o.row==='weapon'&&r.slots.length>=6&&!match;
- return `<article class="demo-offer ${o.bought?'bought':''}"><small>${tag}</small><h3>${name}</h3><p>${text}</p><div>${o.row==='weapon'&&r.slots.length>=6&&!match?DemoButton('weaponChoice',o.uid,o.bought?'ACQUIRED':`CHOOSE REPLACEMENT · ${o.price} BASE`,o.bought||!!d.pack):DemoButton('buy',o.uid,o.bought?'ACQUIRED':`${match&&r.slots.length>=6?'MERGE ↑ · ':''}${o.price} PEARLS`,disabled)}${o.row!=='voucher'?DemoButton('lock',o.uid,o.locked?'■ LOCKED':'□ LOCK',o.bought||!!d.pack):''}</div></article>`;
-}
-function DemoPackChoice(c){if(c.kind==='charm')return `<b>${FiveScore.charms[c.id].name}</b><span>${FiveScore.charms[c.id].text}${c.face?' Bound to '+FiveScore.names[c.face]:''}</span>`;if(c.kind==='routine')return `<b>${c.id} +1 level</b><span>Increases every matching combo in this group.</span>`;if(c.kind==='polish')return `<b>Polish ${FiveScore.names[c.face]}</b><span>+0.5 mult per drawn copy.</span>`;if(c.kind==='technique')return `<b>${c.id==='gold'?'Gold':'Lucky'} ${FiveScore.names[c.face]}</b><span>${c.id==='gold'?'Appearing in a scoring bank marks this wave. Every 2 different waves: +0.25 future value, cap+1.':'25% at bank: repeat the total value of this trick. Positive Luck improves the chance.'}</span>`;return `<b>Practise ${FiveScore.names[c.recipient]}</b><span>Move 5% from ${FiveScore.names[c.donor]} to ${FiveScore.names[c.recipient]}. Total chance stays100%.</span>`}
-Xl=function(){const scroll=document.querySelector('.demo-shop-scrim')?.scrollTop||0;const r=S,d=r.demo,L=d.levelChoices||[],report=r.lastWave;
- const levels=L.length?`<section class="demo-level"><div class="eyebrow">${r.lvup} LEVEL UPGRADE${r.lvup===1?'':'S'} TO CHOOSE</div><div class="demo-level-options">${L.map((c,i)=>DemoButton('level',i,`<small>${DEMO.stats[c.id].group.toUpperCase()}</small><b>${DEMO.statText(c.id,DEMO.stats[c.id].sizes[c.level-1])}</b>`)).join('')}</div></section>`:'';
- const pack=d.pack?`<section class="demo-pack"><h3>Choose ${d.pack.remaining} · ${d.pack.id} pack</h3>${d.pack.fallback?`<p role="status">${DemoEscape(d.pack.fallback)}</p>`:''}<div class="demo-pack-options">${d.pack.choices.map((c,i)=>DemoButton('packPick',i,DemoPackChoice(c),c.used||c.kind==='charm'&&d.charms.length>=DEMO.charmSlots(r))).join('')}</div>${DemoButton('packSkip','','CLOSE PACK · DISCARD UNUSED CHOICES')}</section>`:'';
- const swap=d.offers.find(o=>o.uid===d.weaponChoice&&!o.bought),replacement=swap?`<section class="demo-pack"><h3>Replace one weapon with ${Owc[swap.id].name} T${swap.level}</h3><p>Choose the weapon to sell. Its refund is included in the exact price below.</p><div class="demo-pack-options">${r.slots.map((g,i)=>{const refund=Math.floor((g.paid||0)/2),cost=swap.price-refund;return DemoButton('replaceWeapon',i,`<b>Replace ${Owc[g.id].name} T${g.lvl}</b><span>${cost>=0?'Pay '+cost:'Receive '+(-cost)} pearls · includes ${refund} resale refund</span>`,r.xp<cost)}).join('')}</div>${DemoButton('weaponCancel','','CANCEL')}</section>`:'';
- const shelf=d.offers.filter(o=>!['pack','voucher'].includes(o.row)),packs=d.offers.filter(o=>['pack','voucher'].includes(o.row));
- const gear=r.slots.map((g,i)=>`<div class="demo-inventory-line"><span><b>${Owc[g.id].name}</b> · T${g.lvl} · ${DEMO.weapons[g.id].type}</span><div>${DemoButton('combine',i,'COMBINE ↑',g.lvl>=4||!r.slots.some((a,j)=>j!==i&&a.id===g.id&&a.lvl===g.lvl))}${DemoButton('sell',i,`SELL ${Math.floor((g.paid||0)/2)}`,r.slots.length<=1)}</div></div>`).join('');
- const charms=d.charms.map((id,i)=>`<div class="demo-inventory-line"><span><b>${i+1}. ${FiveScore.charms[id].name}</b><small>${FiveScore.charms[id].text}${d.charmFaces[id]?' Bound to '+FiveScore.names[d.charmFaces[id]]:''}</small></span><div>${DemoButton('charmLeft',i,'←',i===0)}${DemoButton('charmSell',i,`SELL ${Math.floor((d.charmPaid[id]||0)/2)}`)}</div></div>`).join('')||'<p>Charms change score. They resolve left to right at entry.</p>';
- const combat=Object.entries(d.itemCounts).filter(([id,n])=>n>0).map(([id,n])=>`<div class="demo-inventory-line"><span><b>${FiveCombat.items[id].name} ×${n}</b><small>${FiveCombat.items[id].text}</small></span>${DemoButton('itemSell',id,`SELL ${Math.floor((d.itemPaid[id]?.at(-1)||0)/2)}`)}</div>`).join('');
- const rep=FiveScore.faces.map(id=>`<div class="demo-inventory-line"><span><b>${FiveScore.names[id]}</b><small>${d.score.techniques[id]||'No technique'} · Polish ${d.score.polish[id]}/4</small></span><strong>${Math.round(d.score.weights[id]*100)}% · ${DEMO.fmt(FiveScore.value(d.score,id))} mult</strong></div>`).join('');
- const bank=d.last?`<details class="demo-bank-report"><summary>Last bank: ${d.last.chips} × ${DEMO.fmt(d.last.mult)} = ${d.last.score} · see why</summary>${DemoBankBreakdown(d.last)}</details>`:'';
- Ir(`<section class="scrim demo-shop-scrim"><div class="demo-shop"><header class="demo-shop-top"><div><div class="eyebrow">WAVE ${r.wave} COMPLETE</div><h2>Build the next flight.</h2><p>${r.wscore} / ${r.quota} banked · ${report?.pay?.total||0} pearls earned · next flight ${DEMO.cap({...r,wave:r.wave+1})} draws.</p></div><div class="demo-wallet"><small>PEARLS</small><strong>${r.xp}</strong>${DemoButton('next','',`WAVE ${r.wave+1} ↗`,!!r.lvup||!!d.pack||!!d.weaponChoice,'demo-primary')}<small>Next quota ${DEMO.quota(r.wave+1)} · ${DEMO.clock(r.wave+1)}s air</small></div></header>${d.toast?`<p role="status">${DemoEscape(d.toast)}</p>`:''}${levels}<div class="demo-shop-body" ${r.lvup?'hidden':''}>${pack}${replacement}<section class="demo-shop-row"><header><h3>Shelf</h3>${DemoButton('reroll','shelf',`REROLL · ${Math.max(1,2+(d.rerolls.shelf||0)-d.rerollDiscount)}`,!!d.pack||r.xp<Math.max(1,2+(d.rerolls.shelf||0)-d.rerollDiscount))}</header><div class="demo-shelf">${shelf.map(o=>DemoOffer(r,o)).join('')}</div></section><section class="demo-shop-row"><header><h3>Packs & vouchers</h3>${DemoButton('reroll','pack',`REROLL PACKS · ${Math.max(1,2+(d.rerolls.pack||0)-d.rerollDiscount)}`,!!d.pack||r.xp<Math.max(1,2+(d.rerolls.pack||0)-d.rerollDiscount))}</header><div class="demo-shelf">${packs.map(o=>DemoOffer(r,o)).join('')}</div></section><div class="demo-build-grid"><section><h3>Weapons · ${r.slots.length}/6</h3>${gear}<h3>Charm order · ${d.charms.length}/${DEMO.charmSlots(r)}</h3>${charms}<h3>Combat items</h3>${d.itemCounts.I05?`<p class="demo-apex-binding">Apex lens binds ${Owc[DEMO.strongest(r).id].name} (slot ${DEMO.strongest(r).slot+1}). Ascent hits load the four dots; that weapon releases from the apex onward.</p>`:''}${combat||'<p>Items change your attacks, defence or water entry.</p>'}</section><section><h3>Your five tricks</h3>${rep}<h3>Combo levels</h3><p>${Object.entries(d.score.routines).map(([k,n])=>k+' '+n+'/4').join(' · ')}</p><details><summary>Fixed reference odds & combo bonuses</summary><p>Reference: six independent 20% draws. All matching combo types pay once, including nested repeats. Improving your odds never lowers a payout.</p>${FiveScore.combos.map(c=>`<p>${c.name}: +${c.bonus} · ${(c.p*100).toFixed(3)}% reference chance</p>`).join('')}</details></section></div>${bank}<details><summary>Your stats & stat items</summary><div class="demo-stat-list">${Object.entries(d.stats).filter(([k])=>k!=='Drive').map(([k,v])=>`<span>${DEMO.statText(k,v)}</span>`).join('')}</div>${d.statInventory.map(a=>`<p>${DEMO.items[a.id].name} ${DemoButton('statSell',a.uid,`SELL ${Math.floor(a.paid/2)}`)}</p>`).join('')}</details><footer><span>Health restored · locked prices carry over · level choices before launch.</span>${DemoButton('next','',`CONTINUE TO WAVE ${r.wave+1} ↗`,!!r.lvup||!!d.pack||!!d.weaponChoice,'demo-primary')}</footer></div></div></section>`);DemoBind();const pane=document.querySelector('.demo-shop-scrim');if(pane)pane.scrollTop=scroll;
-};
-jl=function(){const won=S.mode==='won';Ir(`<section class="scrim"><div class="summary-panel"><div class="eyebrow">${won?'TWENTY WAVES CLEARED':S.endReason==='quota'?'QUOTA MISSED':'HEALTH DEPLETED'}</div><h2>${won?'An extraordinary ascent.':'Every flight counts.'}</h2><p>Wave ${S.wave} · ${S.wscore} / ${S.quota} banked · ${S.kills} kills.</p><p>${S.endReason==='quota'?'Survived, but missed the quota. Shape your draw chances, combo levels and phase charms.':won?'Your combat and score builds carried the run.':'Improve defence, weapon coverage or your position within the launch path.'}</p><div class="demo-summary-hands">${S.demo.history.slice(-5).map(h=>`<div>${h.chips} × ${DEMO.fmt(h.mult)} = <b>${h.score}</b><small>${h.cards.join(' · ')}</small></div>`).join('')}</div>${DemoButton('home','','BACK TO START',false,'demo-primary')}</div></section>`);DemoBind()};
-ls=function(){if(ft!=='game'||S.mode!=='playing')return;ft='pause';It.clear();Gr=false;je={x:0,y:0};ke=0;Ir(`<section class="scrim"><div class="modal pause-modal"><div class="eyebrow">TAKE A BREATH</div><h2>Your flight can wait.</h2><p>Hold W / up underwater to carve. Release to launch; space boosts. In air, W A S D / arrows steer within the launch path.</p><p>Every drawn trick lands. Score charms resolve at entry. A flight with no kills keeps the same routine.</p><p>Wave ${S.wave} · ${S.wscore} / ${S.quota} banked · ${S.budget.toFixed(1)}s air left.</p><div class="modal-actions">${kt('resume','RESUME FLIGHT ↗','primary')}${kt('end','END RUN')}${DemoButton('tune','','SETTINGS')}</div></div></section>`);DemoBind()};
+ql=function(){ft='title';St=null;ur.reset();hr.innerHTML=`${_w()}<section class="title-content demo-title"><div class="eyebrow">CHIPS × MULT · SCORE FEEL TEST</div><h1>ICARUS<span>BUILD YOUR ASCENT</span></h1><p class="intro">Carve your launch.<br>Build the flight you want.</p><p class="title-description">Automatic weapons turn kills into chips.<br>Your tricks are the reels: they build mult.<br>Get hit and the trick in progress bails. Land to bank.</p><div class="demo-starters">${['sonic','harpoon','rocket'].map(id=>DemoButton('starter',id,`<b>${Owc[id].name}</b><span>${DEMO.weapons[id].type} · ${DEMO.weapons[id].description}</span>`,false,id===En?'selected':'')).join('')}</div><div class="launch-row">${DemoButton('begin','','BEGIN RUN ↗',false,'demo-primary')}${DemoButton('help','','HOW TO PLAY')}${DemoButton('tune','','SETTINGS')}</div><div id="demo-how" hidden><p><b>Launch:</b> hold W or up to carve upward. Release to ride out. Space boosts. Water is safe and pauses the air clock.</p><p><b>Fight:</b> W A S D / arrows steer within your launch path. Weapons fire automatically. Kills give chips, plus bonus chips for multi-kills, apex kills and crits. Land in water to bank chips × mult. Meet every wave's quota for 20 waves; missing one ends the run.</p><p><b>Tricks:</b> each jump draws tricks (3 to start; buy more) that play automatically, like reels. A hit bails the trick in progress: it pays nothing. At 0 HP the jump busts: you fall, bank nothing and come back at half HP. The water's colour as you dive shows how hot your next tricks are.</p><p><b>Build:</b> between waves, buy weapons and gear for chips and survival, charms that rewrite the scoring, and Routine upgrades for your tricks. Charms resolve left to right at the bank.</p></div></section><footer class="title-footer"><div><b>${Object.keys(DEMO.weapons).length}</b><span>WEAPONS · SIX SLOTS</span></div><div><b>5</b><span>TRICKS · DRAWS 3→7</span></div><div><b>${Object.keys(FiveScore.charms).length}</b><span>CHARMS</span></div><div><b>${FiveCombat.catalogue.length}</b><span>COMBAT ITEMS</span></div></footer>`;Kl();DemoBind()};
+jl=function(){const won=S.mode==='won';Ir(`<section class="scrim"><div class="summary-panel"><div class="eyebrow">${won?'TWENTY WAVES CLEARED':'QUOTA MISSED'}</div><h2>${won?'An extraordinary ascent.':'Every flight counts.'}</h2><p>Wave ${S.wave} · ${S.wscore} / ${S.quota} banked · ${S.kills} kills.</p><p>${won?'Your build carried the run.':'Bigger banks come from more chips, more mult or fewer Bails: weapons, charms, Routine upgrades and gear.'}</p><div class="demo-summary-hands">${S.demo.history.slice(-5).map(h=>`<div>${h.busted?'BUST':`${h.chips} × ${DEMO.fmt(h.mult)}`} = <b>${h.score}</b><small>${h.cards.join(' · ')}${h.bails?.length?` · ${h.bails.length} Bail${h.bails.length>1?'s':''}`:''}</small></div>`).join('')}</div>${DemoButton('home','','BACK TO START',false,'demo-primary')}</div></section>`);DemoBind()};
+ls=function(){if(ft!=='game'||S.mode!=='playing')return;ft='pause';It.clear();Gr=false;je={x:0,y:0};ke=0;Ir(`<section class="scrim"><div class="modal pause-modal"><div class="eyebrow">TAKE A BREATH</div><h2>Your flight can wait.</h2><p>Hold W / up underwater to carve. Release to launch; space boosts. In air, W A S D / arrows steer within the launch path.</p><p>Every drawn trick lands unless a hit bails it. At 0 HP the jump busts and banks nothing. Charms resolve at the bank. A flight with no kills keeps the same tricks.</p><p>Wave ${S.wave} · ${S.wscore} / ${S.quota} banked · ${S.budget.toFixed(1)}s air left.</p><div class="modal-actions">${kt('resume','RESUME FLIGHT ↗','primary')}${kt('end','END RUN')}${DemoButton('tune','','SETTINGS')}</div></div></section>`);DemoBind()};
 Owstarter=function(){return ''};
 
 /* Settings: one panel in tabs (T, the backquote key, or SCORE TUNING). Score holds the hand-cap levers (structure doc 5.4,
    kept open to balance in play); the other tabs hold the v3 carve's movement sliders, grouped by what they change. */
 const DemoTuneDefs=[['shake','Screen shake',0,2,.1],['flash','Enemy hit flash',0,1,.1]];
 const DemoTabs=[
-  ['Score',null,'Five tricks; draws 3→6 at waves1/5/10/15. Reference odds and growth caps are fixed.'],
+  ['Score',null,'Each jump draws 3 tricks; buy more in the Routine row. A hit bails the trick in progress; 0 HP busts the jump.'],
   ['Launch',['Forward only','Rocket boost','Carve','Wave schedule'],'The carve and the launch. Launch speed rises5 per wave.'],
   ['Swimming',['Swimming','Boost'],''],
   ['Air',['Air controls','Carried roll','Camera'],''],
   ['Enemies',['Spawning','Pursuit','Boss waves','Overtime','Economy'],'The demo spawns, moves and pays for enemies with its own rules (source/demo.js), so not every slider here has an effect.'],
   ['Look',['Gun ring','Dolphin sprite','Flight path','Brotato scale'],''],
-  ['About',[],'Five trick identities. Draws grow at waves 5, 10 and 15. Reference odds stay fixed. Combat items alter fighting; charms resolve score at water entry.']];
+  ['About',[],'Five trick identities. Kills are chips; tricks, combos and charms are mult. Combat items alter the fight; charms resolve the score at water entry.']];
 let DemoTab='Score';
 function DemoTuneSummary(){return 'Every trick completes. Adjust presentation here; run upgrades live in the shop.'}
 function DemoTabGroups(name){const listed=new Set(DemoTabs.flatMap(t=>t[1]||[]));const tab=DemoTabs.find(t=>t[0]===name);
@@ -4784,7 +4917,7 @@ globalThis.icarusDemo={version:'scoreboard-S3',catalog:DEMO,get state(){return S
 // The banner (the phase notice): each bank, the quota being met, the clock running out. v3's own notices stay off.
 Ovn=function(S2){if(!S2.demo)return;for(const n of S2.events){
   if(n.kind==='bank'){const met=S2.wscore>=S2.quota&&S2.wscore-n.value<S2.quota;
-    ci=n.value>0?`BANKED ${n.value} · ${n.K} × ${DEMO.fmt(Math.round(n.M*10)/10)}${met?' · QUOTA MET':` · ${S2.wscore} / ${S2.quota}`}`:'NO KILLS · NOTHING BANKED';kr=n.value>0?1.8:1.1}
+    ci=n.busted?`BUST · ${n.value?'SECOND WIND · BANKED '+n.value:'NOTHING BANKED'}`:n.value>0?`BANKED ${n.value} · ${n.K} × ${DEMO.fmt(Math.round(n.M*10)/10)}${met?' · QUOTA MET':` · ${S2.wscore} / ${S2.quota}`}`:'NO KILLS · NOTHING BANKED';kr=n.value>0?1.8:1.1}
   else if(n.kind==='armed'){ci='CLOCK OUT · LAND TO BANK';kr=2.2}}};
 /* Hit feel, from Brotato (brotato-reference, reference only): a white flash on the enemy hit; crits in yellow, larger;
    the camera shakes min(damage / 3, 3) px for 0.1 s per hit dealt (damage in Brotato units: ÷ OwB.hp) and 5 px when you're
@@ -4804,7 +4937,9 @@ const DemoFx={SHK:K/1920,CHARM:{'+chips':0x5ff2ff,'+mult':0xb98cff,'×mult':0xff
     else if(e.kind==='hit'){this.shk=this.shk||{i:0,t:0};this.shk.i=Math.max(this.shk.i,5*DemoFx.SHK);this.shk.t=Math.max(this.shk.t,.1)}
     else if(e.kind==='itemproc'){const now=S?.time||0;this.itemFxNext??={};if(now>=(this.itemFxNext[e.item]||0)&&this.rings.length<32){this.itemFxNext[e.item]=now+.2;this.rings.push({x:e.pos.x,y:e.pos.y,age:0,life:.35,radius:['I05','I07'].includes(e.item)?4:2,color:{I04:0x5ff2ff,I05:0xffd84d,I07:0x639bff,I08:0x8cf5cf,I10:0x8cf5cf}[e.item]||0xb98cff})}continue}
     else if(e.kind==='charm'){(this.cfx||(this.cfx=[])).push({e,j,delay:DemoFx.gaps(j++)});continue}
-    keep.push(e)}}catch(err){return ev0.call(this,t)}
+    else if(e.kind==='bust')continue;
+    // Combat-item damage is tagged 'item-I0x', which has no weapon colour; the renderer would throw looking it up.
+    keep.push(e.weapon&&!Q[e.weapon]?{...e,weapon:undefined}:e)}}catch(err){return ev0.call(this,t.filter(e=>!e.weapon||Q[e.weapon]))}
   return ev0.call(this,keep)}}
 {const de0=Ul.prototype.drawEnemies;Ul.prototype.drawEnemies=function(t,e,i,Al,dt=.016){const out=de0.call(this,t,e,i,Al,dt);
   try{const F=this.dmFlash,O=this.flashSprites||(this.flashSprites=new Map()),A=DEMO.tune.flash;
@@ -4844,7 +4979,8 @@ var ScoreHUD = (() => {
   let root=null,particleLayer=null,run=null,queue=[],next=0,last=0,hold=0,popSeq=0,lastChipSound=0;
   const glyph={spout:'≋',front:'↻',back:'↺',cork:'⤨',star:'✦'};
   const reduced=()=>globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-  let model={chips:0,mult:0,score:0,waveScore:0,quota:1,draws:3,faces:[],banked:false,notice:'KILLS FEED CHIPS · TRICKS FEED MULT'};
+  let model={chips:0,mult:0,score:0,waveScore:0,quota:1,draws:3,faces:[],bails:[],busted:false,banked:false,notice:'KILLS FEED CHIPS · TRICKS FEED MULT'};
+  let heatEl=null,heatSeq=0;
   let shown={chips:0,mult:0,score:0,waveScore:0};
   const number=n=>Math.round(n).toLocaleString('en-US');
   const multiplier=n=>Number(n.toFixed(2)).toLocaleString('en-US',{maximumFractionDigits:2});
@@ -4852,7 +4988,7 @@ var ScoreHUD = (() => {
     if(root?.isConnected)return root;
     root=document.createElement('section');root.id='score-hero';root.hidden=true;
     root.setAttribute('aria-label','Flight scoreboard');
-    root.innerHTML=`<div class="ss-equation"><div class="ss-cell ss-chips"><span class="ss-label">CHIPS</span><strong id="ss-chips">0</strong><span class="ss-add" id="ss-chip-add"></span></div><span class="ss-times">×</span><div class="ss-cell ss-mult"><span class="ss-label">MULT</span><strong id="ss-mult">0</strong><span class="ss-add" id="ss-mult-add"></span></div><span class="ss-equals">=</span><div class="ss-cell ss-total"><span class="ss-label" id="ss-total-label">SCORE</span><strong id="ss-score">0</strong><span class="ss-add" id="ss-bank-add"></span></div></div>`;
+    root.innerHTML=`<div class="ss-reels" id="ss-tricks" aria-label="Tricks this jump"></div><div class="ss-equation"><div class="ss-cell ss-chips"><span class="ss-label">CHIPS</span><strong id="ss-chips">0</strong><span class="ss-add" id="ss-chip-add"></span></div><span class="ss-times">×</span><div class="ss-cell ss-mult"><span class="ss-label">MULT</span><strong id="ss-mult">0</strong><span class="ss-add" id="ss-mult-add"></span></div><span class="ss-equals">=</span><div class="ss-cell ss-total"><span class="ss-label" id="ss-total-label">SCORE</span><strong id="ss-score">0</strong><span class="ss-add" id="ss-bank-add"></span></div></div>`;
     document.body.appendChild(root);return root;
   }
   function el(id){return root?.querySelector('#ss-'+id)}
@@ -4875,6 +5011,7 @@ var ScoreHUD = (() => {
     if(reduced()||!ui?.ctx||!ui.enabled)return;
     const now=performance.now();if(kind==='chips'&&now-lastChipSound<65)return;
     if(kind==='chips')lastChipSound=now;
+    if(kind==='bail'||kind==='bust'){ui.tone(kind==='bust'?110:165,kind==='bust'?.45:.18,'sawtooth',kind==='bust'?.05:.035,kind==='bust'?70:120);return}
     const notes=[440,554.37,659.25,739.99,880],f=kind==='chips'?390:kind==='bank'?880:notes[model.faces.length%notes.length];
     ui.tone(f,kind==='bank'?.22:.065,'sine',kind==='bank'?.055:.023,f*(kind==='chips'?1.14:1.025));
     if(kind==='bank'||kind==='combo')ui.tone(f*1.5,.14,'triangle',.016,f*1.5);
@@ -4900,9 +5037,9 @@ var ScoreHUD = (() => {
   }
   function fresh(r){
     run=r;queue=[];next=0;hold=0;
-    model={chips:0,mult:0,score:0,waveScore:r.wscore||0,quota:r.quota||1,draws:DEMO.cap(r),faces:[],banked:false,notice:'KILLS FEED CHIPS · TRICKS FEED MULT'};
+    model={chips:0,mult:0,score:0,waveScore:r.wscore||0,quota:r.quota||1,draws:DEMO.cap(r),faces:[],bails:[],busted:false,banked:false,notice:'KILLS FEED CHIPS · TRICKS FEED MULT'};
     shown={chips:0,mult:0,score:0,waveScore:r.wscore||0};
-    if(root){root.classList.remove('is-banked','is-combo');set('flight',`NEXT FLIGHT · WAVE ${r.wave}`);set('status','LAND TO BANK');set('total-label','SCORE');set('cause',model.notice);const cause=el('cause');if(cause)cause.className='ss-cause';const progress=el('progress');if(progress){progress.style.transition='none';progress.style.width='0%';requestAnimationFrame(()=>{progress.style.transition=''})}for(const id of ['chip-add','mult-add','bank-add']){set(id,'');const e=el(id);if(e)e._scoreUntil=0;}}
+    if(root){root.classList.remove('is-banked','is-combo','is-bust');set('flight',`NEXT FLIGHT · WAVE ${r.wave}`);set('status','LAND TO BANK');set('total-label','SCORE');set('cause',model.notice);const cause=el('cause');if(cause)cause.className='ss-cause';const progress=el('progress');if(progress){progress.style.transition='none';progress.style.width='0%';requestAnimationFrame(()=>{progress.style.transition=''})}for(const id of ['chip-add','mult-add','bank-add']){set(id,'');const e=el(id);if(e)e._scoreUntil=0;}}
     particleLayer?.querySelectorAll('.ss-particle').forEach(e=>e.remove());
   }
   function receive(r,events,renderer){
@@ -4923,16 +5060,23 @@ var ScoreHUD = (() => {
   function apply(e,now){
     ensure();root.dataset.event=e.type;root.dataset.key=e.key;
     if(e.type==='start'){
-      model={...model,chips:0,mult:0,score:0,waveScore:e.waveScore,quota:e.quota,draws:e.draws,faces:[],banked:false};
-      shown.chips=shown.mult=shown.score=0;root.classList.remove('is-banked','is-combo');
+      model={...model,chips:0,mult:0,score:0,waveScore:e.waveScore,quota:e.quota,draws:e.draws,faces:[],bails:[],busted:false,banked:false};
+      shown.chips=shown.mult=shown.score=0;root.classList.remove('is-banked','is-combo','is-bust');
       set('flight',`FLIGHT ${String(e.hand).padStart(2,'0')} · WAVE ${e.wave}`);set('status','LAND TO BANK');set('total-label','SCORE');notice('KILLS FEED CHIPS · TRICKS FEED MULT');return 0;
     }
+    if(e.type==='bail'){
+      model.bails[e.index]=true;model.faces[e.index]=e.face;addition('mult-add','BAIL · '+e.name);notice(`BAIL · ${e.name.toUpperCase()} PAYS NOTHING`,'bail');pulse('mult',1.2);popup('mult','BAIL','bail');sound('bail');return 0;
+    }
+    if(e.type==='saved'){addition('mult-add','SAFETY NET · '+e.name);notice('SAFETY NET · NO BAIL','charm');pulse('mult',.6);return 0}
+    if(e.type==='bust'){model.busted=true;root.classList.add('is-bust');addition('bank-add','BUST');notice('BUST · 0 HP · NOTHING BANKS','bail');pulse('score',1.4);popup('score','BUST','bail');sound('bust');return 0}
     if(e.type==='chips'){
-      model.chips=e.chips;addition('chip-add','+'+number(e.amount));pulse('chips',Math.min(1.5,.7+e.amount*.08));popup('chips','+'+number(e.amount),'chip',e.from);sound('chips');return 0;
+      model.chips=e.chips;addition('chip-add','+'+number(e.amount)+(e.bonus?(e.bonus.apex?' APEX':e.bonus.multi?' MULTI':' CRIT'):''));pulse('chips',Math.min(1.5,.7+e.amount*.08));popup('chips','+'+number(e.amount),'chip',e.from);sound('chips');return 0;
     }
     if(['trick','combo','lucky','charm'].includes(e.type)){
       model.mult=e.mult;
+      if(e.type==='trick'&&e.bailed){model.faces[e.count-1]=e.face;model.bails[e.count-1]=true;return reduced()?0:90}
       if(e.type==='trick'){model.faces[e.count-1]=e.face;addition('mult-add','+'+multiplier(e.amount)+' · '+e.name);notice(`${e.name.toUpperCase()}  +${multiplier(e.amount)} MULT`,'mult');}
+      else if(e.type==='charm'&&e.chipsAdded){model.chips+=e.chipsAdded;addition('chip-add',`+${number(e.chipsAdded)} · ${e.name}`);notice(`${e.name.toUpperCase()}  +${number(e.chipsAdded)} CHIPS`,'charm');pulse('chips',1.2);popup('chips','+'+number(e.chipsAdded),'chip');sound('combo');return reduced()?0:165}
       else if(e.type==='charm'){const text=e.factor>1?`×${multiplier(e.factor)}`:`+${multiplier(e.amount||0)}`;addition('mult-add',text+' · '+e.name);notice(`${e.name.toUpperCase()}  ${text} MULT`,'charm');}
       else{addition('mult-add','+'+multiplier(e.amount||0)+' · '+(e.type==='lucky'?'Lucky':e.name));notice(`${e.type==='lucky'?'LUCKY '+e.name:e.name.toUpperCase()}  +${multiplier(e.amount||0)} MULT`,'combo');}
       root.classList.toggle('is-combo',e.type!=='trick');pulse('mult',e.type==='trick'?1:1.4);popup('mult',e.factor>1?'×'+multiplier(e.factor):'+'+multiplier(e.amount||0),'mult');sound(e.type==='trick'?'trick':'combo');
@@ -4941,8 +5085,8 @@ var ScoreHUD = (() => {
     if(e.type==='bank'){
       set('flight',`FLIGHT ${String(e.hand).padStart(2,'0')} · WAVE ${e.wave}`);
       model.chips=e.chips;model.mult=e.mult;model.score=e.score;model.waveScore=e.waveScore;model.quota=e.quota;model.banked=true;
-      root.classList.add('is-banked');root.classList.remove('is-combo');set('total-label','BANKED');set('status',e.met?'WAVE TARGET MET':'BANKED');addition('bank-add','+'+number(e.score));
-      notice(e.score>0?(e.met?'WAVE TARGET MET':'SPLASH! SCORE BANKED'):'NO KILLS · ROUTINE RETAINED','bank');pulse('score',1.6);pulse('chips',.6);pulse('mult',.8);sound('bank');
+      root.classList.add('is-banked');root.classList.remove('is-combo');set('total-label',e.busted?'BUSTED':'BANKED');set('status',e.met?'WAVE TARGET MET':'BANKED');addition('bank-add',e.busted&&!e.score?'BUST':'+'+number(e.score));
+      notice(e.busted?'BUST · '+(e.score?'SECOND WIND':'NOTHING BANKED'):e.score>0?(e.met?'WAVE TARGET MET':'SPLASH! SCORE BANKED'):'NO KILLS · TRICKS RETAINED','bank');pulse('score',1.6);pulse('chips',.6);pulse('mult',.8);sound('bank');
       if(e.score>0){popup('score','+'+number(e.score),'bank');if(!reduced()&&root.animate){root._bankAnim?.cancel();root._bankAnim=root.animate([{transform:'translateX(-50%) scale(1)'},{transform:'translateX(-50%) scale(1.035)',offset:.18},{transform:'translateX(-50%) scale(.99)',offset:.5},{transform:'translateX(-50%) scale(1)'}],{duration:530,easing:'cubic-bezier(.16,1,.3,1)'});}}
       hold=now+1000;return reduced()?0:720;
     }
@@ -4954,14 +5098,23 @@ var ScoreHUD = (() => {
     for(const name of ['chips','mult','score','waveScore']){shown[name]+=(model[name]-shown[name])*lerp;if(Math.abs(model[name]-shown[name])<.025)shown[name]=model[name];}
     digits('chips',number(shown.chips));digits('mult',multiplier(shown.mult));digits('score',number(shown.score));set('wave-total',number(shown.waveScore));set('quota',number(model.quota));
     for(const id of ['chip-add','mult-add','bank-add']){const e=el(id);if(e)e.style.opacity=performance.now()<(e._scoreUntil||0)?'1':'0';}
-    const tricks=el('tricks');if(tricks){const html=Array.from({length:model.draws},(_,i)=>`<span class="${model.faces[i]?'revealed':''}" title="${model.faces[i]?FiveScore.names[model.faces[i]]:'Trick to come'}">${glyph[model.faces[i]]||'◇'}</span>`).join('');if(tricks.innerHTML!==html)tricks.innerHTML=html;}
+    const tricks=el('tricks');if(tricks){tricks.classList.toggle('is-bust',!!model.busted);const html=Array.from({length:model.draws},(_,i)=>model.bails[i]?`<span class="bailed" title="Bail: ${FiveScore.names[model.faces[i]]||'trick'} pays nothing">✕</span>`:`<span class="${model.faces[i]?'revealed':''}" title="${model.faces[i]?FiveScore.names[model.faces[i]]:'Trick to come'}">${glyph[model.faces[i]]||'◇'}</span>`).join('');if(tricks.innerHTML!==html)tricks.innerHTML=html;}
     const progress=el('progress');if(progress)progress.style.width=Math.min(100,100*shown.waveScore/Math.max(1,model.quota))+'%';
     root.dataset.chips=String(model.chips);root.dataset.mult=String(model.mult);root.dataset.score=String(model.score);root.dataset.queued=String(queue.length);
+  }
+  // Heat cue (design doc §4.4): during the dive, one colour wash and one tone say how hot the next tricks are.
+  const heatTone={cold:196,warm:294,hot:440,jackpot:659.25};
+  function heatPaint(playing){
+    if(!heatEl?.isConnected){heatEl=document.createElement('div');heatEl.id='heat-cue';heatEl.setAttribute('aria-live','polite');heatEl.innerHTML='<span id="heat-word"></span>';document.body.appendChild(heatEl);}
+    const d=S?.demo,show=playing&&S.medium?.kind==='water'&&!!d?.heat;heatEl.hidden=!show;if(!show)return;
+    const band=d.heat.band;if(heatEl.dataset.band!==band){heatEl.dataset.band=band;heatEl.className='heat-'+band;heatEl.querySelector('#heat-word').textContent=band==='jackpot'?'JACKPOT TRICKS':band.toUpperCase()+' TRICKS';}
+    if(heatSeq!==d.handSeq){heatSeq=d.handSeq;if(ui?.ctx&&ui.enabled){const f=heatTone[band];ui.tone(f,.2,'triangle',.03,f);if(band==='jackpot')ui.tone(f*1.5,.25,'sine',.02,f*1.5)}}
   }
   function frame(now){
     const dt=Math.min(60,Math.max(0,now-(last||now)));last=now;
     if(S?.demo&&run!==S)fresh(S);
     const playing=ft==='game'&&S?.mode==='playing',paused=ft==='pause';
+    heatPaint(playing);
     if(!paused&&root&&ft!=='title'){
       let count=0;while(queue.length&&now>=next&&count++<20){const e=queue.shift();const wait=apply(e,now);next=now+wait;if(wait)break;}
       paint(dt);
@@ -4970,7 +5123,7 @@ var ScoreHUD = (() => {
     if(particleLayer)particleLayer.hidden=!!root?.hidden;
     requestAnimationFrame(frame);
   }
-  function update(r){if(run!==r)fresh(r);ensure();root.hidden=false;}
+  function update(r){if(run!==r)fresh(r);ensure();}
   requestAnimationFrame(frame);
   return {receive,update,get state(){return {...model,shown:{...shown},queued:queue.length}},get element(){return root}};
 })();
@@ -4984,7 +5137,7 @@ of=function(){if(!S?.demo||!document.getElementById('wave-number'))return;DemoOf
   DemoSet('control-hint',S.medium.kind==='air'?'W A S D / arrows: steer':'Hold W / up to carve · release to launch · space to boost');
   const fill=document.getElementById('budget-fill');if(fill)fill.style.width=`${Math.max(0,S.budget)/DEMO.clock(S.wave)*100}%`;
 };
-Ovn=function(r){if(r.events.some(e=>e.kind==='overtime')){ci='OVERTIME · ENEMIES KEEP COMING · LAND TO BANK';kr=2.2}};
+Ovn=function(r){if(r.events.some(e=>e.kind==='overtime')){ci='OVERTIME · ENEMIES KEEP COMING · LAND TO BANK';kr=2.2}if(r.events.some(e=>e.kind==='bust')){ci='BUST · 0 HP · FALLING TO THE WATER';kr=2}};
 globalThis.icarusDemo.scoreboard=ScoreHUD;
 
 /* Nonblocking first-run guidance. Conditions come from actual play; no granted kills or score. */
@@ -5002,11 +5155,12 @@ var RunGuide=(()=>{
     else if(r.demo.last?.chips>0&&r.medium.kind==='water'&&r.time-bankAt<5){const h=r.demo.last;html=`<b>LAND & BANK</b><span><em class="guide-chips">${h.chips} chips</em> × <em class="guide-mult">${DEMO.fmt(h.mult)} mult</em> banked <em class="guide-score">${h.score} points</em>. Your wave target is ${r.quota}.</span>`}
     else if(r.medium.kind==='water'&&landings<2){html=`<b>CARVE & RELEASE</b><span>${touch()?'Hold the left control upward, then release to launch. The right button boosts.':'Hold W / ↑ to carve upward, then release to launch. Space boosts.'}</span>`}
     else if(r.medium.kind==='air'&&!r.kills){html='<b>FIGHT</b><span>Weapons fire automatically. Get enemies in range to earn <em class="guide-chips">chips</em>.</span>'}
-    else if(r.medium.kind==='air'&&landings<3){html='<b>BUILD THE PAYOUT</b><span>Kills feed <em class="guide-chips">chips</em>. Tricks feed <em class="guide-mult">mult</em>. Return to water to bank.</span>'}
+    else if(r.medium.kind==='air'&&landings<3){html='<b>BUILD THE PAYOUT</b><span>Kills feed <em class="guide-chips">chips</em>. Tricks feed <em class="guide-mult">mult</em>. A hit bails the trick in progress. Land to bank.</span>'}
+    else if(r.medium.kind==='water'&&landings<6&&r.demo.heat){html=`<b>HEAT</b><span>The water's colour shows your next tricks: <em class="guide-mult">${r.demo.heat.band}</em>. Hot tricks are worth a long flight.</span>`}
     else if(landings<4){html=`<b>WAVE TARGET</b><span>${r.wscore} / ${r.quota} banked. ${r.budget.toFixed(0)} seconds of air remain.</span>`}
     if(!html){el.hidden=true;return}if(html!==last){el.querySelector('#run-guide-text').innerHTML=html;last=html}
   }
-  function shopHint(r){return r.wave<=2?'Weapons earn chips. Tricks and charms build mult. Compare offers with your loadout, then launch.':''}
+  function shopHint(r){return r.wave<=2?'Weapons and gear earn chips and keep you alive. Charms and Routine upgrades build mult. Getting hit bails the trick in progress.':''}
   const original=of;of=function(){original();if(S?.demo)update(S)};
   return {update,shopHint,get element(){return el}};
 })();
@@ -5014,8 +5168,8 @@ globalThis.icarusDemo.guide=RunGuide;
 
 // Give a concrete failure explanation using the recorded run, not a generic difficulty suggestion.
 {const original=jl;jl=function(){original();const r=S,d=r?.demo?.lastFailure;if(!d)return;const panel=document.querySelector('.summary-panel');if(!panel)return;const note=document.createElement('p');note.className='run-failure-note';
- if(r.endReason==='health')note.textContent=(d.quotaMet?'Your banked score had reached the target. ':'')+`${d.acceptedHits} hits dealt ${Math.round(d.damageTaken)} damage this wave. ${d.unbankedChips?d.unbankedChips+' chips were still in the air.':''}`;
- else note.textContent=`${Math.max(0,d.quota-d.score)} more points were needed. You earned ${d.chips} kill chips across ${d.bankedFlights} banked flights.`;
+ const busts=r.demo.history.filter(h=>h.busted).length,bails=r.demo.history.reduce((a,h)=>a+(h.bails?.length||0),0);
+ note.textContent=`${Math.max(0,d.quota-d.score)} more points were needed. ${d.bankedFlights} jumps banked; ${busts} busted and ${bails} tricks bailed from ${d.acceptedHits} hits.`;
  panel.querySelector('.demo-summary-hands')?.before(note);
 }}
 
@@ -5023,13 +5177,18 @@ globalThis.icarusDemo.guide=RunGuide;
 var ShopUI = (() => {
   const E=DemoEscape,B=DemoButton,F=FiveScore,faces=F.faces;
   const faceGlyph={spout:'≋',front:'↻',back:'↺',cork:'⤨',star:'✦'};
-  const iconCache=new Map(),expectCache=new Map(),opened=new Set();let focusCharm=0;
+  const iconCache=new Map(),opened=new Set();let focusCharm=0,focusWeapon=0;
   const number=n=>Number(n.toFixed(2)).toLocaleString('en-US',{maximumFractionDigits:2});
-  const short={fin:'Rapid strikes cleave nearby enemies.',sonic:'A wide pulse pushes nearby enemies back.',arc:'Lightning chains through four targets.',minigun:'Rapid rounds focus one target.',harpoon:'Critical shots pierce enemies.',laser:'A heavy beam pierces three targets.',flak:'Three spreading shells burst into crowds.',rocket:'A blast clears the target and its neighbours.',depth:'Lob a heavy charge ahead of a moving target.'};
-  const charmShort={S01:'Your signature trick pays for each kill phase.',S02:'Kills in two phases reward a varied routine.',S03:'Multi-kills add mult; Two Pair pays more.',S04:'A hit-free flight multiplies your mult.',S05:'Two damage types pay more; Full Show shines.',S06:'Multi-kills reward repeated tricks.',S07:'Spout rewards a strong opening.',S08:'Front flip rewards ascent-heavy kills.',S09:'Backflip rewards descent-heavy kills.',S10:'Star repeats your biggest combo at the apex.',S11:'Corkscrew rewards fighting below enemies.',S12:'Star rewards kills late in a long flight.',S13:'Water Hammer kills reward a varied routine.',S14:'Both flips and two kill phases load a token.',S15:'Three chip flights improve weak combinations.',S16:'Strong combinations grow future flight mult.',S17:'Corkscrew can repeat your strongest trick value.'};
-  const itemGlyph={I01:'◒',I02:'⌁',I03:'⌇',I04:'»',I05:'⌃',I06:'⋈',I07:'≋',I08:'◉',I09:'↓',I10:'⬡'};
-  const charmGlyph={S01:'✦',S02:'⋈',S03:'≋',S04:'◇',S05:'✧',S06:'Ⅱ',S07:'»',S08:'↗',S09:'↘',S10:'⌃',S11:'↓',S12:'◴',S13:'≋',S14:'↔',S15:'▱',S16:'◉',S17:'?'};
   const signed=n=>(n>=0?'+':'')+number(n);
+  const short={fin:'Rapid strikes cleave nearby enemies.',sonic:'A wide pulse pushes nearby enemies back.',arc:'Lightning chains through four targets.',minigun:'Rapid rounds focus one target.',harpoon:'Critical shots pierce enemies.',laser:'A heavy beam pierces three targets.',flak:'Three spreading shells burst into crowds.',rocket:'A blast clears the target and its neighbours.',depth:'Lob a heavy charge ahead of a moving target.'};
+  const rarityName={1:'Common',2:'Uncommon',3:'Rare'};
+  // Charm text is already two lines at most (design doc §4.8); chance-based charms show the player's actual odds.
+  function charmSummary(r,id,face){const luck=r.demo.stats.Luck,extra=r.demo.charms.includes('N20')||id==='N20'?.15:0;
+    if(id==='S17')return `${number(F.chance(luck,extra)*100)}% chance your best trick pays again. Luck helps.`;
+    return F.charmText(id,face);}
+  const itemGlyph={I01:'◒',I02:'⌁',I03:'⌇',I04:'»',I05:'⌃',I06:'⋈',I07:'≋',I08:'◉',I09:'↓',I10:'⬡'};
+  const charmGlyph={'+chips':'◆','+mult':'✚','×mult':'✖','pearls':'◈','rule':'⚙'};
+  const choiceGlyph={draw:'＋',routine:'≡',polish:'✦',transfer:'⇄',technique:'★',focus:'◎'};
   function icon(kind,id,label=''){
     if(kind==='weapon'){
       if(!iconCache.has(id)){
@@ -5039,69 +5198,80 @@ var ShopUI = (() => {
       const src=iconCache.get(id);if(src)return `<img class="shop-weapon-art" alt="" src="${src}">`;
       return `<span class="shop-symbol" aria-hidden="true">${E(Owc[id]?.glyph||'↣')}</span>`;
     }
-    const symbol=kind==='charm'?charmGlyph[id]:kind==='item'?itemGlyph[id]:kind==='face'?faceGlyph[id]:kind==='pack'?{rehearsal:'✦',routine:'≡',charm:'◇'}[id]:kind==='voucher'?'⌑':kind==='stat'?'＋':'◇';
+    const symbol=kind==='charm'?charmGlyph[F.charms[id]?.kind]:kind==='item'?itemGlyph[id]:kind==='face'?faceGlyph[id]:kind==='choice'?choiceGlyph[id]:kind==='pack'?{routine:'≡',charm:'◇'}[id]:kind==='voucher'?'⌑':kind==='stat'?'＋':'◇';
     return `<span class="shop-symbol" aria-hidden="true">${E(symbol||'◇')}</span>`;
   }
-  function prime(r){return ['Close','Shot','Blast'].filter(t=>r.slots.some(g=>DEMO.weapons[g.id].type===t))}
   function statsForWeapon(r,id,level){const w=DEMO.weapons[id];return {damage:DEMO.weaponDamage(r,w,level,false),cooldown:DEMO.tier(w.cd,level)/60/r.stats.fireRate,range:w.range+r.demo.stats.Reach*(w.type==='Close'?.5:1),crit:Math.max(0,Math.min(1,DEMO.tier(w.crit,level)+r.demo.stats.Crit)),type:w.type,cadence:w.cad}}
   function weaponInfo(r,o){const current=r.slots.filter(g=>g.id===o.id),match=current.find(g=>g.lvl===o.level&&g.lvl<4),w=statsForWeapon(r,o.id,o.level),upgrade=match?statsForWeapon(r,o.id,o.level+1):null;return {...w,owned:current.length,ownedTiers:current.map(g=>g.lvl),match:!!match,mergeLevel:match?o.level+1:null,mergeDamage:upgrade?.damage,mergeCooldown:upgrade?.cooldown,full:r.slots.length>=6,inventoryDelta:r.slots.length>=6?(match?'Upgrades an owned copy in place.':'Choose one slot to replace.'):match?`Buy a second T${o.level}, then combine them into T${o.level+1}.`:'Adds one automatic weapon.'}}
-  function factorial(n){let x=1;for(let i=2;i<=n;i++)x*=i;return x}
-  function baseline(state,n,luck=state.luck||0){
-    n=Math.min(6,Math.max(1,n));const key=JSON.stringify([n,state.weights,state.polish,state.techniques,state.gold,state.routines,luck]);if(expectCache.has(key))return expectCache.get(key);
-    const odds=Object.fromEntries(F.combos.map(c=>[c.id,0])),total=faces.reduce((s,f)=>s+state.weights[f],0);let mean=0,mass=0,strong=0;
-    function visit(i,left,counts){if(i<4){for(let c=0;c<=left;c++)visit(i+1,left-c,[...counts,c]);return}counts.push(left);let p=factorial(n),hand=[];for(let j=0;j<5;j++){p*=Math.pow(state.weights[faces[j]]/total,counts[j])/factorial(counts[j]);for(let k=0;k<counts[j];k++)hand.push(faces[j])}if(!p)return;const v=F.evaluate(state,hand,{K:0,wave:1},[],()=>1);let value=v.mult;for(let j=0;j<5;j++)if(state.techniques[faces[j]]==='lucky')value+=counts[j]*F.value(state,faces[j])*F.chance(luck);mean+=p*value;mass+=p;for(const c of v.combos)odds[c.id]+=p;if(v.combos.some(c=>['four','show','threePair','doubleTriple'].includes(c.id)))strong+=p;}
-    visit(0,n,[]);const result={draws:n,meanMult:mean/mass,comboOdds:odds,strongChance:strong/mass,label:'Tricks + combinations, before charms; includes Lucky chance.'};expectCache.set(key,result);if(expectCache.size>128)expectCache.delete(expectCache.keys().next().value);return result;
-  }
-  function changed(state,c){const next=structuredClone(state);let ok=false;if(c.kind==='polish')ok=F.polish(next,c.face);if(c.kind==='transfer')ok=F.transfer(next,c.donor,c.recipient);if(c.kind==='routine')ok=F.routine(next,c.id);if(c.kind==='technique')ok=F.technique(next,c.face,c.id);return {next,ok}}
-  function handMean(state,hand,luck){let value=F.evaluate(state,hand,{K:0,wave:1},[],()=>1).mult;for(const f of hand)if(state.techniques[f]==='lucky')value+=F.value(state,f)*F.chance(luck);return value}
+  // Average mult before charms over every possible hand, with Lucky at its expected value.
+  function baseline(state,n,luck=state.luck||0){return {...F.expect(state,n,luck),label:'Tricks + combos, before charms; Lucky averaged.'}}
+  function changed(state,c){const next=structuredClone(state);let ok=false;
+    if(c.kind==='polish')ok=F.polish(next,c.face);if(c.kind==='transfer')ok=F.transfer(next,c.donor,c.recipient);if(c.kind==='routine')ok=F.routine(next,c.id);if(c.kind==='technique')ok=F.technique(next,c.face,c.id);if(c.kind==='draw')ok=F.addDraw(next);if(c.kind==='focus'){ok=!next.focus;next.focus=true}
+    return {next,ok}}
+  function handMean(state,hand,luck){let value=F.evaluate(state,hand,{K:0,preview:true},[],()=>1).mult;for(const f of hand)if(state.techniques[f]==='lucky')value+=F.value(state,f)*F.chance(luck);return value}
   function choiceInfo(r,c){
-    const state=r.demo.score,luck=r.demo.stats.Luck,n=DEMO.cap({...r,wave:r.wave+1}),before=baseline(state,n,luck);
-    if(c.kind==='charm')return {title:F.charms[c.id].name,summary:charmShort[c.id],detail:F.charms[c.id].text,kind:'charm',id:c.id,impact:charmFit(r,c.id,c.face),scope:'Charm conditions use what happened in your flight.'};
-    const {next,ok}=changed(state,c),after=ok?baseline(next,n,luck):before;let title,summary,detail,fit='';
-    if(c.kind==='polish'){title='Polish '+F.names[c.face];summary='+0.5 mult each time this trick is drawn.';detail=`${F.names[c.face]} value: ${number(F.value(state,c.face))} → ${number(F.value(next,c.face))}. Every matching copy benefits.`;fit=`${Math.round(state.weights[c.face]*100)}% of each draw is ${F.names[c.face]}.`;}
-    if(c.kind==='transfer'){title='Practise '+F.names[c.recipient];summary=`Move 5% draw chance from ${F.names[c.donor]}.`;detail=`${F.names[c.recipient]}: ${Math.round(state.weights[c.recipient]*100)}% → ${Math.round(next.weights[c.recipient]*100)}%. ${F.names[c.donor]}: ${Math.round(state.weights[c.donor]*100)}% → ${Math.round(next.weights[c.donor]*100)}%. Total remains100%. Combo payouts stay fixed.`;const best=F.combos.map(x=>({name:x.name,delta:after.comboOdds[x.id]-before.comboOdds[x.id]})).filter(x=>x.delta>1e-8).sort((a,b)=>b.delta-a.delta)[0];fit=best?`${best.name} chance ${signed(best.delta*100)} percentage points.`:'Changes the routine mix; inspect your combo chances.';}
-    if(c.kind==='routine'){title=c.id+' +1 level';summary=({Repeat:'Strengthen your matching repeats.',Formation:'Strengthen sets of repeated tricks.',Variety:'Strengthen Full Show.'})[c.id];detail=`${c.id} level ${state.routines[c.id]}/4 → ${next.routines[c.id]}/4. ${F.combos.filter(x=>x.group===c.id).map(x=>x.name).join(', ')} receive larger fixed payouts.`;fit=c.id==='Variety'?`Full Show chance: ${number(before.comboOdds.show*100)}% next wave.`:`Helps ${F.combos.filter(x=>x.group===c.id).map(x=>x.name).join(', ')}.`;}
-    if(c.kind==='technique'){title=(c.id==='gold'?'Gold ':'Lucky ')+F.names[c.face];summary=c.id==='gold'?'Grow this trick across different waves.':'A chance to repeat this trick’s value.';detail=c.id==='gold'?'A kill-bearing bank containing this trick marks its wave. Every2 different waves adds0.25 future value, up to+1. Replaces any existing technique.':`${number(F.chance(luck)*100)}% chance at bank to repeat this trick’s total value. Empty flights do not roll. Replaces any existing technique.`;fit=c.id==='gold'?'Future growth; no immediate value increase.':`${Math.round(state.weights[c.face]*100)}% draw chance · Luck improves the bank roll.`;}
-    let recent='';if(r.demo.last?.drawn?.length){const last=r.demo.last.drawn,b=handMean(state,last,luck),a=handMean(next,last,luck);recent=`Last routine: ${number(b)} → ${number(a)} mult before charms${Object.values(state.techniques).includes('lucky')||Object.values(next.techniques).includes('lucky')?' (Lucky averaged)':''}.`;}
+    const state=r.demo.score,luck=r.demo.stats.Luck,n=DEMO.cap(r),before=baseline(state,n,luck);
+    if(c.kind==='charm')return {title:F.charms[c.id].name,summary:charmSummary(r,c.id,c.face),detail:F.charmText(c.id,c.face),kind:'charm',id:c.id,impact:charmFit(r,c.id,c.face),scope:'Charms resolve left to right at the bank.'};
+    const {next,ok}=changed(state,c),after=ok?baseline(next,c.kind==='draw'?n+1:n,luck):before;let title,summary,detail,fit='';
+    if(c.kind==='polish'){title='Polish '+F.names[c.face];summary=`+${F.tune.polishStep} mult each time this trick lands.`;detail=`${F.names[c.face]} value: ${number(F.value(state,c.face))} → ${number(F.value(next,c.face))}.`;fit=`${Math.round(state.weights[c.face]*100)}% of each draw is ${F.names[c.face]}.`;}
+    if(c.kind==='transfer'){title='Practise '+F.names[c.recipient];summary=`Move ${Math.round(F.tune.transfer*100)}% draw chance from ${F.names[c.donor]}.`;detail=`${F.names[c.recipient]}: ${Math.round(state.weights[c.recipient]*100)}% → ${Math.round(next.weights[c.recipient]*100)}%. ${F.names[c.donor]}: ${Math.round(state.weights[c.donor]*100)}% → ${Math.round(next.weights[c.donor]*100)}%.`;const best=F.combos.map(x=>({name:x.name,delta:after.comboOdds[x.id]-before.comboOdds[x.id]})).filter(x=>x.delta>1e-8).sort((a,b)=>b.delta-a.delta)[0];fit=best?`${best.name} chance ${signed(best.delta*100)} points.`:'Changes your trick mix.';}
+    if(c.kind==='routine'){title=c.id+' level '+(state.routines[c.id]+1);summary=({Repeat:'Pairs, Triples and Fours pay more.',Formation:'Two Pairs and Full Houses pay more.',Variety:'Full Show pays more.'})[c.id];detail=`${c.id} ${state.routines[c.id]}/${F.tune.routineCap} → ${next.routines[c.id]}/${F.tune.routineCap}: ${F.combos.filter(x=>x.group===c.id).map(x=>x.name).join(', ')} each gain +${Math.round(F.groups[c.id].gain*100)}% of base.`;fit=c.id==='Variety'?`Full Show chance: ${number(before.comboOdds.show*100)}%.`:`${F.combos.filter(x=>x.group===c.id).map(x=>x.name).slice(0,3).join(', ')}.`;}
+    if(c.kind==='technique'){title=({gold:'Gold',lucky:'Lucky',echo:'Echo'})[c.id]+' '+F.names[c.face];summary=({gold:'Grows across waves.',lucky:'A chance to pay this trick again.',echo:'Counts as an extra copy for combos.'})[c.id];detail=c.id==='gold'?`Each wave it lands in a bank with kills, it gains +${F.tune.goldStep} value every 2 waves, up to +${F.tune.goldCap}. Replaces any technique.`:c.id==='lucky'?`${number(F.chance(luck)*100)}% chance at the bank to repeat its total value. Replaces any technique.`:'At the bank it adds one extra copy of itself for combos when that pays more. Replaces any technique.';fit=c.id==='gold'?'Future growth; no immediate value.':`${Math.round(state.weights[c.face]*100)}% draw chance.`;}
+    if(c.kind==='draw'){title='Extra trick';summary=`Draw ${n+1} tricks every jump instead of ${n}.`;detail=`More reels: bigger combos become possible. Bought draws: ${state.draws}/${F.tune.maxBought}.`;fit=`Four of a Kind or better: ${number(before.strongChance*100)}% → ${number(after.strongChance*100)}%.`;}
+    if(c.kind==='focus'){title='Signature routine';summary='Routine offers favour your most-drawn trick.';detail='Permanent for this run. Polish, odds and techniques lean towards your main trick.';fit='Commit to one trick.';}
+    let recent='';if(r.demo.last?.drawn?.length&&c.kind!=='draw'){const last=r.demo.last.drawn,b=handMean(state,last,luck),a=handMean(next,last,luck);recent=`Last tricks: ${number(b)} → ${number(a)} mult before charms.`;}
     return {title,summary,detail,kind:c.kind,id:c.face||c.id||c.recipient,impact:fit,valid:ok,before:before.meanMult,after:after.meanMult,delta:after.meanMult-before.meanMult,recent,scope:before.label};
   }
-  function charmFit(r,id,face){const s=r.demo.score,n=DEMO.cap({...r,wave:r.wave+1}),b=baseline(s,n,r.demo.stats.Luck),draw=f=>`${F.names[f]} appears in ${number((1-Math.pow(1-s.weights[f],n))*100)}% of ${n}-draw flights.`;
-    if(id==='S01')return draw(face||'front');if(id==='S05')return `${prime(r).length} weapon types owned · Full Show ${number(b.comboOdds.show*100)}%.`;if(id==='S13')return r.demo.itemCounts.I07?'Water Hammer owned: entry kills can pay.':'Needs Water Hammer entry kills.';if(id==='S16')return `Strong combo chance ${number(b.strongChance*100)}% next wave.`;if(['S07','S08','S09','S10','S11','S12','S17'].includes(id))return draw({S07:'spout',S08:'front',S09:'back',S10:'star',S11:'cork',S12:'star',S17:'cork'}[id]);if(['S03','S06'].includes(id)){const multi=r.slots.filter(g=>['fin','sonic','arc','laser','flak','rocket','depth'].includes(g.id));return multi.length?`Multi-target coverage: ${[...new Set(multi.map(g=>Owc[g.id].name))].slice(0,2).join(', ')}.`:'Needs one primary attack to kill several enemies.';}return 'Adds to banked mult when its flight condition is met.';
+  function charmFit(r,id,face){const s=r.demo.score,n=DEMO.cap(r),b=baseline(s,n,r.demo.stats.Luck),appears=f=>`${F.names[f]} is in ${number((1-Math.pow(1-s.weights[f],n))*100)}% of ${n}-trick jumps.`;
+    if(id==='S01'||id==='N10')return appears(face||'star');if(id==='S05')return `Full Show chance: ${number(b.comboOdds.show*100)}%.`;if(id==='N09')return `Triple or better: ${number(((b.comboOdds.triple||0))*100)}%.`;
+    if(id==='S13')return r.demo.itemCounts.I07?'Water Hammer owned.':'Needs Water Hammer.';if(id==='N04')return `${r.slots.filter(g=>DEMO.weapons[g.id].type==='Close').length} Close weapons owned.`;
+    if(['N12','N13'].includes(id)){const g=id==='N12'?'Repeat':'Formation';return `${g} level ${s.routines[g]}/${F.tune.routineCap}.`;}
+    if(id==='N16')return `You draw ${n} tricks now.`;
+    return ({'+chips':'Adds chips at the bank.','+mult':'Adds mult at the bank.','×mult':'Multiplies mult: place it late in the row.','pearls':'Pays pearls at wave end.','rule':'Changes a scoring rule.'})[F.charms[id].kind];
   }
   function detail(id,html){return `<details class="shop-inspect" data-inspect="${id}" ${opened.has(String(id))?'open':''}><summary>Details & comparison</summary>${html}</details>`}
-  function offerInfo(r,o){let name,summary,detailText,tag,tone='chips',impact='',iconKind=o.row,iconId=o.id,owned='';
-    if(o.row==='weapon'){const x=weaponInfo(r,o),w=DEMO.weapons[o.id];name=Owc[o.id].name;tag=`${w.type} · ${w.cad} · T${o.level}`;summary=short[o.id];impact=x.match?`Pair ready → T${x.mergeLevel}: ${Math.round(x.damage)} → ${Math.round(x.mergeDamage)} damage.`:x.owned?`Owned: ${x.ownedTiers.map(t=>'T'+t).join(', ')}. This adds T${o.level}.`:x.inventoryDelta;owned=x.owned?`${x.owned} OWNED`:'NEW WEAPON';detailText=`<p>${E(w.description)}</p><div class="shop-numbers"><span><b>${Math.round(x.damage)}</b> damage</span><span><b>${x.cooldown.toFixed(2)}s</b> cooldown</span><span><b>${number(x.range)}m</b> range</span><span><b>${Math.round(x.crit*100)}%</b> crit</span></div><p>${E(x.inventoryDelta)}</p>`;}
-    else if(o.row==='charm'){name=F.charms[o.id].name;tag='SCORE CHARM';summary=charmShort[o.id];detailText=`<p>${E(F.charms[o.id].text)}${o.face?' Bound to '+E(F.names[o.face])+'.':''}</p><p>Charms resolve left to right at water entry. They change score, not weapon damage.</p>`;tone='mult';impact=charmFit(r,o.id,o.face);owned='CHIPS × MULT';}
-    else if(o.row==='item'){const x=FiveCombat.items[o.id];name=x.name;tag='COMBAT ITEM';summary=x.text.split(/(?<=[.!?])\s+(?=[A-Z])/)[0];if(summary.length>140)summary=summary.slice(0,137)+'…';detailText=`<p>${E(x.text)}</p>`;impact=r.demo.itemCounts[o.id]?`Own ${r.demo.itemCounts[o.id]} · another copy improves this effect.`:'Changes your attacks, defence or water entry.';tone=['I08','I10'].includes(o.id)?'defence':'chips';owned=r.demo.itemCounts[o.id]?`×${r.demo.itemCounts[o.id]} OWNED`:'NEW EFFECT';}
-    else if(o.row==='stat'){const x=DEMO.items[o.id],g=DEMO.stats[x.up].group;name=x.name;tag=g==='defence'?'DEFENCE':'STAT ITEM';summary=DEMO.statText(x.up,x.value);impact=x.down?DEMO.statText(x.down,-x.loss):'Permanent for this run.';detailText=`<p>${E(summary)}${x.down?' · '+E(DEMO.statText(x.down,-x.loss)):''}</p><p>Current: ${E(DEMO.statText(x.up,r.demo.stats[x.up]))}.</p>`;tone=g==='defence'?'defence':g==='economy'?'mult':'chips';}
-    else if(o.row==='pack'){name=({rehearsal:'Rehearsal',routine:'Routine',charm:'Charm'})[o.id]+' pack';tag=o.mega?'CHOOSE 2 OF 5':'CHOOSE 1 OF 3';tone='mult';summary=({rehearsal:'Shape your trick chances and values.',routine:'Increase your combination payouts.',charm:'Choose a score-changing charm.'})[o.id];impact=({rehearsal:'Build reliable repeats or a varied repertoire.',routine:'Specialise in Repeat, Formation or Variety.',charm:`${r.demo.charms.length}/${DEMO.charmSlots(r)} charm slots occupied.`})[o.id];detailText=`<p>${o.id==='rehearsal'?'Pick a weight transfer, a polished trick or a rare technique.':o.id==='routine'?'Pick a combo group to level. Its fixed payouts increase.':'Choose one charm, then arrange it in your scoring order.'}</p>${o.fallback?`<p>${E(o.fallback)}</p>`:''}`;}
-    else{name=({charm:'Charm loop',reroll:'Reroll pass',shelf:'Extra shelf'})[o.id];tag='VOUCHER';summary=({charm:'One more charm slot.',reroll:'Rerolls cost1 less, minimum1.',shelf:'One more shelf offer, up to6 total.'})[o.id];tone='mult';impact='Permanent rule for this run.';detailText=`<p>${E(summary)}</p>`;}
-    return {name,summary,detailText,tag,tone,impact,owned,iconKind,iconId};
+  function offerInfo(r,o){let name,summary,detailText,tag,tone='chips',impact='',iconKind=o.row,iconId=o.id,owned='',rarity=0;
+    if(o.row==='weapon'){const x=weaponInfo(r,o),w=DEMO.weapons[o.id];name=Owc[o.id].name;tag=`WEAPON · ${w.type} · ${w.cad} · T${o.level}`;summary=short[o.id]+(w.type==='Close'?' +2 Armour.':'');impact=x.match?`Matching copy → T${x.mergeLevel}: ${Math.round(x.damage)} → ${Math.round(x.mergeDamage)} damage.`:x.owned?`Owned: ${x.ownedTiers.map(t=>'T'+t).join(', ')}. This adds T${o.level}.`:x.inventoryDelta;owned=x.owned?`${x.owned} OWNED`:'NEW WEAPON';rarity=Math.min(3,o.level);detailText=`<p>${E(w.description)}${w.type==='Close'?' Each Close weapon also gives +2 Armour.':''}</p><div class="shop-numbers"><span><b>${Math.round(x.damage)}</b> damage</span><span><b>${x.cooldown.toFixed(2)}s</b> cooldown</span><span><b>${number(x.range)}m</b> range</span><span><b>${Math.round(x.crit*100)}%</b> crit</span></div><p>${E(x.inventoryDelta)}</p>`;}
+    else if(o.row==='charm'){const c=F.charms[o.id];name=c.name;tag=`CHARM · ${c.kind.toUpperCase()}`;summary=charmSummary(r,o.id,o.face);detailText=`<p>${E(F.charmText(o.id,o.face))}</p><p>Charms resolve left to right at the bank. They change score and pearls, never weapon damage.</p>`;tone=c.kind==='+chips'?'chips':'mult';impact=charmFit(r,o.id,o.face);owned=c.rarityName.toUpperCase();rarity=c.rarity;}
+    else if(o.row==='item'){const x=FiveCombat.items[o.id];name=x.name;tag='GEAR · COMBAT';summary=x.text;detailText=`<p>${E(x.text)}</p><p>${E(x.copies||'')}</p>`;impact=r.demo.itemCounts[o.id]?`Own ${r.demo.itemCounts[o.id]} · ${x.copies}`:'Changes your attacks, defence or water entry.';tone=['I08','I10'].includes(o.id)?'defence':'chips';owned=r.demo.itemCounts[o.id]?`×${r.demo.itemCounts[o.id]} OWNED`:rarityName[x.rarity].toUpperCase();rarity=x.rarity;}
+    else if(o.row==='stat'){const x=DEMO.items[o.id],g=DEMO.stats[x.up].group;name=x.name;tag=g==='defence'?'GEAR · DEFENCE':'GEAR · STAT';summary=DEMO.statText(x.up,x.value)+(x.down?' · '+DEMO.statText(x.down,-x.loss):'');impact=g==='defence'?'Fewer Bails and busts.':'Permanent for this run.';detailText=`<p>${E(summary)}</p><p>Current: ${E(DEMO.statText(x.up,r.demo.stats[x.up]))}.</p>`;tone=g==='defence'?'defence':'chips';}
+    else if(o.row==='routine'){const x=choiceInfo(r,o.choice);name=x.title;tag='ROUTINE';summary=x.summary;impact=x.impact;tone='mult';iconKind='choice';iconId=o.choice.kind;detailText=`<p>${E(x.detail||'')}</p><p>Average mult ${number(x.before)} → <b>${number(x.after)}</b> (before charms).</p>${x.recent?`<p class="shop-recent">${E(x.recent)}</p>`:''}`;}
+    else if(o.row==='pack'){name=({routine:'Routine',charm:'Charm'})[o.id]+' pack';tag=o.mega?'PACK · CHOOSE 2 OF 5':'PACK · CHOOSE 1 OF 3';tone='mult';summary=({routine:'Choose a trick upgrade.',charm:'Choose a charm.'})[o.id];impact=o.id==='charm'?`${r.demo.charms.length}/${DEMO.charmSlots(r)} charm slots used.`:'Values, combos, odds, draws or techniques.';detailText=`<p>${o.id==='routine'?'Each choice is one Routine upgrade.':'Choose one charm, then arrange it in your charm row.'}</p>${o.fallback?`<p>${E(o.fallback)}</p>`:''}`;}
+    else{name=({charm:'Charm loop',reroll:'Reroll pass',shelf:'Extra shelf'})[o.id];tag='RUN RULE · RARE';summary=({charm:'One more charm slot.',reroll:'Rerolls cost 1 less (minimum 1).',shelf:'One more shelf offer.'})[o.id];tone='mult';impact='Permanent for this run.';detailText=`<p>${E(summary)}</p>`;rarity=3;}
+    return {name,summary,detailText,tag,tone,impact,owned,iconKind,iconId,rarity};
   }
   function offer(r,o){const d=r.demo,x=offerInfo(r,o),match=o.row==='weapon'&&r.slots.some(g=>g.id===o.id&&g.lvl===o.level&&g.lvl<4),replace=o.row==='weapon'&&r.slots.length>=6&&!match;
-    const disabled=o.bought||!!d.pack||!replace&&o.price>r.xp||(o.row==='charm'||o.row==='pack'&&o.id==='charm')&&d.charms.length>=DEMO.charmSlots(r);
-    const label=o.bought?'ACQUIRED':replace?'REPLACE A SLOT':match&&r.slots.length>=6?`MERGE · ${o.price} ◈`:`BUY · ${o.price} ◈`;
-    return `<article class="shop-offer tone-${x.tone} ${o.bought?'bought':''}" data-offer="${o.uid}"><div class="shop-offer-top"><span class="shop-art">${icon(x.iconKind,x.iconId)}</span><div><span class="shop-tag">${E(x.tag)}</span><h3>${E(x.name)}</h3>${x.owned?`<small class="shop-owned">${E(x.owned)}</small>`:''}</div><b class="shop-price">${o.price}<small>PEARLS</small></b></div><p class="shop-effect">${E(x.summary)}</p><p class="shop-fit">${E(x.impact)}</p>${detail(o.uid,x.detailText)}<div class="shop-buy-row">${B(replace?'weaponChoice':'buy',o.uid,label,disabled,'shop-buy')}${o.row!=='voucher'?B('lock',o.uid,o.locked?'LOCKED':'LOCK',o.bought||!!d.pack,'shop-lock '+(o.locked?'locked':'')):''}</div></article>`;
+    const invalid=o.row==='routine'&&!DEMO.packChoiceValid(r,o.choice);
+    const disabled=o.bought||!!d.pack||invalid||!replace&&o.price>r.xp||(o.row==='charm'||o.row==='pack'&&o.id==='charm')&&d.charms.length>=DEMO.charmSlots(r);
+    const label=o.bought?'ACQUIRED':invalid?'AT CAP':replace?'REPLACE A SLOT':match&&r.slots.length>=6?`MERGE · ${o.price} ◈`:`BUY · ${o.price} ◈`;
+    return `<article class="shop-offer tone-${x.tone} ${x.rarity?'rarity-'+x.rarity:''} ${o.bought?'bought':''}" data-offer="${o.uid}"><div class="shop-offer-top"><span class="shop-art">${icon(x.iconKind,x.iconId)}</span><div><span class="shop-tag">${E(x.tag)}</span><h3>${E(x.name)}</h3>${x.owned?`<small class="shop-owned">${E(x.owned)}</small>`:''}</div><b class="shop-price">${o.price}<small>PEARLS</small></b></div><p class="shop-effect">${E(x.summary)}</p><p class="shop-fit">${E(x.impact)}</p>${detail(o.uid,x.detailText)}<div class="shop-buy-row">${B(replace?'weaponChoice':'buy',o.uid,label,disabled,'shop-buy')}${o.row!=='voucher'?B('lock',o.uid,o.locked?'LOCKED':'LOCK',o.bought||!!d.pack,'shop-lock '+(o.locked?'locked':'')):''}</div></article>`;
   }
-  function slot(r,g,i){if(!g)return `<div class="shop-slot empty" aria-label="Empty weapon slot ${i+1}"><span>${i+1}</span><small>EMPTY</small></div>`;const can=r.slots.some((q,j)=>i!==j&&q.id===g.id&&q.lvl===g.lvl)&&g.lvl<4;return `<div class="shop-slot tone-chips" data-weapon-slot="${i}"><div class="shop-slot-art">${icon('weapon',g.id)}</div><div class="shop-slot-name"><b>${E(Owc[g.id].name)}</b><small>T${g.lvl} · ${DEMO.weapons[g.id].type}</small></div><div class="shop-slot-actions">${B('combine',i,'↑',!can,'shop-slot-merge')}${B('sell',i,'−',r.slots.length<=1,'shop-slot-sell')}</div></div>`}
-  function charmpanel(r){const d=r.demo,slots=DEMO.charmSlots(r);if(focusCharm>=d.charms.length)focusCharm=Math.max(0,d.charms.length-1);const id=d.charms[focusCharm];return `<section class="shop-charms"><div class="shop-section-caption"><b>CHARMS</b><span>${d.charms.length}/${slots} · left → right</span></div><div class="shop-charm-row">${Array.from({length:slots},(_,i)=>{const c=d.charms[i];return `<button class="shop-charm-slot ${i===focusCharm&&c?'selected':''}" data-shop="charm" data-slot="${i}" ${c?'':'disabled'} title="${c?E(F.charms[c].name):'Empty charm slot'}" aria-label="${c?E(F.charms[c].name):'Empty charm slot '+(i+1)}">${c?icon('charm',c):'◇'}<small>${i+1}</small></button>`}).join('')}</div></section>${id?`<section class="shop-charm-selected"><b>${E(F.charms[id].name)}</b><p>${E(charmShort[id])}</p><div>${B('charmLeft',focusCharm,'← MOVE LEFT',focusCharm===0)}${B('charmSell',focusCharm,`SELL ${Math.floor((d.charmPaid[id]||0)/2)} ◈`)}</div>${detail('owned-'+id,`<p>${E(F.charms[id].text)}${d.charmFaces[id]?' Bound to '+E(F.names[d.charmFaces[id]])+'.':''}</p>`)}</section>`:'<p class="shop-empty-note">Charms change banked mult. Your weapon damage stays the same.</p>'}`}
-  function buildrail(r){const d=r.demo,rep=faces.map(f=>`<div class="shop-repertoire-face"><span>${icon('face',f)}</span><b>${E(F.names[f])}</b><strong>${Math.round(d.score.weights[f]*100)}%<small>${number(F.value(d.score,f))} mult</small></strong></div>`).join('');const b=baseline(d.score,DEMO.cap({...r,wave:r.wave+1}),d.stats.Luck);
-    return `<aside class="shop-build-rail" aria-label="Your current build"><div class="shop-rail-core"><div class="shop-section-caption"><b>YOUR WEAPONS</b><span>${r.slots.length}/6 slots</span></div><div class="shop-weapon-grid">${Array.from({length:6},(_,i)=>slot(r,r.slots[i],i)).join('')}</div>${charmpanel(r).split('<section class="shop-charm-selected">')[0]}</div><div class="shop-rail-details">${d.charms.length?'<section class="shop-charm-selected">'+charmpanel(r).split('<section class="shop-charm-selected">')[1]:''}<details class="shop-build-details" data-inspect="repertoire" ${opened.has('repertoire')?'open':''}><summary>Your five tricks <small>×${number(b.meanMult)} average</small></summary><p>${DEMO.cap({...r,wave:r.wave+1})} draws next wave. ${E(b.label)}</p>${rep}<div class="shop-routine-levels">${Object.entries(d.score.routines).map(([k,v])=>`<span>${k} <b>${v}/4</b></span>`).join('')}</div></details><details class="shop-build-details" data-inspect="combat-items" ${opened.has('combat-items')?'open':''}><summary>Combat items <small>${Object.values(d.itemCounts).reduce((a,n)=>a+n,0)} owned</small></summary>${Object.entries(d.itemCounts).filter(([id,n])=>n>0).map(([id,n])=>`<div class="shop-owned-item"><span>${icon('item',id)}</span><div><b>${E(FiveCombat.items[id].name)} ×${n}</b><p>${E(FiveCombat.items[id].text)}</p>${B('itemSell',id,`SELL ${Math.floor((d.itemPaid[id]?.at(-1)||0)/2)} ◈`)}</div></div>`).join('')||'<p>No combat items yet.</p>'}</details><details class="shop-build-details" data-inspect="stats" ${opened.has('stats')?'open':''}><summary>Stats & trade-offs</summary><div class="shop-stat-list">${Object.entries(d.stats).filter(([k])=>k!=='Drive').map(([k,v])=>`<span>${E(DEMO.statText(k,v))}</span>`).join('')}</div>${d.statInventory.map(a=>`<div class="shop-stat-sale">${E(DEMO.items[a.id].name)}${B('statSell',a.uid,`SELL ${Math.floor(a.paid/2)} ◈`)}</div>`).join('')}</details></div></aside>`;
+  function slot(r,g,i){if(!g)return `<div class="shop-slot empty" aria-label="Empty weapon slot ${i+1}"><span>${i+1}</span><small>EMPTY</small></div>`;return `<button class="shop-slot tone-chips ${i===focusWeapon?'selected':''}" data-shop="weapon" data-slot="${i}" data-weapon-slot="${i}" aria-label="Inspect ${E(Owc[g.id].name)} tier ${g.lvl}"><div class="shop-slot-art">${icon('weapon',g.id)}</div><div class="shop-slot-name"><b>${E(Owc[g.id].name)}</b><small>T${g.lvl} · ${DEMO.weapons[g.id].type}</small></div></button>`}
+  function weaponActions(r){if(focusWeapon>=r.slots.length)focusWeapon=Math.max(0,r.slots.length-1);const g=r.slots[focusWeapon];if(!g)return '';const can=r.slots.some((q,j)=>focusWeapon!==j&&q.id===g.id&&q.lvl===g.lvl)&&g.lvl<4,x=statsForWeapon(r,g.id,g.lvl);return `<div class="shop-weapon-selected"><p><b>${E(Owc[g.id].name)}</b> · ${Math.round(x.damage)} damage · ${x.cooldown.toFixed(2)}s</p><div class="shop-weapon-actions">${B('combine',focusWeapon,can?`COMBINE → T${g.lvl+1}`:'COMBINE',!can,'shop-slot-merge')}${B('sell',focusWeapon,`SELL ${Math.floor((g.paid||0)/2)} ◈`,r.slots.length<=1,'shop-slot-sell')}</div></div>`}
+  function charmpanel(r){const d=r.demo,slots=DEMO.charmSlots(r);if(focusCharm>=d.charms.length)focusCharm=Math.max(0,d.charms.length-1);const id=d.charms[focusCharm];return `<section class="shop-charms"><div class="shop-section-caption"><b>CHARMS</b><span>${d.charms.length}/${slots} · left → right</span></div><div class="shop-charm-row">${Array.from({length:slots},(_,i)=>{const c=d.charms[i];return `<button class="shop-charm-slot ${i===focusCharm&&c?'selected':''}" data-shop="charm" data-slot="${i}" ${c?'':'disabled'} title="${c?E(F.charms[c].name):'Empty charm slot'}" aria-label="${c?E(F.charms[c].name):'Empty charm slot '+(i+1)}">${c?icon('charm',c):'◇'}<small>${i+1}</small></button>`}).join('')}</div></section>${id?`<section class="shop-charm-selected"><b>${E(F.charms[id].name)}</b><p>${E(charmSummary(r,id,d.charmFaces[id]))}</p><div>${B('charmLeft',focusCharm,'← MOVE LEFT',focusCharm===0)}${B('charmSell',focusCharm,`SELL ${Math.floor((d.charmPaid[id]||0)/2)} ◈`)}</div></section>`:'<p class="shop-empty-note">Charms change chips, mult and pearls at the bank. Your weapon damage stays the same.</p>'}`}
+  // The trick scoreboard is always visible in the shop (design doc §4.9): information, not a purchase.
+  function trickBoard(r){const d=r.demo,s=d.score,n=DEMO.cap(r),b=baseline(s,n,d.stats.Luck);
+    const rows=faces.map(f=>`<div class="shop-repertoire-face"><span>${icon('face',f)}</span><b>${E(F.names[f])}${s.techniques[f]?` <small>${E(s.techniques[f].toUpperCase())}</small>`:''}</b><strong>${Math.round(s.weights[f]*100)}%<small>${number(F.value(s,f))} mult</small></strong></div>`).join('');
+    const combos=F.combos.map(c=>`<div class="shop-combo-row"><span>${E(c.name)}</span><b>+${number(c.bonus*(1+F.groups[c.group].gain*s.routines[c.group]))}</b><small>${number(b.comboOdds[c.id]*100)}%</small></div>`).join('');
+    return `<section class="shop-trick-board" aria-label="Your tricks"><div class="shop-section-caption"><b>YOUR TRICKS</b><span>${n} per jump · ×${number(b.meanMult)} average</span></div>${rows}<div class="shop-routine-levels">${Object.entries(s.routines).map(([k,v])=>`<span>${k} <b>${v}/${F.tune.routineCap}</b></span>`).join('')}</div><div class="shop-combo-table"><div class="shop-combo-row head"><span>Combo</span><b>Pays</b><small>Chance</small></div>${combos}</div><p class="shop-board-note">${E(b.label)} Chances use your draw odds and ${n} tricks.</p></section>`;}
+  function buildrail(r){const d=r.demo;if(focusWeapon>=r.slots.length)focusWeapon=Math.max(0,r.slots.length-1);
+    return `<aside class="shop-build-rail" aria-label="Your current build"><div class="shop-rail-core"><div class="shop-section-caption"><b>YOUR WEAPONS</b><span>${r.slots.length}/6 slots</span></div><div class="shop-weapon-grid">${Array.from({length:6},(_,i)=>slot(r,r.slots[i],i)).join('')}</div>${weaponActions(r)}${charmpanel(r).split('<section class="shop-charm-selected">')[0]}</div><div class="shop-rail-details">${d.charms.length?'<section class="shop-charm-selected">'+charmpanel(r).split('<section class="shop-charm-selected">')[1]:''}${trickBoard(r)}<details class="shop-build-details" data-inspect="combat-items" ${opened.has('combat-items')?'open':''}><summary>Combat gear <small>${Object.values(d.itemCounts).reduce((a,n)=>a+n,0)} owned</small></summary>${Object.entries(d.itemCounts).filter(([id,n])=>n>0).map(([id,n])=>`<div class="shop-owned-item"><span>${icon('item',id)}</span><div><b>${E(FiveCombat.items[id].name)} ×${n}</b><p>${E(FiveCombat.items[id].text)}</p>${B('itemSell',id,`SELL ${Math.floor((d.itemPaid[id]?.at(-1)||0)/2)} ◈`)}</div></div>`).join('')||'<p>No combat gear yet.</p>'}</details><details class="shop-build-details" data-inspect="stats" ${opened.has('stats')?'open':''}><summary>Stats & trade-offs</summary><div class="shop-stat-list">${Object.entries(d.stats).filter(([k])=>k!=='Drive').map(([k,v])=>`<span>${E(DEMO.statText(k,v))}</span>`).join('')}</div>${d.statInventory.map(a=>`<div class="shop-stat-sale">${E(DEMO.items[a.id].name)}${B('statSell',a.uid,`SELL ${Math.floor(a.paid/2)} ◈`)}</div>`).join('')}</details></div></aside>`;
   }
-  function pack(r){const p=r.demo.pack;if(!p)return '';return `<section class="shop-choice-panel tone-mult"><header><span class="shop-tag">OPEN ${E(p.id.toUpperCase())} PACK</span><h3>Choose ${p.remaining}${p.taken?' more':''}</h3><p>Keep the option that supports your build.</p></header>${p.fallback?`<p role="status">${E(p.fallback)}</p>`:''}<div class="shop-pack-options">${p.choices.map((c,i)=>{const x=choiceInfo(r,c);return `<article class="shop-pack-choice ${c.used?'used':''}"><div class="shop-choice-name"><span class="shop-art">${icon(c.kind==='charm'?'charm':'face',c.kind==='charm'?c.id:c.face||c.recipient)}</span><h4>${E(x.title||'Rehearsal')}</h4></div><p class="shop-effect">${E(x.summary||'')}</p><p class="shop-fit">${E(x.impact||'')}</p>${x.kind!=='charm'?`<p class="shop-mean">Average mult ${number(x.before)} → <b>${number(x.after)}</b></p>`:''}${detail('choice-'+i,`<p>${E(x.detail||'')}</p>${x.recent?`<p class="shop-recent">${E(x.recent)}</p>`:''}<small>${E(x.scope||'')}</small>`)}${B('packPick',i,c.used?'CHOSEN':'CHOOSE',c.used||c.kind==='charm'&&r.demo.charms.length>=DEMO.charmSlots(r),'shop-buy')}</article>`}).join('')}</div>${B('packSkip','','CLOSE · DISCARD UNUSED CHOICES',false,'shop-close-pack')}</section>`}
+  function pack(r){const p=r.demo.pack;if(!p)return '';return `<section class="shop-choice-panel tone-mult"><header><span class="shop-tag">OPEN ${E(p.id.toUpperCase())} PACK</span><h3>Choose ${p.remaining}${p.taken?' more':''}</h3><p>Keep the option that supports your build.</p></header>${p.fallback?`<p role="status">${E(p.fallback)}</p>`:''}<div class="shop-pack-options">${p.choices.map((c,i)=>{const x=choiceInfo(r,c);return `<article class="shop-pack-choice ${c.used?'used':''}"><div class="shop-choice-name"><span class="shop-art">${c.kind==='charm'?icon('charm',c.id):icon('choice',c.kind)}</span><h4>${E(x.title||'Routine')}</h4></div><p class="shop-effect">${E(x.summary||'')}</p><p class="shop-fit">${E(x.impact||'')}</p>${x.kind!=='charm'?`<p class="shop-mean">Average mult ${number(x.before)} → <b>${number(x.after)}</b></p>`:''}${detail('choice-'+i,`<p>${E(x.detail||'')}</p>${x.recent?`<p class="shop-recent">${E(x.recent)}</p>`:''}<small>${E(x.scope||'')}</small>`)}${B('packPick',i,c.used?'CHOSEN':'CHOOSE',c.used||!DEMO.packChoiceValid(r,c),'shop-buy')}</article>`}).join('')}</div>${B('packSkip','','CLOSE · DISCARD UNUSED CHOICES',false,'shop-close-pack')}</section>`}
   function replacement(r){const d=r.demo,o=d.offers.find(x=>x.uid===d.weaponChoice&&!x.bought);if(!o)return '';return `<section class="shop-choice-panel tone-chips"><header><span class="shop-tag">REPLACE A WEAPON</span><h3>${E(Owc[o.id].name)} · T${o.level}</h3><p>Choose the slot to sell. Each price includes that slot’s resale value.</p></header><div class="shop-replacements">${r.slots.map((g,i)=>{const refund=Math.floor((g.paid||0)/2),cost=o.price-refund,preview={...r,demo:{...d,stats:{...d.stats}},stats:{...r.stats},slots:r.slots.map(q=>({...q}))};preview.slots[i]={...g,id:o.id,lvl:o.level};DEMO.sync(preview);const old=statsForWeapon(r,g.id,g.lvl),next=statsForWeapon(preview,o.id,o.level);return `<div class="shop-replace-option">${icon('weapon',g.id)}<b>${E(Owc[g.id].name)} T${g.lvl}</b><p>${Math.round(old.damage)} → ${Math.round(next.damage)} damage<br>${old.cooldown.toFixed(2)}s → ${next.cooldown.toFixed(2)}s cooldown</p>${B('replaceWeapon',i,`${cost>=0?'PAY '+cost:'RECEIVE '+(-cost)} ◈`,r.xp<cost)}<small>Includes ${refund} ◈ refund</small></div>`}).join('')}</div>${B('weaponCancel','','CANCEL · KEEP CURRENT BUILD')}</section>`}
-  function show(){const r=S;if(!r?.demo)return;const d=r.demo,L=d.levelChoices||[],old=document.querySelector('.shop-offers'),rail=document.querySelector('.shop-rail-details'),scroll=old?.scrollTop||0,railScroll=rail?.scrollTop||0;
-    const levels=L.length?`<section class="shop-levels"><span class="shop-tag">${r.lvup} LEVEL UPGRADE${r.lvup===1?'':'S'}</span><h3>Choose a stat first</h3><p>Every option improves this run. Then choose your purchases.</p><div class="shop-level-options">${L.map((c,i)=>B('level',i,`<span class="shop-tag">${E(DEMO.stats[c.id].group.toUpperCase())}</span><b>${E(DEMO.statText(c.id,DEMO.stats[c.id].sizes[c.level-1]))}</b>`,false,'tone-'+(DEMO.stats[c.id].group==='defence'?'defence':'chips'))).join('')}</div></section>`:'';
-    const shelf=d.offers.filter(o=>!['pack','voucher'].includes(o.row)),packs=d.offers.filter(o=>['pack','voucher'].includes(o.row)),cost=k=>Math.max(1,2+(d.rerolls[k]||0)-d.rerollDiscount),canRoll=k=>d.offers.some(o=>(k==='pack'?o.row==='pack':!['pack','voucher'].includes(o.row))&&(!o.locked||o.bought));
+  const inRoutineRow=o=>o.row==='routine'||o.row==='pack';
+  function show(){const r=S;if(!r?.demo)return;const d=r.demo,old=document.querySelector('.shop-offers'),rail=document.querySelector('.shop-rail-details'),scroll=old?.scrollTop||0,railScroll=rail?.scrollTop||0;
+    const shelf=d.offers.filter(o=>!inRoutineRow(o)),routine=d.offers.filter(inRoutineRow),cost=k=>Math.max(1,2+(d.rerolls[k]||0)-d.rerollDiscount),canRoll=k=>d.offers.some(o=>(k==='pack'?inRoutineRow(o):!inRoutineRow(o))&&(!o.locked||o.bought));
     const hint=typeof RunGuide!=='undefined'&&RunGuide.shopHint?RunGuide.shopHint(r):'';
-    Ir(`<section class="scrim demo-shop-scrim shop-scrim"><div class="shop-shell"><header class="shop-header"><div><span class="shop-tag">WAVE ${r.wave} COMPLETE</span><h2>Build your next flight.</h2><p><span class="shop-header-score">${number(r.wscore)} / ${number(r.quota)} banked</span> · ${r.lastWave?.pay?.total||0} pearls earned</p></div><div class="shop-wallet"><span>PEARLS <b>${r.xp}</b></span>${B('next','',`LAUNCH WAVE ${r.wave+1} ↗`,!!r.lvup||!!d.pack||!!d.weaponChoice,'shop-launch')}<small>${DEMO.clock(r.wave+1)}s air, then land to bank · ${DEMO.cap({...r,wave:r.wave+1})} tricks</small></div></header>${hint?`<p class="shop-onboard">${E(hint)}</p>`:''}${d.toast?`<p class="shop-toast" role="status">${E(d.toast)}</p>`:''}<div class="shop-main"><main class="shop-offers">${levels}<div class="shop-market" ${r.lvup?'hidden':''}>${pack(r)}${replacement(r)}<section class="shop-market-row"><header><div><h3>Shelf</h3><p>Weapons earn chips. Charms build mult.</p></div>${B('reroll','shelf',`REROLL · ${cost('shelf')} ◈`,!!d.pack||r.xp<cost('shelf')||!canRoll('shelf'),'shop-reroll')}</header><div class="shop-offer-grid">${shelf.map(o=>offer(r,o)).join('')}</div></section><section class="shop-market-row"><header><div><h3>Build your routine</h3><p>Shape your scoring direction.</p></div>${B('reroll','pack',`REROLL · ${cost('pack')} ◈`,!!d.pack||r.xp<cost('pack')||!canRoll('pack'),'shop-reroll')}</header><div class="shop-offer-grid shop-pack-grid">${packs.map(o=>offer(r,o)).join('')}</div></section>${d.last?`<details class="shop-last-flight" data-inspect="last-flight" ${opened.has('last-flight')?'open':''}><summary>Last flight: <b>${d.last.chips} × ${number(d.last.mult)} = ${number(d.last.score)}</b> · see why</summary>${DemoBankBreakdown(d.last)}</details>`:''}</div></main>${buildrail(r)}</div></div></section>`);
+    Ir(`<section class="scrim demo-shop-scrim shop-scrim"><div class="shop-shell"><header class="shop-header"><div><span class="shop-tag">WAVE ${r.wave} COMPLETE</span><h2>Build your next flight.</h2><p><span class="shop-header-score">${number(r.wscore)} / ${number(r.quota)} banked</span> · ${r.lastWave?.pay?.total||0} pearls earned${r.lastWave?.pay?.score?` (${r.lastWave.pay.score} for overscore)`:''}</p></div><div class="shop-wallet"><span>PEARLS <b>${r.xp}</b></span>${B('next','',`LAUNCH WAVE ${r.wave+1} ↗`,!!d.pack||!!d.weaponChoice,'shop-launch')}<small>${DEMO.clock(r.wave+1)}s air · quota ${number(DEMO.quota(r.wave+1))} · ${DEMO.cap(r)} tricks</small></div></header>${hint?`<p class="shop-onboard">${E(hint)}</p>`:''}${d.toast?`<p class="shop-toast" role="status">${E(d.toast)}</p>`:''}<div class="shop-main"><main class="shop-offers"><div class="shop-market">${pack(r)}${replacement(r)}<section class="shop-market-row"><header><div><h3>Shelf</h3><p>Weapons and gear for chips and survival. Charms rewrite the scoring.</p></div>${B('reroll','shelf',`REROLL · ${cost('shelf')} ◈`,!!d.pack||r.xp<cost('shelf')||!canRoll('shelf'),'shop-reroll')}</header><div class="shop-offer-grid">${shelf.map(o=>offer(r,o)).join('')}</div></section><section class="shop-market-row"><header><div><h3>Routine</h3><p>Upgrade your tricks: values, combos, odds and extra draws.</p></div>${B('reroll','pack',`REROLL · ${cost('pack')} ◈`,!!d.pack||r.xp<cost('pack')||!canRoll('pack'),'shop-reroll')}</header><div class="shop-offer-grid shop-pack-grid">${routine.map(o=>offer(r,o)).join('')}</div></section>${d.last?`<details class="shop-last-flight" data-inspect="last-flight" ${opened.has('last-flight')?'open':''}><summary>Last flight: <b>${d.last.busted?'BUST':`${number(d.last.chips)} × ${number(d.last.mult)}`} = ${number(d.last.score)}</b> · see why</summary>${DemoBankBreakdown(d.last)}</details>`:''}</div></main>${buildrail(r)}</div></div></section>`);
     DemoBind();const pane=document.querySelector('.shop-offers'),detailRail=document.querySelector('.shop-rail-details');if(pane)pane.scrollTop=scroll;if(detailRail)detailRail.scrollTop=railScroll;
     for(const e of document.querySelectorAll('[data-inspect]'))e.ontoggle=()=>e.open?opened.add(e.dataset.inspect):opened.delete(e.dataset.inspect);
     for(const e of document.querySelectorAll('[data-shop="charm"]'))e.onclick=()=>{focusCharm=+e.dataset.slot;show()};
+    for(const e of document.querySelectorAll('[data-shop="weapon"]'))e.onclick=()=>{focusWeapon=+e.dataset.slot;show()};
     for(const e of document.querySelectorAll('.shop-slot-merge'))e.setAttribute('aria-label','Combine matching weapon copies');
     for(const e of document.querySelectorAll('.shop-slot-sell'))e.setAttribute('aria-label','Sell this weapon');
   }
-  return {show,offerInfo,weaponInfo,choiceInfo,baseline,icon,version:'shop-1'};
+  return {show,offerInfo,weaponInfo,choiceInfo,baseline,icon,version:'shop-2'};
 })();
 Xl=ShopUI.show;
 globalThis.icarusDemo.shop=ShopUI;

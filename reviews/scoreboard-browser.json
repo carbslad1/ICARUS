@@ -1,5 +1,5 @@
 {
-  "buildSha256": "d21f4e996e7f67a3012e6a9fe7c818a3d86397541ba3b3d01387dd5f32832da1",
+  "buildSha256": "ecc17d8588f565f256f538376254a789121ccde0ceb4932312ea1f39b1bc59dc",
   "scope": "Actual rendered browser. Natural keyboard launch plus labelled constructed scoring fixtures; no human satisfaction claim.",
   "errors": [],
   "checks": [
@@ -7,27 +7,30 @@
       "name": "Actual keyboard launch and prominent animated scoreboard",
       "passed": true,
       "detail": {
-        "top": 61,
-        "width": 610,
+        "top": 733.6875,
+        "width": 550,
         "center": 720,
         "font": 60.48,
-        "text": "FLIGHT 01 · WAVE 1\nLAND TO BANK\nCHIPS\n0\n×\nMULT\n1\n+1\n=\nFLIGHT SCORE\n0\nSTAR POSE +1 MULT\n✦\n◇\n◇\n0 / 52 WAVE TARGET",
-        "animations": 1,
+        "text": "↺\n↻\n◇\nCHIPS\n0\n×\nMULT\n2\n+1 · Front flip\n=\nSCORE\n0",
+        "animations": 0,
         "state": {
           "chips": 0,
-          "mult": 1,
+          "mult": 2,
           "score": 0,
           "waveScore": 0,
-          "quota": 52,
+          "quota": 82,
           "draws": 3,
           "faces": [
-            "star"
+            "back",
+            "front"
           ],
+          "bails": [],
+          "busted": false,
           "banked": false,
-          "notice": "STAR POSE  +1 MULT",
+          "notice": "FRONT FLIP  +1 MULT",
           "shown": {
             "chips": 0,
-            "mult": 1,
+            "mult": 2,
             "score": 0,
             "waveScore": 0
           },
@@ -46,9 +49,11 @@
             "mult": 0,
             "score": 0,
             "waveScore": 0,
-            "quota": 52,
+            "quota": 82,
             "draws": 3,
             "faces": [],
+            "bails": [],
+            "busted": false,
             "banked": false,
             "notice": "KILLS FEED CHIPS · TRICKS FEED MULT",
             "shown": {
@@ -67,7 +72,7 @@
           "mult": 4,
           "score": 20
         },
-        "text": "FLIGHT 01 · WAVE 1\nBANKED\nCHIPS\n5\n+5\n×\nMULT\n4\n+1\n=\nBANKED\n20\n+20\nSPLASH! SCORE BANKED\n↻\n↻\n⤨\n20 / 52 WAVE TARGET"
+        "text": "↻\n↻\n⤨\nCHIPS\n5\n+5\n×\nMULT\n4\n+1 · Corkscrew\n=\nBANKED\n20\n+20"
       }
     },
     {
@@ -81,16 +86,16 @@
           "height": 390
         },
         "score": {
-          "x": 234.5,
-          "y": 10,
-          "width": 375,
-          "height": 110.875
+          "x": 257,
+          "y": 310.125,
+          "width": 330,
+          "height": 67.875
         },
         "clock": {
-          "x": 645.453125,
-          "y": 131.640625,
-          "width": 118,
-          "height": 26.09375
+          "x": 541.546875,
+          "y": 13.640625,
+          "width": 115,
+          "height": 28.09375
         },
         "wave": {
           "x": 96.125,

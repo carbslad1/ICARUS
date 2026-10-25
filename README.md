@@ -1,31 +1,43 @@
-# ICARUS — animated chips × mult scoreboard
+# ICARUS — tricks as reels (S4)
 
-Open **ICARUS-demo.html** in a browser. This is a separate presentation test based on the five-trick score-attack demo. It uses that version's kills × mult scoring, score quotas, weapons, shops and movement.
+Open **ICARUS-demo.html** in a browser. This build implements the scoring and run design in `ICARUS_DESIGN.md` §4 and §10 (revised 2026-10-25).
 
 Hold **W / Up** underwater to carve, then release to launch. **Space** boosts. **W A S D / arrows** steer in the air; weapons fire automatically. **Esc** pauses.
 
-## What to test
+## How a run works
 
-- The top-centre scoreboard is the main visual focal point: blue chips, pink mult, gold flight score.
-- Real kills send a blue addition toward chips; the number counts up, enlarges and shakes locally.
-- Completed trick segments reveal their mult additions. New matching combinations receive a stronger pulse and named cue.
-- At water entry, remaining guaranteed tricks, Lucky effects and active charms count through in order. A larger gold animation banks the exact final payout and fills the wave target bar.
-- Short flights still receive every drawn trick. The animation does not add scoring requirements.
-- Repeated rapid kills are visually grouped without losing chip value. Floating additions are capped at16 and sound ticks are rate-limited.
-- The scoreboard has a compact landscape-phone layout. Reduced-motion preference removes vibration/flying additions; mute remains available through the game.
-
-The airborne score is a progressively revealed presentation of the hand; the authoritative payout still resolves through the original bank calculation. This test changes how scoring is shown, not weapon damage or scoring odds. Whether it feels satisfying needs your playtest.
+- **Every jump banks chips × mult** at water entry. Kills are chips, plus bonus chips for multi-kills, apex kills and crit kills. Tricks, combos and charms are mult.
+- **Tricks are the reels.** Each jump draws 3 tricks (buy more, up to 6; Loaded reels makes 7). They play automatically in order across the flight.
+- **A hit bails the trick in progress.** It shows as a red ✕ on the reels and pays nothing; landed tricks keep their value.
+- **0 HP busts the jump.** The dolphin falls out of combat to the water, spending air clock. The jump banks nothing (half with Second wind), and you come back at 50% HP.
+- **Heat cue.** The next jump's tricks are drawn when you hit the water. During the dive, a colour wash, a tone and a one-word label (cold, warm, hot, jackpot) say how good they are.
+- **The only way to lose is missing a wave's quota.** After the air clock runs out, the wave ends at the next water entry.
+- **Shop:** Weapons, Gear (stat and combat items; the only source of stats, with no XP or level-ups), Charms and Routine (trick values, combo levels, draw odds, extra draws, Lucky/Gold/Echo techniques). Run rules (charm slot, reroll discount, extra shelf) appear as rare shelf offers. Rarity sets how often an offer appears and is shown in colour. The trick scoreboard with real combo odds is always visible in the shop.
+- **37 charms**, each readable in two lines with at most one condition: +chips, +mult, ×mult, pearls and rule changes (wildcard, payline doubling, Second wind, Safety net, Loaded reels). They resolve left to right at the bank. No charm changes weapon damage.
 
 ## Source and checks
 
 `node source/build.cjs` rebuilds the self-contained HTML.
 
-`node qa/scoreboard.cjs` checks exact cue totals, short-flight completion, Lucky/charms/Gold,1000 draw/upgrade cases, and original-versus-edited first-wave parity for three movement/weapon policies.
+Headless suites (all pass on this build):
 
-`node qa/five-score.cjs` runs the original14-group/18,083-assertion scoring reference suite.
+| Script | Covers |
+|---|---|
+| `qa/five-score.cjs` | Scoring rules, every charm, bails, busts, techniques, monotonic draws (16 groups, 18,821 assertions) |
+| `qa/five-combat.cjs` | Combat items |
+| `qa/scoreboard.cjs` | Score cues match the bank, including bails and busts |
+| `qa/shop.cjs`, `qa/shop-ui.cjs`, `qa/weapon-shop.cjs` | Shop transactions, offer rules, rarity, previews |
+| `qa/scoring-mechanics.cjs`, `qa/combat-integration.cjs`, `qa/score-stress.cjs` | Overtime, bosses, busts freezing combat, item hooks, CPU stress |
 
-`node qa/scoreboard-browser.cjs` checks actual keyboard launch, real automatic kill feedback, landing bank animation, landscape layout and reduced motion. It currently names the bundled Playwright dependency on this machine. Chromium needs permission to launch outside the macOS sandbox here.
+Browser suites need Playwright: `qa/scoreboard-browser.cjs` (4 of 4 pass) and `qa/product-review.cjs --browser --round=S4` (8 of 8 runtime, 10 of 11 browser). The failing browser check is the 15-second rendered stress test, which reaches about 4.5 s of simulated air in this container's software-GL Chromium. The previous build measures the same once its renderer crash is fixed, so this is the environment, not a regression.
 
-Current reports and actual rendered screenshots are in **reviews/**. Earlier browser failures are preserved: an initial fixture timeout/navigation timeout, then the discovered phone timer overlap. The final version moves the timer clear of the board and keeps it inside the playfield. It also places floating additions outside the board's transformed coordinate system and clears stale labels between runs.
+Bot trials (`qa/scoring-progression.cjs`, `--focused`, `qa/scoring-styles.cjs`) write `reviews/S4-*.json`. They are scripted policies, not players.
 
-The source demo, prior score-attack output and combat fork remain unchanged; **release.json** records their hashes. Device performance, full-run balance and human satisfaction are not established by these presentation checks.
+## Known balance state (to tune)
+
+- Waves 1–4 are close (1.1–4× quota for bots); waves 5–12 are too easy for a strong machine (5–40×).
+- Wave 17 is a wall: bots bust repeatedly and miss quota. Bots in the previous build also died around wave 17.
+- The Sonic starter and close-range low launches remain weak, and the ascent charm package underperforms.
+- Quota curve, bust fall speed, revive HP and heat bands are tuning values (`[TUNE]` in the design doc).
+
+Device performance, human learning time and enjoyment are not established by these checks.

@@ -1,0 +1,77 @@
+{
+  "round": "S4",
+  "buildSha256": "4758476fad7b967313d8dea9163488cc101e7f745f5cf255f7e4d8cb1efa32ff",
+  "scope": "Independent built-runtime fixtures. Browser checks are separately identified; no human learning/fun, commercial or physical-device performance claim.",
+  "checks": [
+    {
+      "name": "five identities, fixed odds and bought draws remain score based",
+      "passed": true,
+      "detail": {
+        "referenceSixMult": 56,
+        "score": 280
+      }
+    },
+    {
+      "name": "equipped scoring charms cannot amplify direct weapon damage",
+      "passed": true,
+      "detail": {
+        "actualPrimaryDamage": 7
+      }
+    },
+    {
+      "name": "real kill credit and final bank use exact chips×mult once",
+      "passed": true,
+      "detail": {
+        "chips": 3,
+        "mult": 4,
+        "bank": 12
+      }
+    },
+    {
+      "name": "no level gate: shop purchases apply immediately and the level command is gone",
+      "passed": true,
+      "detail": {
+        "cash": 180,
+        "slots": 2
+      }
+    },
+    {
+      "name": "full rack replacement and matching purchase preserve exact net cost",
+      "passed": true,
+      "detail": {
+        "cash": 0,
+        "slots": 6,
+        "tier": 2
+      }
+    },
+    {
+      "name": "launch speed schedule and original steering corridor remain intact",
+      "passed": true,
+      "detail": {
+        "local": {
+          "x": 36.4,
+          "y": -20
+        }
+      }
+    },
+    {
+      "name": "living boss cannot disappear through ordinary enemy culling",
+      "passed": true,
+      "detail": {
+        "hp": 100000,
+        "present": true
+      }
+    },
+    {
+      "name": "timer expiry keeps spawning and combat live until the next actual water landing",
+      "passed": true,
+      "detail": {
+        "activeOvertime": 3.5000499990623113,
+        "bank": 9,
+        "mode": "shop"
+      }
+    }
+  ],
+  "passed": 8,
+  "failed": 0
+}

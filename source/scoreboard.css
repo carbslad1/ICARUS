@@ -12,3 +12,14 @@
 @media(prefers-reduced-motion:reduce){#score-hero *{will-change:auto}.ss-add{transition:none}}
 
 .budget-block.in-overtime #budget-label,.budget-block.in-overtime #budget-value{color:#ffe3a0!important}.budget-block.in-overtime .budget-track{box-shadow:0 0 9px #ffd37833}
+
+/* Reels: drawn tricks for this jump. A Bail shows as a red cross the moment you are hit; a bust darkens the row. */
+.ss-reels{display:flex;justify-content:center;gap:6px;margin-bottom:4px;min-height:22px}.ss-reels span{font-size:18px;line-height:22px;width:22px;text-align:center;color:#58707a;text-shadow:0 2px 6px #02070e}.ss-reels span.revealed{color:#ff9dce;text-shadow:0 0 10px #ff8dbd}.ss-reels span.bailed{color:#ff5a5a;font-weight:900;text-shadow:0 0 10px #ff3b3b}.ss-reels.is-bust span{color:#3c464c;text-shadow:none}
+#score-hero.is-bust .ss-total strong,#score-hero.is-bust .ss-mult strong{color:#ff6b6b;text-shadow:0 2px 8px #02070e,0 0 18px #ff3b3b}.ss-particle.bail{color:#ff6b6b;font-size:26px}
+/* Heat cue: a colour wash at the screen edges during the dive, plus a one-word label. */
+#heat-cue{position:fixed;inset:0;z-index:20;pointer-events:none;transition:opacity .25s}#heat-cue[hidden]{display:none!important}#heat-cue #heat-word{position:absolute;left:50%;bottom:max(150px,calc((100vh - min(100vh,56.25vw))/2 + 150px));transform:translateX(-50%);font:900 15px/1 Arial,Helvetica,sans-serif;letter-spacing:.24em;text-shadow:0 2px 8px #02070e}
+#heat-cue.heat-cold{box-shadow:inset 0 0 120px 30px #3a7bd566}#heat-cue.heat-cold #heat-word{color:#8fc3ff}
+#heat-cue.heat-warm{box-shadow:inset 0 0 120px 30px #f0b44c55}#heat-cue.heat-warm #heat-word{color:#ffd58a}
+#heat-cue.heat-hot{box-shadow:inset 0 0 140px 40px #ff6a3d77}#heat-cue.heat-hot #heat-word{color:#ff9a6b}
+#heat-cue.heat-jackpot{box-shadow:inset 0 0 160px 50px #ff4fd899}#heat-cue.heat-jackpot #heat-word{color:#ffd1f4;font-size:18px}
+@media(max-height:550px){#heat-cue #heat-word{font-size:12px;bottom:100px}.ss-reels{min-height:16px;margin-bottom:2px}.ss-reels span{font-size:13px;line-height:16px;width:16px}}

@@ -1,0 +1,681 @@
+{
+  "round": "S4",
+  "scope": "Actual built simulation, constructed combat fixtures; no browser or human-playtest claim",
+  "generated": "2026-10-25T09:33:12.195Z",
+  "buildSha256": "4758476fad7b967313d8dea9163488cc101e7f745f5cf255f7e4d8cb1efa32ff",
+  "passed": 14,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "all nine real weapon paths preserve primary context into item hits",
+      "pass": true,
+      "detail": [
+        {
+          "id": "fin",
+          "damage": 49.83999991416931,
+          "attackIds": [
+            "1"
+          ],
+          "woundRemaining": 3.3599999999999968
+        },
+        {
+          "id": "sonic",
+          "damage": 28.83999991416931,
+          "attackIds": [
+            "1"
+          ],
+          "woundRemaining": 3.3599999999999968
+        },
+        {
+          "id": "arc",
+          "damage": 48.06666676700115,
+          "attackIds": [
+            "1"
+          ],
+          "woundRemaining": 5.599999999999995
+        },
+        {
+          "id": "minigun",
+          "damage": 38.3833329975605,
+          "attackIds": [
+            "1"
+          ],
+          "woundRemaining": 4.549999999999996
+        },
+        {
+          "id": "harpoon",
+          "damage": 148.8375002592802,
+          "attackIds": [
+            "1"
+          ],
+          "woundRemaining": 7.962499999999993
+        },
+        {
+          "id": "laser",
+          "damage": 319.2000002861023,
+          "attackIds": [
+            "1"
+          ],
+          "woundRemaining": 16.800000000000068
+        },
+        {
+          "id": "flak",
+          "damage": 56.5250001847744,
+          "attackIds": [
+            "1"
+          ],
+          "woundRemaining": 2.274999999999998
+        },
+        {
+          "id": "rocket",
+          "damage": 47.97916676104069,
+          "attackIds": [
+            "1"
+          ],
+          "woundRemaining": 5.687499999999996
+        },
+        {
+          "id": "depth",
+          "damage": 186.43624983727932,
+          "attackIds": [
+            "1"
+          ],
+          "woundRemaining": 22.863750000000017
+        }
+      ]
+    },
+    {
+      "name": "cleave, chain, beam and three-shell volley load Apex only once per attack",
+      "pass": true,
+      "detail": [
+        {
+          "id": "fin",
+          "charges": 1,
+          "damageEvents": 5
+        },
+        {
+          "id": "sonic",
+          "charges": 1,
+          "damageEvents": 5
+        },
+        {
+          "id": "arc",
+          "charges": 1,
+          "damageEvents": 4
+        },
+        {
+          "id": "laser",
+          "charges": 1,
+          "damageEvents": 3
+        },
+        {
+          "id": "flak",
+          "charges": 1,
+          "damageEvents": 15
+        }
+      ]
+    },
+    {
+      "name": "actual piercing and explosions retain one primary multikill ID",
+      "pass": true,
+      "detail": [
+        {
+          "id": "fin",
+          "kills": 4,
+          "maxMulti": 4,
+          "attackIds": [
+            1
+          ]
+        },
+        {
+          "id": "arc",
+          "kills": 4,
+          "maxMulti": 4,
+          "attackIds": [
+            1
+          ]
+        },
+        {
+          "id": "laser",
+          "kills": 3,
+          "maxMulti": 3,
+          "attackIds": [
+            1
+          ]
+        },
+        {
+          "id": "flak",
+          "kills": 4,
+          "maxMulti": 4,
+          "attackIds": [
+            1
+          ]
+        },
+        {
+          "id": "rocket",
+          "kills": 4,
+          "maxMulti": 4,
+          "attackIds": [
+            1
+          ]
+        },
+        {
+          "id": "depth",
+          "kills": 4,
+          "maxMulti": 4,
+          "attackIds": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "name": "item secondary kills pay chips without becoming primary multikills or recursively proccing",
+      "pass": true,
+      "detail": {
+        "chips": 1,
+        "kill": {
+          "t": 0.008333333333333333,
+          "phase": "ascent",
+          "kv": 1,
+          "bonus": 0,
+          "primary": false,
+          "above": false,
+          "crit": false,
+          "opening": true,
+          "late": false,
+          "entry": false
+        },
+        "itemTriggers": {
+          "I02": 1,
+          "I04": 1
+        }
+      }
+    },
+    {
+      "name": "real phase ledger distinguishes opening, apex, descent and late kills; apex kills pay bonus chips",
+      "pass": true,
+      "detail": {
+        "prediction": {
+          "height": 30,
+          "air": 4,
+          "apex": 2,
+          "distance": 80,
+          "turned": false
+        },
+        "kills": [
+          {
+            "t": 0.1,
+            "phase": "ascent",
+            "kv": 1,
+            "bonus": 1,
+            "weaponType": "Shot",
+            "primary": true,
+            "attackId": 1,
+            "above": false,
+            "crit": true,
+            "opening": true,
+            "late": false,
+            "entry": false
+          },
+          {
+            "t": 2,
+            "phase": "apex",
+            "kv": 1,
+            "bonus": 2,
+            "weaponType": "Shot",
+            "primary": true,
+            "attackId": 2,
+            "above": false,
+            "crit": false,
+            "opening": false,
+            "late": false,
+            "entry": false
+          },
+          {
+            "t": 3.5,
+            "phase": "descent",
+            "kv": 1,
+            "bonus": 0,
+            "weaponType": "Shot",
+            "primary": true,
+            "attackId": 3,
+            "above": false,
+            "crit": false,
+            "opening": false,
+            "late": true,
+            "entry": false
+          }
+        ],
+        "ledger": {
+          "K": 6,
+          "kills": [
+            {
+              "t": 0.1,
+              "phase": "ascent",
+              "kv": 1,
+              "bonus": 1,
+              "weaponType": "Shot",
+              "primary": true,
+              "attackId": 1,
+              "above": false,
+              "crit": true,
+              "opening": true,
+              "late": false,
+              "entry": false
+            },
+            {
+              "t": 2,
+              "phase": "apex",
+              "kv": 1,
+              "bonus": 2,
+              "weaponType": "Shot",
+              "primary": true,
+              "attackId": 2,
+              "above": false,
+              "crit": false,
+              "opening": false,
+              "late": false,
+              "entry": false
+            },
+            {
+              "t": 3.5,
+              "phase": "descent",
+              "kv": 1,
+              "bonus": 0,
+              "weaponType": "Shot",
+              "primary": true,
+              "attackId": 3,
+              "above": false,
+              "crit": false,
+              "opening": false,
+              "late": true,
+              "entry": false
+            }
+          ],
+          "hits": 0,
+          "air": 3.5,
+          "bails": [],
+          "busted": false,
+          "netUsed": false,
+          "hpFrac": 10000000,
+          "banked": 0,
+          "closeWeapons": 0,
+          "maxMulti": 1,
+          "wave": 1,
+          "bankId": 1,
+          "luck": 0,
+          "angle": 56.309932474020215
+        }
+      }
+    },
+    {
+      "name": "real water contact damages before banking and only near the contact point",
+      "pass": true,
+      "detail": {
+        "entryKillIndex": 4,
+        "bankIndex": 10,
+        "bank": {
+          "base": 3,
+          "items": [
+            {
+              "id": "I07",
+              "name": "Water hammer",
+              "count": 1
+            }
+          ],
+          "techniqueLog": [],
+          "predAir": 4,
+          "apexWeapon": "laser",
+          "chips": 2,
+          "killChips": 2,
+          "bonus": {
+            "multi": 0,
+            "apex": 0,
+            "crit": 0
+          },
+          "mult": 3,
+          "score": 6,
+          "pearls": 0,
+          "busted": false,
+          "bails": [],
+          "cards": [
+            "Spout",
+            "Front flip",
+            "Backflip"
+          ],
+          "drawn": [
+            "spout",
+            "front",
+            "back"
+          ],
+          "combos": [],
+          "charmLog": [],
+          "kills": 1,
+          "air": 0.009345028343377637,
+          "physicalAir": 0.009345028343377637,
+          "peak": 0,
+          "hits": 0,
+          "hpLost": 0,
+          "launch": {
+            "angle": 0.982793723247329,
+            "speed": 36.05551275463989
+          },
+          "slots": 3,
+          "cap": 3,
+          "phases": {
+            "ascent": 1,
+            "apex": 0,
+            "descent": 0
+          },
+          "entryKills": 1
+        }
+      }
+    },
+    {
+      "name": "a bust freezes new combat facts and item effects until the dolphin reaches the water",
+      "pass": true,
+      "detail": {
+        "ticks": 240,
+        "busted": true,
+        "damageFrozen": true
+      }
+    },
+    {
+      "name": "marked enemy self propulsion slows, while independent shock impulse stays unchanged",
+      "pass": true,
+      "detail": {
+        "selfVelocity": [
+          -0.45698558806510386,
+          -0.36558847045208315
+        ],
+        "shockDisplacement": [
+          0.08234909671714874,
+          0.08234909671714874
+        ],
+        "shockVelocity": [
+          9.764716866522432,
+          9.764716866522432
+        ]
+      }
+    },
+    {
+      "name": "Armour then Repulsor then shield reduce damage, and shielded accepted hits still enter ledger",
+      "pass": true,
+      "detail": {
+        "hp": 72.5,
+        "acceptedHits": 2,
+        "hpLost": 27.5,
+        "shield": 90
+      }
+    },
+    {
+      "name": "underwater overlap preserves a real entry-converted pursuer and gives no kill",
+      "pass": true,
+      "detail": {
+        "before": {
+          "kills": 0,
+          "xp": 0,
+          "pursuers": 1,
+          "hp": 1000000000
+        },
+        "after": {
+          "kills": 0,
+          "xp": 0,
+          "pursuers": 1,
+          "hp": 1000000000
+        }
+      }
+    },
+    {
+      "name": "material XP pays nothing and never levels: stats come only from Gear",
+      "pass": true,
+      "detail": {
+        "levels": 0,
+        "maxHp": 100
+      }
+    },
+    {
+      "name": "splitter children respect the shared one-hundred enemy cap",
+      "pass": true,
+      "detail": {
+        "count": 100
+      }
+    },
+    {
+      "name": "ordinary and inherited spawns share the cap with returning pursuers",
+      "pass": true,
+      "detail": {
+        "enemies": 99,
+        "pursuers": 1
+      }
+    },
+    {
+      "name": "one minute of actual combat with one hundred live enemies keeps tracking bounded",
+      "pass": true,
+      "detail": {
+        "scope": "CPU simulation only; continuously replenished100-enemy scene; no renderer, Android or thermal claim",
+        "simulatedSeconds": 60,
+        "wallSeconds": 4.2258027920000005,
+        "maxEnemies": 100,
+        "maxShots": 128,
+        "maxTracked": 512,
+        "replenished": 966,
+        "totalAttacks": 599,
+        "wounds": 5,
+        "grazeRecords": 53,
+        "stepMs": {
+          "median": 0.5345899999999801,
+          "p95": 0.9791159999999763,
+          "p99": 1.2120869999998831,
+          "max": 4.428674999999998
+        }
+      }
+    }
+  ],
+  "observations": {
+    "stressFrames": [
+      {
+        "sec": 0,
+        "cam": {
+          "x": 0.16681429516250945,
+          "y": 999999.9999375347
+        },
+        "origin": {
+          "x": 0.16666666666666666,
+          "y": 999999.9994791667
+        },
+        "n": 100,
+        "first": {
+          "pos": {
+            "x": -13.5,
+            "y": -9
+          },
+          "off": 0
+        }
+      },
+      {
+        "sec": 1,
+        "cam": {
+          "x": 20.3124664145491,
+          "y": 999993.247723649
+        },
+        "origin": {
+          "x": 20.16666666666667,
+          "y": 999992.3744791704
+        },
+        "n": 100,
+        "first": {
+          "pos": {
+            "x": -13.5,
+            "y": -9
+          },
+          "off": 0
+        }
+      },
+      {
+        "sec": 2,
+        "cam": {
+          "x": 40.332167510780025,
+          "y": 999970.6310360621
+        },
+        "origin": {
+          "x": 40.166666666666636,
+          "y": 999969.7494791741
+        },
+        "n": 100,
+        "first": {
+          "pos": {
+            "x": -13.5,
+            "y": -9
+          },
+          "off": 0
+        }
+      },
+      {
+        "sec": 3,
+        "cam": {
+          "x": 60.333275524879134,
+          "y": 999932.8885259961
+        },
+        "origin": {
+          "x": 60.16666666666635,
+          "y": 999932.1244791779
+        },
+        "n": 100,
+        "first": {
+          "pos": {
+            "x": -14.095580061405936,
+            "y": -10.615986114224086
+          },
+          "off": 0
+        }
+      },
+      {
+        "sec": 4,
+        "cam": {
+          "x": 80.33333054990436,
+          "y": 999880.1388978699
+        },
+        "origin": {
+          "x": 80.16666666666676,
+          "y": 999879.4994791816
+        },
+        "n": 100,
+        "first": {
+          "pos": {
+            "x": -14.993055014957847,
+            "y": -22.14565803439565
+          },
+          "off": 0
+        }
+      },
+      {
+        "sec": 5,
+        "cam": {
+          "x": 100.33333320037505,
+          "y": 999812.3889157845
+        },
+        "origin": {
+          "x": 100.16666666666733,
+          "y": 999811.8744791853
+        },
+        "n": 100,
+        "first": {
+          "pos": {
+            "x": -15.025366034480431,
+            "y": -37.483941555447544
+          },
+          "off": 0.8166666666666662
+        }
+      },
+      {
+        "sec": 6,
+        "cam": {
+          "x": 120.33333332699704,
+          "y": 999729.6389166445
+        },
+        "origin": {
+          "x": 120.1666666666679,
+          "y": 999729.249479189
+        },
+        "n": 100,
+        "first": {
+          "pos": {
+            "x": -15.025446125490399,
+            "y": -52.822225076499436
+          },
+          "off": 1.8166666666666627
+        }
+      },
+      {
+        "sec": 7,
+        "cam": {
+          "x": 140.3333333330326,
+          "y": 999631.8889166885
+        },
+        "origin": {
+          "x": 140.16666666666742,
+          "y": 999631.6244791928
+        },
+        "n": 100,
+        "first": {
+          "pos": {
+            "x": -14.871768924574148,
+            "y": -27.967061718296005
+          },
+          "off": 0.8833333333333326
+        }
+      },
+      {
+        "sec": 8,
+        "cam": {
+          "x": 160.33333333331927,
+          "y": 999519.1389166943
+        },
+        "origin": {
+          "x": 160.1666666666663,
+          "y": 999518.9994791965
+        },
+        "n": 100,
+        "first": {
+          "pos": {
+            "x": -14.871768924574148,
+            "y": -31.092586446489204
+          },
+          "off": 1.883333333333329
+        }
+      },
+      {
+        "sec": 9,
+        "cam": {
+          "x": 180.33333333333184,
+          "y": 999391.388916698
+        },
+        "origin": {
+          "x": 180.16666666666515,
+          "y": 999391.3744792002
+        },
+        "n": 100,
+        "first": {
+          "pos": {
+            "x": -17.981148701694,
+            "y": 33.99576526353518
+          },
+          "off": 0.6833333333333333
+        }
+      }
+    ],
+    "stress": {
+      "attacks": 599,
+      "live": 100,
+      "maxEnemies": 100,
+      "maxShots": 128,
+      "maxTracked": 512,
+      "activeAir": 59.999999999997236,
+      "time": 59.999999999997236,
+      "mode": "playing",
+      "medium": "air"
+    }
+  }
+}

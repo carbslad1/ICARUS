@@ -1,6 +1,6 @@
 'use strict';
 const fs=require('fs'),path=require('path'),assert=require('assert/strict'),crypto=require('crypto');
-const {chromium}=require('/Users/johncarbone/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const {chromium}=require('playwright');
 const root=path.resolve(__dirname,'..'),file=path.join(root,'ICARUS-demo.html'),report={buildSha256:crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex'),scope:'Actual rendered browser. Natural keyboard launch plus labelled constructed scoring fixtures; no human satisfaction claim.',errors:[],checks:[]};
 (async()=>{const browser=await chromium.launch({headless:true,args:['--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});const page=await browser.newPage({viewport:{width:1440,height:900}});page.on('pageerror',e=>report.errors.push(e.message));
 async function check(name,fn){try{const detail=await fn();report.checks.push({name,passed:true,detail});console.log('PASS '+name)}catch(e){report.checks.push({name,passed:false,error:e.stack,diagnostic:await page.evaluate(()=>({mode:window.icarusDemo?.state?.mode,endReason:window.icarusDemo?.state?.endReason,time:window.icarusDemo?.state?.time,hp:window.icarusDemo?.state?.hp,medium:window.icarusDemo?.state?.medium,hand:window.icarusDemo?.state?.hand&&{open:window.icarusDemo.state.hand.open,air:window.icarusDemo.state.hand.air,activeAir:window.icarusDemo.state.hand.activeAir},last:window.icarusDemo?.state?.demo?.last,scoreboard:window.icarusDemo?.scoreboard.state})).catch(()=>null)});console.log('FAIL '+name+': '+e.message)}}
@@ -8,7 +8,7 @@ await check('Actual keyboard launch and prominent animated scoreboard',async()=>
  await page.goto('file://'+file);await page.waitForSelector('[data-demo="begin"]');await page.click('[data-demo="begin"]');await page.waitForSelector('#score-hero');await page.keyboard.down('w');await page.waitForFunction(()=>window.icarusDemo.state.medium.kind==='air'||window.icarusDemo.state.medium.heading>.5,{}, {timeout:5000});await page.keyboard.up('w');await page.waitForFunction(()=>window.icarusDemo.state.medium.kind==='air',{}, {timeout:10000});
  await page.waitForFunction(()=>window.icarusDemo.scoreboard.state.mult>0,{}, {timeout:10000});await page.screenshot({path:path.join(root,'reviews','scoreboard-natural.png')});
  const x=await page.evaluate(()=>{const e=document.getElementById('score-hero'),b=e.getBoundingClientRect();return {top:b.y,width:b.width,center:b.x+b.width/2,font:parseFloat(getComputedStyle(document.getElementById('ss-chips')).fontSize),text:e.innerText,animations:e.getAnimations({subtree:true}).length,state:window.icarusDemo.scoreboard.state}});
- assert.ok(x.top<100);assert.ok(x.width>=550);assert.ok(x.font>=50);assert.ok(x.text.includes('CHIPS')&&x.text.includes('MULT'));return x;
+ assert.ok(x.top>450,'approved bottom placement (NEXT-PASS: move score to bottom)');assert.ok(x.width>=550);assert.ok(x.font>=50);assert.ok(x.text.includes('CHIPS')&&x.text.includes('MULT'));return x;
 });
 await check('Actual kills add chips and real trick/Pair cues animate mult, with exact bank',async()=>{
  // Construct a repeat hand and a reachable 1HP enemy; actual automatic weapon fire earns the chip.
