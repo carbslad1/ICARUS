@@ -261,7 +261,7 @@ Getting hit is the slot machine's danger, and it is Tony Hawk's bail.
 - **Every accepted hit also costs HP.** HP decides one thing only: **busts**. It does not feed the score.
 - **0 HP busts the jump.**
   - The jump banks nothing.
-  - The dolphin falls from where it is to the water, and **the fall spends air clock** for its duration.
+  - The dolphin falls from where it is to the water, and **the fall spends air clock** for its duration. **[TUNE]** fall speed.
   - **[CALL]** The next jump starts at **50% of max HP** **[TUNE]**. A full refill would make busting a cheap heal (diving in at low HP to come back full).
   - **[CALL]** The busted hand is discarded. The next jump's tricks are drawn when the dolphin reaches the water, as for any jump.
   - **[CALL]** In overtime, the bust's water entry counts as the water entry that ends the wave. It banks nothing, then the quota is checked.
@@ -296,7 +296,7 @@ Charms are the build-defining layer, equivalent to Balatro's jokers and CloverPi
   - Bail interactions ("Bails pay +2 chips")
   - flight-phase hooks ("+3 chips per kill during descent")
 - **Charms resolve left to right at the bank.** The player arranges the order in the shop. Order must matter, mainly through `×mult` placement.
-- **Each charm reads in one line** and has at most one condition. No stacked multi-condition text. The same rule applies to every gear item and weapon description.
+- **Each charm is readable in two lines** at most and has at most one condition. No stacked multi-condition text. The same rule applies to every gear item and weapon description.
 - **Binding constraint (user rule):** no charm changes weapon damage. Charms change score and pearls only.
 - **Scale target:** about 30–40 charms for the demo, with enough `×mult`, retrigger and scaling effects that a strong build is many times stronger than an unbuilt one. In S3 the strongest focused trick build was only about 2.6× an unbuilt one, which is too low.
 
@@ -388,13 +388,13 @@ These are binding design constraints, not aspirations. A slot-machine structure 
 
 ## 4.16 Open questions
 
-1. The fall after a bust: its speed, and therefore how much air clock a bust costs. (§4.6)
-2. Quota curve once extra draws are bought rather than free and XP levels are gone. (§4.3, §4.4, §4.10)
-3. Whether to show a "this jump needs X" readout alongside the heat cue. This was proposed and not decided.
-4. How much of the existing 17-charm list and the 10 combat items survive the one-line standard in §4.8.
-5. Heat bands: how many, and what expected mult each represents. (§4.4)
+1. How much of the existing 17-charm list and the 10 combat items survive the two-line standard in §4.8.
 
-**Considered and rejected (2026-10-25):** making airtime decide how many tricks complete. Every drawn trick still completes unless a hit bails it.
+Fall speed, the quota curve and the heat bands are tuning, marked **[TUNE]** where they appear. They are not open design questions.
+
+**Considered and rejected (2026-10-25):**
+- Making airtime decide how many tricks complete. Every drawn trick still completes unless a hit bails it.
+- A "this jump needs X" readout. The heat cue is the only pre-launch signal.
 
 ---
 
