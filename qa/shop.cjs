@@ -66,10 +66,12 @@ test('Gear purchases sell one copy and reverse their exact stat contributions',(
   assert.equal(JSON.stringify(r.demo.stats),before,D.items[id].name+' exact stat reversal');assert.equal(r.xp,xp-19+9);
  }
 });
-test('No XP or level-ups: stats come only from Gear',()=>{
- const r=run();assert.equal(D.levelChoices,undefined);assert.equal(D.command(r,'level',0),false);
- assert.equal(D.stats.Pickup,undefined);assert.equal(D.stats['XP gain'],undefined);assert(!D.items.some(x=>x.rule));
- const p=H.Hd(1,'harpoon');p.lvl=0;H.Oxepay(p,p.medium,{x:0,y:0});assert.equal(p.lvl,0);assert.equal(p.stats.maxHp,100);
+test('Levels gate the shop until each stat pick is chosen, and add no Max HP by themselves',()=>{
+ const r=run();r.lvup=2;D.levelChoices(r);assert.equal(r.demo.levelChoices.length,3);r.demo.offers=[{uid:9001,row:'weapon',id:'harpoon',level:1,price:20}];const xp=r.xp;
+ assert.equal(D.command(r,'buy',9001),false);assert.equal(r.xp,xp);assert.equal(D.command(r,'next'),false);
+ assert.equal(D.command(r,'level',0),true);assert.equal(r.lvup,1);assert.equal(D.command(r,'level',0),true);assert.equal(r.lvup,0);assert.equal(D.command(r,'buy',9001),true);
+ const p=H.Hd(1,'harpoon'),hp=p.hp;p.medium={kind:'air',origin:{x:0,y:20},local:{x:0,y:0},velocity:{x:0,y:0},vx:0,vy:0,elapsed:1,heading:0,waterScale:1};H.Oxepay(p,H.Oxeneed(0),{x:0,y:0});assert.equal(p.lvl,1);assert.equal(p.lvup,1);assert.equal(p.stats.maxHp,100);assert.equal(p.hp,hp);
+ assert.ok(D.stats.Pickup&&D.stats['XP gain']);assert(!D.items.some(x=>x.rule));
 });
 test('Charm slot cap rejects shelf additions without payment and permits selling/replacing',()=>{
  const r=run();r.demo.charms=['S01','S02','S03','S04','S07'];

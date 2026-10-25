@@ -11,7 +11,8 @@ Hold **W / Up** underwater to carve, then release to launch. **Space** boosts. *
 - **A hit bails the trick in progress.** It shows as a red ✕ on the reels and pays nothing; landed tricks keep their value.
 - **0 HP busts the jump.** The dolphin falls out of combat to the water, spending air clock. The jump banks nothing (half with Second wind), and you come back at 50% HP.
 - **The only way to lose is missing a wave's quota.** After the air clock runs out, the wave ends at the next water entry.
-- **Shop:** Weapons, Gear (stat and combat items; the only source of stats, with no XP or level-ups), Charms and Routine (trick values, combo levels, draw odds, extra draws, Lucky/Gold/Echo techniques). Run rules (charm slot, reroll discount, extra shelf) appear as rare shelf offers. Rarity sets how often an offer appears and is shown in colour. The trick scoreboard with real combo odds is always visible in the shop.
+- **XP:** kills drop XP orbs that you steer through to collect. Each level gives a free pick of three stats before the shop. Levels add no Max HP on their own.
+- **Shop:** Weapons, Gear (stat and combat items), Charms and Routine (trick values, combo levels, draw odds, extra draws, Lucky/Gold/Echo techniques). Run rules (charm slot, reroll discount, extra shelf) appear as rare shelf offers. Rarity sets how often an offer appears and is shown in colour. The trick scoreboard with real combo odds is always visible in the shop.
 - **37 charms**, each readable in two lines with at most one condition: +chips, +mult, ×mult, pearls and rule changes (wildcard, payline doubling, Second wind, Safety net, Loaded reels). They resolve left to right at the bank. No charm changes weapon damage.
 
 ## Source and checks

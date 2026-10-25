@@ -1,6 +1,6 @@
 {
   "round": "S4",
-  "buildSha256": "4758476fad7b967313d8dea9163488cc101e7f745f5cf255f7e4d8cb1efa32ff",
+  "buildSha256": "ab1becf5c069fb0d088a1c1246ea6f51d34cbce775ca602775d89e2f88f4e2bf",
   "scope": "Independent built-runtime fixtures. Browser checks are separately identified; no human learning/fun, commercial or physical-device performance claim.",
   "checks": [
     {
@@ -28,11 +28,17 @@
       }
     },
     {
-      "name": "no level gate: shop purchases apply immediately and the level command is gone",
+      "name": "pending level gates shop mutations atomically",
       "passed": true,
       "detail": {
-        "cash": 180,
-        "slots": 2
+        "before": {
+          "cash": 200,
+          "slots": 1
+        },
+        "after": {
+          "cash": 180,
+          "slots": 2
+        }
       }
     },
     {

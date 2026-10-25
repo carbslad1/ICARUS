@@ -1,5 +1,5 @@
 {
-  "buildSha256": "48290ec6eebbe204f65c1878e0e9a8562d038e9a9e42ee9d361e33c72dbcbee5",
+  "buildSha256": "ab1becf5c069fb0d088a1c1246ea6f51d34cbce775ca602775d89e2f88f4e2bf",
   "scope": "Actual rendered browser. Natural keyboard launch plus labelled constructed scoring fixtures; no human satisfaction claim.",
   "errors": [],
   "checks": [
@@ -11,30 +11,30 @@
         "width": 550,
         "center": 720,
         "font": 60.48,
-        "text": "⤨\n≋\n◇\nCHIPS\n0\n×\nMULT\n2\n+1 · Spout\n=\nSCORE\n0",
-        "animations": 0,
+        "text": "✦\n✦\n◇\nCHIPS\n0\n×\nMULT\n3\n+1 · Pair\n=\nSCORE\n0",
+        "animations": 1,
         "state": {
           "chips": 0,
-          "mult": 2,
+          "mult": 3,
           "score": 0,
           "waveScore": 0,
           "quota": 70,
           "draws": 3,
           "faces": [
-            "cork",
-            "spout"
+            "star",
+            "star"
           ],
           "bails": [],
           "busted": false,
           "banked": false,
-          "notice": "SPOUT  +1 MULT",
+          "notice": "PAIR  +1 MULT",
           "shown": {
             "chips": 0,
-            "mult": 2,
+            "mult": 3,
             "score": 0,
             "waveScore": 0
           },
-          "queued": 2
+          "queued": 0
         }
       }
     },
@@ -57,7 +57,7 @@
             "banked": false,
             "notice": "KILLS FEED CHIPS · TRICKS FEED MULT",
             "shown": {
-              "chips": 3.222949168826127,
+              "chips": 3.6652443288173666,
               "mult": 0,
               "score": 0,
               "waveScore": 0

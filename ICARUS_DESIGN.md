@@ -180,7 +180,7 @@ Bounds are necessary: without them the player could fly straight down to the wat
 
 # 4. Reward architecture and scoring
 
-**Revised 2026-10-25.** This section replaces the original §4 (altimeter score, tier jackpots, entry-quality near-misses and the level-up draft as the primary reward). It is the target scoring and build design for the playable demo (`source/`, built to `ICARUS-demo.html`). The demo does not implement all of it yet: draws still grow for free, 0 HP still ends the run, XP and level-ups remain, and there are no trick bails, busts or chip bonuses. All numbers marked **[TUNE]** are starting points; the structure beside them is the requirement. Items marked **[OPEN]** are unresolved and must be raised, not guessed.
+**Revised 2026-10-25.** This section replaces the original §4 (altimeter score, tier jackpots, entry-quality near-misses and the level-up draft as the primary reward). It is the target scoring and build design for the playable demo (`source/`, built to `ICARUS-demo.html`). The demo does not implement all of it yet: draws still grow for free, 0 HP still ends the run, and there are no trick bails, busts or chip bonuses. All numbers marked **[TUNE]** are starting points; the structure beside them is the requirement. Items marked **[OPEN]** are unresolved and must be raised, not guessed.
 
 ## 4.1 The thesis
 
@@ -320,18 +320,18 @@ Charms are the build-defining layer, equivalent to Balatro's jokers and CloverPi
 
 The shop between waves is where all building and all reading happens.
 
-**Four categories, one stat stream:**
+**Four categories:**
 
 | Category | Contains |
 |---|---|
 | Weapons | 9 automatic weapons in 3 types × 3 cadences, 6 slots, merge two equal copies into the next tier (max T4) |
-| Gear | Stat items with trade-offs and combat items, merged into one category. **The only source of stats.** |
+| Gear | Stat items with trade-offs and combat items, merged into one category. |
 | Charms | §4.8 |
 | Routine | Trick values, combo levels, draw odds, extra draws and techniques (§4.9) |
 
 **[CALL]** Vouchers are no longer a category. Permanent run rules, such as an extra charm slot, cheaper rerolls, an extra shelf slot or the commit offer, appear as rare offers in the row they affect.
 
-**[CALL]** XP and level-ups are removed, which leaves Gear as the single stat stream. This also removes the free +10 Max HP per level that grew defence for nothing, and the Pickup and XP gain stats that only served XP.
+**XP and level-ups stay (user decision, 2026-10-25).** Kills drop XP orbs that are collected in the air, so steering for them is a positioning decision. Each level offers a free pick of three stats (combat, defence, flight/economy) before shopping. Stats therefore come from Gear and level-up picks. **Levels add no Max HP by themselves** (user decision): defence grows only by choice. S4 briefly removed XP; that was reverted.
 
 **Offer rules:**
 - **Rarity** sets how often an offer appears, not only its price, and each rarity has a visible colour.
@@ -659,12 +659,12 @@ At weapon level 8, with the matching passive held, a weapon evolves: new name, n
 ## 10.1 Within a run
 
 - **Between waves: the shop (§4.10).** This is where the build is made and where the player reads it.
-- **No XP or levels** (§4.10). All stats come from Gear in the shop. The demo still has XP and level-ups.
+- **XP and levels:** kills drop XP orbs, collected in the air. Each level gives a free stat pick from three before the shop (§4.10). Levels add no Max HP by themselves.
 - **The stat pool still spans both phases**, or the build layer ends up orthogonal to the game:
   - **Flight:** Lift, Hang, Air steering
   - **Combat:** type damage, Damage %, Attack speed, Crit, Reach, Area
   - **Defence:** Max HP, Armour, Regen. Under §4.6 they protect landed tricks and prevent busts.
-  - **Economy:** Luck
+  - **Economy:** Pickup, Luck, XP gain
 - **Launch shape is a build axis.** Builds that pay for long apexes and descents favour high launches. Builds that pay for breach and entry favour many short hops. Both must be viable.
 
 ## 10.2 Run structure
@@ -1081,7 +1081,7 @@ Weapon system, all four weapons, projectiles, targeting, collisions, kills, dama
 
 ### Phase 5 — Reward
 
-> **Superseded in part (2026-10-25).** The reward phase now targets §4: chips × mult, chip bonuses, tricks, combos, charms, trick bails and busts, the shop and the economy. Tier loot, streaks, the altimeter, XP and level-up drafts are out.
+> **Superseded in part (2026-10-25).** The reward phase now targets §4: chips × mult, chip bonuses, tricks, combos, charms, trick bails and busts, the shop and the economy. Tier loot, streaks and the altimeter are out; XP and level-up stat picks stay.
 XP, orbs, levels, the draft with weighting and guarantees, loot tables, streaks, combo, escalation, the altimeter and record lines, run summary.
 
 **Gate, two parts:**

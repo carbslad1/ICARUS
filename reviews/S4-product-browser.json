@@ -1,6 +1,6 @@
 {
   "round": "S4",
-  "buildSha256": "4758476fad7b967313d8dea9163488cc101e7f745f5cf255f7e4d8cb1efa32ff",
+  "buildSha256": "ab1becf5c069fb0d088a1c1246ea6f51d34cbce775ca602775d89e2f88f4e2bf",
   "scope": "Actual rendered UI/input checks. Constructed shop fixtures are not evidence of natural offer availability; mobile is browser emulation, not physical hardware.",
   "errors": [],
   "checks": [
@@ -20,7 +20,7 @@
           "width": 1440,
           "height": 810
         },
-        "text": "↺\n◇\n◇\nCHIPS\n0\n×\nMULT\n0.64\n+1 · Backflip\n=\nSCORE\n0",
+        "text": "≋\n◇\n◇\nCHIPS\n0\n×\nMULT\n0.64\n+1 · Spout\n=\nSCORE\n0",
         "strong": 3,
         "background": "rgba(0, 0, 0, 0)",
         "border": "0px",
@@ -28,7 +28,7 @@
       }
     },
     {
-      "name": "shop six-slot rack, charm rail and always-visible trick scoreboard",
+      "name": "shop six-slot rack, charm rail, actual level gate and always-visible trick scoreboard",
       "passed": true,
       "detail": {
         "slots": 6,
@@ -285,7 +285,7 @@
     {
       "name": "bounded15-second rendered100-enemy scoring stress",
       "passed": false,
-      "error": "AssertionError [ERR_ASSERTION]: main combat simulation must actually keep running {\"activeAir\":4.433333333333343,\"simulatedSeconds\":4.433333333333343,\"frames\":89,\"frameIntervalMs\":{\"median\":16.700000000000728,\"p95\":899.9000000000015,\"p99\":2583.2000000000007,\"max\":2583.2000000000007},\"attacks\":78}\n    at /home/user/icarus/qa/product-review.cjs:38:1712\n    at async test (/home/user/icarus/qa/product-review.cjs:22:47)\n    at async /home/user/icarus/qa/product-review.cjs:35:1"
+      "error": "AssertionError [ERR_ASSERTION]: main combat simulation must actually keep running {\"activeAir\":3.791666666666656,\"simulatedSeconds\":3.791666666666656,\"frames\":83,\"frameIntervalMs\":{\"median\":16.799999999999272,\"p95\":850,\"p99\":2766.5,\"max\":2766.5},\"attacks\":66}\n    at /home/user/icarus/qa/product-review.cjs:38:1712\n    at async test (/home/user/icarus/qa/product-review.cjs:22:47)\n    at async /home/user/icarus/qa/product-review.cjs:35:1"
     }
   ],
   "passed": 10,

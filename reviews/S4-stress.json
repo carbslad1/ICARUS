@@ -1,10 +1,10 @@
 {
   "round": "S4",
-  "buildSha256": "4758476fad7b967313d8dea9163488cc101e7f745f5cf255f7e4d8cb1efa32ff",
+  "buildSha256": "ab1becf5c069fb0d088a1c1246ea6f51d34cbce775ca602775d89e2f88f4e2bf",
   "passed": true,
   "scope": "60 seconds CPU simulation only: continuously100 mixed enemies, six tier4weapons, all10items/all17scorecharms. Constructed health/altitude/clock fixture and replenished enemy population; no survival, rendering, Android frame pacing or thermal claim.",
   "seconds": 60,
-  "wallSeconds": 4.976606463,
+  "wallSeconds": 6.298666854,
   "attacks": 1007,
   "maxEnemies": 100,
   "maxShots": 25,
@@ -13,9 +13,9 @@
   "replenished": 15,
   "damageTaken": 4.934355616569519,
   "stepMs": {
-    "median": 0.5860330000000431,
-    "p95": 1.1966259999999806,
-    "p99": 1.734411999999793,
-    "max": 13.229213999999985
+    "median": 0.8605980000002091,
+    "p95": 1.4936229999998432,
+    "p99": 1.9451820000003863,
+    "max": 10.632750999999999
   }
 }

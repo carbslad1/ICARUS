@@ -1,8 +1,8 @@
 {
   "round": "S4",
   "scope": "Actual built simulation, constructed combat fixtures; no browser or human-playtest claim",
-  "generated": "2026-10-25T10:23:55.625Z",
-  "buildSha256": "48290ec6eebbe204f65c1878e0e9a8562d038e9a9e42ee9d361e33c72dbcbee5",
+  "generated": "2026-10-25T10:44:39.492Z",
+  "buildSha256": "ab1becf5c069fb0d088a1c1246ea6f51d34cbce775ca602775d89e2f88f4e2bf",
   "passed": 14,
   "failed": 0,
   "checks": [
@@ -428,10 +428,10 @@
       }
     },
     {
-      "name": "material XP pays nothing and never levels: stats come only from Gear",
+      "name": "actual material XP levels up with a stat pick but no automatic Max HP or healing",
       "pass": true,
       "detail": {
-        "levels": 0,
+        "levels": 1,
         "maxHp": 100
       }
     },
@@ -456,7 +456,7 @@
       "detail": {
         "scope": "CPU simulation only; continuously replenished100-enemy scene; no renderer, Android or thermal claim",
         "simulatedSeconds": 60,
-        "wallSeconds": 4.778085978,
+        "wallSeconds": 4.773074318,
         "maxEnemies": 100,
         "maxShots": 128,
         "maxTracked": 512,
@@ -465,10 +465,10 @@
         "wounds": 5,
         "grazeRecords": 53,
         "stepMs": {
-          "median": 0.5529360000000452,
-          "p95": 1.2148209999995743,
-          "p99": 1.8838120000000345,
-          "max": 7.652827999999971
+          "median": 0.5622860000000856,
+          "p95": 1.1269090000000688,
+          "p99": 1.5656439999997929,
+          "max": 5.590089000000006
         }
       }
     }

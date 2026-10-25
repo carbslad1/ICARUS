@@ -48,7 +48,7 @@ var DEMO = (() => {
     Reach:{group:'combat',sizes:[1,2,3,4]},Area:{group:'combat',sizes:[.05,.10,.15,.20]},
     'Max HP':{group:'defence',sizes:[3,6,9,12]},Armour:{group:'defence',sizes:[1,2,3,4]},Regen:{group:'defence',sizes:[2,3,4,5]},
     Lift:{group:'flight',sizes:[1,2,3,4]},Hang:{group:'flight',sizes:[1,2,3,4]},Drive:{group:'flight',sizes:[1,2,3,4]},'Air steering':{group:'flight',sizes:[.03,.06,.09,.12]},
-    Luck:{group:'economy',sizes:[5,10,15,20]}
+    Pickup:{group:'economy',sizes:[1,2,3,4]},Luck:{group:'economy',sizes:[5,10,15,20]},'XP gain':{group:'economy',sizes:[.05,.10,.15,.20]}
   };
   const items = [
     {name:'Close training',up:'Close',value:3,down:'Shot',loss:1}, {name:'Sight glass',up:'Shot',value:3,down:'Armour',loss:1},
@@ -58,9 +58,10 @@ var DEMO = (() => {
     {name:'Reinforced scales',up:'Max HP',value:9,down:'Damage %',loss:.04}, {name:'Shell weave',up:'Armour',value:3},
     {name:'Recovery tissue',up:'Regen',value:3}, {name:'Rising fin',up:'Lift',value:3},
     {name:'Floating fin',up:'Hang',value:3}, {name:'Driving fin',up:'Drive',value:3},
-    {name:'Lucky shell',up:'Luck',value:10}, {name:'Steering fin',up:'Air steering',value:.09}
+    {name:'Collector',up:'Pickup',value:3}, {name:'Lucky shell',up:'Luck',value:10}, {name:'Fast learner',up:'XP gain',value:.15},
+    {name:'Steering fin',up:'Air steering',value:.09}
   ];
-  // Gear is the only source of stats (design doc §4.10): no XP or level-ups. Driving fin stays out of offers, as before.
+  // Stats come from Gear and level-up picks (design doc §4.10). Driving fin stays out of offers, as before.
   const gearStats=items.map((x,i)=>i).filter(i=>items[i].up!=='Drive');
   const tier=(v,l)=>Array.isArray(v)?v[l-1]:v;
   const choose=(r,a)=>a[Math.floor(ce(r)*a.length)];
@@ -109,7 +110,8 @@ var DEMO = (() => {
     const s=r.demo.stats;
     r.stats.damage=Math.max(.05,1+s['Damage %']);r.stats.fireRate=Math.max(.1,1+s['Attack speed']);
     r.stats.armour=s.Armour+2*r.slots.filter(g=>weapons[g.id]?.type==='Close').length;
-    r.stats.maxHp=100+s['Max HP']*hpScale();r.stats.magnet=13;r.stats.xpRate=1;
+    // Levels do not add Max HP (design doc §4.10): only the Max HP stat does.
+    r.stats.maxHp=100+s['Max HP']*hpScale();r.stats.magnet=13+s.Pickup;r.stats.xpRate=Math.max(.1,1+s['XP gain']);
     r.hp=Math.min(r.hp,r.stats.maxHp);
   }
   function init(r,starter){
@@ -158,7 +160,7 @@ var DEMO = (() => {
     // as v3's kill (lw): a splitter breaks into two swarmers
     if(e.kind==='splitter')for(let s=0;s<2&&r.enemies.length+(r.pursuers?.length||0)<100;s++){const o=6*Ld(r.wave);r.enemies.push({...e,id:++r.id,kind:'swarmer',xp:Osp.xp,tint:0,pos:ye(e.pos.x+(s?1.3:-1.3),e.pos.y+1.5),hp:o,maxHp:o,radius:ObR(1),age:0,velocity:{x:s?12:-12,y:8}})}
     if(e.role==='boss')r.demo.bossDefeated=true;recordKill(r,e,ctx);FiveCombat.afterDamage(r,e,ctx);
-    r.events.push({kind:'kill',pos:Mr(r.medium.origin,e.pos),enemy:e.kind,weapon,value:e.kv});
+    Oxedrop(r,r.medium,e);r.events.push({kind:'kill',pos:Mr(r.medium.origin,e.pos),enemy:e.kind,weapon,value:e.kv});
   }
   function hit(r,amount){
     if(r.medium.kind!=='air'||r.armed||r.hand?.busted||r.hurt>0||r.medium.elapsed<.3)return;
@@ -272,7 +274,7 @@ var DEMO = (() => {
     // Overscore funds the build: half the base pay per full quota beaten, up to one more base pay (design doc §4.10). [TUNE]
     const base=24+r.wave*4,bonus=Math.min(base,Math.floor(base*.5*Math.max(0,r.wscore/r.quota-1))),interest=Math.min(8,Math.floor(r.xp*.1)),extra=d.pendingPearls||0;
     report.pay={clear:base,score:bonus,interest,charms:extra,total:base+bonus+interest+extra};d.pendingPearls=0;r.xp+=report.pay.total;r.earned+=report.pay.total;r.hp=r.stats.maxHp;
-    r.lvup=0;if(r.wave===20){r.mode='won';r.milestones.victory=true}else{r.mode='shop';shop(r)}
+    if(r.wave===20){r.mode='won';r.milestones.victory=true}else{r.mode='shop';shop(r);levelChoices(r)}
   }
   function rarity(r){const a=ce(r),luck=Math.max(0,r.demo.stats.Luck)*.001;return a<.015+r.wave*.002+luck?4:a<.10+r.wave*.007+luck?3:a<.35+r.wave*.01+luck?2:1}
   const price=(r,base)=>Math.max(1,Math.floor((base+r.wave+.1*base*r.wave)*r.demo.shopMultiplier));
@@ -329,6 +331,7 @@ var DEMO = (() => {
     const shelves=3+d.shelfBonus;for(let i=d.offers.filter(o=>!inRoutineRow(o)).length;i<shelves&&d.offers.length<6;i++)d.offers.push(shelfOffer(r,i));
     for(let i=d.offers.filter(inRoutineRow).length;i<2&&d.offers.length<6;i++)d.offers.push(routineOffer(r,i));
   }
+  function levelChoices(r){if(!r.lvup){r.demo.levelChoices=[];return}const types=new Set(r.slots.map(g=>weapons[g.id].type)),all=Object.keys(stats).filter(k=>k!=='Drive');r.demo.levelChoices=['combat','defence','flight'].map(group=>{const pool=all.filter(k=>(stats[k].group===group||group==='flight'&&stats[k].group==='economy')&&(!['Close','Shot','Blast'].includes(k)||types.has(k)));return{id:choose(r,pool),level:rarity(r)}})}
   function addStat(r,k,v){r.demo.stats[k]+=v;sync(r);if(k==='Max HP'&&v>0)r.hp=Math.min(r.stats.maxHp,r.hp+v*hpScale())}
   const choiceKey=c=>[c.kind,c.id||'',c.face||'',c.donor||'',c.recipient||''].join(':');
   function packChoices(r,o){const d=r.demo,out=[],n=o.mega?5:3;
@@ -361,8 +364,9 @@ var DEMO = (() => {
       if(pool.length){p.choices[i]=choose(r,pool);used.add(choiceKey(p.choices[i]));seen.add(choiceKey(p.choices[i]))}
     }
   }
-  function command(r,action,index){const d=r.demo;if(r.mode!=='shop')return false;d.toast='';
-    if(action==='next'){if(d.pack||d.weaponChoice){d.toast=d.pack?'Finish choosing from your open pack.':'Choose a replacement or cancel it first.';return false}r.wave++;wave(r);sync(r);r.mode='playing';return true}
+  function command(r,action,index){const d=r.demo;if(r.mode!=='shop')return false;d.toast='';if(r.lvup&&action!=='level'){d.toast='Choose your level upgrades first.';return false}
+    if(action==='level'){const c=d.levelChoices[index];if(!c||!r.lvup)return false;addStat(r,c.id,stats[c.id].sizes[c.level-1]);r.lvup--;levelChoices(r);return true}
+    if(action==='next'){if(r.lvup||d.pack||d.weaponChoice){d.toast=r.lvup?'Choose your level upgrades first.':d.pack?'Finish choosing from your open pack.':'Choose a replacement or cancel it first.';return false}r.wave++;wave(r);sync(r);r.mode='playing';return true}
     if(action==='lock'){const o=d.offers.find(x=>x.uid===+index);if(!o||o.bought||o.row==='voucher')return false;o.locked=!o.locked;return true}
     if(action==='reroll'){const row=index==='weapon'?'shelf':index,cost=Math.max(1,2+(d.rerolls[row]||0)-d.rerollDiscount);if(!['shelf','pack'].includes(row)||r.xp<cost||d.pack)return false;const pred=o=>row==='pack'?inRoutineRow(o):!inRoutineRow(o),canChange=d.offers.some(o=>pred(o)&&(!o.locked||o.bought));if(!canChange){d.toast='Unlock an offer before rerolling this row.';return false}d.weaponChoice=null;r.xp-=cost;d.rerolls[row]=(d.rerolls[row]||0)+1;const n=d.offers.filter(pred).length;d.offers=d.offers.filter(o=>!pred(o)||o.locked&&!o.bought);for(let i=d.offers.filter(pred).length;i<n;i++)d.offers.push(row==='pack'?routineOffer(r,i):shelfOffer(r,i));return true}
     if(action==='weaponChoice'){const o=d.offers.find(x=>x.uid===+index);if(!o||o.bought||o.row!=='weapon'||d.pack||r.slots.length!==6)return false;d.weaponChoice=o.uid;return true}
@@ -395,14 +399,14 @@ var DEMO = (() => {
   }
   function preview(r){return null}
 
-  return {broEnemy,withContact,hpScale,tune,TUNE_DEFAULT,saveTune,charmSlots,weapons,cards,charms,stats,items,tier,fmt,phase,strongest,ledger,diagnosis,bossAlive,returnBoss,continueSchedule,statText,standard,clock,quota,expectedChips,cap,init,wave,sync,open,fireCharms,nextCard,tickCards,bank,damage,hit,spawn,fire,weaponDamage,combat,drift,finish,shop,command,preview,applyChoice,packChoiceValid,routineChoice,charmPool,BUST};
+  return {broEnemy,withContact,hpScale,tune,TUNE_DEFAULT,saveTune,charmSlots,weapons,cards,charms,stats,items,tier,fmt,phase,strongest,ledger,diagnosis,bossAlive,returnBoss,continueSchedule,statText,standard,clock,quota,expectedChips,cap,init,wave,sync,open,fireCharms,nextCard,tickCards,bank,damage,hit,spawn,fire,weaponDamage,combat,drift,finish,shop,levelChoices,command,preview,applyChoice,packChoiceValid,routineChoice,charmPool,BUST};
 })();
 
 /* The existing simulation entry points now use the vertical slice. */
 FiveCombat.configure({damage:(r,e,a,c)=>DEMO.damage(r,e,a,c.weapon||('item-'+c.item),0,0,0,false,c),strongest:r=>DEMO.strongest(r),phase:r=>DEMO.phase(r),position:r=>r.medium.local});
 // Match automatic XP level gains to the same HP scale as explicit upgrades.
-// No XP or level-ups (design doc §4.10): Gear is the only stat stream. Kills drop no orbs, and any orb pays nothing.
-Oxepay=function(){};
+// XP orbs and level-ups as v3, except a level adds no Max HP (design doc §4.10); the level-up stat pick is the reward.
+{const xp0=Oxepay;Oxepay=function(r,m,pos){const hp=r.hp;xp0(r,m,pos);if(r.demo){r.hp=hp;DEMO.sync(r)}}}
 var DemoHd=Hd;
 Hd=function(seed,starter='harpoon',record=0){return DEMO.init(DemoHd(seed,starter,record),starter)};
 Owsetup=function(r){r.world='open';r.diff='standard';return r};
@@ -491,7 +495,7 @@ function DemoBind(){for(const b of hr.querySelectorAll('[data-demo]'))b.onclick=
   if(a==='starter'){En=i;ql();return}if(a==='begin'){Zd(En);return}if(a==='tune'){document.getElementById('tune')?DemoPanel(false):DemoTune(true);return}if(a==='help'){const el=document.getElementById('demo-how');if(el)el.hidden=!el.hidden;return}if(a==='home'){ql();return}
   if(a==='next'){if(DEMO.command(S,a,i)){ke=0;as=Br(S);sf()}else Xl();return}DEMO.command(S,a,i);Xl();if(a==='level'){(hr.querySelector('[data-demo=level]:not(:disabled)')||hr.querySelector('[data-demo=buy]:not(:disabled)'))?.focus({preventScroll:true})}else if(S.demo.pack){const choice=hr.querySelector('[data-demo=packPick]:not(:disabled)');choice?.focus({preventScroll:true});choice?.scrollIntoView?.({block:'nearest'})}
 }}
-ql=function(){ft='title';St=null;ur.reset();hr.innerHTML=`${_w()}<section class="title-content demo-title"><div class="eyebrow">CHIPS × MULT · SCORE FEEL TEST</div><h1>ICARUS<span>BUILD YOUR ASCENT</span></h1><p class="intro">Carve your launch.<br>Build the flight you want.</p><p class="title-description">Automatic weapons turn kills into chips.<br>Your tricks are the reels: they build mult.<br>Get hit and the trick in progress bails. Land to bank.</p><div class="demo-starters">${['sonic','harpoon','rocket'].map(id=>DemoButton('starter',id,`<b>${Owc[id].name}</b><span>${DEMO.weapons[id].type} · ${DEMO.weapons[id].description}</span>`,false,id===En?'selected':'')).join('')}</div><div class="launch-row">${DemoButton('begin','','BEGIN RUN ↗',false,'demo-primary')}${DemoButton('help','','HOW TO PLAY')}${DemoButton('tune','','SETTINGS')}</div><div id="demo-how" hidden><p><b>Launch:</b> hold W or up to carve upward. Release to ride out. Space boosts. Water is safe and pauses the air clock.</p><p><b>Fight:</b> W A S D / arrows steer within your launch path. Weapons fire automatically. Kills give chips, plus bonus chips for multi-kills, apex kills and crits. Land in water to bank chips × mult. Meet every wave's quota for 20 waves; missing one ends the run.</p><p><b>Tricks:</b> each jump draws tricks (3 to start; buy more) that play automatically, like reels. A hit bails the trick in progress: it pays nothing. At 0 HP the jump busts: you fall, bank nothing and come back at half HP.</p><p><b>Build:</b> between waves, buy weapons and gear for chips and survival, charms that rewrite the scoring, and Routine upgrades for your tricks. Charms resolve left to right at the bank.</p></div></section><footer class="title-footer"><div><b>${Object.keys(DEMO.weapons).length}</b><span>WEAPONS · SIX SLOTS</span></div><div><b>5</b><span>TRICKS · DRAWS 3→7</span></div><div><b>${Object.keys(FiveScore.charms).length}</b><span>CHARMS</span></div><div><b>${FiveCombat.catalogue.length}</b><span>COMBAT ITEMS</span></div></footer>`;Kl();DemoBind()};
+ql=function(){ft='title';St=null;ur.reset();hr.innerHTML=`${_w()}<section class="title-content demo-title"><div class="eyebrow">CHIPS × MULT · SCORE FEEL TEST</div><h1>ICARUS<span>BUILD YOUR ASCENT</span></h1><p class="intro">Carve your launch.<br>Build the flight you want.</p><p class="title-description">Automatic weapons turn kills into chips.<br>Your tricks are the reels: they build mult.<br>Get hit and the trick in progress bails. Land to bank.</p><div class="demo-starters">${['sonic','harpoon','rocket'].map(id=>DemoButton('starter',id,`<b>${Owc[id].name}</b><span>${DEMO.weapons[id].type} · ${DEMO.weapons[id].description}</span>`,false,id===En?'selected':'')).join('')}</div><div class="launch-row">${DemoButton('begin','','BEGIN RUN ↗',false,'demo-primary')}${DemoButton('help','','HOW TO PLAY')}${DemoButton('tune','','SETTINGS')}</div><div id="demo-how" hidden><p><b>Launch:</b> hold W or up to carve upward. Release to ride out. Space boosts. Water is safe and pauses the air clock.</p><p><b>Fight:</b> W A S D / arrows steer within your launch path. Weapons fire automatically. Kills give chips, plus bonus chips for multi-kills, apex kills and crits. Land in water to bank chips × mult. Meet every wave's quota for 20 waves; missing one ends the run.</p><p><b>Tricks:</b> each jump draws tricks (3 to start; buy more) that play automatically, like reels. A hit bails the trick in progress: it pays nothing. At 0 HP the jump busts: you fall, bank nothing and come back at half HP.</p><p><b>Build:</b> kills drop XP orbs; steer through them to level up. Each level gives a free stat pick before the shop. Then buy weapons and gear for chips and survival, charms that rewrite the scoring, and Routine upgrades for your tricks. Charms resolve left to right at the bank.</p></div></section><footer class="title-footer"><div><b>${Object.keys(DEMO.weapons).length}</b><span>WEAPONS · SIX SLOTS</span></div><div><b>5</b><span>TRICKS · DRAWS 3→7</span></div><div><b>${Object.keys(FiveScore.charms).length}</b><span>CHARMS</span></div><div><b>${FiveCombat.catalogue.length}</b><span>COMBAT ITEMS</span></div></footer>`;Kl();DemoBind()};
 jl=function(){const won=S.mode==='won';Ir(`<section class="scrim"><div class="summary-panel"><div class="eyebrow">${won?'TWENTY WAVES CLEARED':'QUOTA MISSED'}</div><h2>${won?'An extraordinary ascent.':'Every flight counts.'}</h2><p>Wave ${S.wave} · ${S.wscore} / ${S.quota} banked · ${S.kills} kills.</p><p>${won?'Your build carried the run.':'Bigger banks come from more chips, more mult or fewer Bails: weapons, charms, Routine upgrades and gear.'}</p><div class="demo-summary-hands">${S.demo.history.slice(-5).map(h=>`<div>${h.busted?'BUST':`${h.chips} × ${DEMO.fmt(h.mult)}`} = <b>${h.score}</b><small>${h.cards.join(' · ')}${h.bails?.length?` · ${h.bails.length} Bail${h.bails.length>1?'s':''}`:''}</small></div>`).join('')}</div>${DemoButton('home','','BACK TO START',false,'demo-primary')}</div></section>`);DemoBind()};
 ls=function(){if(ft!=='game'||S.mode!=='playing')return;ft='pause';It.clear();Gr=false;je={x:0,y:0};ke=0;Ir(`<section class="scrim"><div class="modal pause-modal"><div class="eyebrow">TAKE A BREATH</div><h2>Your flight can wait.</h2><p>Hold W / up underwater to carve. Release to launch; space boosts. In air, W A S D / arrows steer within the launch path.</p><p>Every drawn trick lands unless a hit bails it. At 0 HP the jump busts and banks nothing. Charms resolve at the bank. A flight with no kills keeps the same tricks.</p><p>Wave ${S.wave} · ${S.wscore} / ${S.quota} banked · ${S.budget.toFixed(1)}s air left.</p><div class="modal-actions">${kt('resume','RESUME FLIGHT ↗','primary')}${kt('end','END RUN')}${DemoButton('tune','','SETTINGS')}</div></div></section>`);DemoBind()};
 Owstarter=function(){return ''};

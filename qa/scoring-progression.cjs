@@ -17,7 +17,9 @@ function run(route,seed){const buildSha256=crypto.createHash('sha256').update(fs
    for(const o of d.offers)if(o.row==='stat'&&!o.bought&&o.price<=r.xp&&['Armour','Max HP','Regen',D.weapons[route.starter].type].includes(D.items[o.id].up))buy(o);
  }
  function sortCharms(){const x=id=>D.charms[id]?.kind==='×mult'?1:0;r.demo.charms.sort((a,b)=>x(a)-x(b));}
- function shop(){if(process.argv.includes('--focused'))return focusedShop();const d=r.demo;
+ // Level-up stat picks come first, as the shop requires.
+ function levels(){const d=r.demo,pref=['Armour','Max HP','Regen','Damage %','Attack speed',D.weapons[route.starter].type,'Crit','Area','Lift','Hang','Air steering','Pickup','Luck','XP gain'];for(let i=0;r.lvup&&i<100;i++){const best=d.levelChoices.map((c,i)=>({i,score:pref.indexOf(c.id)<0?-1:100-pref.indexOf(c.id)-(c.id==='Armour'&&d.stats.Armour>15?50:0)})).sort((a,b)=>b.score-a.score)[0];D.command(r,'level',best.i)}}
+ function shop(){levels();if(process.argv.includes('--focused'))return focusedShop();const d=r.demo;
   for(let turn=0;turn<3;turn++){
    for(const o of d.offers)if(o.row==='weapon'&&!o.bought&&o.price<=r.xp&&(r.slots.length<6||r.slots.some(g=>g.id===o.id&&g.lvl===o.level&&g.lvl<4)))buy(o);
    for(let i=0;i<r.slots.length;i++)D.command(r,'combine',i);
