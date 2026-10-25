@@ -1,0 +1,117 @@
+{
+  "buildSha256": "d21f4e996e7f67a3012e6a9fe7c818a3d86397541ba3b3d01387dd5f32832da1",
+  "scope": "Actual rendered browser. Natural keyboard launch plus labelled constructed scoring fixtures; no human satisfaction claim.",
+  "errors": [],
+  "checks": [
+    {
+      "name": "Actual keyboard launch and prominent animated scoreboard",
+      "passed": true,
+      "detail": {
+        "top": 61,
+        "width": 610,
+        "center": 720,
+        "font": 60.48,
+        "text": "FLIGHT 01 · WAVE 1\nLAND TO BANK\nCHIPS\n0\n×\nMULT\n1\n+1\n=\nFLIGHT SCORE\n0\nSTAR POSE +1 MULT\n✦\n◇\n◇\n0 / 52 WAVE TARGET",
+        "animations": 1,
+        "state": {
+          "chips": 0,
+          "mult": 1,
+          "score": 0,
+          "waveScore": 0,
+          "quota": 52,
+          "draws": 3,
+          "faces": [
+            "star"
+          ],
+          "banked": false,
+          "notice": "STAR POSE  +1 MULT",
+          "shown": {
+            "chips": 0,
+            "mult": 1,
+            "score": 0,
+            "waveScore": 0
+          },
+          "queued": 0
+        }
+      }
+    },
+    {
+      "name": "Actual kills add chips and real trick/Pair cues animate mult, with exact bank",
+      "passed": true,
+      "detail": {
+        "scope": "Constructed hand/enemy; real automatic attack and landing",
+        "chip": {
+          "state": {
+            "chips": 5,
+            "mult": 0,
+            "score": 0,
+            "waveScore": 0,
+            "quota": 52,
+            "draws": 3,
+            "faces": [],
+            "banked": false,
+            "notice": "KILLS FEED CHIPS · TRICKS FEED MULT",
+            "shown": {
+              "chips": 3.222949168826127,
+              "mult": 0,
+              "score": 0,
+              "waveScore": 0
+            },
+            "queued": 0
+          },
+          "particles": 1,
+          "animations": 1
+        },
+        "bank": {
+          "chips": 5,
+          "mult": 4,
+          "score": 20
+        },
+        "text": "FLIGHT 01 · WAVE 1\nBANKED\nCHIPS\n5\n+5\n×\nMULT\n4\n+1\n=\nBANKED\n20\n+20\nSPLASH! SCORE BANKED\n↻\n↻\n⤨\n20 / 52 WAVE TARGET"
+      }
+    },
+    {
+      "name": "Scoreboard stays above playfield without overlapping timer on landscape phone",
+      "passed": true,
+      "detail": {
+        "playfield": {
+          "x": 75.328125,
+          "y": 0,
+          "width": 693.328125,
+          "height": 390
+        },
+        "score": {
+          "x": 234.5,
+          "y": 10,
+          "width": 375,
+          "height": 110.875
+        },
+        "clock": {
+          "x": 645.453125,
+          "y": 131.640625,
+          "width": 118,
+          "height": 26.09375
+        },
+        "wave": {
+          "x": 96.125,
+          "y": 13.640625,
+          "width": 82.34375,
+          "height": 20.34375
+        },
+        "overflow": false,
+        "font": 36
+      }
+    },
+    {
+      "name": "Reduced motion preserves score information without vibration",
+      "passed": true,
+      "detail": {
+        "reduced": true,
+        "animations": 0,
+        "mult": 1
+      }
+    }
+  ],
+  "passed": 4,
+  "failed": 0
+}

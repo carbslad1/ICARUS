@@ -1,0 +1,6523 @@
+{
+  "round": "U1",
+  "buildSha256": "b2ac5bc779422c0558f39b4bbf9efc827cc4337d5edb634812887f1ba3a221b7",
+  "scope": "18 fresh-VM actual-runtime constructed trials: three equal-spend scoring packages, three actual launch policies, two seeds. Package policies deliberately use early return, stay aloft or approach entry targets. No natural acquisition or population win-rate claim. Conditional score additions reflect observed bank facts; damage/encounter RNG can diverge after policy changes. Low/mid/high labels are intended launch angles, with actual angles recorded.",
+  "summary": [
+    {
+      "package": "ascent",
+      "angle": "low",
+      "runs": 2,
+      "clears": 2,
+      "avgScore": 5237.5,
+      "avgScorePerAir": 85.7278601366402,
+      "avgExtraRawScore": 1104.3,
+      "avgDamage": 435.2777777777777,
+      "avgAir": 61.11101689734322,
+      "avgBanks": 14,
+      "charmsPaid": [
+        {
+          "S01": 10,
+          "S07": 0,
+          "S08": 1
+        },
+        {
+          "S01": 12,
+          "S07": 0,
+          "S08": 0
+        }
+      ]
+    },
+    {
+      "package": "ascent",
+      "angle": "mid",
+      "runs": 2,
+      "clears": 1,
+      "avgScore": 2875,
+      "avgScorePerAir": 54.8709414572522,
+      "avgExtraRawScore": 396,
+      "avgDamage": 595.2777777777776,
+      "avgAir": 46.92091033152726,
+      "avgBanks": 5.5,
+      "charmsPaid": [
+        {
+          "S01": 2,
+          "S07": 0,
+          "S08": 0
+        },
+        {
+          "S01": 4,
+          "S07": 0,
+          "S08": 0
+        }
+      ]
+    },
+    {
+      "package": "ascent",
+      "angle": "high",
+      "runs": 2,
+      "clears": 0,
+      "avgScore": 2305,
+      "avgScorePerAir": 51.67599658948443,
+      "avgExtraRawScore": 423,
+      "avgDamage": 601.9444444444443,
+      "avgAir": 44.39120646710405,
+      "avgBanks": 4,
+      "charmsPaid": [
+        {
+          "S01": 2,
+          "S07": 0,
+          "S08": 0
+        },
+        {
+          "S01": 3,
+          "S07": 0,
+          "S08": 0
+        }
+      ]
+    },
+    {
+      "package": "late",
+      "angle": "low",
+      "runs": 2,
+      "clears": 0,
+      "avgScore": 3643,
+      "avgScorePerAir": 64.29924914813157,
+      "avgExtraRawScore": 706.8,
+      "avgDamage": 687.7777777777776,
+      "avgAir": 56.80043855220997,
+      "avgBanks": 9.5,
+      "charmsPaid": [
+        {
+          "S09": 0,
+          "S12": 2,
+          "S15": 7
+        },
+        {
+          "S09": 2,
+          "S12": 2,
+          "S15": 7
+        }
+      ]
+    },
+    {
+      "package": "late",
+      "angle": "mid",
+      "runs": 2,
+      "clears": 0,
+      "avgScore": 3807,
+      "avgScorePerAir": 66.69594013762436,
+      "avgExtraRawScore": 361,
+      "avgDamage": 693.1944444444442,
+      "avgAir": 57.551071469579185,
+      "avgBanks": 6,
+      "charmsPaid": [
+        {
+          "S09": 0,
+          "S12": 2,
+          "S15": 1
+        },
+        {
+          "S09": 0,
+          "S12": 0,
+          "S15": 3
+        }
+      ]
+    },
+    {
+      "package": "late",
+      "angle": "high",
+      "runs": 2,
+      "clears": 0,
+      "avgScore": 2380,
+      "avgScorePerAir": 54.288787324377054,
+      "avgExtraRawScore": 735.7,
+      "avgDamage": 636.5277777777776,
+      "avgAir": 43.566267941372814,
+      "avgBanks": 3.5,
+      "charmsPaid": [
+        {
+          "S09": 0,
+          "S12": 2,
+          "S15": 1
+        },
+        {
+          "S09": 1,
+          "S12": 2,
+          "S15": 2
+        }
+      ]
+    },
+    {
+      "package": "entry",
+      "angle": "low",
+      "runs": 2,
+      "clears": 2,
+      "avgScore": 6725.5,
+      "avgScorePerAir": 106.96190470307161,
+      "avgExtraRawScore": 2910,
+      "avgDamage": 699.4444444444442,
+      "avgAir": 62.875541281296535,
+      "avgBanks": 14,
+      "charmsPaid": [
+        {
+          "S13": 2,
+          "S02": 14,
+          "S15": 10
+        },
+        {
+          "S13": 4,
+          "S02": 14,
+          "S15": 10
+        }
+      ]
+    },
+    {
+      "package": "entry",
+      "angle": "mid",
+      "runs": 2,
+      "clears": 0,
+      "avgScore": 4912.5,
+      "avgScorePerAir": 89.32142184973858,
+      "avgExtraRawScore": 2109,
+      "avgDamage": 667.0833333333331,
+      "avgAir": 54.84631120837818,
+      "avgBanks": 6.5,
+      "charmsPaid": [
+        {
+          "S13": 3,
+          "S02": 6,
+          "S15": 3
+        },
+        {
+          "S13": 2,
+          "S02": 7,
+          "S15": 5
+        }
+      ]
+    },
+    {
+      "package": "entry",
+      "angle": "high",
+      "runs": 2,
+      "clears": 0,
+      "avgScore": 5693.5,
+      "avgScorePerAir": 109.02432299525101,
+      "avgExtraRawScore": 2628.5,
+      "avgDamage": 656.9444444444443,
+      "avgAir": 52.85028526880515,
+      "avgBanks": 5,
+      "charmsPaid": [
+        {
+          "S13": 2,
+          "S02": 5,
+          "S15": 2
+        },
+        {
+          "S13": 4,
+          "S02": 5,
+          "S15": 1
+        }
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "buildSha256": "b2ac5bc779422c0558f39b4bbf9efc827cc4337d5edb634812887f1ba3a221b7",
+      "package": "ascent",
+      "angle": "low",
+      "seed": 11,
+      "setup": {
+        "kind": "Constructed initial previous-run level/stats and custom wave9 shop offers at actual real prices, then actual commands buy/combine/next. No in-fight grants, forced kills, or refills.",
+        "sharedStats": {
+          "Close": 3,
+          "Shot": 3,
+          "Blast": 3,
+          "Damage %": 0.1,
+          "Attack speed": 0.08,
+          "Armour": 10,
+          "Max HP": 18,
+          "Regen": 5
+        },
+        "level": 15,
+        "sharedSpend": 236,
+        "charmSpend": 105,
+        "totalSpend": 341,
+        "unspent": 0,
+        "purchases": [
+          {
+            "id": "harpoon",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "sonic",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "rocket",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "laser",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "I07",
+            "row": "item",
+            "price": 66
+          },
+          {
+            "id": "S01",
+            "row": "charm",
+            "price": 31
+          },
+          {
+            "id": "S07",
+            "row": "charm",
+            "price": 31
+          },
+          {
+            "id": "S08",
+            "row": "charm",
+            "price": 43
+          }
+        ],
+        "loadout": [
+          {
+            "id": "harpoon",
+            "tier": 2
+          },
+          {
+            "id": "sonic",
+            "tier": 2
+          },
+          {
+            "id": "rocket",
+            "tier": 2
+          },
+          {
+            "id": "laser",
+            "tier": 1
+          }
+        ],
+        "flow": "live-overtime-until-water-entry"
+      },
+      "outcome": {
+        "mode": "shop",
+        "reason": null,
+        "wave": 10,
+        "hp": 430,
+        "score": 5454,
+        "quota": 2823,
+        "quotaRatio": 1.9319872476089266,
+        "chips": 456,
+        "kills": 382,
+        "air": 60.75993271244982,
+        "time": 72.65833333333723,
+        "banks": 14,
+        "bossSpawned": true,
+        "bossDefeated": true,
+        "bossRecoveries": 0
+      },
+      "metrics": {
+        "hits": 7,
+        "damageTaken": 280.55555555555554,
+        "primaryApplied": 48023.07103481938,
+        "secondaryApplied": 1111.5945320788032,
+        "baseScore": 4404,
+        "extraRawScoreFromCharms": 1049.6,
+        "charmsPaid": {
+          "S01": 10,
+          "S07": 0,
+          "S08": 1
+        },
+        "charmContribution": {
+          "S01": 956,
+          "S07": 0,
+          "S08": 93.60000000000004
+        },
+        "scorePerAir": 89.76310138148763,
+        "phaseChips": {
+          "ascent": 215,
+          "apex": 97,
+          "descent": 144
+        },
+        "entryKills": 8
+      },
+      "launches": [
+        {
+          "angle": 0.596864264621023,
+          "speed": 75,
+          "angleDegrees": 34.19780330496416,
+          "predictedAir": 5.620516675328686
+        },
+        {
+          "angle": 0.5561387622813456,
+          "speed": 75.00000000000001,
+          "angleDegrees": 31.864403902350485,
+          "predictedAir": 5.279107928937952
+        },
+        {
+          "angle": 0.4803496659159463,
+          "speed": 74.99999999999999,
+          "angleDegrees": 27.522008547502814,
+          "predictedAir": 4.620892991972715
+        },
+        {
+          "angle": 0.5384406411720252,
+          "speed": 75,
+          "angleDegrees": 30.85037625747503,
+          "predictedAir": 5.127978915046317
+        },
+        {
+          "angle": 0.48332634230999294,
+          "speed": 75,
+          "angleDegrees": 27.69255954185791,
+          "predictedAir": 4.647270641532128
+        },
+        {
+          "angle": 0.553581805758651,
+          "speed": 74.99999999999999,
+          "angleDegrees": 31.717901085201632,
+          "predictedAir": 5.2573744678340075
+        },
+        {
+          "angle": 0.4781787671716502,
+          "speed": 74.99999999999999,
+          "angleDegrees": 27.397625211704398,
+          "predictedAir": 4.601629863276424
+        },
+        {
+          "angle": 0.5608043912761768,
+          "speed": 75,
+          "angleDegrees": 32.13172475252817,
+          "predictedAir": 5.318675506166187
+        },
+        {
+          "angle": 0.4961077455436784,
+          "speed": 75,
+          "angleDegrees": 28.424880003402947,
+          "predictedAir": 4.760061410328044
+        },
+        {
+          "angle": 0.5485477489229611,
+          "speed": 75,
+          "angleDegrees": 31.42947087468762,
+          "predictedAir": 5.214485985282278
+        },
+        {
+          "angle": 0.5050998000648667,
+          "speed": 75,
+          "angleDegrees": 28.94008677661856,
+          "predictedAir": 4.838947803837588
+        },
+        {
+          "angle": 0.5145797685103266,
+          "speed": 75,
+          "angleDegrees": 29.483248958460614,
+          "predictedAir": 4.921690811502563
+        },
+        {
+          "angle": 0.5052581044308594,
+          "speed": 75,
+          "angleDegrees": 28.949156948668442,
+          "predictedAir": 4.840333106159594
+        },
+        {
+          "angle": 0.4538195915361791,
+          "speed": 75,
+          "angleDegrees": 26.001947255374002,
+          "predictedAir": 4.384016929662257
+        }
+      ],
+      "banks": [
+        {
+          "chips": 7,
+          "mult": 11,
+          "score": 77,
+          "air": 5.097371202773714,
+          "launch": {
+            "angle": 0.596864264621023,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 0,
+            "apex": 2,
+            "descent": 5
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": [
+            "S01"
+          ]
+        },
+        {
+          "chips": 23,
+          "mult": 12,
+          "score": 276,
+          "air": 4.713337575331151,
+          "launch": {
+            "angle": 0.5561387622813456,
+            "speed": 75.00000000000001
+          },
+          "phases": {
+            "ascent": 6,
+            "apex": 4,
+            "descent": 13
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": [
+            "S01"
+          ]
+        },
+        {
+          "chips": 16,
+          "mult": 15,
+          "score": 240,
+          "air": 3.944917769564078,
+          "launch": {
+            "angle": 0.4803496659159463,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 9,
+            "apex": 2,
+            "descent": 5
+          },
+          "combos": [
+            "show"
+          ],
+          "active": [
+            "S01"
+          ]
+        },
+        {
+          "chips": 29,
+          "mult": 9,
+          "score": 261,
+          "air": 4.540697648336076,
+          "launch": {
+            "angle": 0.5384406411720252,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 14,
+            "apex": 12,
+            "descent": 3
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": []
+        },
+        {
+          "chips": 31,
+          "mult": 8,
+          "score": 248,
+          "air": 3.9766974603252416,
+          "launch": {
+            "angle": 0.48332634230999294,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 18,
+            "apex": 5,
+            "descent": 8
+          },
+          "combos": [
+            "pair",
+            "twoPair"
+          ],
+          "active": []
+        },
+        {
+          "chips": 22,
+          "mult": 9,
+          "score": 198,
+          "air": 4.688621676343583,
+          "launch": {
+            "angle": 0.553581805758651,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 9,
+            "apex": 4,
+            "descent": 9
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S01"
+          ]
+        },
+        {
+          "chips": 26,
+          "mult": 15.600000000000001,
+          "score": 406,
+          "air": 3.921642708727306,
+          "launch": {
+            "angle": 0.4781787671716502,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 16,
+            "apex": 4,
+            "descent": 6
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": [
+            "S01",
+            "S08"
+          ]
+        },
+        {
+          "chips": 57,
+          "mult": 12,
+          "score": 684,
+          "air": 4.758244758719464,
+          "launch": {
+            "angle": 0.5608043912761768,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 34,
+            "apex": 9,
+            "descent": 14
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": [
+            "S01"
+          ]
+        },
+        {
+          "chips": 39,
+          "mult": 12,
+          "score": 468,
+          "air": 4.111469266261821,
+          "launch": {
+            "angle": 0.4961077455436784,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 13,
+            "apex": 12,
+            "descent": 14
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": [
+            "S01"
+          ]
+        },
+        {
+          "chips": 42,
+          "mult": 12,
+          "score": 504,
+          "air": 4.639741296702642,
+          "launch": {
+            "angle": 0.5485477489229611,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 20,
+            "apex": 10,
+            "descent": 12
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": [
+            "S01"
+          ]
+        },
+        {
+          "chips": 41,
+          "mult": 8,
+          "score": 328,
+          "air": 4.204743432101276,
+          "launch": {
+            "angle": 0.5050998000648667,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 19,
+            "apex": 4,
+            "descent": 18
+          },
+          "combos": [
+            "pair",
+            "twoPair"
+          ],
+          "active": []
+        },
+        {
+          "chips": 36,
+          "mult": 12,
+          "score": 432,
+          "air": 4.301794466518542,
+          "launch": {
+            "angle": 0.5145797685103266,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 20,
+            "apex": 10,
+            "descent": 6
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": [
+            "S01"
+          ]
+        },
+        {
+          "chips": 53,
+          "mult": 20,
+          "score": 1060,
+          "air": 4.2063746814840615,
+          "launch": {
+            "angle": 0.5052581044308594,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 21,
+            "apex": 11,
+            "descent": 21
+          },
+          "combos": [
+            "pair",
+            "triple",
+            "four"
+          ],
+          "active": [
+            "S01"
+          ]
+        },
+        {
+          "chips": 34,
+          "mult": 8,
+          "score": 272,
+          "air": 3.654278769263769,
+          "launch": {
+            "angle": 0.4538195915361791,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 16,
+            "apex": 8,
+            "descent": 10
+          },
+          "combos": [
+            "pair",
+            "twoPair"
+          ],
+          "active": []
+        }
+      ]
+    },
+    {
+      "buildSha256": "b2ac5bc779422c0558f39b4bbf9efc827cc4337d5edb634812887f1ba3a221b7",
+      "package": "ascent",
+      "angle": "low",
+      "seed": 23,
+      "setup": {
+        "kind": "Constructed initial previous-run level/stats and custom wave9 shop offers at actual real prices, then actual commands buy/combine/next. No in-fight grants, forced kills, or refills.",
+        "sharedStats": {
+          "Close": 3,
+          "Shot": 3,
+          "Blast": 3,
+          "Damage %": 0.1,
+          "Attack speed": 0.08,
+          "Armour": 10,
+          "Max HP": 18,
+          "Regen": 5
+        },
+        "level": 15,
+        "sharedSpend": 236,
+        "charmSpend": 105,
+        "totalSpend": 341,
+        "unspent": 0,
+        "purchases": [
+          {
+            "id": "harpoon",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "sonic",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "rocket",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "laser",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "I07",
+            "row": "item",
+            "price": 66
+          },
+          {
+            "id": "S01",
+            "row": "charm",
+            "price": 31
+          },
+          {
+            "id": "S07",
+            "row": "charm",
+            "price": 31
+          },
+          {
+            "id": "S08",
+            "row": "charm",
+            "price": 43
+          }
+        ],
+        "loadout": [
+          {
+            "id": "harpoon",
+            "tier": 2
+          },
+          {
+            "id": "sonic",
+            "tier": 2
+          },
+          {
+            "id": "rocket",
+            "tier": 2
+          },
+          {
+            "id": "laser",
+            "tier": 1
+          }
+        ],
+        "flow": "live-overtime-until-water-entry"
+      },
+      "outcome": {
+        "mode": "shop",
+        "reason": null,
+        "wave": 10,
+        "hp": 430,
+        "score": 5021,
+        "quota": 2823,
+        "quotaRatio": 1.7786043216436416,
+        "chips": 443,
+        "kills": 369,
+        "air": 61.462101082236615,
+        "time": 73.44166666667118,
+        "banks": 14,
+        "bossSpawned": true,
+        "bossDefeated": true,
+        "bossRecoveries": 0
+      },
+      "metrics": {
+        "hits": 15,
+        "damageTaken": 589.9999999999999,
+        "primaryApplied": 47285.155452013045,
+        "secondaryApplied": 948.204547986982,
+        "baseScore": 3862,
+        "extraRawScoreFromCharms": 1159,
+        "charmsPaid": {
+          "S01": 12,
+          "S07": 0,
+          "S08": 0
+        },
+        "charmContribution": {
+          "S01": 1159,
+          "S07": 0,
+          "S08": 0
+        },
+        "scorePerAir": 81.69261889179278,
+        "phaseChips": {
+          "ascent": 172,
+          "apex": 99,
+          "descent": 172
+        },
+        "entryKills": 14
+      },
+      "launches": [
+        {
+          "angle": 0.596864264621023,
+          "speed": 75,
+          "angleDegrees": 34.19780330496416,
+          "predictedAir": 5.620516675328686
+        },
+        {
+          "angle": 0.5193394931908636,
+          "speed": 74.99999999999999,
+          "angleDegrees": 29.75596109429964,
+          "predictedAir": 4.963068290213814
+        },
+        {
+          "angle": 0.5307707725633335,
+          "speed": 75,
+          "angleDegrees": 30.410925156777118,
+          "predictedAir": 5.061982189901712
+        },
+        {
+          "angle": 0.5193464773074277,
+          "speed": 74.99999999999999,
+          "angleDegrees": 29.75636125470239,
+          "predictedAir": 4.963128922503983
+        },
+        {
+          "angle": 0.5307886004845828,
+          "speed": 75,
+          "angleDegrees": 30.411946621422196,
+          "predictedAir": 5.062135940149932
+        },
+        {
+          "angle": 0.5181308404233834,
+          "speed": 74.99999999999999,
+          "angleDegrees": 29.686710391826217,
+          "predictedAir": 4.952571782686965
+        },
+        {
+          "angle": 0.5214990704913559,
+          "speed": 75,
+          "angleDegrees": 29.879695759150103,
+          "predictedAir": 4.981805011830991
+        },
+        {
+          "angle": 0.5289641279056511,
+          "speed": 75.00000000000001,
+          "angleDegrees": 30.30741204281206,
+          "predictedAir": 5.046393123710841
+        },
+        {
+          "angle": 0.5051115126830766,
+          "speed": 75,
+          "angleDegrees": 28.940757860209047,
+          "predictedAir": 4.839050303694696
+        },
+        {
+          "angle": 0.5384588531401566,
+          "speed": 75,
+          "angleDegrees": 30.85141972638559,
+          "predictedAir": 5.128135265647077
+        },
+        {
+          "angle": 0.5088671929985424,
+          "speed": 75,
+          "angleDegrees": 29.155942491485597,
+          "predictedAir": 4.871882827785026
+        },
+        {
+          "angle": 0.5318308424252103,
+          "speed": 75,
+          "angleDegrees": 30.471662685851676,
+          "predictedAir": 5.071121568422202
+        },
+        {
+          "angle": 0.48254689216487834,
+          "speed": 75,
+          "angleDegrees": 27.64790033820198,
+          "predictedAir": 4.640367558169084
+        },
+        {
+          "angle": 0.4994001672704192,
+          "speed": 75.00000000000001,
+          "angleDegrees": 28.61352187272237,
+          "predictedAir": 4.788990496437536
+        }
+      ],
+      "banks": [
+        {
+          "chips": 8,
+          "mult": 11,
+          "score": 88,
+          "air": 5.097371202773714,
+          "launch": {
+            "angle": 0.596864264621023,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 0,
+            "apex": 3,
+            "descent": 5
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": [
+            "S01"
+          ]
+        },
+        {
+          "chips": 21,
+          "mult": 9,
+          "score": 189,
+          "air": 4.350048273142263,
+          "launch": {
+            "angle": 0.5193394931908636,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 9,
+            "apex": 2,
+            "descent": 10
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S01"
+          ]
+        },
+        {
+          "chips": 23,
+          "mult": 9,
+          "score": 207,
+          "air": 4.464704945563851,
+          "launch": {
+            "angle": 0.5307707725633335,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 12,
+            "apex": 7,
+            "descent": 4
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S01"
+          ]
+        },
+        {
+          "chips": 19,
+          "mult": 8,
+          "score": 152,
+          "air": 4.35011885133069,
+          "launch": {
+            "angle": 0.5193464773074277,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 9,
+            "apex": 2,
+            "descent": 8
+          },
+          "combos": [
+            "pair",
+            "twoPair"
+          ],
+          "active": []
+        },
+        {
+          "chips": 32,
+          "mult": 18,
+          "score": 576,
+          "air": 4.464882439581636,
+          "launch": {
+            "angle": 0.5307886004845828,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 18,
+            "apex": 6,
+            "descent": 8
+          },
+          "combos": [
+            "pair",
+            "twoPair",
+            "triple",
+            "house"
+          ],
+          "active": [
+            "S01"
+          ]
+        },
+        {
+          "chips": 44,
+          "mult": 11,
+          "score": 484,
+          "air": 4.337824273703724,
+          "launch": {
+            "angle": 0.5181308404233834,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 9,
+            "apex": 3,
+            "descent": 32
+          },
+          "combos": [
+            "pair",
+            "twoPair"
+          ],
+          "active": [
+            "S01"
+          ]
+        },
+        {
+          "chips": 25,
+          "mult": 9,
+          "score": 225,
+          "air": 4.371840736508901,
+          "launch": {
+            "angle": 0.5214990704913559,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 7,
+            "apex": 9,
+            "descent": 9
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S01"
+          ]
+        },
+        {
+          "chips": 35,
+          "mult": 6,
+          "score": 210,
+          "air": 4.446697074747225,
+          "launch": {
+            "angle": 0.5289641279056511,
+            "speed": 75.00000000000001
+          },
+          "phases": {
+            "ascent": 22,
+            "apex": 5,
+            "descent": 8
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": []
+        },
+        {
+          "chips": 41,
+          "mult": 11,
+          "score": 451,
+          "air": 4.204864137518714,
+          "launch": {
+            "angle": 0.5051115126830766,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 21,
+            "apex": 3,
+            "descent": 17
+          },
+          "combos": [
+            "pair",
+            "twoPair"
+          ],
+          "active": [
+            "S01"
+          ]
+        },
+        {
+          "chips": 52,
+          "mult": 18,
+          "score": 936,
+          "air": 4.540877223812447,
+          "launch": {
+            "angle": 0.5384588531401566,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 18,
+            "apex": 12,
+            "descent": 22
+          },
+          "combos": [
+            "pair",
+            "twoPair",
+            "triple",
+            "house"
+          ],
+          "active": [
+            "S01"
+          ]
+        },
+        {
+          "chips": 41,
+          "mult": 12,
+          "score": 492,
+          "air": 4.243465661377927,
+          "launch": {
+            "angle": 0.5088671929985424,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 15,
+            "apex": 5,
+            "descent": 21
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": [
+            "S01"
+          ]
+        },
+        {
+          "chips": 39,
+          "mult": 9,
+          "score": 351,
+          "air": 4.4752519513206845,
+          "launch": {
+            "angle": 0.5318308424252103,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 12,
+            "apex": 18,
+            "descent": 9
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S01"
+          ]
+        },
+        {
+          "chips": 32,
+          "mult": 9,
+          "score": 288,
+          "air": 3.9683907145329083,
+          "launch": {
+            "angle": 0.48254689216487834,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 11,
+            "apex": 13,
+            "descent": 8
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S01"
+          ]
+        },
+        {
+          "chips": 31,
+          "mult": 12,
+          "score": 372,
+          "air": 4.145763596324878,
+          "launch": {
+            "angle": 0.4994001672704192,
+            "speed": 75.00000000000001
+          },
+          "phases": {
+            "ascent": 9,
+            "apex": 11,
+            "descent": 11
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": [
+            "S01"
+          ]
+        }
+      ]
+    },
+    {
+      "buildSha256": "b2ac5bc779422c0558f39b4bbf9efc827cc4337d5edb634812887f1ba3a221b7",
+      "package": "ascent",
+      "angle": "mid",
+      "seed": 11,
+      "setup": {
+        "kind": "Constructed initial previous-run level/stats and custom wave9 shop offers at actual real prices, then actual commands buy/combine/next. No in-fight grants, forced kills, or refills.",
+        "sharedStats": {
+          "Close": 3,
+          "Shot": 3,
+          "Blast": 3,
+          "Damage %": 0.1,
+          "Attack speed": 0.08,
+          "Armour": 10,
+          "Max HP": 18,
+          "Regen": 5
+        },
+        "level": 15,
+        "sharedSpend": 236,
+        "charmSpend": 105,
+        "totalSpend": 341,
+        "unspent": 0,
+        "purchases": [
+          {
+            "id": "harpoon",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "sonic",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "rocket",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "laser",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "I07",
+            "row": "item",
+            "price": 66
+          },
+          {
+            "id": "S01",
+            "row": "charm",
+            "price": 31
+          },
+          {
+            "id": "S07",
+            "row": "charm",
+            "price": 31
+          },
+          {
+            "id": "S08",
+            "row": "charm",
+            "price": 43
+          }
+        ],
+        "loadout": [
+          {
+            "id": "harpoon",
+            "tier": 2
+          },
+          {
+            "id": "sonic",
+            "tier": 2
+          },
+          {
+            "id": "rocket",
+            "tier": 2
+          },
+          {
+            "id": "laser",
+            "tier": 1
+          }
+        ],
+        "flow": "live-overtime-until-water-entry"
+      },
+      "outcome": {
+        "mode": "dead",
+        "reason": "health",
+        "wave": 10,
+        "hp": 0,
+        "score": 1116,
+        "quota": 2823,
+        "quotaRatio": 0.3953241232731137,
+        "chips": 148,
+        "kills": 132,
+        "air": 30.71201604980931,
+        "time": 36.08333333333193,
+        "banks": 3,
+        "bossSpawned": true,
+        "bossDefeated": false,
+        "bossRecoveries": 0
+      },
+      "metrics": {
+        "hits": 13,
+        "damageTaken": 535.5555555555554,
+        "primaryApplied": 19092.13652348215,
+        "secondaryApplied": 2.0066666666666606,
+        "baseScore": 921,
+        "extraRawScoreFromCharms": 195,
+        "charmsPaid": {
+          "S01": 2,
+          "S07": 0,
+          "S08": 0
+        },
+        "charmContribution": {
+          "S01": 195,
+          "S07": 0,
+          "S08": 0
+        },
+        "scorePerAir": 36.33756892383915,
+        "phaseChips": {
+          "ascent": 34,
+          "apex": 27,
+          "descent": 46
+        },
+        "entryKills": 1
+      },
+      "launches": [
+        {
+          "angle": 0.9005575108071192,
+          "speed": 74.99999999999999,
+          "angleDegrees": 51.598144578054956,
+          "predictedAir": 7.836733421484886
+        },
+        {
+          "angle": 0.9965921209307459,
+          "speed": 75,
+          "angleDegrees": 57.10052242532309,
+          "predictedAir": 8.396248171869498
+        },
+        {
+          "angle": 0.9497859030609084,
+          "speed": 75.00000000000001,
+          "angleDegrees": 54.41872368641159,
+          "predictedAir": 8.132909495788834
+        },
+        {
+          "angle": 0.9908931178207415,
+          "speed": 74.99999999999999,
+          "angleDegrees": 56.77399359968791,
+          "predictedAir": 8.365156897959324
+        }
+      ],
+      "banks": [
+        {
+          "chips": 18,
+          "mult": 12,
+          "score": 216,
+          "air": 7.480238551950014,
+          "launch": {
+            "angle": 0.9005575108071192,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 1,
+            "apex": 4,
+            "descent": 13
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": [
+            "S01"
+          ]
+        },
+        {
+          "chips": 47,
+          "mult": 12,
+          "score": 564,
+          "air": 8.065627049636326,
+          "launch": {
+            "angle": 0.9965921209307459,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 15,
+            "apex": 12,
+            "descent": 20
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": [
+            "S01"
+          ]
+        },
+        {
+          "chips": 42,
+          "mult": 8,
+          "score": 336,
+          "air": 7.790617412173923,
+          "launch": {
+            "angle": 0.9497859030609084,
+            "speed": 75.00000000000001
+          },
+          "phases": {
+            "ascent": 18,
+            "apex": 11,
+            "descent": 13
+          },
+          "combos": [
+            "pair",
+            "twoPair"
+          ],
+          "active": []
+        }
+      ]
+    },
+    {
+      "buildSha256": "b2ac5bc779422c0558f39b4bbf9efc827cc4337d5edb634812887f1ba3a221b7",
+      "package": "ascent",
+      "angle": "mid",
+      "seed": 23,
+      "setup": {
+        "kind": "Constructed initial previous-run level/stats and custom wave9 shop offers at actual real prices, then actual commands buy/combine/next. No in-fight grants, forced kills, or refills.",
+        "sharedStats": {
+          "Close": 3,
+          "Shot": 3,
+          "Blast": 3,
+          "Damage %": 0.1,
+          "Attack speed": 0.08,
+          "Armour": 10,
+          "Max HP": 18,
+          "Regen": 5
+        },
+        "level": 15,
+        "sharedSpend": 236,
+        "charmSpend": 105,
+        "totalSpend": 341,
+        "unspent": 0,
+        "purchases": [
+          {
+            "id": "harpoon",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "sonic",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "rocket",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "laser",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "I07",
+            "row": "item",
+            "price": 66
+          },
+          {
+            "id": "S01",
+            "row": "charm",
+            "price": 31
+          },
+          {
+            "id": "S07",
+            "row": "charm",
+            "price": 31
+          },
+          {
+            "id": "S08",
+            "row": "charm",
+            "price": 43
+          }
+        ],
+        "loadout": [
+          {
+            "id": "harpoon",
+            "tier": 2
+          },
+          {
+            "id": "sonic",
+            "tier": 2
+          },
+          {
+            "id": "rocket",
+            "tier": 2
+          },
+          {
+            "id": "laser",
+            "tier": 1
+          }
+        ],
+        "flow": "live-overtime-until-water-entry"
+      },
+      "outcome": {
+        "mode": "shop",
+        "reason": null,
+        "wave": 10,
+        "hp": 440,
+        "score": 4634,
+        "quota": 2823,
+        "quotaRatio": 1.6415161176053843,
+        "chips": 450,
+        "kills": 378,
+        "air": 63.12980461324521,
+        "time": 74.61666666667212,
+        "banks": 8,
+        "bossSpawned": true,
+        "bossDefeated": true,
+        "bossRecoveries": 0
+      },
+      "metrics": {
+        "hits": 21,
+        "damageTaken": 654.9999999999999,
+        "primaryApplied": 46365.85200134288,
+        "secondaryApplied": 1433.8279986571006,
+        "baseScore": 4037,
+        "extraRawScoreFromCharms": 597,
+        "charmsPaid": {
+          "S01": 4,
+          "S07": 0,
+          "S08": 0
+        },
+        "charmContribution": {
+          "S01": 597,
+          "S07": 0,
+          "S08": 0
+        },
+        "scorePerAir": 73.40431399066526,
+        "phaseChips": {
+          "ascent": 179,
+          "apex": 77,
+          "descent": 194
+        },
+        "entryKills": 14
+      },
+      "launches": [
+        {
+          "angle": 0.9005575108071192,
+          "speed": 74.99999999999999,
+          "angleDegrees": 51.598144578054956,
+          "predictedAir": 7.836733421484886
+        },
+        {
+          "angle": 1.0340897166712704,
+          "speed": 75,
+          "angleDegrees": 59.24897640314287,
+          "predictedAir": 8.593972770441114
+        },
+        {
+          "angle": 0.9169456814057755,
+          "speed": 74.99999999999999,
+          "angleDegrees": 52.53711758729834,
+          "predictedAir": 7.937475441181385
+        },
+        {
+          "angle": 1.0189601862709683,
+          "speed": 75,
+          "angleDegrees": 58.38211816519069,
+          "predictedAir": 8.515633582910908
+        },
+        {
+          "angle": 0.9351336412998486,
+          "speed": 74.99999999999999,
+          "angleDegrees": 53.57921092718194,
+          "predictedAir": 8.046784295930388
+        },
+        {
+          "angle": 1.0069270882756067,
+          "speed": 75,
+          "angleDegrees": 57.692672435589145,
+          "predictedAir": 8.451934879207178
+        },
+        {
+          "angle": 0.9434701184432323,
+          "speed": 75,
+          "angleDegrees": 54.0568558835051,
+          "predictedAir": 8.095998684106775
+        },
+        {
+          "angle": 0.9896057580577216,
+          "speed": 75.00000000000001,
+          "angleDegrees": 56.70023331855191,
+          "predictedAir": 8.358095970793975
+        }
+      ],
+      "banks": [
+        {
+          "chips": 16,
+          "mult": 12,
+          "score": 192,
+          "air": 7.480238551950014,
+          "launch": {
+            "angle": 0.9005575108071192,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 2,
+            "apex": 5,
+            "descent": 9
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": [
+            "S01"
+          ]
+        },
+        {
+          "chips": 45,
+          "mult": 12,
+          "score": 540,
+          "air": 8.271583890390898,
+          "launch": {
+            "angle": 1.0340897166712704,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 19,
+            "apex": 14,
+            "descent": 12
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": [
+            "S01"
+          ]
+        },
+        {
+          "chips": 47,
+          "mult": 6,
+          "score": 282,
+          "air": 7.585948307241047,
+          "launch": {
+            "angle": 0.9169456814057755,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 16,
+            "apex": 7,
+            "descent": 24
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": []
+        },
+        {
+          "chips": 74,
+          "mult": 6,
+          "score": 444,
+          "air": 8.19003463421687,
+          "launch": {
+            "angle": 1.0189601862709683,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 38,
+            "apex": 7,
+            "descent": 29
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": []
+        },
+        {
+          "chips": 54,
+          "mult": 6,
+          "score": 324,
+          "air": 7.700485797797434,
+          "launch": {
+            "angle": 0.9351336412998486,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 18,
+            "apex": 10,
+            "descent": 26
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": []
+        },
+        {
+          "chips": 74,
+          "mult": 12,
+          "score": 888,
+          "air": 8.123676270946742,
+          "launch": {
+            "angle": 1.0069270882756067,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 32,
+            "apex": 12,
+            "descent": 30
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": [
+            "S01"
+          ]
+        },
+        {
+          "chips": 76,
+          "mult": 9,
+          "score": 684,
+          "air": 7.752001502771308,
+          "launch": {
+            "angle": 0.9434701184432323,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 32,
+            "apex": 16,
+            "descent": 28
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": []
+        },
+        {
+          "chips": 64,
+          "mult": 20,
+          "score": 1280,
+          "air": 8.025835657935234,
+          "launch": {
+            "angle": 0.9896057580577216,
+            "speed": 75.00000000000001
+          },
+          "phases": {
+            "ascent": 22,
+            "apex": 6,
+            "descent": 36
+          },
+          "combos": [
+            "pair",
+            "triple",
+            "four"
+          ],
+          "active": [
+            "S01"
+          ]
+        }
+      ]
+    },
+    {
+      "buildSha256": "b2ac5bc779422c0558f39b4bbf9efc827cc4337d5edb634812887f1ba3a221b7",
+      "package": "ascent",
+      "angle": "high",
+      "seed": 11,
+      "setup": {
+        "kind": "Constructed initial previous-run level/stats and custom wave9 shop offers at actual real prices, then actual commands buy/combine/next. No in-fight grants, forced kills, or refills.",
+        "sharedStats": {
+          "Close": 3,
+          "Shot": 3,
+          "Blast": 3,
+          "Damage %": 0.1,
+          "Attack speed": 0.08,
+          "Armour": 10,
+          "Max HP": 18,
+          "Regen": 5
+        },
+        "level": 15,
+        "sharedSpend": 236,
+        "charmSpend": 105,
+        "totalSpend": 341,
+        "unspent": 0,
+        "purchases": [
+          {
+            "id": "harpoon",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "sonic",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "rocket",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "laser",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "I07",
+            "row": "item",
+            "price": 66
+          },
+          {
+            "id": "S01",
+            "row": "charm",
+            "price": 31
+          },
+          {
+            "id": "S07",
+            "row": "charm",
+            "price": 31
+          },
+          {
+            "id": "S08",
+            "row": "charm",
+            "price": 43
+          }
+        ],
+        "loadout": [
+          {
+            "id": "harpoon",
+            "tier": 2
+          },
+          {
+            "id": "sonic",
+            "tier": 2
+          },
+          {
+            "id": "rocket",
+            "tier": 2
+          },
+          {
+            "id": "laser",
+            "tier": 1
+          }
+        ],
+        "flow": "live-overtime-until-water-entry"
+      },
+      "outcome": {
+        "mode": "dead",
+        "reason": "health",
+        "wave": 10,
+        "hp": 0,
+        "score": 1859,
+        "quota": 2823,
+        "quotaRatio": 0.6585193057031526,
+        "chips": 247,
+        "kills": 197,
+        "air": 43.09883786678872,
+        "time": 54.70833333333087,
+        "banks": 4,
+        "bossSpawned": true,
+        "bossDefeated": true,
+        "bossRecoveries": 0
+      },
+      "metrics": {
+        "hits": 17,
+        "damageTaken": 583.8888888888888,
+        "primaryApplied": 26323.521228931477,
+        "secondaryApplied": 669.3883440220868,
+        "baseScore": 1502,
+        "extraRawScoreFromCharms": 357,
+        "charmsPaid": {
+          "S01": 2,
+          "S07": 0,
+          "S08": 0
+        },
+        "charmContribution": {
+          "S01": 357,
+          "S07": 0,
+          "S08": 0
+        },
+        "scorePerAir": 43.1334136142106,
+        "phaseChips": {
+          "ascent": 83,
+          "apex": 34,
+          "descent": 101
+        },
+        "entryKills": 6
+      },
+      "launches": [
+        {
+          "angle": 1.3302482559428315,
+          "speed": 74.99999999999999,
+          "angleDegrees": 76.21761077016278,
+          "predictedAir": 9.712075510914952
+        },
+        {
+          "angle": 1.3464016355702166,
+          "speed": 74.99999999999997,
+          "angleDegrees": 77.14313124768455,
+          "predictedAir": 9.749289767178762
+        },
+        {
+          "angle": 1.4835298641951802,
+          "speed": 75,
+          "angleDegrees": 85,
+          "predictedAir": 9.961946980917457
+        },
+        {
+          "angle": 1.4009946386803143,
+          "speed": 75,
+          "angleDegrees": 80.27107991683772,
+          "predictedAir": 9.856182983996202
+        },
+        {
+          "angle": 1.7401886929543344,
+          "speed": 74.99999999999999,
+          "angleDegrees": 99.70546766267046,
+          "predictedAir": 9.856873858755051
+        }
+      ],
+      "banks": [
+        {
+          "chips": 32,
+          "mult": 12,
+          "score": 384,
+          "air": 9.4292681253123,
+          "launch": {
+            "angle": 1.3302482559428315,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 4,
+            "apex": 5,
+            "descent": 23
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": [
+            "S01"
+          ]
+        },
+        {
+          "chips": 50,
+          "mult": 6,
+          "score": 300,
+          "air": 9.46762823588258,
+          "launch": {
+            "angle": 1.3464016355702166,
+            "speed": 74.99999999999997
+          },
+          "phases": {
+            "ascent": 16,
+            "apex": 12,
+            "descent": 22
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": []
+        },
+        {
+          "chips": 49,
+          "mult": 8,
+          "score": 392,
+          "air": 9.686654126242475,
+          "launch": {
+            "angle": 1.4835298641951802,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 18,
+            "apex": 6,
+            "descent": 25
+          },
+          "combos": [
+            "pair",
+            "twoPair"
+          ],
+          "active": []
+        },
+        {
+          "chips": 87,
+          "mult": 9,
+          "score": 783,
+          "air": 9.577760199211815,
+          "launch": {
+            "angle": 1.4009946386803143,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 45,
+            "apex": 11,
+            "descent": 31
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S01"
+          ]
+        }
+      ]
+    },
+    {
+      "buildSha256": "b2ac5bc779422c0558f39b4bbf9efc827cc4337d5edb634812887f1ba3a221b7",
+      "package": "ascent",
+      "angle": "high",
+      "seed": 23,
+      "setup": {
+        "kind": "Constructed initial previous-run level/stats and custom wave9 shop offers at actual real prices, then actual commands buy/combine/next. No in-fight grants, forced kills, or refills.",
+        "sharedStats": {
+          "Close": 3,
+          "Shot": 3,
+          "Blast": 3,
+          "Damage %": 0.1,
+          "Attack speed": 0.08,
+          "Armour": 10,
+          "Max HP": 18,
+          "Regen": 5
+        },
+        "level": 15,
+        "sharedSpend": 236,
+        "charmSpend": 105,
+        "totalSpend": 341,
+        "unspent": 0,
+        "purchases": [
+          {
+            "id": "harpoon",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "sonic",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "rocket",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "laser",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "I07",
+            "row": "item",
+            "price": 66
+          },
+          {
+            "id": "S01",
+            "row": "charm",
+            "price": 31
+          },
+          {
+            "id": "S07",
+            "row": "charm",
+            "price": 31
+          },
+          {
+            "id": "S08",
+            "row": "charm",
+            "price": 43
+          }
+        ],
+        "loadout": [
+          {
+            "id": "harpoon",
+            "tier": 2
+          },
+          {
+            "id": "sonic",
+            "tier": 2
+          },
+          {
+            "id": "rocket",
+            "tier": 2
+          },
+          {
+            "id": "laser",
+            "tier": 1
+          }
+        ],
+        "flow": "live-overtime-until-water-entry"
+      },
+      "outcome": {
+        "mode": "dead",
+        "reason": "health",
+        "wave": 10,
+        "hp": 0,
+        "score": 2751,
+        "quota": 2823,
+        "quotaRatio": 0.9744952178533475,
+        "chips": 275,
+        "kills": 219,
+        "air": 45.683575067419376,
+        "time": 57.26666666666406,
+        "banks": 4,
+        "bossSpawned": true,
+        "bossDefeated": true,
+        "bossRecoveries": 0
+      },
+      "metrics": {
+        "hits": 17,
+        "damageTaken": 619.9999999999998,
+        "primaryApplied": 30369.401333333335,
+        "secondaryApplied": 502.2733333333333,
+        "baseScore": 2262,
+        "extraRawScoreFromCharms": 489,
+        "charmsPaid": {
+          "S01": 3,
+          "S07": 0,
+          "S08": 0
+        },
+        "charmContribution": {
+          "S01": 489,
+          "S07": 0,
+          "S08": 0
+        },
+        "scorePerAir": 60.21857956475825,
+        "phaseChips": {
+          "ascent": 60,
+          "apex": 43,
+          "descent": 129
+        },
+        "entryKills": 6
+      },
+      "launches": [
+        {
+          "angle": 1.3302482559428315,
+          "speed": 74.99999999999999,
+          "angleDegrees": 76.21761077016278,
+          "predictedAir": 9.712075510914952
+        },
+        {
+          "angle": 1.3457622201697517,
+          "speed": 75.00000000000001,
+          "angleDegrees": 77.10649544388224,
+          "predictedAir": 9.747864970969138
+        },
+        {
+          "angle": 1.4835298641951802,
+          "speed": 75,
+          "angleDegrees": 85,
+          "predictedAir": 9.961946980917457
+        },
+        {
+          "angle": 1.3952543831582604,
+          "speed": 75,
+          "angleDegrees": 79.94218750209737,
+          "predictedAir": 9.846320375037777
+        },
+        {
+          "angle": 1.7401997671575355,
+          "speed": 75,
+          "angleDegrees": 99.70610216777537,
+          "predictedAir": 9.856855188877574
+        }
+      ],
+      "banks": [
+        {
+          "chips": 29,
+          "mult": 12,
+          "score": 348,
+          "air": 9.4292681253123,
+          "launch": {
+            "angle": 1.3302482559428315,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 5,
+            "apex": 6,
+            "descent": 18
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": [
+            "S01"
+          ]
+        },
+        {
+          "chips": 54,
+          "mult": 12,
+          "score": 648,
+          "air": 9.466159745365859,
+          "launch": {
+            "angle": 1.3457622201697517,
+            "speed": 75.00000000000001
+          },
+          "phases": {
+            "ascent": 12,
+            "apex": 15,
+            "descent": 27
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": [
+            "S01"
+          ]
+        },
+        {
+          "chips": 80,
+          "mult": 9,
+          "score": 720,
+          "air": 9.686654126242363,
+          "launch": {
+            "angle": 1.4835298641951802,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 22,
+            "apex": 12,
+            "descent": 46
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S01"
+          ]
+        },
+        {
+          "chips": 69,
+          "mult": 15,
+          "score": 1035,
+          "air": 9.567601980167778,
+          "launch": {
+            "angle": 1.3952543831582604,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 21,
+            "apex": 10,
+            "descent": 38
+          },
+          "combos": [
+            "pair",
+            "twoPair",
+            "triple",
+            "house"
+          ],
+          "active": []
+        }
+      ]
+    },
+    {
+      "buildSha256": "b2ac5bc779422c0558f39b4bbf9efc827cc4337d5edb634812887f1ba3a221b7",
+      "package": "late",
+      "angle": "low",
+      "seed": 11,
+      "setup": {
+        "kind": "Constructed initial previous-run level/stats and custom wave9 shop offers at actual real prices, then actual commands buy/combine/next. No in-fight grants, forced kills, or refills.",
+        "sharedStats": {
+          "Close": 3,
+          "Shot": 3,
+          "Blast": 3,
+          "Damage %": 0.1,
+          "Attack speed": 0.08,
+          "Armour": 10,
+          "Max HP": 18,
+          "Regen": 5
+        },
+        "level": 15,
+        "sharedSpend": 236,
+        "charmSpend": 105,
+        "totalSpend": 341,
+        "unspent": 0,
+        "purchases": [
+          {
+            "id": "harpoon",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "sonic",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "rocket",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "laser",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "I07",
+            "row": "item",
+            "price": 66
+          },
+          {
+            "id": "S09",
+            "row": "charm",
+            "price": 43
+          },
+          {
+            "id": "S12",
+            "row": "charm",
+            "price": 31
+          },
+          {
+            "id": "S15",
+            "row": "charm",
+            "price": 31
+          }
+        ],
+        "loadout": [
+          {
+            "id": "harpoon",
+            "tier": 2
+          },
+          {
+            "id": "sonic",
+            "tier": 2
+          },
+          {
+            "id": "rocket",
+            "tier": 2
+          },
+          {
+            "id": "laser",
+            "tier": 1
+          }
+        ],
+        "flow": "live-overtime-until-water-entry"
+      },
+      "outcome": {
+        "mode": "dead",
+        "reason": "health",
+        "wave": 10,
+        "hp": 0,
+        "score": 3394,
+        "quota": 2823,
+        "quotaRatio": 1.2022670917463691,
+        "chips": 408,
+        "kills": 346,
+        "air": 58.31363344038961,
+        "time": 69.70833333333488,
+        "banks": 10,
+        "bossSpawned": true,
+        "bossDefeated": true,
+        "bossRecoveries": 0
+      },
+      "metrics": {
+        "hits": 16,
+        "damageTaken": 685.2777777777776,
+        "primaryApplied": 42487.55801329203,
+        "secondaryApplied": 1274.778492923341,
+        "baseScore": 2663,
+        "extraRawScoreFromCharms": 731,
+        "charmsPaid": {
+          "S09": 0,
+          "S12": 2,
+          "S15": 7
+        },
+        "charmContribution": {
+          "S09": 0,
+          "S12": 168,
+          "S15": 563
+        },
+        "scorePerAir": 58.20251285609693,
+        "phaseChips": {
+          "ascent": 154,
+          "apex": 72,
+          "descent": 162
+        },
+        "entryKills": 11
+      },
+      "launches": [
+        {
+          "angle": 0.596864264621023,
+          "speed": 75,
+          "angleDegrees": 34.19780330496416,
+          "predictedAir": 5.620516675328686
+        },
+        {
+          "angle": 0.5527850780958159,
+          "speed": 75,
+          "angleDegrees": 31.67225195269986,
+          "predictedAir": 5.2505954608144325
+        },
+        {
+          "angle": 0.5464151226003043,
+          "speed": 75,
+          "angleDegrees": 31.307280387120883,
+          "predictedAir": 5.196276809712661
+        },
+        {
+          "angle": 0.5504401329091309,
+          "speed": 75,
+          "angleDegrees": 31.53789649031329,
+          "predictedAir": 5.230624023898498
+        },
+        {
+          "angle": 0.5478982233192188,
+          "speed": 74.99999999999999,
+          "angleDegrees": 31.3922557989075,
+          "predictedAir": 5.20894259613713
+        },
+        {
+          "angle": 0.5285676145761397,
+          "speed": 75.00000000000001,
+          "angleDegrees": 30.284693502510375,
+          "predictedAir": 5.042969507476828
+        },
+        {
+          "angle": 0.5120997961476507,
+          "speed": 75,
+          "angleDegrees": 29.3411570087702,
+          "predictedAir": 4.9000875486979645
+        },
+        {
+          "angle": 0.5032206847758722,
+          "speed": 75,
+          "angleDegrees": 28.832421401340678,
+          "predictedAir": 4.822494640215793
+        },
+        {
+          "angle": 0.5576012483206596,
+          "speed": 75,
+          "angleDegrees": 31.948198179999977,
+          "predictedAir": 5.291523170250276
+        },
+        {
+          "angle": 0.5438705883508971,
+          "speed": 75.00000000000001,
+          "angleDegrees": 31.161489313803358,
+          "predictedAir": 5.174519693467449
+        },
+        {
+          "angle": 0.4698281143878222,
+          "speed": 75.00000000000001,
+          "angleDegrees": 26.91916805101188,
+          "predictedAir": 4.527330309286217
+        }
+      ],
+      "banks": [
+        {
+          "chips": 12,
+          "mult": 12,
+          "score": 144,
+          "air": 6.060522725538388,
+          "launch": {
+            "angle": 0.596864264621023,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 0,
+            "apex": 4,
+            "descent": 8
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": [
+            "S12"
+          ]
+        },
+        {
+          "chips": 33,
+          "mult": 12,
+          "score": 396,
+          "air": 5.717037505994047,
+          "launch": {
+            "angle": 0.5527850780958159,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 11,
+            "apex": 6,
+            "descent": 16
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S12",
+            "S15"
+          ]
+        },
+        {
+          "chips": 27,
+          "mult": 8,
+          "score": 216,
+          "air": 5.6668498343416935,
+          "launch": {
+            "angle": 0.5464151226003043,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 12,
+            "apex": 5,
+            "descent": 10
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S15"
+          ]
+        },
+        {
+          "chips": 31,
+          "mult": 9,
+          "score": 279,
+          "air": 5.698577097296032,
+          "launch": {
+            "angle": 0.5504401329091309,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 8,
+            "apex": 6,
+            "descent": 17
+          },
+          "combos": [
+            "pair",
+            "twoPair"
+          ],
+          "active": [
+            "S15"
+          ]
+        },
+        {
+          "chips": 36,
+          "mult": 8,
+          "score": 288,
+          "air": 5.678546347434,
+          "launch": {
+            "angle": 0.5478982233192188,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 16,
+            "apex": 4,
+            "descent": 16
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S15"
+          ]
+        },
+        {
+          "chips": 66,
+          "mult": 8,
+          "score": 528,
+          "air": 5.525573971789042,
+          "launch": {
+            "angle": 0.5285676145761397,
+            "speed": 75.00000000000001
+          },
+          "phases": {
+            "ascent": 35,
+            "apex": 8,
+            "descent": 23
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S15"
+          ]
+        },
+        {
+          "chips": 32,
+          "mult": 9,
+          "score": 288,
+          "air": 5.394425061291115,
+          "launch": {
+            "angle": 0.5120997961476507,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 8,
+            "apex": 7,
+            "descent": 17
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": []
+        },
+        {
+          "chips": 43,
+          "mult": 8,
+          "score": 344,
+          "air": 5.323425251724073,
+          "launch": {
+            "angle": 0.5032206847758722,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 21,
+            "apex": 10,
+            "descent": 12
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S15"
+          ]
+        },
+        {
+          "chips": 47,
+          "mult": 9,
+          "score": 423,
+          "air": 5.754896679003714,
+          "launch": {
+            "angle": 0.5576012483206596,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 22,
+            "apex": 6,
+            "descent": 19
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": []
+        },
+        {
+          "chips": 61,
+          "mult": 8,
+          "score": 488,
+          "air": 5.646766372497038,
+          "launch": {
+            "angle": 0.5438705883508971,
+            "speed": 75.00000000000001
+          },
+          "phases": {
+            "ascent": 21,
+            "apex": 16,
+            "descent": 24
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S15"
+          ]
+        }
+      ]
+    },
+    {
+      "buildSha256": "b2ac5bc779422c0558f39b4bbf9efc827cc4337d5edb634812887f1ba3a221b7",
+      "package": "late",
+      "angle": "low",
+      "seed": 23,
+      "setup": {
+        "kind": "Constructed initial previous-run level/stats and custom wave9 shop offers at actual real prices, then actual commands buy/combine/next. No in-fight grants, forced kills, or refills.",
+        "sharedStats": {
+          "Close": 3,
+          "Shot": 3,
+          "Blast": 3,
+          "Damage %": 0.1,
+          "Attack speed": 0.08,
+          "Armour": 10,
+          "Max HP": 18,
+          "Regen": 5
+        },
+        "level": 15,
+        "sharedSpend": 236,
+        "charmSpend": 105,
+        "totalSpend": 341,
+        "unspent": 0,
+        "purchases": [
+          {
+            "id": "harpoon",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "sonic",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "rocket",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "laser",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "I07",
+            "row": "item",
+            "price": 66
+          },
+          {
+            "id": "S09",
+            "row": "charm",
+            "price": 43
+          },
+          {
+            "id": "S12",
+            "row": "charm",
+            "price": 31
+          },
+          {
+            "id": "S15",
+            "row": "charm",
+            "price": 31
+          }
+        ],
+        "loadout": [
+          {
+            "id": "harpoon",
+            "tier": 2
+          },
+          {
+            "id": "sonic",
+            "tier": 2
+          },
+          {
+            "id": "rocket",
+            "tier": 2
+          },
+          {
+            "id": "laser",
+            "tier": 1
+          }
+        ],
+        "flow": "live-overtime-until-water-entry"
+      },
+      "outcome": {
+        "mode": "dead",
+        "reason": "health",
+        "wave": 10,
+        "hp": 0,
+        "score": 3892,
+        "quota": 2823,
+        "quotaRatio": 1.3786751682607155,
+        "chips": 371,
+        "kills": 313,
+        "air": 55.28724366403033,
+        "time": 65.94999999999855,
+        "banks": 9,
+        "bossSpawned": true,
+        "bossDefeated": true,
+        "bossRecoveries": 0
+      },
+      "metrics": {
+        "hits": 17,
+        "damageTaken": 690.2777777777776,
+        "primaryApplied": 39015.36952767255,
+        "secondaryApplied": 954.7196717905182,
+        "baseScore": 3210,
+        "extraRawScoreFromCharms": 682.6,
+        "charmsPaid": {
+          "S09": 2,
+          "S12": 2,
+          "S15": 7
+        },
+        "charmContribution": {
+          "S09": 189.60000000000002,
+          "S12": 208,
+          "S15": 285
+        },
+        "scorePerAir": 70.3959854401662,
+        "phaseChips": {
+          "ascent": 112,
+          "apex": 43,
+          "descent": 181
+        },
+        "entryKills": 10
+      },
+      "launches": [
+        {
+          "angle": 0.596864264621023,
+          "speed": 75,
+          "angleDegrees": 34.19780330496416,
+          "predictedAir": 5.620516675328686
+        },
+        {
+          "angle": 0.5736556223677106,
+          "speed": 75.00000000000001,
+          "angleDegrees": 32.86804605562036,
+          "predictedAir": 5.427061082127568
+        },
+        {
+          "angle": 0.454533962464865,
+          "speed": 75.00000000000001,
+          "angleDegrees": 26.04287769459454,
+          "predictedAir": 4.390436427419013
+        },
+        {
+          "angle": 0.5876530790988495,
+          "speed": 75,
+          "angleDegrees": 33.670041250231606,
+          "predictedAir": 5.544093404275929
+        },
+        {
+          "angle": 0.6009692503713198,
+          "speed": 75,
+          "angleDegrees": 34.43300166341751,
+          "predictedAir": 5.654421648953818
+        },
+        {
+          "angle": 0.4881686575222282,
+          "speed": 74.99999999999999,
+          "angleDegrees": 27.970003766590985,
+          "predictedAir": 4.690092462349391
+        },
+        {
+          "angle": 0.5294681456508293,
+          "speed": 74.99999999999999,
+          "angleDegrees": 30.336290132410475,
+          "predictedAir": 5.050743820336667
+        },
+        {
+          "angle": 0.5051868702893235,
+          "speed": 75,
+          "angleDegrees": 28.9450755330012,
+          "predictedAir": 4.839709759828528
+        },
+        {
+          "angle": 0.4962805196231572,
+          "speed": 75,
+          "angleDegrees": 28.43477922896634,
+          "predictedAir": 4.761580787018228
+        },
+        {
+          "angle": 0.5120174732370188,
+          "speed": 75,
+          "angleDegrees": 29.336440253433764,
+          "predictedAir": 4.899369908866585
+        }
+      ],
+      "banks": [
+        {
+          "chips": 14,
+          "mult": 9,
+          "score": 126,
+          "air": 6.060522725538388,
+          "launch": {
+            "angle": 0.596864264621023,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 0,
+            "apex": 4,
+            "descent": 10
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": []
+        },
+        {
+          "chips": 27,
+          "mult": 9,
+          "score": 243,
+          "air": 5.880534592837431,
+          "launch": {
+            "angle": 0.5736556223677106,
+            "speed": 75.00000000000001
+          },
+          "phases": {
+            "ascent": 9,
+            "apex": 6,
+            "descent": 12
+          },
+          "combos": [
+            "pair",
+            "twoPair"
+          ],
+          "active": [
+            "S15"
+          ]
+        },
+        {
+          "chips": 34,
+          "mult": 9,
+          "score": 306,
+          "air": 4.931209747408245,
+          "launch": {
+            "angle": 0.454533962464865,
+            "speed": 75.00000000000001
+          },
+          "phases": {
+            "ascent": 17,
+            "apex": 2,
+            "descent": 15
+          },
+          "combos": [
+            "pair",
+            "twoPair"
+          ],
+          "active": [
+            "S15"
+          ]
+        },
+        {
+          "chips": 28,
+          "mult": 11.4,
+          "score": 319,
+          "air": 5.989329652936999,
+          "launch": {
+            "angle": 0.5876530790988495,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 7,
+            "apex": 4,
+            "descent": 17
+          },
+          "combos": [
+            "pair",
+            "twoPair"
+          ],
+          "active": [
+            "S09",
+            "S15"
+          ]
+        },
+        {
+          "chips": 51,
+          "mult": 11.4,
+          "score": 581,
+          "air": 6.09214385789436,
+          "launch": {
+            "angle": 0.6009692503713198,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 11,
+            "apex": 4,
+            "descent": 36
+          },
+          "combos": [
+            "pair",
+            "twoPair"
+          ],
+          "active": [
+            "S09",
+            "S15"
+          ]
+        },
+        {
+          "chips": 25,
+          "mult": 12,
+          "score": 300,
+          "air": 5.202651608587506,
+          "launch": {
+            "angle": 0.4881686575222282,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 13,
+            "apex": 1,
+            "descent": 11
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S12",
+            "S15"
+          ]
+        },
+        {
+          "chips": 59,
+          "mult": 9,
+          "score": 531,
+          "air": 5.53272455848384,
+          "launch": {
+            "angle": 0.5294681456508293,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 19,
+            "apex": 8,
+            "descent": 32
+          },
+          "combos": [
+            "pair",
+            "twoPair"
+          ],
+          "active": [
+            "S15"
+          ]
+        },
+        {
+          "chips": 36,
+          "mult": 12,
+          "score": 432,
+          "air": 5.339163754719082,
+          "launch": {
+            "angle": 0.5051868702893235,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 10,
+            "apex": 6,
+            "descent": 20
+          },
+          "combos": [
+            "pair",
+            "twoPair"
+          ],
+          "active": [
+            "S12",
+            "S15"
+          ]
+        },
+        {
+          "chips": 62,
+          "mult": 17,
+          "score": 1054,
+          "air": 5.267800882664485,
+          "launch": {
+            "angle": 0.4962805196231572,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 26,
+            "apex": 8,
+            "descent": 28
+          },
+          "combos": [
+            "pair",
+            "triple",
+            "four"
+          ],
+          "active": []
+        }
+      ]
+    },
+    {
+      "buildSha256": "b2ac5bc779422c0558f39b4bbf9efc827cc4337d5edb634812887f1ba3a221b7",
+      "package": "late",
+      "angle": "mid",
+      "seed": 11,
+      "setup": {
+        "kind": "Constructed initial previous-run level/stats and custom wave9 shop offers at actual real prices, then actual commands buy/combine/next. No in-fight grants, forced kills, or refills.",
+        "sharedStats": {
+          "Close": 3,
+          "Shot": 3,
+          "Blast": 3,
+          "Damage %": 0.1,
+          "Attack speed": 0.08,
+          "Armour": 10,
+          "Max HP": 18,
+          "Regen": 5
+        },
+        "level": 15,
+        "sharedSpend": 236,
+        "charmSpend": 105,
+        "totalSpend": 341,
+        "unspent": 0,
+        "purchases": [
+          {
+            "id": "harpoon",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "sonic",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "rocket",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "laser",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "I07",
+            "row": "item",
+            "price": 66
+          },
+          {
+            "id": "S09",
+            "row": "charm",
+            "price": 43
+          },
+          {
+            "id": "S12",
+            "row": "charm",
+            "price": 31
+          },
+          {
+            "id": "S15",
+            "row": "charm",
+            "price": 31
+          }
+        ],
+        "loadout": [
+          {
+            "id": "harpoon",
+            "tier": 2
+          },
+          {
+            "id": "sonic",
+            "tier": 2
+          },
+          {
+            "id": "rocket",
+            "tier": 2
+          },
+          {
+            "id": "laser",
+            "tier": 1
+          }
+        ],
+        "flow": "live-overtime-until-water-entry"
+      },
+      "outcome": {
+        "mode": "dead",
+        "reason": "health",
+        "wave": 10,
+        "hp": 0,
+        "score": 3466,
+        "quota": 2823,
+        "quotaRatio": 1.2277718738930217,
+        "chips": 314,
+        "kills": 256,
+        "air": 49.193882638926866,
+        "time": 57.87499999999736,
+        "banks": 5,
+        "bossSpawned": true,
+        "bossDefeated": true,
+        "bossRecoveries": 0
+      },
+      "metrics": {
+        "hits": 17,
+        "damageTaken": 671.9444444444442,
+        "primaryApplied": 34552.96923061188,
+        "secondaryApplied": 1200.7201506719684,
+        "baseScore": 3048,
+        "extraRawScoreFromCharms": 418,
+        "charmsPaid": {
+          "S09": 0,
+          "S12": 2,
+          "S15": 1
+        },
+        "charmContribution": {
+          "S09": 0,
+          "S12": 338,
+          "S15": 80
+        },
+        "scorePerAir": 70.4559147209367,
+        "phaseChips": {
+          "ascent": 103,
+          "apex": 36,
+          "descent": 109
+        },
+        "entryKills": 14
+      },
+      "launches": [
+        {
+          "angle": 0.9005575108071192,
+          "speed": 74.99999999999999,
+          "angleDegrees": 51.598144578054956,
+          "predictedAir": 7.836733421484886
+        },
+        {
+          "angle": 0.9675157343190753,
+          "speed": 75.00000000000001,
+          "angleDegrees": 55.434568188983675,
+          "predictedAir": 8.234788151371427
+        },
+        {
+          "angle": 0.9177518814970239,
+          "speed": 75,
+          "angleDegrees": 52.58330944996993,
+          "predictedAir": 7.9423765518088105
+        },
+        {
+          "angle": 0.9383968401779236,
+          "speed": 75,
+          "angleDegrees": 53.76617845060746,
+          "predictedAir": 8.066115385838996
+        },
+        {
+          "angle": 0.9227979877782552,
+          "speed": 75,
+          "angleDegrees": 52.872430042858944,
+          "predictedAir": 7.97293580943423
+        },
+        {
+          "angle": 0.934472069377234,
+          "speed": 75.00000000000001,
+          "angleDegrees": 53.54130564817177,
+          "predictedAir": 8.042854710696854
+        }
+      ],
+      "banks": [
+        {
+          "chips": 26,
+          "mult": 12,
+          "score": 312,
+          "air": 8.163394902230266,
+          "launch": {
+            "angle": 0.9005575108071192,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 3,
+            "apex": 3,
+            "descent": 20
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": [
+            "S12"
+          ]
+        },
+        {
+          "chips": 40,
+          "mult": 8,
+          "score": 320,
+          "air": 8.546795913535933,
+          "launch": {
+            "angle": 0.9675157343190753,
+            "speed": 75.00000000000001
+          },
+          "phases": {
+            "ascent": 16,
+            "apex": 9,
+            "descent": 15
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S15"
+          ]
+        },
+        {
+          "chips": 51,
+          "mult": 15,
+          "score": 765,
+          "air": 8.265021410686149,
+          "launch": {
+            "angle": 0.9177518814970239,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 20,
+            "apex": 12,
+            "descent": 19
+          },
+          "combos": [
+            "pair",
+            "twoPair",
+            "triple",
+            "house"
+          ],
+          "active": []
+        },
+        {
+          "chips": 52,
+          "mult": 17,
+          "score": 884,
+          "air": 8.384174908196536,
+          "launch": {
+            "angle": 0.9383968401779236,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 19,
+            "apex": 6,
+            "descent": 27
+          },
+          "combos": [
+            "show"
+          ],
+          "active": [
+            "S12"
+          ]
+        },
+        {
+          "chips": 79,
+          "mult": 15,
+          "score": 1185,
+          "air": 8.294436454045792,
+          "launch": {
+            "angle": 0.9227979877782552,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 45,
+            "apex": 6,
+            "descent": 28
+          },
+          "combos": [
+            "pair",
+            "twoPair",
+            "triple",
+            "house"
+          ],
+          "active": []
+        }
+      ]
+    },
+    {
+      "buildSha256": "b2ac5bc779422c0558f39b4bbf9efc827cc4337d5edb634812887f1ba3a221b7",
+      "package": "late",
+      "angle": "mid",
+      "seed": 23,
+      "setup": {
+        "kind": "Constructed initial previous-run level/stats and custom wave9 shop offers at actual real prices, then actual commands buy/combine/next. No in-fight grants, forced kills, or refills.",
+        "sharedStats": {
+          "Close": 3,
+          "Shot": 3,
+          "Blast": 3,
+          "Damage %": 0.1,
+          "Attack speed": 0.08,
+          "Armour": 10,
+          "Max HP": 18,
+          "Regen": 5
+        },
+        "level": 15,
+        "sharedSpend": 236,
+        "charmSpend": 105,
+        "totalSpend": 341,
+        "unspent": 0,
+        "purchases": [
+          {
+            "id": "harpoon",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "sonic",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "rocket",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "laser",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "I07",
+            "row": "item",
+            "price": 66
+          },
+          {
+            "id": "S09",
+            "row": "charm",
+            "price": 43
+          },
+          {
+            "id": "S12",
+            "row": "charm",
+            "price": 31
+          },
+          {
+            "id": "S15",
+            "row": "charm",
+            "price": 31
+          }
+        ],
+        "loadout": [
+          {
+            "id": "harpoon",
+            "tier": 2
+          },
+          {
+            "id": "sonic",
+            "tier": 2
+          },
+          {
+            "id": "rocket",
+            "tier": 2
+          },
+          {
+            "id": "laser",
+            "tier": 1
+          }
+        ],
+        "flow": "live-overtime-until-water-entry"
+      },
+      "outcome": {
+        "mode": "dead",
+        "reason": "health",
+        "wave": 10,
+        "hp": 0,
+        "score": 4148,
+        "quota": 2823,
+        "quotaRatio": 1.46935883811548,
+        "chips": 468,
+        "kills": 394,
+        "air": 65.9082603002315,
+        "time": 77.79166666667464,
+        "banks": 7,
+        "bossSpawned": true,
+        "bossDefeated": true,
+        "bossRecoveries": 0
+      },
+      "metrics": {
+        "hits": 18,
+        "damageTaken": 714.4444444444442,
+        "primaryApplied": 49655.6448764182,
+        "secondaryApplied": 1036.3473553272793,
+        "baseScore": 3844,
+        "extraRawScoreFromCharms": 304,
+        "charmsPaid": {
+          "S09": 0,
+          "S12": 0,
+          "S15": 3
+        },
+        "charmContribution": {
+          "S09": 0,
+          "S12": 0,
+          "S15": 304
+        },
+        "scorePerAir": 62.93596555431201,
+        "phaseChips": {
+          "ascent": 156,
+          "apex": 73,
+          "descent": 173
+        },
+        "entryKills": 10
+      },
+      "launches": [
+        {
+          "angle": 0.9005575108071192,
+          "speed": 74.99999999999999,
+          "angleDegrees": 51.598144578054956,
+          "predictedAir": 7.836733421484886
+        },
+        {
+          "angle": 0.9293037996236181,
+          "speed": 75,
+          "angleDegrees": 53.24518560390446,
+          "predictedAir": 8.012035344033512
+        },
+        {
+          "angle": 0.9328929999434618,
+          "speed": 75,
+          "angleDegrees": 53.4508316340585,
+          "predictedAir": 8.033461175920587
+        },
+        {
+          "angle": 0.9269588287125005,
+          "speed": 75,
+          "angleDegrees": 53.110828667616474,
+          "predictedAir": 7.997981211672384
+        },
+        {
+          "angle": 0.91871391139425,
+          "speed": 75,
+          "angleDegrees": 52.638429702846395,
+          "predictedAir": 7.948218238786016
+        },
+        {
+          "angle": 0.946766512268555,
+          "speed": 75,
+          "angleDegrees": 54.24572533730908,
+          "predictedAir": 8.115303906275669
+        },
+        {
+          "angle": 0.9106791243759375,
+          "speed": 75.00000000000001,
+          "angleDegrees": 52.17807031741059,
+          "predictedAir": 7.899203672935463
+        },
+        {
+          "angle": 0.914949449454544,
+          "speed": 75,
+          "angleDegrees": 52.42274192156362,
+          "predictedAir": 7.9253176061602515
+        }
+      ],
+      "banks": [
+        {
+          "chips": 24,
+          "mult": 9,
+          "score": 216,
+          "air": 8.163394902230266,
+          "launch": {
+            "angle": 0.9005575108071192,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 3,
+            "apex": 3,
+            "descent": 18
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": []
+        },
+        {
+          "chips": 34,
+          "mult": 9,
+          "score": 306,
+          "air": 8.332083350572496,
+          "launch": {
+            "angle": 0.9293037996236181,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 12,
+            "apex": 9,
+            "descent": 13
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": []
+        },
+        {
+          "chips": 48,
+          "mult": 17,
+          "score": 816,
+          "air": 8.352718512634416,
+          "launch": {
+            "angle": 0.9328929999434618,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 20,
+            "apex": 11,
+            "descent": 17
+          },
+          "combos": [
+            "pair",
+            "triple",
+            "four"
+          ],
+          "active": []
+        },
+        {
+          "chips": 77,
+          "mult": 12,
+          "score": 924,
+          "air": 8.318549904217464,
+          "launch": {
+            "angle": 0.9269588287125005,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 38,
+            "apex": 12,
+            "descent": 27
+          },
+          "combos": [
+            "show"
+          ],
+          "active": []
+        },
+        {
+          "chips": 62,
+          "mult": 9,
+          "score": 558,
+          "air": 8.27064376483887,
+          "launch": {
+            "angle": 0.91871391139425,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 20,
+            "apex": 8,
+            "descent": 34
+          },
+          "combos": [
+            "pair",
+            "twoPair"
+          ],
+          "active": [
+            "S15"
+          ]
+        },
+        {
+          "chips": 85,
+          "mult": 8,
+          "score": 680,
+          "air": 8.431575368044681,
+          "launch": {
+            "angle": 0.946766512268555,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 37,
+            "apex": 16,
+            "descent": 32
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S15"
+          ]
+        },
+        {
+          "chips": 72,
+          "mult": 9,
+          "score": 648,
+          "air": 8.223478452994797,
+          "launch": {
+            "angle": 0.9106791243759375,
+            "speed": 75.00000000000001
+          },
+          "phases": {
+            "ascent": 26,
+            "apex": 14,
+            "descent": 32
+          },
+          "combos": [
+            "pair",
+            "twoPair"
+          ],
+          "active": [
+            "S15"
+          ]
+        }
+      ]
+    },
+    {
+      "buildSha256": "b2ac5bc779422c0558f39b4bbf9efc827cc4337d5edb634812887f1ba3a221b7",
+      "package": "late",
+      "angle": "high",
+      "seed": 11,
+      "setup": {
+        "kind": "Constructed initial previous-run level/stats and custom wave9 shop offers at actual real prices, then actual commands buy/combine/next. No in-fight grants, forced kills, or refills.",
+        "sharedStats": {
+          "Close": 3,
+          "Shot": 3,
+          "Blast": 3,
+          "Damage %": 0.1,
+          "Attack speed": 0.08,
+          "Armour": 10,
+          "Max HP": 18,
+          "Regen": 5
+        },
+        "level": 15,
+        "sharedSpend": 236,
+        "charmSpend": 105,
+        "totalSpend": 341,
+        "unspent": 0,
+        "purchases": [
+          {
+            "id": "harpoon",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "sonic",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "rocket",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "laser",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "I07",
+            "row": "item",
+            "price": 66
+          },
+          {
+            "id": "S09",
+            "row": "charm",
+            "price": 43
+          },
+          {
+            "id": "S12",
+            "row": "charm",
+            "price": 31
+          },
+          {
+            "id": "S15",
+            "row": "charm",
+            "price": 31
+          }
+        ],
+        "loadout": [
+          {
+            "id": "harpoon",
+            "tier": 2
+          },
+          {
+            "id": "sonic",
+            "tier": 2
+          },
+          {
+            "id": "rocket",
+            "tier": 2
+          },
+          {
+            "id": "laser",
+            "tier": 1
+          }
+        ],
+        "flow": "live-overtime-until-water-entry"
+      },
+      "outcome": {
+        "mode": "dead",
+        "reason": "health",
+        "wave": 10,
+        "hp": 0,
+        "score": 1992,
+        "quota": 2823,
+        "quotaRatio": 0.7056323060573858,
+        "chips": 234,
+        "kills": 192,
+        "air": 39.06505288212456,
+        "time": 48.283333333331235,
+        "banks": 3,
+        "bossSpawned": true,
+        "bossDefeated": true,
+        "bossRecoveries": 0
+      },
+      "metrics": {
+        "hits": 19,
+        "damageTaken": 618.6111111111109,
+        "primaryApplied": 25268.660785285243,
+        "secondaryApplied": 265.65000000000003,
+        "baseScore": 1413,
+        "extraRawScoreFromCharms": 579,
+        "charmsPaid": {
+          "S09": 0,
+          "S12": 2,
+          "S15": 1
+        },
+        "charmContribution": {
+          "S09": 0,
+          "S12": 417,
+          "S15": 162
+        },
+        "scorePerAir": 50.991867488588554,
+        "phaseChips": {
+          "ascent": 51,
+          "apex": 24,
+          "descent": 91
+        },
+        "entryKills": 0
+      },
+      "launches": [
+        {
+          "angle": 1.3302482559428315,
+          "speed": 74.99999999999999,
+          "angleDegrees": 76.21761077016278,
+          "predictedAir": 9.712075510914952
+        },
+        {
+          "angle": 1.451527443801169,
+          "speed": 75,
+          "angleDegrees": 83.16639637721977,
+          "predictedAir": 9.92895894132657
+        },
+        {
+          "angle": 1.3966336864688254,
+          "speed": 75,
+          "angleDegrees": 80.02121576046117,
+          "predictedAir": 9.848719847902839
+        },
+        {
+          "angle": 1.4372044786676574,
+          "speed": 75,
+          "angleDegrees": 82.34575092495652,
+          "predictedAir": 9.910898723155658
+        }
+      ],
+      "banks": [
+        {
+          "chips": 31,
+          "mult": 12,
+          "score": 372,
+          "air": 9.979295444575392,
+          "launch": {
+            "angle": 1.3302482559428315,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 5,
+            "apex": 3,
+            "descent": 23
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": [
+            "S12"
+          ]
+        },
+        {
+          "chips": 54,
+          "mult": 12,
+          "score": 648,
+          "air": 10.190637053564272,
+          "launch": {
+            "angle": 1.451527443801169,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 23,
+            "apex": 10,
+            "descent": 21
+          },
+          "combos": [
+            "show"
+          ],
+          "active": []
+        },
+        {
+          "chips": 81,
+          "mult": 12,
+          "score": 972,
+          "air": 10.112421925054395,
+          "launch": {
+            "angle": 1.3966336864688254,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 23,
+            "apex": 11,
+            "descent": 47
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S12",
+            "S15"
+          ]
+        }
+      ]
+    },
+    {
+      "buildSha256": "b2ac5bc779422c0558f39b4bbf9efc827cc4337d5edb634812887f1ba3a221b7",
+      "package": "late",
+      "angle": "high",
+      "seed": 23,
+      "setup": {
+        "kind": "Constructed initial previous-run level/stats and custom wave9 shop offers at actual real prices, then actual commands buy/combine/next. No in-fight grants, forced kills, or refills.",
+        "sharedStats": {
+          "Close": 3,
+          "Shot": 3,
+          "Blast": 3,
+          "Damage %": 0.1,
+          "Attack speed": 0.08,
+          "Armour": 10,
+          "Max HP": 18,
+          "Regen": 5
+        },
+        "level": 15,
+        "sharedSpend": 236,
+        "charmSpend": 105,
+        "totalSpend": 341,
+        "unspent": 0,
+        "purchases": [
+          {
+            "id": "harpoon",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "sonic",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "rocket",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "laser",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "I07",
+            "row": "item",
+            "price": 66
+          },
+          {
+            "id": "S09",
+            "row": "charm",
+            "price": 43
+          },
+          {
+            "id": "S12",
+            "row": "charm",
+            "price": 31
+          },
+          {
+            "id": "S15",
+            "row": "charm",
+            "price": 31
+          }
+        ],
+        "loadout": [
+          {
+            "id": "harpoon",
+            "tier": 2
+          },
+          {
+            "id": "sonic",
+            "tier": 2
+          },
+          {
+            "id": "rocket",
+            "tier": 2
+          },
+          {
+            "id": "laser",
+            "tier": 1
+          }
+        ],
+        "flow": "live-overtime-until-water-entry"
+      },
+      "outcome": {
+        "mode": "dead",
+        "reason": "health",
+        "wave": 10,
+        "hp": 0,
+        "score": 2768,
+        "quota": 2823,
+        "quotaRatio": 0.9805171803046404,
+        "chips": 314,
+        "kills": 262,
+        "air": 48.06748300062106,
+        "time": 59.71666666666392,
+        "banks": 4,
+        "bossSpawned": true,
+        "bossDefeated": true,
+        "bossRecoveries": 0
+      },
+      "metrics": {
+        "hits": 18,
+        "damageTaken": 654.4444444444442,
+        "primaryApplied": 35044.2993076308,
+        "secondaryApplied": 0,
+        "baseScore": 1876,
+        "extraRawScoreFromCharms": 892.4000000000001,
+        "charmsPaid": {
+          "S09": 1,
+          "S12": 2,
+          "S15": 2
+        },
+        "charmContribution": {
+          "S09": 140.40000000000006,
+          "S12": 537,
+          "S15": 215
+        },
+        "scorePerAir": 57.58570716016555,
+        "phaseChips": {
+          "ascent": 67,
+          "apex": 44,
+          "descent": 130
+        },
+        "entryKills": 0
+      },
+      "launches": [
+        {
+          "angle": 1.3302482559428315,
+          "speed": 74.99999999999999,
+          "angleDegrees": 76.21761077016278,
+          "predictedAir": 9.712075510914952
+        },
+        {
+          "angle": 1.4835298641951802,
+          "speed": 75,
+          "angleDegrees": 85,
+          "predictedAir": 9.961946980917457
+        },
+        {
+          "angle": 1.3841177472096502,
+          "speed": 74.99999999999999,
+          "angleDegrees": 79.30410526426834,
+          "predictedAir": 9.82626097104548
+        },
+        {
+          "angle": 1.42329770032617,
+          "speed": 74.99999999999999,
+          "angleDegrees": 81.54895121936535,
+          "predictedAir": 9.891417848311626
+        },
+        {
+          "angle": 1.418690859605909,
+          "speed": 75.00000000000001,
+          "angleDegrees": 81.28499868920538,
+          "predictedAir": 9.884542494774283
+        }
+      ],
+      "banks": [
+        {
+          "chips": 29,
+          "mult": 9,
+          "score": 261,
+          "air": 9.979295444575392,
+          "launch": {
+            "angle": 1.3302482559428315,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 4,
+            "apex": 9,
+            "descent": 16
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": []
+        },
+        {
+          "chips": 59,
+          "mult": 9,
+          "score": 531,
+          "air": 10.22280175732437,
+          "launch": {
+            "angle": 1.4835298641951802,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 23,
+            "apex": 8,
+            "descent": 28
+          },
+          "combos": [
+            "pair",
+            "twoPair"
+          ],
+          "active": [
+            "S15"
+          ]
+        },
+        {
+          "chips": 78,
+          "mult": 13.8,
+          "score": 1076,
+          "air": 10.090535031668207,
+          "launch": {
+            "angle": 1.3841177472096502,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 15,
+            "apex": 16,
+            "descent": 47
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S09",
+            "S12",
+            "S15"
+          ]
+        },
+        {
+          "chips": 75,
+          "mult": 12,
+          "score": 900,
+          "air": 10.154039120018684,
+          "launch": {
+            "angle": 1.42329770032617,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 25,
+            "apex": 11,
+            "descent": 39
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": [
+            "S12"
+          ]
+        }
+      ]
+    },
+    {
+      "buildSha256": "b2ac5bc779422c0558f39b4bbf9efc827cc4337d5edb634812887f1ba3a221b7",
+      "package": "entry",
+      "angle": "low",
+      "seed": 11,
+      "setup": {
+        "kind": "Constructed initial previous-run level/stats and custom wave9 shop offers at actual real prices, then actual commands buy/combine/next. No in-fight grants, forced kills, or refills.",
+        "sharedStats": {
+          "Close": 3,
+          "Shot": 3,
+          "Blast": 3,
+          "Damage %": 0.1,
+          "Attack speed": 0.08,
+          "Armour": 10,
+          "Max HP": 18,
+          "Regen": 5
+        },
+        "level": 15,
+        "sharedSpend": 236,
+        "charmSpend": 105,
+        "totalSpend": 341,
+        "unspent": 0,
+        "purchases": [
+          {
+            "id": "harpoon",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "sonic",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "rocket",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "laser",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "I07",
+            "row": "item",
+            "price": 66
+          },
+          {
+            "id": "S13",
+            "row": "charm",
+            "price": 43
+          },
+          {
+            "id": "S02",
+            "row": "charm",
+            "price": 31
+          },
+          {
+            "id": "S15",
+            "row": "charm",
+            "price": 31
+          }
+        ],
+        "loadout": [
+          {
+            "id": "harpoon",
+            "tier": 2
+          },
+          {
+            "id": "sonic",
+            "tier": 2
+          },
+          {
+            "id": "rocket",
+            "tier": 2
+          },
+          {
+            "id": "laser",
+            "tier": 1
+          }
+        ],
+        "flow": "live-overtime-until-water-entry"
+      },
+      "outcome": {
+        "mode": "shop",
+        "reason": null,
+        "wave": 10,
+        "hp": 440,
+        "score": 6830,
+        "quota": 2823,
+        "quotaRatio": 2.4194119730782857,
+        "chips": 469,
+        "kills": 399,
+        "air": 63.026689034337466,
+        "time": 75.25000000000595,
+        "banks": 14,
+        "bossSpawned": true,
+        "bossDefeated": true,
+        "bossRecoveries": 0
+      },
+      "metrics": {
+        "hits": 18,
+        "damageTaken": 701.9444444444442,
+        "primaryApplied": 50211.3958462952,
+        "secondaryApplied": 110.19711076229926,
+        "baseScore": 4331,
+        "extraRawScoreFromCharms": 2499,
+        "charmsPaid": {
+          "S13": 2,
+          "S02": 14,
+          "S15": 10
+        },
+        "charmContribution": {
+          "S13": 374,
+          "S02": 1536,
+          "S15": 589
+        },
+        "scorePerAir": 108.36679039698498,
+        "phaseChips": {
+          "ascent": 201,
+          "apex": 125,
+          "descent": 143
+        },
+        "entryKills": 2
+      },
+      "launches": [
+        {
+          "angle": 0.596864264621023,
+          "speed": 75,
+          "angleDegrees": 34.19780330496416,
+          "predictedAir": 5.620516675328686
+        },
+        {
+          "angle": 0.5563858389383709,
+          "speed": 75.00000000000001,
+          "angleDegrees": 31.878560352014233,
+          "predictedAir": 5.281206189398726
+        },
+        {
+          "angle": 0.4641541024300881,
+          "speed": 75,
+          "angleDegrees": 26.594071112926954,
+          "predictedAir": 4.476665596126997
+        },
+        {
+          "angle": 0.5445853331696165,
+          "speed": 75,
+          "angleDegrees": 31.20244117534483,
+          "predictedAir": 5.180634530208098
+        },
+        {
+          "angle": 0.5077879188882349,
+          "speed": 74.99999999999999,
+          "angleDegrees": 29.09410464002724,
+          "predictedAir": 4.862454724175654
+        },
+        {
+          "angle": 0.5149450829641172,
+          "speed": 74.99999999999999,
+          "angleDegrees": 29.504179934857945,
+          "predictedAir": 4.9248705439676055
+        },
+        {
+          "angle": 0.5340361468007931,
+          "speed": 75.00000000000001,
+          "angleDegrees": 30.598017319114305,
+          "predictedAir": 5.090116300621216
+        },
+        {
+          "angle": 0.5110682909076669,
+          "speed": 75,
+          "angleDegrees": 29.2820561119735,
+          "predictedAir": 4.89109313162795
+        },
+        {
+          "angle": 0.5354302519024108,
+          "speed": 74.99999999999999,
+          "angleDegrees": 30.677893657634655,
+          "predictedAir": 5.102111244415614
+        },
+        {
+          "angle": 0.49709373537090296,
+          "speed": 75,
+          "angleDegrees": 28.48137305914575,
+          "predictedAir": 4.768730303335623
+        },
+        {
+          "angle": 0.47992966355744415,
+          "speed": 75,
+          "angleDegrees": 27.4979441849751,
+          "predictedAir": 4.617167863318405
+        },
+        {
+          "angle": 0.555731567104901,
+          "speed": 75,
+          "angleDegrees": 31.841073337302124,
+          "predictedAir": 5.275649183448846
+        },
+        {
+          "angle": 0.5835145287059734,
+          "speed": 75,
+          "angleDegrees": 33.4329197794176,
+          "predictedAir": 5.509603181662677
+        },
+        {
+          "angle": 0.49407313864583746,
+          "speed": 75,
+          "angleDegrees": 28.30830561518846,
+          "predictedAir": 4.742158383545355
+        }
+      ],
+      "banks": [
+        {
+          "chips": 9,
+          "mult": 12,
+          "score": 108,
+          "air": 5.097371202773714,
+          "launch": {
+            "angle": 0.596864264621023,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 0,
+            "apex": 4,
+            "descent": 5
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": [
+            "S02"
+          ]
+        },
+        {
+          "chips": 24,
+          "mult": 12,
+          "score": 288,
+          "air": 4.806777637800066,
+          "launch": {
+            "angle": 0.5563858389383709,
+            "speed": 75.00000000000001
+          },
+          "phases": {
+            "ascent": 10,
+            "apex": 7,
+            "descent": 7
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S02",
+            "S15"
+          ]
+        },
+        {
+          "chips": 22,
+          "mult": 12,
+          "score": 264,
+          "air": 4.040382011203954,
+          "launch": {
+            "angle": 0.4641541024300881,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 11,
+            "apex": 2,
+            "descent": 9
+          },
+          "combos": [
+            "pair",
+            "twoPair"
+          ],
+          "active": [
+            "S02",
+            "S15"
+          ]
+        },
+        {
+          "chips": 24,
+          "mult": 12,
+          "score": 288,
+          "air": 4.601057642982913,
+          "launch": {
+            "angle": 0.5445853331696165,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 10,
+            "apex": 5,
+            "descent": 9
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S02",
+            "S15"
+          ]
+        },
+        {
+          "chips": 25,
+          "mult": 18,
+          "score": 450,
+          "air": 4.444405970329883,
+          "launch": {
+            "angle": 0.5077879188882349,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 10,
+            "apex": 6,
+            "descent": 9
+          },
+          "combos": [
+            "pair",
+            "twoPair"
+          ],
+          "active": [
+            "S13",
+            "S02",
+            "S15"
+          ]
+        },
+        {
+          "chips": 30,
+          "mult": 12,
+          "score": 360,
+          "air": 4.305509009532867,
+          "launch": {
+            "angle": 0.5149450829641172,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 11,
+            "apex": 10,
+            "descent": 9
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S02",
+            "S15"
+          ]
+        },
+        {
+          "chips": 56,
+          "mult": 23,
+          "score": 1288,
+          "air": 4.497147882314601,
+          "launch": {
+            "angle": 0.5340361468007931,
+            "speed": 75.00000000000001
+          },
+          "phases": {
+            "ascent": 11,
+            "apex": 33,
+            "descent": 12
+          },
+          "combos": [
+            "pair",
+            "triple",
+            "four"
+          ],
+          "active": [
+            "S13",
+            "S02"
+          ]
+        },
+        {
+          "chips": 28,
+          "mult": 12,
+          "score": 336,
+          "air": 4.265994680673927,
+          "launch": {
+            "angle": 0.5110682909076669,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 14,
+            "apex": 4,
+            "descent": 10
+          },
+          "combos": [
+            "pair",
+            "twoPair"
+          ],
+          "active": [
+            "S02",
+            "S15"
+          ]
+        },
+        {
+          "chips": 43,
+          "mult": 12,
+          "score": 516,
+          "air": 4.670057068740792,
+          "launch": {
+            "angle": 0.5354302519024108,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 21,
+            "apex": 11,
+            "descent": 11
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S02",
+            "S15"
+          ]
+        },
+        {
+          "chips": 38,
+          "mult": 19,
+          "score": 722,
+          "air": 4.444974823893031,
+          "launch": {
+            "angle": 0.49709373537090296,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 21,
+            "apex": 10,
+            "descent": 7
+          },
+          "combos": [
+            "pair",
+            "triple",
+            "four"
+          ],
+          "active": [
+            "S02"
+          ]
+        },
+        {
+          "chips": 34,
+          "mult": 17,
+          "score": 578,
+          "air": 3.9404212712394155,
+          "launch": {
+            "angle": 0.47992966355744415,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 17,
+            "apex": 2,
+            "descent": 15
+          },
+          "combos": [
+            "pair",
+            "twoPair",
+            "triple",
+            "house"
+          ],
+          "active": [
+            "S02"
+          ]
+        },
+        {
+          "chips": 46,
+          "mult": 12,
+          "score": 552,
+          "air": 4.709406574181484,
+          "launch": {
+            "angle": 0.555731567104901,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 19,
+            "apex": 9,
+            "descent": 18
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S02",
+            "S15"
+          ]
+        },
+        {
+          "chips": 45,
+          "mult": 12,
+          "score": 540,
+          "air": 5.112990962132406,
+          "launch": {
+            "angle": 0.5835145287059734,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 26,
+            "apex": 13,
+            "descent": 6
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S02",
+            "S15"
+          ]
+        },
+        {
+          "chips": 45,
+          "mult": 12,
+          "score": 540,
+          "air": 4.0901922965415265,
+          "launch": {
+            "angle": 0.49407313864583746,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 20,
+            "apex": 9,
+            "descent": 16
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S02",
+            "S15"
+          ]
+        }
+      ]
+    },
+    {
+      "buildSha256": "b2ac5bc779422c0558f39b4bbf9efc827cc4337d5edb634812887f1ba3a221b7",
+      "package": "entry",
+      "angle": "low",
+      "seed": 23,
+      "setup": {
+        "kind": "Constructed initial previous-run level/stats and custom wave9 shop offers at actual real prices, then actual commands buy/combine/next. No in-fight grants, forced kills, or refills.",
+        "sharedStats": {
+          "Close": 3,
+          "Shot": 3,
+          "Blast": 3,
+          "Damage %": 0.1,
+          "Attack speed": 0.08,
+          "Armour": 10,
+          "Max HP": 18,
+          "Regen": 5
+        },
+        "level": 15,
+        "sharedSpend": 236,
+        "charmSpend": 105,
+        "totalSpend": 341,
+        "unspent": 0,
+        "purchases": [
+          {
+            "id": "harpoon",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "sonic",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "rocket",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "laser",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "I07",
+            "row": "item",
+            "price": 66
+          },
+          {
+            "id": "S13",
+            "row": "charm",
+            "price": 43
+          },
+          {
+            "id": "S02",
+            "row": "charm",
+            "price": 31
+          },
+          {
+            "id": "S15",
+            "row": "charm",
+            "price": 31
+          }
+        ],
+        "loadout": [
+          {
+            "id": "harpoon",
+            "tier": 2
+          },
+          {
+            "id": "sonic",
+            "tier": 2
+          },
+          {
+            "id": "rocket",
+            "tier": 2
+          },
+          {
+            "id": "laser",
+            "tier": 1
+          }
+        ],
+        "flow": "live-overtime-until-water-entry"
+      },
+      "outcome": {
+        "mode": "shop",
+        "reason": null,
+        "wave": 10,
+        "hp": 440,
+        "score": 6621,
+        "quota": 2823,
+        "quotaRatio": 2.3453772582359194,
+        "chips": 445,
+        "kills": 379,
+        "air": 62.72439352825561,
+        "time": 74.85833333333898,
+        "banks": 14,
+        "bossSpawned": true,
+        "bossDefeated": true,
+        "bossRecoveries": 0
+      },
+      "metrics": {
+        "hits": 19,
+        "damageTaken": 696.9444444444442,
+        "primaryApplied": 46058.23711911694,
+        "secondaryApplied": 878.0793333333335,
+        "baseScore": 3300,
+        "extraRawScoreFromCharms": 3321,
+        "charmsPaid": {
+          "S13": 4,
+          "S02": 14,
+          "S15": 10
+        },
+        "charmContribution": {
+          "S13": 1126,
+          "S02": 1576,
+          "S15": 619
+        },
+        "scorePerAir": 105.55701900915825,
+        "phaseChips": {
+          "ascent": 227,
+          "apex": 82,
+          "descent": 136
+        },
+        "entryKills": 5
+      },
+      "launches": [
+        {
+          "angle": 0.596864264621023,
+          "speed": 75,
+          "angleDegrees": 34.19780330496416,
+          "predictedAir": 5.620516675328686
+        },
+        {
+          "angle": 0.5543790463722579,
+          "speed": 75.00000000000001,
+          "angleDegrees": 31.76357960761773,
+          "predictedAir": 5.264154498853181
+        },
+        {
+          "angle": 0.4684349121605985,
+          "speed": 75.00000000000001,
+          "angleDegrees": 26.83934344338374,
+          "predictedAir": 4.514903485905304
+        },
+        {
+          "angle": 0.5548773998869543,
+          "speed": 75.00000000000001,
+          "angleDegrees": 31.792133160715345,
+          "predictedAir": 5.268390983533214
+        },
+        {
+          "angle": 0.6046910155625116,
+          "speed": 75,
+          "angleDegrees": 34.646243101211496,
+          "predictedAir": 5.685079087647232
+        },
+        {
+          "angle": 0.5952750849731934,
+          "speed": 75,
+          "angleDegrees": 34.10675001825543,
+          "predictedAir": 5.607365444961375
+        },
+        {
+          "angle": 0.46587517096389036,
+          "speed": 75,
+          "angleDegrees": 26.692681076166593,
+          "predictedAir": 4.4920487629796515
+        },
+        {
+          "angle": 0.5288021315697999,
+          "speed": 74.99999999999999,
+          "angleDegrees": 30.298130336471207,
+          "predictedAir": 5.044994494088753
+        },
+        {
+          "angle": 0.5070645999173445,
+          "speed": 75,
+          "angleDegrees": 29.052661515753474,
+          "predictedAir": 4.856132930560036
+        },
+        {
+          "angle": 0.5404623964516218,
+          "speed": 75,
+          "angleDegrees": 30.966214302204204,
+          "predictedAir": 5.145325381259378
+        },
+        {
+          "angle": 0.5125170942181724,
+          "speed": 75,
+          "angleDegrees": 29.365066427010042,
+          "predictedAir": 4.903724782304052
+        },
+        {
+          "angle": 0.5093981198803201,
+          "speed": 74.99999999999999,
+          "angleDegrees": 29.1863623610415,
+          "predictedAir": 4.876518709224472
+        },
+        {
+          "angle": 0.47220490016975464,
+          "speed": 75.00000000000001,
+          "angleDegrees": 27.05534784512331,
+          "predictedAir": 4.548510019841406
+        },
+        {
+          "angle": 0.5067651393562895,
+          "speed": 75,
+          "angleDegrees": 29.0355036894744,
+          "predictedAir": 4.853514907268694
+        }
+      ],
+      "banks": [
+        {
+          "chips": 8,
+          "mult": 12,
+          "score": 96,
+          "air": 5.097371202773714,
+          "launch": {
+            "angle": 0.596864264621023,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 0,
+            "apex": 4,
+            "descent": 4
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": [
+            "S02"
+          ]
+        },
+        {
+          "chips": 18,
+          "mult": 12,
+          "score": 216,
+          "air": 4.696335949367574,
+          "launch": {
+            "angle": 0.5543790463722579,
+            "speed": 75.00000000000001
+          },
+          "phases": {
+            "ascent": 9,
+            "apex": 4,
+            "descent": 5
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S02",
+            "S15"
+          ]
+        },
+        {
+          "chips": 22,
+          "mult": 12,
+          "score": 264,
+          "air": 3.8161119705502267,
+          "launch": {
+            "angle": 0.4684349121605985,
+            "speed": 75.00000000000001
+          },
+          "phases": {
+            "ascent": 9,
+            "apex": 5,
+            "descent": 8
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": [
+            "S02"
+          ]
+        },
+        {
+          "chips": 28,
+          "mult": 12,
+          "score": 336,
+          "air": 4.798819258609715,
+          "launch": {
+            "angle": 0.5548773998869543,
+            "speed": 75.00000000000001
+          },
+          "phases": {
+            "ascent": 16,
+            "apex": 3,
+            "descent": 9
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S02",
+            "S15"
+          ]
+        },
+        {
+          "chips": 24,
+          "mult": 12,
+          "score": 288,
+          "air": 5.16920333378942,
+          "launch": {
+            "angle": 0.6046910155625116,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 16,
+            "apex": 4,
+            "descent": 4
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S02",
+            "S15"
+          ]
+        },
+        {
+          "chips": 19,
+          "mult": 12,
+          "score": 228,
+          "air": 5.082711055272414,
+          "launch": {
+            "angle": 0.5952750849731934,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 12,
+            "apex": 4,
+            "descent": 3
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S02",
+            "S15"
+          ]
+        },
+        {
+          "chips": 41,
+          "mult": 20,
+          "score": 820,
+          "air": 4.182451187443372,
+          "launch": {
+            "angle": 0.46587517096389036,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 20,
+            "apex": 5,
+            "descent": 16
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S13",
+            "S02",
+            "S15"
+          ]
+        },
+        {
+          "chips": 54,
+          "mult": 12,
+          "score": 648,
+          "air": 4.487085670295158,
+          "launch": {
+            "angle": 0.5288021315697999,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 39,
+            "apex": 6,
+            "descent": 9
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S02",
+            "S15"
+          ]
+        },
+        {
+          "chips": 40,
+          "mult": 18,
+          "score": 720,
+          "air": 4.224963817148004,
+          "launch": {
+            "angle": 0.5070645999173445,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 20,
+            "apex": 4,
+            "descent": 16
+          },
+          "combos": [
+            "pair",
+            "twoPair"
+          ],
+          "active": [
+            "S13",
+            "S02",
+            "S15"
+          ]
+        },
+        {
+          "chips": 46,
+          "mult": 12,
+          "score": 552,
+          "air": 4.560608025162709,
+          "launch": {
+            "angle": 0.5404623964516218,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 20,
+            "apex": 11,
+            "descent": 15
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S02",
+            "S15"
+          ]
+        },
+        {
+          "chips": 37,
+          "mult": 18,
+          "score": 666,
+          "air": 4.280786260119952,
+          "launch": {
+            "angle": 0.5125170942181724,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 12,
+            "apex": 11,
+            "descent": 14
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": [
+            "S13",
+            "S02"
+          ]
+        },
+        {
+          "chips": 35,
+          "mult": 12,
+          "score": 420,
+          "air": 4.248906204135836,
+          "launch": {
+            "angle": 0.5093981198803201,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 14,
+            "apex": 11,
+            "descent": 10
+          },
+          "combos": [
+            "pair",
+            "twoPair"
+          ],
+          "active": [
+            "S02",
+            "S15"
+          ]
+        },
+        {
+          "chips": 42,
+          "mult": 20,
+          "score": 840,
+          "air": 3.85715399074104,
+          "launch": {
+            "angle": 0.47220490016975464,
+            "speed": 75.00000000000001
+          },
+          "phases": {
+            "ascent": 24,
+            "apex": 6,
+            "descent": 12
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S13",
+            "S02",
+            "S15"
+          ]
+        },
+        {
+          "chips": 31,
+          "mult": 17,
+          "score": 527,
+          "air": 4.221885602849567,
+          "launch": {
+            "angle": 0.5067651393562895,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 16,
+            "apex": 4,
+            "descent": 11
+          },
+          "combos": [
+            "pair",
+            "twoPair",
+            "triple",
+            "house"
+          ],
+          "active": [
+            "S02"
+          ]
+        }
+      ]
+    },
+    {
+      "buildSha256": "b2ac5bc779422c0558f39b4bbf9efc827cc4337d5edb634812887f1ba3a221b7",
+      "package": "entry",
+      "angle": "mid",
+      "seed": 11,
+      "setup": {
+        "kind": "Constructed initial previous-run level/stats and custom wave9 shop offers at actual real prices, then actual commands buy/combine/next. No in-fight grants, forced kills, or refills.",
+        "sharedStats": {
+          "Close": 3,
+          "Shot": 3,
+          "Blast": 3,
+          "Damage %": 0.1,
+          "Attack speed": 0.08,
+          "Armour": 10,
+          "Max HP": 18,
+          "Regen": 5
+        },
+        "level": 15,
+        "sharedSpend": 236,
+        "charmSpend": 105,
+        "totalSpend": 341,
+        "unspent": 0,
+        "purchases": [
+          {
+            "id": "harpoon",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "sonic",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "rocket",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "laser",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "I07",
+            "row": "item",
+            "price": 66
+          },
+          {
+            "id": "S13",
+            "row": "charm",
+            "price": 43
+          },
+          {
+            "id": "S02",
+            "row": "charm",
+            "price": 31
+          },
+          {
+            "id": "S15",
+            "row": "charm",
+            "price": 31
+          }
+        ],
+        "loadout": [
+          {
+            "id": "harpoon",
+            "tier": 2
+          },
+          {
+            "id": "sonic",
+            "tier": 2
+          },
+          {
+            "id": "rocket",
+            "tier": 2
+          },
+          {
+            "id": "laser",
+            "tier": 1
+          }
+        ],
+        "flow": "live-overtime-until-water-entry"
+      },
+      "outcome": {
+        "mode": "dead",
+        "reason": "health",
+        "wave": 10,
+        "hp": 0,
+        "score": 4394,
+        "quota": 2823,
+        "quotaRatio": 1.5565001771165428,
+        "chips": 327,
+        "kills": 281,
+        "air": 51.62089823427922,
+        "time": 61.52499999999715,
+        "banks": 6,
+        "bossSpawned": true,
+        "bossDefeated": true,
+        "bossRecoveries": 0
+      },
+      "metrics": {
+        "hits": 14,
+        "damageTaken": 607.4999999999999,
+        "primaryApplied": 34188.513002150255,
+        "secondaryApplied": 676.4424737913384,
+        "baseScore": 2367,
+        "extraRawScoreFromCharms": 2027,
+        "charmsPaid": {
+          "S13": 3,
+          "S02": 6,
+          "S15": 3
+        },
+        "charmContribution": {
+          "S13": 962,
+          "S02": 892,
+          "S15": 173
+        },
+        "scorePerAir": 85.12056454457691,
+        "phaseChips": {
+          "ascent": 131,
+          "apex": 45,
+          "descent": 110
+        },
+        "entryKills": 7
+      },
+      "launches": [
+        {
+          "angle": 0.9005575108071192,
+          "speed": 74.99999999999999,
+          "angleDegrees": 51.598144578054956,
+          "predictedAir": 7.836733421484886
+        },
+        {
+          "angle": 0.9959851720022046,
+          "speed": 75,
+          "angleDegrees": 57.06574681333769,
+          "predictedAir": 8.392949880499788
+        },
+        {
+          "angle": 0.9444349035988481,
+          "speed": 75.00000000000001,
+          "angleDegrees": 54.112134001058756,
+          "predictedAir": 8.101658032029055
+        },
+        {
+          "angle": 0.9879564336517516,
+          "speed": 75,
+          "angleDegrees": 56.6057339910419,
+          "predictedAir": 8.349029495563077
+        },
+        {
+          "angle": 0.9551365734414139,
+          "speed": 74.99999999999999,
+          "angleDegrees": 54.72529451678021,
+          "predictedAir": 8.16392618848224
+        },
+        {
+          "angle": 0.9488901627233206,
+          "speed": 75,
+          "angleDegrees": 54.36740154552818,
+          "predictedAir": 8.127694303883427
+        },
+        {
+          "angle": 0.9796634680307256,
+          "speed": 75,
+          "angleDegrees": 56.13058206131003,
+          "predictedAir": 8.303098675724382
+        }
+      ],
+      "banks": [
+        {
+          "chips": 19,
+          "mult": 12,
+          "score": 228,
+          "air": 7.480238551950014,
+          "launch": {
+            "angle": 0.9005575108071192,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 3,
+            "apex": 3,
+            "descent": 13
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": [
+            "S02"
+          ]
+        },
+        {
+          "chips": 42,
+          "mult": 12,
+          "score": 504,
+          "air": 8.062187715078917,
+          "launch": {
+            "angle": 0.9959851720022046,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 16,
+            "apex": 9,
+            "descent": 17
+          },
+          "combos": [
+            "pair",
+            "twoPair"
+          ],
+          "active": [
+            "S02",
+            "S15"
+          ]
+        },
+        {
+          "chips": 34,
+          "mult": 20,
+          "score": 680,
+          "air": 7.757923437568999,
+          "launch": {
+            "angle": 0.9444349035988481,
+            "speed": 75.00000000000001
+          },
+          "phases": {
+            "ascent": 13,
+            "apex": 7,
+            "descent": 14
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S13",
+            "S02",
+            "S15"
+          ]
+        },
+        {
+          "chips": 52,
+          "mult": 18,
+          "score": 936,
+          "air": 8.01637714937608,
+          "launch": {
+            "angle": 0.9879564336517516,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 22,
+            "apex": 9,
+            "descent": 21
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": [
+            "S13",
+            "S02"
+          ]
+        },
+        {
+          "chips": 76,
+          "mult": 12,
+          "score": 912,
+          "air": 7.823053314494283,
+          "launch": {
+            "angle": 0.9551365734414139,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 42,
+            "apex": 10,
+            "descent": 24
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": [
+            "S02"
+          ]
+        },
+        {
+          "chips": 63,
+          "mult": 18,
+          "score": 1134,
+          "air": 7.78516237746083,
+          "launch": {
+            "angle": 0.9488901627233206,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 35,
+            "apex": 7,
+            "descent": 21
+          },
+          "combos": [
+            "pair",
+            "twoPair"
+          ],
+          "active": [
+            "S13",
+            "S02",
+            "S15"
+          ]
+        }
+      ]
+    },
+    {
+      "buildSha256": "b2ac5bc779422c0558f39b4bbf9efc827cc4337d5edb634812887f1ba3a221b7",
+      "package": "entry",
+      "angle": "mid",
+      "seed": 23,
+      "setup": {
+        "kind": "Constructed initial previous-run level/stats and custom wave9 shop offers at actual real prices, then actual commands buy/combine/next. No in-fight grants, forced kills, or refills.",
+        "sharedStats": {
+          "Close": 3,
+          "Shot": 3,
+          "Blast": 3,
+          "Damage %": 0.1,
+          "Attack speed": 0.08,
+          "Armour": 10,
+          "Max HP": 18,
+          "Regen": 5
+        },
+        "level": 15,
+        "sharedSpend": 236,
+        "charmSpend": 105,
+        "totalSpend": 341,
+        "unspent": 0,
+        "purchases": [
+          {
+            "id": "harpoon",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "sonic",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "rocket",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "laser",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "I07",
+            "row": "item",
+            "price": 66
+          },
+          {
+            "id": "S13",
+            "row": "charm",
+            "price": 43
+          },
+          {
+            "id": "S02",
+            "row": "charm",
+            "price": 31
+          },
+          {
+            "id": "S15",
+            "row": "charm",
+            "price": 31
+          }
+        ],
+        "loadout": [
+          {
+            "id": "harpoon",
+            "tier": 2
+          },
+          {
+            "id": "sonic",
+            "tier": 2
+          },
+          {
+            "id": "rocket",
+            "tier": 2
+          },
+          {
+            "id": "laser",
+            "tier": 1
+          }
+        ],
+        "flow": "live-overtime-until-water-entry"
+      },
+      "outcome": {
+        "mode": "dead",
+        "reason": "health",
+        "wave": 10,
+        "hp": 0,
+        "score": 5431,
+        "quota": 2823,
+        "quotaRatio": 1.9238398866454127,
+        "chips": 397,
+        "kills": 339,
+        "air": 58.071724182477155,
+        "time": 69.55000000000142,
+        "banks": 7,
+        "bossSpawned": true,
+        "bossDefeated": true,
+        "bossRecoveries": 0
+      },
+      "metrics": {
+        "hits": 20,
+        "damageTaken": 726.6666666666664,
+        "primaryApplied": 41680.49796171414,
+        "secondaryApplied": 95.4061743917826,
+        "baseScore": 3240,
+        "extraRawScoreFromCharms": 2191,
+        "charmsPaid": {
+          "S13": 2,
+          "S02": 7,
+          "S15": 5
+        },
+        "charmContribution": {
+          "S13": 840,
+          "S02": 1046,
+          "S15": 305
+        },
+        "scorePerAir": 93.52227915490025,
+        "phaseChips": {
+          "ascent": 125,
+          "apex": 85,
+          "descent": 151
+        },
+        "entryKills": 4
+      },
+      "launches": [
+        {
+          "angle": 0.9005575108071192,
+          "speed": 74.99999999999999,
+          "angleDegrees": 51.598144578054956,
+          "predictedAir": 7.836733421484886
+        },
+        {
+          "angle": 1.0304931470426641,
+          "speed": 75.00000000000001,
+          "angleDegrees": 59.042908142698806,
+          "predictedAir": 8.575527663242323
+        },
+        {
+          "angle": 0.9252242068685002,
+          "speed": 74.99999999999999,
+          "angleDegrees": 53.01144215690405,
+          "predictedAir": 7.98755678574175
+        },
+        {
+          "angle": 1.0149229896267342,
+          "speed": 75,
+          "angleDegrees": 58.1508038364117,
+          "predictedAir": 8.494399170416697
+        },
+        {
+          "angle": 0.8976549684153652,
+          "speed": 74.99999999999999,
+          "angleDegrees": 51.43184114914964,
+          "predictedAir": 7.818670621304231
+        },
+        {
+          "angle": 1.0300510608994418,
+          "speed": 75.00000000000001,
+          "angleDegrees": 59.01757847251095,
+          "predictedAir": 8.57325275184284
+        },
+        {
+          "angle": 0.9092637426363336,
+          "speed": 75,
+          "angleDegrees": 52.0969749173314,
+          "predictedAir": 7.890516509182224
+        },
+        {
+          "angle": 0.8932184872101615,
+          "speed": 75,
+          "angleDegrees": 51.17764950020236,
+          "predictedAir": 7.790934738794149
+        }
+      ],
+      "banks": [
+        {
+          "chips": 19,
+          "mult": 12,
+          "score": 228,
+          "air": 7.480238551950014,
+          "launch": {
+            "angle": 0.9005575108071192,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 3,
+            "apex": 4,
+            "descent": 12
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": [
+            "S02"
+          ]
+        },
+        {
+          "chips": 36,
+          "mult": 12,
+          "score": 432,
+          "air": 8.252388909619704,
+          "launch": {
+            "angle": 1.0304931470426641,
+            "speed": 75.00000000000001
+          },
+          "phases": {
+            "ascent": 15,
+            "apex": 6,
+            "descent": 15
+          },
+          "combos": [
+            "pair",
+            "twoPair"
+          ],
+          "active": [
+            "S02",
+            "S15"
+          ]
+        },
+        {
+          "chips": 37,
+          "mult": 19,
+          "score": 703,
+          "air": 7.638445618379599,
+          "launch": {
+            "angle": 0.9252242068685002,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 14,
+            "apex": 7,
+            "descent": 16
+          },
+          "combos": [
+            "pair",
+            "triple",
+            "four"
+          ],
+          "active": [
+            "S02"
+          ]
+        },
+        {
+          "chips": 52,
+          "mult": 12,
+          "score": 624,
+          "air": 8.167918607266355,
+          "launch": {
+            "angle": 1.0149229896267342,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 19,
+            "apex": 12,
+            "descent": 21
+          },
+          "combos": [
+            "pair",
+            "twoPair"
+          ],
+          "active": [
+            "S02",
+            "S15"
+          ]
+        },
+        {
+          "chips": 87,
+          "mult": 18,
+          "score": 1566,
+          "air": 7.461269418211264,
+          "launch": {
+            "angle": 0.8976549684153652,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 22,
+            "apex": 33,
+            "descent": 32
+          },
+          "combos": [
+            "pair",
+            "twoPair"
+          ],
+          "active": [
+            "S13",
+            "S02",
+            "S15"
+          ]
+        },
+        {
+          "chips": 77,
+          "mult": 12,
+          "score": 924,
+          "air": 8.250021261632313,
+          "launch": {
+            "angle": 1.0300510608994418,
+            "speed": 75.00000000000001
+          },
+          "phases": {
+            "ascent": 34,
+            "apex": 11,
+            "descent": 32
+          },
+          "combos": [
+            "pair",
+            "twoPair"
+          ],
+          "active": [
+            "S02",
+            "S15"
+          ]
+        },
+        {
+          "chips": 53,
+          "mult": 18,
+          "score": 954,
+          "air": 7.536691955601571,
+          "launch": {
+            "angle": 0.9092637426363336,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 18,
+            "apex": 12,
+            "descent": 23
+          },
+          "combos": [
+            "pair",
+            "twoPair"
+          ],
+          "active": [
+            "S13",
+            "S02",
+            "S15"
+          ]
+        }
+      ]
+    },
+    {
+      "buildSha256": "b2ac5bc779422c0558f39b4bbf9efc827cc4337d5edb634812887f1ba3a221b7",
+      "package": "entry",
+      "angle": "high",
+      "seed": 11,
+      "setup": {
+        "kind": "Constructed initial previous-run level/stats and custom wave9 shop offers at actual real prices, then actual commands buy/combine/next. No in-fight grants, forced kills, or refills.",
+        "sharedStats": {
+          "Close": 3,
+          "Shot": 3,
+          "Blast": 3,
+          "Damage %": 0.1,
+          "Attack speed": 0.08,
+          "Armour": 10,
+          "Max HP": 18,
+          "Regen": 5
+        },
+        "level": 15,
+        "sharedSpend": 236,
+        "charmSpend": 105,
+        "totalSpend": 341,
+        "unspent": 0,
+        "purchases": [
+          {
+            "id": "harpoon",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "sonic",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "rocket",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "laser",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "I07",
+            "row": "item",
+            "price": 66
+          },
+          {
+            "id": "S13",
+            "row": "charm",
+            "price": 43
+          },
+          {
+            "id": "S02",
+            "row": "charm",
+            "price": 31
+          },
+          {
+            "id": "S15",
+            "row": "charm",
+            "price": 31
+          }
+        ],
+        "loadout": [
+          {
+            "id": "harpoon",
+            "tier": 2
+          },
+          {
+            "id": "sonic",
+            "tier": 2
+          },
+          {
+            "id": "rocket",
+            "tier": 2
+          },
+          {
+            "id": "laser",
+            "tier": 1
+          }
+        ],
+        "flow": "live-overtime-until-water-entry"
+      },
+      "outcome": {
+        "mode": "dead",
+        "reason": "health",
+        "wave": 10,
+        "hp": 0,
+        "score": 4632,
+        "quota": 2823,
+        "quotaRatio": 1.640807651434644,
+        "chips": 345,
+        "kills": 291,
+        "air": 55.52457277877002,
+        "time": 69.39166666666796,
+        "banks": 5,
+        "bossSpawned": true,
+        "bossDefeated": true,
+        "bossRecoveries": 0
+      },
+      "metrics": {
+        "hits": 20,
+        "damageTaken": 671.3888888888888,
+        "primaryApplied": 36685.48888900389,
+        "secondaryApplied": 208.2733333333333,
+        "baseScore": 2528,
+        "extraRawScoreFromCharms": 2104,
+        "charmsPaid": {
+          "S13": 2,
+          "S02": 5,
+          "S15": 2
+        },
+        "charmContribution": {
+          "S13": 1040,
+          "S02": 854,
+          "S15": 210
+        },
+        "scorePerAir": 83.42252390586711,
+        "phaseChips": {
+          "ascent": 123,
+          "apex": 50,
+          "descent": 108
+        },
+        "entryKills": 3
+      },
+      "launches": [
+        {
+          "angle": 1.3302482559428315,
+          "speed": 74.99999999999999,
+          "angleDegrees": 76.21761077016278,
+          "predictedAir": 9.712075510914952
+        },
+        {
+          "angle": 1.329842412723474,
+          "speed": 74.99999999999999,
+          "angleDegrees": 76.19435766654959,
+          "predictedAir": 9.711107850707949
+        },
+        {
+          "angle": 1.3459585189854286,
+          "speed": 75.00000000000001,
+          "angleDegrees": 77.11774253754395,
+          "predictedAir": 9.748302803567643
+        },
+        {
+          "angle": 1.4835298641951802,
+          "speed": 74.99999999999999,
+          "angleDegrees": 85,
+          "predictedAir": 9.961946980917453
+        },
+        {
+          "angle": 1.7414423436750288,
+          "speed": 75,
+          "angleDegrees": 99.77729655794978,
+          "predictedAir": 9.854752666029585
+        },
+        {
+          "angle": 1.688972057297341,
+          "speed": 75,
+          "angleDegrees": 96.77097059866549,
+          "predictedAir": 9.930253710481194
+        }
+      ],
+      "banks": [
+        {
+          "chips": 27,
+          "mult": 12,
+          "score": 324,
+          "air": 9.4292681253123,
+          "launch": {
+            "angle": 1.3302482559428315,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 5,
+            "apex": 5,
+            "descent": 17
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": [
+            "S02"
+          ]
+        },
+        {
+          "chips": 44,
+          "mult": 17,
+          "score": 748,
+          "air": 9.428270541913262,
+          "launch": {
+            "angle": 1.329842412723474,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 20,
+            "apex": 12,
+            "descent": 12
+          },
+          "combos": [
+            "pair",
+            "twoPair",
+            "triple",
+            "house"
+          ],
+          "active": [
+            "S02"
+          ]
+        },
+        {
+          "chips": 55,
+          "mult": 20,
+          "score": 1100,
+          "air": 9.46661100648787,
+          "launch": {
+            "angle": 1.3459585189854286,
+            "speed": 75.00000000000001
+          },
+          "phases": {
+            "ascent": 22,
+            "apex": 3,
+            "descent": 30
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S13",
+            "S02",
+            "S15"
+          ]
+        },
+        {
+          "chips": 100,
+          "mult": 18,
+          "score": 1800,
+          "air": 9.68665412624168,
+          "launch": {
+            "angle": 1.4835298641951802,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 50,
+            "apex": 24,
+            "descent": 26
+          },
+          "combos": [
+            "pair",
+            "twoPair"
+          ],
+          "active": [
+            "S13",
+            "S02",
+            "S15"
+          ]
+        },
+        {
+          "chips": 55,
+          "mult": 12,
+          "score": 660,
+          "air": 9.576287050644416,
+          "launch": {
+            "angle": 1.7414423436750288,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 26,
+            "apex": 6,
+            "descent": 23
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": [
+            "S02"
+          ]
+        }
+      ]
+    },
+    {
+      "buildSha256": "b2ac5bc779422c0558f39b4bbf9efc827cc4337d5edb634812887f1ba3a221b7",
+      "package": "entry",
+      "angle": "high",
+      "seed": 23,
+      "setup": {
+        "kind": "Constructed initial previous-run level/stats and custom wave9 shop offers at actual real prices, then actual commands buy/combine/next. No in-fight grants, forced kills, or refills.",
+        "sharedStats": {
+          "Close": 3,
+          "Shot": 3,
+          "Blast": 3,
+          "Damage %": 0.1,
+          "Attack speed": 0.08,
+          "Armour": 10,
+          "Max HP": 18,
+          "Regen": 5
+        },
+        "level": 15,
+        "sharedSpend": 236,
+        "charmSpend": 105,
+        "totalSpend": 341,
+        "unspent": 0,
+        "purchases": [
+          {
+            "id": "harpoon",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "sonic",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "rocket",
+            "row": "weapon",
+            "level": 2,
+            "price": 54
+          },
+          {
+            "id": "laser",
+            "row": "weapon",
+            "level": 1,
+            "price": 31
+          },
+          {
+            "id": "I07",
+            "row": "item",
+            "price": 66
+          },
+          {
+            "id": "S13",
+            "row": "charm",
+            "price": 43
+          },
+          {
+            "id": "S02",
+            "row": "charm",
+            "price": 31
+          },
+          {
+            "id": "S15",
+            "row": "charm",
+            "price": 31
+          }
+        ],
+        "loadout": [
+          {
+            "id": "harpoon",
+            "tier": 2
+          },
+          {
+            "id": "sonic",
+            "tier": 2
+          },
+          {
+            "id": "rocket",
+            "tier": 2
+          },
+          {
+            "id": "laser",
+            "tier": 1
+          }
+        ],
+        "flow": "live-overtime-until-water-entry"
+      },
+      "outcome": {
+        "mode": "dead",
+        "reason": "health",
+        "wave": 10,
+        "hp": 0,
+        "score": 6755,
+        "quota": 2823,
+        "quotaRatio": 2.3928444916755227,
+        "chips": 341,
+        "kills": 287,
+        "air": 50.17599775884028,
+        "time": 63.85833333333035,
+        "banks": 5,
+        "bossSpawned": true,
+        "bossDefeated": true,
+        "bossRecoveries": 0
+      },
+      "metrics": {
+        "hits": 19,
+        "damageTaken": 642.4999999999998,
+        "primaryApplied": 37305.164833271985,
+        "secondaryApplied": 647.0598166272176,
+        "baseScore": 3602,
+        "extraRawScoreFromCharms": 3153,
+        "charmsPaid": {
+          "S13": 4,
+          "S02": 5,
+          "S15": 1
+        },
+        "charmContribution": {
+          "S13": 1924,
+          "S02": 1121,
+          "S15": 108
+        },
+        "scorePerAir": 134.62612208463491,
+        "phaseChips": {
+          "ascent": 108,
+          "apex": 47,
+          "descent": 159
+        },
+        "entryKills": 9
+      },
+      "launches": [
+        {
+          "angle": 1.3302482559428315,
+          "speed": 74.99999999999999,
+          "angleDegrees": 76.21761077016278,
+          "predictedAir": 9.712075510914952
+        },
+        {
+          "angle": 1.33090833739625,
+          "speed": 75,
+          "angleDegrees": 76.25543065157852,
+          "predictedAir": 9.713645939727181
+        },
+        {
+          "angle": 1.3459334318068084,
+          "speed": 74.99999999999999,
+          "angleDegrees": 77.11630514808911,
+          "predictedAir": 9.748246869073004
+        },
+        {
+          "angle": 1.3323111201241615,
+          "speed": 75,
+          "angleDegrees": 76.3358041814617,
+          "predictedAir": 9.7169693065191
+        },
+        {
+          "angle": 1.3341119769931418,
+          "speed": 75,
+          "angleDegrees": 76.43898567956141,
+          "predictedAir": 9.721207729536738
+        },
+        {
+          "angle": 1.3383683752327542,
+          "speed": 75.00000000000001,
+          "angleDegrees": 76.68285933461812,
+          "predictedAir": 9.731100073094435
+        }
+      ],
+      "banks": [
+        {
+          "chips": 26,
+          "mult": 18,
+          "score": 468,
+          "air": 9.4292681253123,
+          "launch": {
+            "angle": 1.3302482559428315,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 4,
+            "apex": 7,
+            "descent": 15
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": [
+            "S13",
+            "S02"
+          ]
+        },
+        {
+          "chips": 54,
+          "mult": 20,
+          "score": 1080,
+          "air": 9.430887102986743,
+          "launch": {
+            "angle": 1.33090833739625,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 21,
+            "apex": 11,
+            "descent": 22
+          },
+          "combos": [
+            "pair"
+          ],
+          "active": [
+            "S13",
+            "S02",
+            "S15"
+          ]
+        },
+        {
+          "chips": 53,
+          "mult": 12,
+          "score": 636,
+          "air": 9.466553356530586,
+          "launch": {
+            "angle": 1.3459334318068084,
+            "speed": 74.99999999999999
+          },
+          "phases": {
+            "ascent": 22,
+            "apex": 9,
+            "descent": 22
+          },
+          "combos": [
+            "pair",
+            "triple"
+          ],
+          "active": [
+            "S02"
+          ]
+        },
+        {
+          "chips": 102,
+          "mult": 27,
+          "score": 2754,
+          "air": 9.434313153028343,
+          "launch": {
+            "angle": 1.3323111201241615,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 27,
+            "apex": 8,
+            "descent": 67
+          },
+          "combos": [
+            "show"
+          ],
+          "active": [
+            "S13",
+            "S02"
+          ]
+        },
+        {
+          "chips": 79,
+          "mult": 23,
+          "score": 1817,
+          "air": 9.438682420618894,
+          "launch": {
+            "angle": 1.3341119769931418,
+            "speed": 75
+          },
+          "phases": {
+            "ascent": 34,
+            "apex": 12,
+            "descent": 33
+          },
+          "combos": [
+            "pair",
+            "triple",
+            "four"
+          ],
+          "active": [
+            "S13",
+            "S02"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "version": "scoreboard-S3",
+  "date": "2026-10-25",
+  "outputSha256": "d21f4e996e7f67a3012e6a9fe7c818a3d86397541ba3b3d01387dd5f32832da1",
+  "sourceFiles": {
+    "source/carve-reference.html": "9e8c37dbffd6ca31aac94a19b69d5c4418d230ed482c9726aed57ca37a581180",
+    "source/demo.css": "854effed6fcdf095cfb98954e1bdd11360bf497c44fb3759398ffa88f9d27060",
+    "source/score-cues.js": "ba76bf972e5ee3515834c44d339da2a15b73d1dad0915d3a3ac2bedb2fdbd3f4",
+    "source/five-combat.js": "61b885c92343b978fa5327b16bfb5b57898d9f921aeff0d1f6e8eb160d70b9db",
+    "source/scoreboard.js": "ee86eb636af754182933bda82afe9cf5bd5972190d226ff09c7d43526c56e89c",
+    "source/five-score.js": "c4c132ae46d41b8be73eb9a19e2bca3f7d1e16137861bbc02cee87cf21b2ed8c",
+    "source/demo.js": "45641b576acc882050e06ff98e6296419c73ee7247c55a389f02dc1376044f25",
+    "source/build.cjs": "34158fedae4c8c67c93a079cbbb55bb4c6b96cf93c5865ae1a9fe42372e34a57",
+    "source/scoreboard.css": "194f4c4fd98272be51685ca73925b03383128690a383e04a6ce79277581b6944"
+  },
+  "preservedScoreDemo": {
+    "path": "/Users/johncarbone/.codex/.chatgpt-projects/g-p-6aa605d20484819194a8761a7fbee797/outputs/icarus-five-trick-demo/ICARUS-demo.html",
+    "sha256": "3dd8118f7778518c1ee35b223ae9d89ff60551bef78587951d020ad851626f21"
+  },
+  "preservedCombatDemo": {
+    "path": "/Users/johncarbone/.codex/.chatgpt-projects/g-p-6aa605d20484819194a8761a7fbee797/outputs/icarus-trick-combat-demo/ICARUS-demo.html",
+    "sha256": "17affa73f1693cefea4b27eaccce169b7b493da066f0b5ad9fe468fa74bce4ea"
+  },
+  "originalFiles": [
+    {
+      "path": "/Users/johncarbone/Projects/Dolphin game/ICARUS-v3-carve/demo-loop/ICARUS-demo.html",
+      "expected": "94830edf2df74df1f420e1d120944c7a40a9ed3d2815b01a113a1de6dec6e474",
+      "actual": "94830edf2df74df1f420e1d120944c7a40a9ed3d2815b01a113a1de6dec6e474",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/johncarbone/Projects/Dolphin game/ICARUS-v3-carve/demo-loop/source/demo.js",
+      "expected": "189ff389c9a597b634da7380374627fc33fd8138e9bbfef84af3a575cfbad68f",
+      "actual": "189ff389c9a597b634da7380374627fc33fd8138e9bbfef84af3a575cfbad68f",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/johncarbone/Projects/Dolphin game/ICARUS-v3-carve/demo-loop/source/build.cjs",
+      "expected": "469cbacbc39d033001bc054223d06be0efca81bcff45afdfc7540b3bba96ad4c",
+      "actual": "469cbacbc39d033001bc054223d06be0efca81bcff45afdfc7540b3bba96ad4c",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/johncarbone/Projects/Dolphin game/ICARUS-v3-carve/demo-loop/source/demo.css",
+      "expected": "2534648801e576f38885fa4dc07783f4fdf4d17dfef6f0b881ece672e3268498",
+      "actual": "2534648801e576f38885fa4dc07783f4fdf4d17dfef6f0b881ece672e3268498",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/johncarbone/Projects/Dolphin game/ICARUS-v3-carve/demo-loop/source/carve-reference.html",
+      "expected": "9e8c37dbffd6ca31aac94a19b69d5c4418d230ed482c9726aed57ca37a581180",
+      "actual": "9e8c37dbffd6ca31aac94a19b69d5c4418d230ed482c9726aed57ca37a581180",
+      "unchanged": true
+    }
+  ]
+}

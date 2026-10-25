@@ -1,0 +1,68 @@
+{
+  "buildSha256": "b2ac5bc779422c0558f39b4bbf9efc827cc4337d5edb634812887f1ba3a221b7",
+  "scope": "Actual scoring cue rules and original-versus-edited simulation parity; no player satisfaction claim.",
+  "passed": 5,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "chips only follow real kill attribution, while trick and nested combo additions reconcile",
+      "passed": true,
+      "detail": {
+        "tricks": 3,
+        "comboBonuses": [
+          1,
+          3
+        ]
+      }
+    },
+    {
+      "name": "short-flight landing reveals every remaining trick and banks once without RNG",
+      "passed": true,
+      "detail": {
+        "chips": 8,
+        "mult": 18,
+        "score": 144
+      }
+    },
+    {
+      "name": "Lucky, ordered charms and Gold growth use authoritative pre-growth bank values",
+      "passed": true,
+      "detail": {
+        "mult": 16.5,
+        "score": 198,
+        "cues": 13
+      }
+    },
+    {
+      "name": "one thousand draw/upgrade combinations preserve exact final results",
+      "passed": true,
+      "detail": {
+        "cases": 1000
+      }
+    },
+    {
+      "name": "three pre-deadline scoring simulations preserve the original chips and multiplier math",
+      "passed": true,
+      "detail": [
+        {
+          "style": "low-keep",
+          "score": 71,
+          "kills": 20,
+          "mode": "playing"
+        },
+        {
+          "style": "mid-keep",
+          "score": 75,
+          "kills": 20,
+          "mode": "playing"
+        },
+        {
+          "style": "high-keep",
+          "score": 64,
+          "kills": 20,
+          "mode": "playing"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "round": "U1",
+  "buildSha256": "b2ac5bc779422c0558f39b4bbf9efc827cc4337d5edb634812887f1ba3a221b7",
+  "scope": "Host Chromium/Swiftshader with a continuously replenished constructed100-enemy scene,6tier4weapons/all10items, high initialHP/altitude/clock and6-second presentation prediction. Actual attacks earn kills/chips. Includes fixture/query overhead. Not physicalAndroid, sustainedGPU/thermal or human performance evidence.",
+  "seconds": 15.01570000000298,
+  "frames": 821,
+  "frameIntervalMs": {
+    "median": 16.69999999999891,
+    "p95": 17.099999999998545,
+    "p99": 17.600000000000364,
+    "max": 599.8999999999996
+  },
+  "minLive": 100,
+  "maxLive": 100,
+  "replenished": 20,
+  "kills": 20,
+  "maxParticles": 1,
+  "maxQueue": 1,
+  "initialNodes": 145,
+  "maxNodes": 147,
+  "finalNodes": 146,
+  "state": "playing",
+  "heapBytes": 26000000
+}

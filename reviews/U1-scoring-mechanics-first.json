@@ -1,0 +1,120 @@
+{
+  "round": "U1",
+  "buildSha256": "b2ac5bc779422c0558f39b4bbf9efc827cc4337d5edb634812887f1ba3a221b7",
+  "scope": "Actual built simulation with constructed branch fixtures; no human balance or Android claim.",
+  "passed": 8,
+  "failed": 1,
+  "checks": [
+    {
+      "name": "timer crossing keeps full-tick combat, vulnerability and scoring live",
+      "passed": true,
+      "details": {
+        "activeAir": 0.008333333333333333,
+        "afterClockChips": 1,
+        "hp": 99
+      }
+    },
+    {
+      "name": "actual scheduled spawns continue several seconds past zero and finite exhausted lanes recycle their own roster",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(maxEnemies>0)\n\n    at /Users/johncarbone/.codex/.chatgpt-projects/g-p-6aa605d20484819194a8761a7fbee797/outputs/icarus-scoreboard-demo/qa/scoring-mechanics.cjs:8:402\n    at test (/Users/johncarbone/.codex/.chatgpt-projects/g-p-6aa605d20484819194a8761a7fbee797/outputs/icarus-scoreboard-demo/qa/scoring-mechanics.cjs:4:42)\n    at Object.<anonymous> (/Users/johncarbone/.codex/.chatgpt-projects/g-p-6aa605d20484819194a8761a7fbee797/outputs/icarus-scoreboard-demo/qa/scoring-mechanics.cjs:8:1)\n    at Module._compile (node:internal/modules/cjs/loader:1730:14)\n    at Object..js (node:internal/modules/cjs/loader:1895:10)\n    at Module.load (node:internal/modules/cjs/loader:1465:32)\n    at Function._load (node:internal/modules/cjs/loader:1282:12)\n    at TracingChannel.traceSync (node:diagnostics_channel:322:14)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)\n    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)"
+    },
+    {
+      "name": "landing after clock banks exactly once then clears or fails quota, without extra air ticks in water",
+      "passed": true,
+      "details": {
+        "score": 8,
+        "banks": 1,
+        "mode": "shop"
+      }
+    },
+    {
+      "name": "meeting quota does not prematurely finish a wave before the timer",
+      "passed": true,
+      "details": {
+        "mode": "playing",
+        "airRemaining": 9.999950000937678,
+        "score": 8
+      }
+    },
+    {
+      "name": "water-entry item damage remains eligible during overtime and contributes to the final bank",
+      "passed": true,
+      "details": {
+        "entryKills": 1,
+        "chips": 2,
+        "bank": 8
+      }
+    },
+    {
+      "name": "boss culling restores the same living body and HP without a kill award",
+      "passed": true,
+      "details": {
+        "hp": 100000,
+        "recoveries": 1
+      }
+    },
+    {
+      "name": "full cap delays the boss until there is an actual free shared slot",
+      "passed": true,
+      "details": {
+        "bossSpawned": true,
+        "live": 100
+      }
+    },
+    {
+      "name": "Relay earned at a bank survives the actual next-wave reset",
+      "passed": true,
+      "details": {
+        "wave": 2,
+        "relay": 3
+      }
+    },
+    {
+      "name": "failure attribution reports actual accepted damage and quota state",
+      "passed": true,
+      "details": {
+        "wave": 1,
+        "reason": "health",
+        "score": 57,
+        "quota": 52,
+        "quotaRatio": 1.0961538461538463,
+        "quotaMet": true,
+        "hp": 0,
+        "maxHp": 100,
+        "armour": 0,
+        "regen": 0,
+        "activeAir": 0,
+        "airRemaining": 20,
+        "overtime": false,
+        "overtimeAir": 0,
+        "damageTaken": 10,
+        "acceptedHits": 1,
+        "primaryApplied": 0,
+        "secondaryApplied": 0,
+        "chips": 0,
+        "bankedFlights": 0,
+        "unbankedChips": 0,
+        "unbankedBaseEstimate": 0,
+        "slots": [
+          {
+            "id": "harpoon",
+            "tier": 1
+          }
+        ],
+        "lastHits": [
+          {
+            "air": 0,
+            "value": 10,
+            "hp": 0,
+            "phase": "ascent",
+            "enemies": 0
+          }
+        ],
+        "bossSpawned": false,
+        "bossDefeated": false,
+        "bossRecoveries": 0
+      }
+    }
+  ]
+}

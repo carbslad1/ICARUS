@@ -1,0 +1,44 @@
+{
+  "round": "U1",
+  "buildSha256": "b2ac5bc779422c0558f39b4bbf9efc827cc4337d5edb634812887f1ba3a221b7",
+  "passed": 6,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "Full rack matching purchase upgrades in place with one debit and no seventh slot",
+      "passed": true,
+      "detail": {
+        "slots": 6,
+        "level": 2,
+        "cash": 75
+      }
+    },
+    {
+      "name": "Nonmatching full rack swap charges exact net price only on explicit selection",
+      "passed": true,
+      "detail": {
+        "cash": 85,
+        "slots": 6
+      }
+    },
+    {
+      "name": "Swap is affordable from resale, cancellation is free, insufficient net funds never mutate",
+      "passed": true
+    },
+    {
+      "name": "Fully locked rerolls reject without cost and capped vouchers reject without cost",
+      "passed": true
+    },
+    {
+      "name": "Capped shelf voucher is excluded from milestone offers",
+      "passed": true,
+      "detail": {
+        "seeds": 200
+      }
+    },
+    {
+      "name": "Pending replacement blocks next wave, cancellation permits it, reroll clears stale selection",
+      "passed": true
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "suite": "five-combat",
+  "passed": 26,
+  "tests": [
+    {
+      "name": "all ten items exported with meaningful shop metadata",
+      "pass": true
+    },
+    {
+      "name": "I01 stores only first overkill per primary attack and releases on another attack",
+      "pass": true
+    },
+    {
+      "name": "I01 retention caps at 75% and capacity one noncrit hit",
+      "pass": true
+    },
+    {
+      "name": "I02 attacks wound only their first target and stronger remaining wound wins",
+      "pass": true
+    },
+    {
+      "name": "secondary wound damage never procs other item effects",
+      "pass": true
+    },
+    {
+      "name": "I03 each safe passing projectile charges once, three arm one secondary arc",
+      "pass": true
+    },
+    {
+      "name": "I03 a projectile crossing within damage safety distance gives no graze",
+      "pass": true
+    },
+    {
+      "name": "I03 relative projectile path includes player steering, not only shot travel",
+      "pass": true
+    },
+    {
+      "name": "I04 cone excludes target, behind player and outside radius; max three",
+      "pass": true
+    },
+    {
+      "name": "I04 water waiting and repeated breach do not rearm readiness",
+      "pass": true
+    },
+    {
+      "name": "I05 binds strongest slot at breach; weaker slot cannot consume apex charges",
+      "pass": true
+    },
+    {
+      "name": "I05 same cleave attack loads once and a later phase still releases",
+      "pass": true
+    },
+    {
+      "name": "I05 killing blows preserve charge until selected slot hits a survivor",
+      "pass": true
+    },
+    {
+      "name": "I06 cannot spend readiness linking a corpse or nonexistent partner",
+      "pass": true
+    },
+    {
+      "name": "I06 subsequent attack echoes once even when both endpoints are hit",
+      "pass": true
+    },
+    {
+      "name": "I07 hammer uses actual player contact position and counts entry kills",
+      "pass": true
+    },
+    {
+      "name": "I07 hammer requires kills and stops completely after clock expiry",
+      "pass": true
+    },
+    {
+      "name": "I07 remote airborne calls cannot create a water contact blast",
+      "pass": true
+    },
+    {
+      "name": "I08 mitigation and impulses cap; accepted hit does not alter launch motion",
+      "pass": true
+    },
+    {
+      "name": "I09 one marked target, half boss effect, 40% cap, no direct velocity edits",
+      "pass": true
+    },
+    {
+      "name": "I10 shield appears only on next breach, expires and accepted hits absorb",
+      "pass": true
+    },
+    {
+      "name": "I10 shield stacks cap at 25% and selling final copy clears shield",
+      "pass": true
+    },
+    {
+      "name": "active time, wounds, mark and all cooldowns freeze during water and clockout",
+      "pass": true
+    },
+    {
+      "name": "wave reset clears carryover while preserving owned counts",
+      "pass": true
+    },
+    {
+      "name": "attack and graze tracking stay bounded during long attacks",
+      "pass": true
+    },
+    {
+      "name": "inventory rejects unknown items and stacking does not reset cooldowns",
+      "pass": true
+    }
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "buildSha256": "ae0d29b36fe74686f08b1035e58a2f27bfca876b63a878b7ef963843bebfc84d",
+  "scope": "Actual rendered browser. Natural keyboard launch plus labelled constructed scoring fixtures; no human satisfaction claim.",
+  "errors": [],
+  "checks": [
+    {
+      "name": "Actual keyboard launch and prominent animated scoreboard",
+      "passed": true,
+      "detail": {
+        "top": 61,
+        "width": 610,
+        "center": 720,
+        "font": 60.48,
+        "text": "FLIGHT 01 · WAVE 1\nLAND TO BANK\nCHIPS\n0\n×\nMULT\n1\n+1\n=\nFLIGHT SCORE\n0\nSPOUT +1 MULT\n≋\n◇\n◇\n0 / 52 WAVE TARGET",
+        "animations": 0,
+        "state": {
+          "chips": 0,
+          "mult": 1,
+          "score": 0,
+          "waveScore": 0,
+          "quota": 52,
+          "draws": 3,
+          "faces": [
+            "spout"
+          ],
+          "banked": false,
+          "notice": "SPOUT  +1 MULT",
+          "shown": {
+            "chips": 0,
+            "mult": 1,
+            "score": 0,
+            "waveScore": 0
+          },
+          "queued": 0
+        }
+      }
+    },
+    {
+      "name": "Actual kills add chips and real trick/Pair cues animate mult, with exact bank",
+      "passed": true,
+      "detail": {
+        "scope": "Constructed hand/enemy; real automatic attack and landing",
+        "chip": {
+          "state": {
+            "chips": 5,
+            "mult": 0,
+            "score": 0,
+            "waveScore": 0,
+            "quota": 52,
+            "draws": 3,
+            "faces": [],
+            "banked": false,
+            "notice": "KILLS FEED CHIPS · TRICKS FEED MULT",
+            "shown": {
+              "chips": 3.222949168826127,
+              "mult": 0,
+              "score": 0,
+              "waveScore": 0
+            },
+            "queued": 0
+          },
+          "particles": 1,
+          "animations": 1
+        },
+        "bank": {
+          "chips": 5,
+          "mult": 4,
+          "score": 20
+        },
+        "text": "FLIGHT 01 · WAVE 1\nBANKED\nCHIPS\n5\n+5\n×\nMULT\n4\n+1\n=\nBANKED\n20\n+20\nSPLASH! SCORE BANKED\n↻\n↻\n⤨\n20 / 52 WAVE TARGET"
+      }
+    },
+    {
+      "name": "Scoreboard stays above playfield without overlapping timer on landscape phone",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: score must clear timer\n    at /Users/johncarbone/.codex/.chatgpt-projects/g-p-6aa605d20484819194a8761a7fbee797/outputs/icarus-scoreboard-demo/qa/scoreboard-browser.cjs:22:837\n    at async check (/Users/johncarbone/.codex/.chatgpt-projects/g-p-6aa605d20484819194a8761a7fbee797/outputs/icarus-scoreboard-demo/qa/scoreboard-browser.cjs:6:48)\n    at async /Users/johncarbone/.codex/.chatgpt-projects/g-p-6aa605d20484819194a8761a7fbee797/outputs/icarus-scoreboard-demo/qa/scoreboard-browser.cjs:21:1",
+      "diagnostic": {
+        "mode": "playing",
+        "endReason": null,
+        "time": 0.6166666666666669,
+        "hp": 100,
+        "medium": {
+          "kind": "water",
+          "pos": {
+            "x": 9.351472857082872,
+            "y": -25.124079536455774
+          },
+          "heading": -1.1650954155571551,
+          "velocity": {
+            "x": 11.687684388017049,
+            "y": -27.210434597941052
+          },
+          "sp": 29.61434985547927,
+          "wt": 0.6166666666666669,
+          "om": -0.4287776307955117,
+          "cv": false,
+          "face": 1,
+          "cva": 0
+        },
+        "hand": null,
+        "last": null,
+        "scoreboard": {
+          "chips": 0,
+          "mult": 0,
+          "score": 0,
+          "waveScore": 0,
+          "quota": 52,
+          "draws": 3,
+          "faces": [],
+          "banked": false,
+          "notice": "KILLS FEED CHIPS · TRICKS FEED MULT",
+          "shown": {
+            "chips": 0,
+            "mult": 0,
+            "score": 0,
+            "waveScore": 0
+          },
+          "queued": 0
+        }
+      }
+    },
+    {
+      "name": "Reduced motion preserves score information without vibration",
+      "passed": true,
+      "detail": {
+        "reduced": true,
+        "animations": 0,
+        "mult": 1
+      }
+    }
+  ],
+  "passed": 3,
+  "failed": 1
+}

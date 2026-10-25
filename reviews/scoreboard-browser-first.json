@@ -1,0 +1,60 @@
+{
+  "buildSha256": "ae0d29b36fe74686f08b1035e58a2f27bfca876b63a878b7ef963843bebfc84d",
+  "scope": "Actual rendered browser. Natural keyboard launch plus labelled constructed scoring fixtures; no human satisfaction claim.",
+  "errors": [],
+  "checks": [
+    {
+      "name": "Actual keyboard launch and prominent animated scoreboard",
+      "passed": true,
+      "detail": {
+        "top": 61,
+        "width": 610,
+        "center": 720,
+        "font": 60.48,
+        "text": "FLIGHT 01 · WAVE 1\nLAND TO BANK\nCHIPS\n0\n×\nMULT\n1\n+1\n=\nFLIGHT SCORE\n0\nSTAR POSE +1 MULT\n✦\n◇\n◇\n0 / 52 WAVE TARGET",
+        "animations": 0,
+        "state": {
+          "chips": 0,
+          "mult": 1,
+          "score": 0,
+          "waveScore": 0,
+          "quota": 52,
+          "draws": 3,
+          "faces": [
+            "star"
+          ],
+          "banked": false,
+          "notice": "STAR POSE  +1 MULT",
+          "shown": {
+            "chips": 0,
+            "mult": 1,
+            "score": 0,
+            "waveScore": 0
+          },
+          "queued": 0
+        }
+      }
+    },
+    {
+      "name": "Actual kills add chips and real trick/Pair cues animate mult, with exact bank",
+      "passed": false,
+      "error": "page.waitForFunction: Timeout 12000ms exceeded.\n    at /Users/johncarbone/.codex/.chatgpt-projects/g-p-6aa605d20484819194a8761a7fbee797/outputs/icarus-scoreboard-demo/qa/scoreboard-browser.cjs:18:13\n    at async check (/Users/johncarbone/.codex/.chatgpt-projects/g-p-6aa605d20484819194a8761a7fbee797/outputs/icarus-scoreboard-demo/qa/scoreboard-browser.cjs:6:48)\n    at async /Users/johncarbone/.codex/.chatgpt-projects/g-p-6aa605d20484819194a8761a7fbee797/outputs/icarus-scoreboard-demo/qa/scoreboard-browser.cjs:13:1"
+    },
+    {
+      "name": "Scoreboard stays above playfield without overlapping timer on landscape phone",
+      "passed": false,
+      "error": "page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"file:///Users/johncarbone/.codex/.chatgpt-projects/g-p-6aa605d20484819194a8761a7fbee797/outputs/icarus-scoreboard-demo/ICARUS-demo.html\", waiting until \"load\"\u001b[22m\n\n    at /Users/johncarbone/.codex/.chatgpt-projects/g-p-6aa605d20484819194a8761a7fbee797/outputs/icarus-scoreboard-demo/qa/scoreboard-browser.cjs:22:169\n    at async check (/Users/johncarbone/.codex/.chatgpt-projects/g-p-6aa605d20484819194a8761a7fbee797/outputs/icarus-scoreboard-demo/qa/scoreboard-browser.cjs:6:48)\n    at async /Users/johncarbone/.codex/.chatgpt-projects/g-p-6aa605d20484819194a8761a7fbee797/outputs/icarus-scoreboard-demo/qa/scoreboard-browser.cjs:21:1"
+    },
+    {
+      "name": "Reduced motion preserves score information without vibration",
+      "passed": true,
+      "detail": {
+        "reduced": true,
+        "animations": 0,
+        "mult": 1
+      }
+    }
+  ],
+  "passed": 2,
+  "failed": 2
+}

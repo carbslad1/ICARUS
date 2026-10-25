@@ -1,0 +1,77 @@
+{
+  "suite": "five-score",
+  "passed": 14,
+  "assertions": 18083,
+  "results": [
+    {
+      "name": "Five identities; independent replacement; draws 3→6 at waves 5/10/15",
+      "passed": true,
+      "ms": 1
+    },
+    {
+      "name": "Reference odds and once-per-type overlap verified across 15,625 ordered hands",
+      "passed": true,
+      "ms": 158
+    },
+    {
+      "name": "Weight conservation, bounds, Polish caps and Routine caps",
+      "passed": true,
+      "ms": 0
+    },
+    {
+      "name": "Routine directions tuned at N5 and differentiated by profiles at N6",
+      "passed": true,
+      "ms": 20
+    },
+    {
+      "name": "All 17 score charms read combat facts and respect left-to-right order",
+      "passed": true,
+      "ms": 3
+    },
+    {
+      "name": "House lights has an immediate two-type fallback and multiplies it only on Full Show",
+      "passed": true,
+      "ms": 0
+    },
+    {
+      "name": "Attack IDs aggregate primary multi-kills and exclude secondary victims",
+      "passed": true,
+      "ms": 0
+    },
+    {
+      "name": "Empty flights and previews never roll, grow, spend or cache a bank",
+      "passed": true,
+      "ms": 0
+    },
+    {
+      "name": "Gold grows only future hands, once each wave; replacement preserves purchased Polish",
+      "passed": true,
+      "ms": 0
+    },
+    {
+      "name": "Relay spends old token before loading one new token; wave and sale reset",
+      "passed": true,
+      "ms": 0
+    },
+    {
+      "name": "Recorder future-bank growth cap, sale reset and unique-bank idempotence",
+      "passed": true,
+      "ms": 1
+    },
+    {
+      "name": "Lucky and Chorus chance roll once each; Luck improves chance without repricing combos",
+      "passed": true,
+      "ms": 0
+    },
+    {
+      "name": "Experimental multi-Echo chooses best final result with one shared roll and one state commit",
+      "passed": true,
+      "ms": 0
+    },
+    {
+      "name": "Extra draws never reduce current mult, including charm and experimental Echo combinations",
+      "passed": true,
+      "ms": 105
+    }
+  ]
+}
