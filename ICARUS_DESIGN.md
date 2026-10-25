@@ -180,7 +180,7 @@ Bounds are necessary: without them the player could fly straight down to the wat
 
 # 4. Reward architecture and scoring
 
-**Revised 2026-10-25.** This section replaces the original §4 (altimeter score, tier jackpots, entry-quality near-misses and the level-up draft as the primary reward). It describes the scoring and build design for the playable demo (`source/`, built to `ICARUS-demo.html`). All numbers marked **[TUNE]** are starting points; the structure beside them is the requirement. Items marked **[OPEN]** are unresolved and must be raised, not guessed.
+**Revised 2026-10-25.** This section replaces the original §4 (altimeter score, tier jackpots, entry-quality near-misses and the level-up draft as the primary reward). It is the target scoring and build design for the playable demo (`source/`, built to `ICARUS-demo.html`). The demo does not implement all of it yet: draws still grow for free, 0 HP still ends the run, and there is no HP bonus or bust. All numbers marked **[TUNE]** are starting points; the structure beside them is the requirement. Items marked **[OPEN]** are unresolved and must be raised, not guessed.
 
 ## 4.1 The thesis
 
@@ -244,7 +244,7 @@ Combos pay when the drawn tricks match a pattern. Names are taken from poker so 
 | Five of a Kind | 14 | Repeat |
 | Six of a Kind | 24 | Repeat |
 
-All matching combos pay, including nested repeats. Combo groups can be levelled (§4.9). Odds are displayed in-game (§4.14).
+All matching combos pay, including nested repeats. Combo groups can be levelled (§4.9). Odds are displayed in-game, using the player's actual draw weights and draw count (§4.15).
 
 ## 4.6 Danger: health is part of the score
 
@@ -650,16 +650,16 @@ At weapon level 8, with the matching passive held, a weapon evolves: new name, n
 
 ## 10.2 Run structure
 
-| Element | Current demo value |
+| Element | Value (rows marked *target* are not yet in the demo) |
 |---|---|
 | Waves | 20; the run is won by clearing wave 20 |
 | Air clock | 20 s at wave 1, +5 s per wave, capped at 60 s; wave 20 is 90 s **[TUNE]** |
 | Launch speed | 30 m/s at wave 1, +5 m/s per wave (user rule; preserve) |
 | Bosses | Waves 10 and 20 |
 | Vouchers | Offered in the shops after waves 5, 10 and 15 |
-| Trick draws | Base 3, bought up to 6 (§4.4) |
+| Trick draws | *Target:* base 3, bought up to 6 (§4.4). Demo: free growth at waves 5/10/15 |
 | Quota | Escalates per wave from the expected kill value of that wave's spawn schedule **[TUNE]** after the draw change |
-| Loss | Missing a quota (§4.3). Health busts jumps; it does not end runs (§4.6). |
+| Loss | *Target:* missing a quota (§4.3); health busts jumps, it does not end runs (§4.6). Demo: 0 HP still ends the run |
 
 Escalation steps are **announced**. Boss waves and the voucher shops should each have a distinct sting. Visible dread is better pacing than invisible difficulty drift.
 
