@@ -1,6 +1,6 @@
 {
   "round": "S4",
-  "buildSha256": "4758476fad7b967313d8dea9163488cc101e7f745f5cf255f7e4d8cb1efa32ff",
+  "buildSha256": "48290ec6eebbe204f65c1878e0e9a8562d038e9a9e42ee9d361e33c72dbcbee5",
   "passed": 6,
   "failed": 0,
   "checks": [
@@ -34,7 +34,7 @@
       "passed": true,
       "detail": {
         "seeds": 500,
-        "ruleOffers": 107
+        "ruleOffers": 100
       }
     },
     {

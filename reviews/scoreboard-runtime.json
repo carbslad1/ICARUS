@@ -1,5 +1,5 @@
 {
-  "buildSha256": "ecc17d8588f565f256f538376254a789121ccde0ceb4932312ea1f39b1bc59dc",
+  "buildSha256": "48290ec6eebbe204f65c1878e0e9a8562d038e9a9e42ee9d361e33c72dbcbee5",
   "scope": "Actual scoring cue rules and original-versus-edited simulation parity; no player satisfaction claim.",
   "passed": 6,
   "failed": 0,

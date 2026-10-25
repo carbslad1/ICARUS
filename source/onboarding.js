@@ -14,7 +14,6 @@ var RunGuide=(()=>{
     else if(r.medium.kind==='water'&&landings<2){html=`<b>CARVE & RELEASE</b><span>${touch()?'Hold the left control upward, then release to launch. The right button boosts.':'Hold W / ↑ to carve upward, then release to launch. Space boosts.'}</span>`}
     else if(r.medium.kind==='air'&&!r.kills){html='<b>FIGHT</b><span>Weapons fire automatically. Get enemies in range to earn <em class="guide-chips">chips</em>.</span>'}
     else if(r.medium.kind==='air'&&landings<3){html='<b>BUILD THE PAYOUT</b><span>Kills feed <em class="guide-chips">chips</em>. Tricks feed <em class="guide-mult">mult</em>. A hit bails the trick in progress. Land to bank.</span>'}
-    else if(r.medium.kind==='water'&&landings<6&&r.demo.heat){html=`<b>HEAT</b><span>The water's colour shows your next tricks: <em class="guide-mult">${r.demo.heat.band}</em>. Hot tricks are worth a long flight.</span>`}
     else if(landings<4){html=`<b>WAVE TARGET</b><span>${r.wscore} / ${r.quota} banked. ${r.budget.toFixed(0)} seconds of air remain.</span>`}
     if(!html){el.hidden=true;return}if(html!==last){el.querySelector('#run-guide-text').innerHTML=html;last=html}
   }

@@ -51,7 +51,7 @@ test('Single Routine offers apply exactly once and charge once; capped upgrades 
 });
 test('Bought draws raise the next wave’s hand size; Loaded reels adds one more, up to seven',()=>{
  const r=run();assert.equal(D.cap(r),3);const o=fixture(r,'routine','draw',9,{choice:{kind:'draw'}});D.command(r,'buy',o.uid);assert.equal(D.cap(r),4);
- assert.equal(D.command(r,'next'),true);assert.equal(r.demo.heldHand.length,4);assert.ok(['cold','warm','hot','jackpot'].includes(r.demo.heat.band));
+ assert.equal(D.command(r,'next'),true);assert.equal(r.demo.heldHand,null);r.medium={kind:'air',origin:{x:0,y:20},local:{x:0,y:0},velocity:{x:0,y:0},vx:20,vy:30,elapsed:0,heading:1,waterScale:1,exitFlight:false};D.open(r);assert.equal(r.hand.drawn.length,4);
  r.demo.score.draws=6;r.demo.charms.push('N16');assert.equal(D.cap(r),7);
 });
 test('Gear purchases sell one copy and reverse their exact stat contributions',()=>{

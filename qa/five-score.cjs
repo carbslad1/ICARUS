@@ -166,10 +166,8 @@ check('Extra draws never reduce current mult, with every charm and with Echo',()
   for(let n=2;n<5;n++)for(const c of vectors(n)){const h=c.flatMap((count,i)=>Array(count).fill(S.faces[i])),before=evaluate(h,[{id:'N10',face:'star'}],{...facts,preview:true}).mult;
     for(const f of S.faces){assertions++;assert(evaluate([...h,f],[{id:'N10',face:'star'}],{...facts,preview:true}).mult+1e-8>=before);}}
 });
-check('Expectation and heat use the same evaluation as the bank',()=>{
+check('Expected mult covers every hand size and matches the reference',()=>{
   const s=S.create();for(const n of [3,4,5,6]){const e=S.expect(s,n,0);assertions++;assert(e.meanMult>0);close(Object.values(e.comboOdds).length,10);}
   eq(S.expect(s,3,0).meanMult.toFixed(2),'3.64');eq(S.expect(s,6,0).meanMult.toFixed(2),'13.11');
-  eq(S.heat(s,['front','back','star'],0).band,'cold');eq(S.heat(s,['front','front','back'],0).band,'warm');eq(S.heat(s,['front','front','front'],0).band,'jackpot');
-  const h=S.heat(s,['front','front','back'],0);close(h.mult,evaluate(['front','front','back'],[],{K:0,preview:true}).mult);close(h.ratio,h.mult/h.mean);
 });
 console.log(JSON.stringify({suite:'five-score',passed:results.length,assertions,results},null,2));

@@ -4,7 +4,6 @@ var ScoreHUD = (() => {
   const glyph={spout:'≋',front:'↻',back:'↺',cork:'⤨',star:'✦'};
   const reduced=()=>globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
   let model={chips:0,mult:0,score:0,waveScore:0,quota:1,draws:3,faces:[],bails:[],busted:false,banked:false,notice:'KILLS FEED CHIPS · TRICKS FEED MULT'};
-  let heatEl=null,heatSeq=0;
   let shown={chips:0,mult:0,score:0,waveScore:0};
   const number=n=>Math.round(n).toLocaleString('en-US');
   const multiplier=n=>Number(n.toFixed(2)).toLocaleString('en-US',{maximumFractionDigits:2});
@@ -126,19 +125,10 @@ var ScoreHUD = (() => {
     const progress=el('progress');if(progress)progress.style.width=Math.min(100,100*shown.waveScore/Math.max(1,model.quota))+'%';
     root.dataset.chips=String(model.chips);root.dataset.mult=String(model.mult);root.dataset.score=String(model.score);root.dataset.queued=String(queue.length);
   }
-  // Heat cue (design doc §4.4): during the dive, one colour wash and one tone say how hot the next tricks are.
-  const heatTone={cold:196,warm:294,hot:440,jackpot:659.25};
-  function heatPaint(playing){
-    if(!heatEl?.isConnected){heatEl=document.createElement('div');heatEl.id='heat-cue';heatEl.setAttribute('aria-live','polite');heatEl.innerHTML='<span id="heat-word"></span>';document.body.appendChild(heatEl);}
-    const d=S?.demo,show=playing&&S.medium?.kind==='water'&&!!d?.heat;heatEl.hidden=!show;if(!show)return;
-    const band=d.heat.band;if(heatEl.dataset.band!==band){heatEl.dataset.band=band;heatEl.className='heat-'+band;heatEl.querySelector('#heat-word').textContent=band==='jackpot'?'JACKPOT TRICKS':band.toUpperCase()+' TRICKS';}
-    if(heatSeq!==d.handSeq){heatSeq=d.handSeq;if(ui?.ctx&&ui.enabled){const f=heatTone[band];ui.tone(f,.2,'triangle',.03,f);if(band==='jackpot')ui.tone(f*1.5,.25,'sine',.02,f*1.5)}}
-  }
   function frame(now){
     const dt=Math.min(60,Math.max(0,now-(last||now)));last=now;
     if(S?.demo&&run!==S)fresh(S);
     const playing=ft==='game'&&S?.mode==='playing',paused=ft==='pause';
-    heatPaint(playing);
     if(!paused&&root&&ft!=='title'){
       let count=0;while(queue.length&&now>=next&&count++<20){const e=queue.shift();const wait=apply(e,now);next=now+wait;if(wait)break;}
       paint(dt);

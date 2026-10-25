@@ -1,8 +1,8 @@
 {
   "round": "S4",
   "scope": "Actual built simulation, constructed combat fixtures; no browser or human-playtest claim",
-  "generated": "2026-10-25T09:33:12.195Z",
-  "buildSha256": "4758476fad7b967313d8dea9163488cc101e7f745f5cf255f7e4d8cb1efa32ff",
+  "generated": "2026-10-25T10:23:55.625Z",
+  "buildSha256": "48290ec6eebbe204f65c1878e0e9a8562d038e9a9e42ee9d361e33c72dbcbee5",
   "passed": 14,
   "failed": 0,
   "checks": [
@@ -456,7 +456,7 @@
       "detail": {
         "scope": "CPU simulation only; continuously replenished100-enemy scene; no renderer, Android or thermal claim",
         "simulatedSeconds": 60,
-        "wallSeconds": 4.2258027920000005,
+        "wallSeconds": 4.778085978,
         "maxEnemies": 100,
         "maxShots": 128,
         "maxTracked": 512,
@@ -465,10 +465,10 @@
         "wounds": 5,
         "grazeRecords": 53,
         "stepMs": {
-          "median": 0.5345899999999801,
-          "p95": 0.9791159999999763,
-          "p99": 1.2120869999998831,
-          "max": 4.428674999999998
+          "median": 0.5529360000000452,
+          "p95": 1.2148209999995743,
+          "p99": 1.8838120000000345,
+          "max": 7.652827999999971
         }
       }
     }

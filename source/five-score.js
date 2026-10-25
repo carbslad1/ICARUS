@@ -249,15 +249,6 @@ var FiveScore = (function () {
     var keys=Object.keys(expectCache);if(keys.length>128)delete expectCache[keys[0]];
     return expectCache[key]=out;
   }
-  // The pre-launch heat cue: this hand's mult before charms against the average hand of the same size.
-  var heatBands=[{id:'cold',below:.9},{id:'warm',below:1.3},{id:'hot',below:1.9},{id:'jackpot',below:Infinity}];
-  function heat(state,hand,luck){
-    if(!hand||!hand.length)return {band:'cold',ratio:0,mult:0,mean:0};
-    var v=evaluate(state,hand,{K:0,preview:true},[],function(){return 1;}).mult,c=counts(hand);
-    faces.forEach(function(x){if(state.techniques[x]==='lucky')v+=c[x]*value(state,x)*chance(luck);});
-    var mean=expect(state,hand.length,luck).meanMult,ratio=mean>0?v/mean:1;
-    return {band:heatBands.filter(function(b){return ratio<b.below;})[0].id,ratio:ratio,mult:v,mean:mean};
-  }
-  return {faces:faces,names:names,combos:combos,charms:charms,charmText:charmText,groups:groups,tune:tune,chipBonus:chipBonus,prices:prices,create:create,draws:draws,addDraw:addDraw,draw:draw,evaluate:evaluate,expect:expect,heat:heat,heatBands:heatBands,transfer:transfer,polish:polish,routine:routine,technique:technique,resetWave:resetWave,sellCharm:sellCharm,value:value,chance:chance,counts:counts,match:match,version:'five-trick-slot-1'};
+  return {faces:faces,names:names,combos:combos,charms:charms,charmText:charmText,groups:groups,tune:tune,chipBonus:chipBonus,prices:prices,create:create,draws:draws,addDraw:addDraw,draw:draw,evaluate:evaluate,expect:expect,transfer:transfer,polish:polish,routine:routine,technique:technique,resetWave:resetWave,sellCharm:sellCharm,value:value,chance:chance,counts:counts,match:match,version:'five-trick-slot-1'};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=FiveScore;

@@ -81,7 +81,7 @@ There is no ceiling and no altitude at which the game stops getting harder. Stay
   (repeat, compounding)
 ```
 
-> **Superseded in part (2026-10-25).** There is no entry grading and no speed compounding. The current loop is dive (the next hand's heat cue shows) → breach (the lever pulled) → fly (kills are chips, tricks resolve as reels, a hit bails the trick in progress and costs HP) → water entry (bank chips × mult, or bust at 0 HP) → repeat until the wave's air clock runs out → shop. See §4. The cycle and run lengths below are also superseded: they follow from the wave air clock and launch speeds in §10.2.
+> **Superseded in part (2026-10-25).** There is no entry grading and no speed compounding. The current loop is dive → breach (the lever pulled; tricks drawn) → fly (kills are chips, tricks resolve as reels, a hit bails the trick in progress and costs HP) → water entry (bank chips × mult, or bust at 0 HP) → repeat until the wave's air clock runs out → shop. See §4. The cycle and run lengths below are also superseded: they follow from the wave air clock and launch speeds in §10.2.
 
 A cycle runs 20–45 seconds. A run is 15–25 minutes, or forty to sixty cycles.
 
@@ -180,7 +180,7 @@ Bounds are necessary: without them the player could fly straight down to the wat
 
 # 4. Reward architecture and scoring
 
-**Revised 2026-10-25.** This section replaces the original §4 (altimeter score, tier jackpots, entry-quality near-misses and the level-up draft as the primary reward). It is the target scoring and build design for the playable demo (`source/`, built to `ICARUS-demo.html`). The demo does not implement all of it yet: draws still grow for free, 0 HP still ends the run, XP and level-ups remain, and there are no trick bails, busts, chip bonuses or heat cue. All numbers marked **[TUNE]** are starting points; the structure beside them is the requirement. Items marked **[OPEN]** are unresolved and must be raised, not guessed.
+**Revised 2026-10-25.** This section replaces the original §4 (altimeter score, tier jackpots, entry-quality near-misses and the level-up draft as the primary reward). It is the target scoring and build design for the playable demo (`source/`, built to `ICARUS-demo.html`). The demo does not implement all of it yet: draws still grow for free, 0 HP still ends the run, XP and level-ups remain, and there are no trick bails, busts or chip bonuses. All numbers marked **[TUNE]** are starting points; the structure beside them is the requirement. Items marked **[OPEN]** are unresolved and must be raised, not guessed.
 
 ## 4.1 The thesis
 
@@ -225,10 +225,9 @@ mult  = values of landed tricks + combo payouts + charm effects
 
 ## 4.4 Tricks: the reels
 
-- Each jump's tricks are drawn from the five identities: **Spout, Front flip, Backflip, Corkscrew, Star pose**, according to the player's draw weights. **[CALL]** The next jump's tricks are drawn at the previous water entry, as soon as a jump banks with kills or busts. A jump with no kills keeps its tricks, as below. A wave's first jump draws at wave start. This lets the dive show a heat cue.
+- Each jump's tricks are drawn from the five identities: **Spout, Front flip, Backflip, Corkscrew, Star pose**, according to the player's draw weights. They are drawn at breach.
 - **The tricks are performed automatically, in drawn order, across the flight.** Each completed trick reveals its mult on the scoreboard. They never gate movement or weapon damage.
 - **The player is never expected to read the hand during play.** Underwater lasts about a second, and in the air the player is dodging. The reels are watched at a glance, like a slot machine, not planned around. All reading happens in the shop.
-- **Heat cue: the one thing shown before launch.** During the dive, a single signal, a colour and a sound, says how hot the next hand is, cold to hot. Heat is the hand's expected mult before charms, in bands such as cold, warm, hot and jackpot **[TUNE]**. It is one glance, not a hand to read. It gives "will this jump score enough?" a lever: launch high on a hot hand, burn a cold one on a low hop.
 - A jump with no kills banks nothing and keeps the same tricks for the next jump.
 - **Draw count is bought, not given.** Base 3 draws, maximum 6 **[TUNE]**. More reels come from Routine offers (§4.9), never from a free wave schedule. Free growth made the trick build irrelevant: in the S3 demo the average unupgraded mult rose from 3.6 to 13.1 purely from free draws.
 
@@ -359,7 +358,6 @@ Nobody can read mid-flight, so the payout must be **glanceable**:
 - It uses colour and one large number in the bottom scoreboard: **chips × mult = score**.
 - Each completed trick and combo pulses as it resolves. A hit turns the trick in progress into a Bail on the reels at that moment, with a distinct sound.
 - A bust is unmistakable: the reels go dark and the jump scores zero.
-- The heat cue (§4.4) is a colour wash and a tone during the dive, readable without looking at the reels.
 
 Detail belongs in the shop. The "last flight · see why" breakdown shows every trick (landed or bailed), combo, chip bonus and charm (paid or missed, with the reason).
 
@@ -390,11 +388,12 @@ These are binding design constraints, not aspirations. A slot-machine structure 
 
 1. Resolved in build S4: all 17 original charms were rewritten to the two-line standard and 20 new charms added (37 in total); the 10 combat items have two-line text, with stacking details moved to the details panel.
 
-Fall speed, the quota curve and the heat bands are tuning, marked **[TUNE]** where they appear. They are not open design questions.
+Fall speed and the quota curve are tuning, marked **[TUNE]** where they appear. They are not open design questions.
 
 **Considered and rejected (2026-10-25):**
 - Making airtime decide how many tricks complete. Every drawn trick still completes unless a hit bails it.
-- A "this jump needs X" readout. The heat cue is the only pre-launch signal.
+- A "this jump needs X" readout.
+- A pre-launch heat cue (a colour and tone during the dive rating the next tricks). Built in S4 and removed: it added a system while rarely saying more than cold or warm.
 
 ---
 
@@ -1001,7 +1000,7 @@ Built in Phase 0, before any game content.
 
 ## 15.1 Levels
 
-> **Superseded in part (2026-10-25).** Tests for entry quality, perfect-entry apex growth, early-commit entries, draft guarantees and tier drops cover systems removed in §4. Their replacements are tests for the §4 rules: bank resolution order, trick bails and busts, chip bonuses, the heat cue, the Echo and Lucky techniques, offer rarity and build weighting.
+> **Superseded in part (2026-10-25).** Tests for entry quality, perfect-entry apex growth, early-commit entries, draft guarantees and tier drops cover systems removed in §4. Their replacements are tests for the §4 rules: bank resolution order, trick bails and busts, chip bonuses, the Echo and Lucky techniques, offer rarity and build weighting.
 
 **Unit.** Entry quality bands. Medium resolution with hysteresis. Tier lookup. Apex and airtime derivation. Arena bounds clamping. `toWorld` round-tripping within float tolerance. Draft weighting distributions. Loot table distributions.
 
@@ -1082,7 +1081,7 @@ Weapon system, all four weapons, projectiles, targeting, collisions, kills, dama
 
 ### Phase 5 — Reward
 
-> **Superseded in part (2026-10-25).** The reward phase now targets §4: chips × mult, chip bonuses, tricks, combos, charms, trick bails and busts, the heat cue, the shop and the economy. Tier loot, streaks, the altimeter, XP and level-up drafts are out.
+> **Superseded in part (2026-10-25).** The reward phase now targets §4: chips × mult, chip bonuses, tricks, combos, charms, trick bails and busts, the shop and the economy. Tier loot, streaks, the altimeter, XP and level-up drafts are out.
 XP, orbs, levels, the draft with weighting and guarantees, loot tables, streaks, combo, escalation, the altimeter and record lines, run summary.
 
 **Gate, two parts:**
