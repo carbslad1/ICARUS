@@ -81,7 +81,7 @@ There is no ceiling and no altitude at which the game stops getting harder. Stay
   (repeat, compounding)
 ```
 
-> **Superseded in part (2026-10-25).** There is no entry grading and no speed compounding. The current loop is dive → breach (tricks drawn, the lever pulled) → fly (kills are chips, tricks resolve as reels, hits cost HP) → water entry (bank chips × mult, or bust at 0 HP) → repeat until the wave's air clock runs out → shop. See §4.
+> **Superseded in part (2026-10-25).** There is no entry grading and no speed compounding. The current loop is dive (the next hand's heat cue shows) → breach (the lever pulled) → fly (kills are chips, tricks resolve as reels, a hit bails the trick in progress and costs HP) → water entry (bank chips × mult, or bust at 0 HP) → repeat until the wave's air clock runs out → shop. See §4. The cycle and run lengths below are also superseded: they follow from the wave air clock and launch speeds in §10.2.
 
 A cycle runs 20–45 seconds. A run is 15–25 minutes, or forty to sixty cycles.
 
@@ -159,7 +159,7 @@ Do not distribute this transform across entities. Do not give any entity two pos
 
 ## 3.5 Commitment: the trade that makes the risk dial work
 
-> **Superseded (2026-10-25).** Entry speed retention and entry grading were removed. Risk now comes from exposure during the flight: HP lost lowers the payout, and 0 HP busts the jump (§4.6).
+> **Superseded (2026-10-25).** Entry speed retention and entry grading were removed. Risk now comes from exposure during the flight: a hit bails the trick in progress, and 0 HP busts the jump (§4.6).
 
 The frame's velocity at commitment *is* your entry vector. Early in the arc the frame is still rising or shallow — commit then and you enter slow and flat, shedding most of your speed. Ride the arc to its natural end and the frame has mirrored back to full speed at a steep angle: the best possible entry.
 
@@ -180,7 +180,7 @@ Bounds are necessary: without them the player could fly straight down to the wat
 
 # 4. Reward architecture and scoring
 
-**Revised 2026-10-25.** This section replaces the original §4 (altimeter score, tier jackpots, entry-quality near-misses and the level-up draft as the primary reward). It is the target scoring and build design for the playable demo (`source/`, built to `ICARUS-demo.html`). The demo does not implement all of it yet: draws still grow for free, 0 HP still ends the run, and there is no HP bonus or bust. All numbers marked **[TUNE]** are starting points; the structure beside them is the requirement. Items marked **[OPEN]** are unresolved and must be raised, not guessed.
+**Revised 2026-10-25.** This section replaces the original §4 (altimeter score, tier jackpots, entry-quality near-misses and the level-up draft as the primary reward). It is the target scoring and build design for the playable demo (`source/`, built to `ICARUS-demo.html`). The demo does not implement all of it yet: draws still grow for free, 0 HP still ends the run, XP and level-ups remain, and there are no trick bails, busts, chip bonuses or heat cue. All numbers marked **[TUNE]** are starting points; the structure beside them is the requirement. Items marked **[OPEN]** are unresolved and must be raised, not guessed.
 
 ## 4.1 The thesis
 
@@ -201,13 +201,17 @@ The slot-machine structure was already the insight of the original §4.1. What h
 ```
 bank = chips × mult      (paid at water entry)
 
-chips = kill value earned this jump (plus +chips effects)
-mult  = trick values + combo payouts + charm effects + HP bonus
+chips = kill value earned this jump + chip bonuses + chip effects
+mult  = values of landed tricks + combo payouts + charm effects
 ```
 
 - **Chips** come from kills. They are visible as enemies die; the player never has to calculate them.
-- **Mult** is built from the jump's tricks (§4.4), the combos they form (§4.5), the player's charms (§4.8) and the **HP bonus** (§4.6).
-- **Resolution order at the bank:** tricks → combos → charms, left to right as arranged in the charm row → HP bonus. **[CALL]** HP bonus resolves last so that it acts on the finished hand. **[TUNE]** whether it is additive or multiplicative.
+- **Chip bonuses: how you kill matters, not only how many.** Without them, chips are roughly a kill count capped by spawns, and every build scores alike. Kills pay extra chips for how they happened. These are score effects and never change weapon damage. **[TUNE]** all values.
+  - **Multi-kills:** one attack killing several enemies pays more per victim.
+  - **Apex kills:** kills during the apex window pay extra.
+  - **Crit kills:** a killing blow that crits pays extra.
+- **Mult** is built from the tricks that land (§4.4, §4.6), the combos they form (§4.5) and the player's charms (§4.8).
+- **Resolution order at the bank:** tricks → combos → charms, left to right as arranged in the charm row.
 - The bank is the payoff moment and must be the loudest, clearest event in the game (§4.12).
 
 ## 4.3 Loss condition and the air clock
@@ -221,11 +225,12 @@ mult  = trick values + combo payouts + charm effects + HP bonus
 
 ## 4.4 Tricks: the reels
 
-- At breach, the jump draws its tricks from the five identities: **Spout, Front flip, Backflip, Corkscrew, Star pose**, according to the player's draw weights.
+- Each jump's tricks are drawn from the five identities: **Spout, Front flip, Backflip, Corkscrew, Star pose**, according to the player's draw weights. **[CALL]** The next jump's tricks are drawn at the previous water entry, as soon as a jump banks with kills or busts. A jump with no kills keeps its tricks, as below. A wave's first jump draws at wave start. This lets the dive show a heat cue.
 - **The tricks are performed automatically, in drawn order, across the flight.** Each completed trick reveals its mult on the scoreboard. They never gate movement or weapon damage.
 - **The player is never expected to read the hand during play.** Underwater lasts about a second, and in the air the player is dodging. The reels are watched at a glance, like a slot machine, not planned around. All reading happens in the shop.
+- **Heat cue: the one thing shown before launch.** During the dive, a single signal, a colour and a sound, says how hot the next hand is, cold to hot. Heat is the hand's expected mult before charms, in bands such as cold, warm, hot and jackpot **[TUNE]**. It is one glance, not a hand to read. It gives "will this jump score enough?" a lever: launch high on a hot hand, burn a cold one on a low hop.
 - A jump with no kills banks nothing and keeps the same tricks for the next jump.
-- **Draw count is bought, not given.** Base 3 draws, maximum 6 **[TUNE]**. More reels come from Routine offers or vouchers (§4.9), never from a free wave schedule. Free growth made the trick build irrelevant: in the S3 demo the average unupgraded mult rose from 3.6 to 13.1 purely from free draws.
+- **Draw count is bought, not given.** Base 3 draws, maximum 6 **[TUNE]**. More reels come from Routine offers (§4.9), never from a free wave schedule. Free growth made the trick build irrelevant: in the S3 demo the average unupgraded mult rose from 3.6 to 13.1 purely from free draws.
 
 ## 4.5 Combos: the paylines
 
@@ -246,17 +251,25 @@ Combos pay when the drawn tricks match a pattern. Names are taken from poker so 
 
 All matching combos pay, including nested repeats. Combo groups can be levelled (§4.9). Odds are displayed in-game, using the player's actual draw weights and draw count (§4.15).
 
-## 4.6 Danger: health is part of the score
+## 4.6 Danger: hits bail tricks, 0 HP busts the jump
 
-Getting hit is the slot machine's bust.
+Getting hit is the slot machine's danger, and it is Tony Hawk's bail.
 
-- **Every accepted hit costs HP** and places a **Bail** symbol on the reels. A Bail is visual feedback in the slot's own language and a hook for charms (for example, "Bails pay +2 chips"). A Bail does not bust the jump by itself.
-- **HP bonus.** At the bank, the player's **raw** remaining HP adds to the payout as a bonus multiplier. **[CALL]** Raw HP, not a percentage of max: stacking Max HP is a deliberate build route that grows the multiplier. **[TUNE]** the conversion rate and cap. Watch that defence does not become the dominant build because it now serves both survival and score.
-- **0 HP busts the jump.** The jump banks nothing. The dolphin falls from where it is to the water, and **the fall spends air clock**. The next jump starts at **full HP**. The cost of a bust is the lost jump plus the air time.
+- **A hit bails the trick in progress.** That trick turns into a **Bail** symbol on the reels and pays nothing. It does not count towards combos. Tricks already landed keep their value.
+  - Damage therefore costs mult in proportion to how good the trick build is, so defence works with a build instead of being a stat every build takes.
+  - Bails are also a hook for charms (for example, "Bails pay +2 chips").
+- **Every accepted hit also costs HP.** HP decides one thing only: **busts**. It does not feed the score.
+- **0 HP busts the jump.**
+  - The jump banks nothing.
+  - The dolphin falls from where it is to the water, and **the fall spends air clock** for its duration.
+  - **[CALL]** The next jump starts at **50% of max HP** **[TUNE]**. A full refill would make busting a cheap heal (diving in at low HP to come back full).
+  - **[CALL]** The busted hand is discarded. The next jump's tricks are drawn when the dolphin reaches the water, as for any jump.
+  - **[CALL]** In overtime, the bust's water entry counts as the water entry that ends the wave. It banks nothing, then the quota is checked.
+  - **[CALL]** The fall is out of combat: the dolphin cannot be hit or score during it.
 - HP otherwise carries between jumps within a wave, with Regen, and is restored at wave end.
-- **[OPEN]** Whether the player can be hit or score during the fall, and how fast the fall is.
+- **Optional, through charms only:** an HP-based payout bonus, if wanted, is a charm, based on percentage of max HP and capped, for example "×1.5 mult if above 75% HP". It is never a baseline rule.
 
-The result is that **health is not a separate number to watch**. Damage shows up as a smaller payout, and a bust shows up as a zero, on the scoreboard the player is already glancing at.
+Damage shows up on the reels the player is already glancing at, as bailed tricks and, at worst, a zero.
 
 ## 4.7 The spending trade-off
 
@@ -266,9 +279,9 @@ Every pearl goes into one of three investments, all priced in score:
 |---|---|---|
 | **The stake** | Weapons, offensive gear and stats | More chips per jump |
 | **The machine** | Tricks, combos, charms | More mult per jump |
-| **Protection** | Max HP, Armour, Regen, defensive gear | A bigger HP bonus and fewer busts |
+| **Protection** | Max HP, Armour, Regen, defensive gear | Fewer bailed tricks and fewer busts |
 
-A build that ignores any of the three should be possible but costly. Weapon type also sets risk. Close weapons need proximity and invite hits, and they add Armour. Shot weapons keep distance and are safer. Blast weapons sit between.
+A build that ignores any of the three should be possible but costly. Protection's value scales with the machine it protects, so a weak trick build has little to lose and a strong one has a lot. Weapon type also sets risk. Close weapons need proximity and invite hits, and they add Armour. Shot weapons keep distance and are safer. Blast weapons sit between.
 
 ## 4.8 Charms: rewriting the machine
 
@@ -283,7 +296,7 @@ Charms are the build-defining layer, equivalent to Balatro's jokers and CloverPi
   - Bail interactions ("Bails pay +2 chips")
   - flight-phase hooks ("+3 chips per kill during descent")
 - **Charms resolve left to right at the bank.** The player arranges the order in the shop. Order must matter, mainly through `×mult` placement.
-- **Each charm reads in one line** and fits on one condition. No stacked multi-condition text.
+- **Each charm reads in one line** and has at most one condition. No stacked multi-condition text. The same rule applies to every gear item and weapon description.
 - **Binding constraint (user rule):** no charm changes weapon damage. Charms change score and pearls only.
 - **Scale target:** about 30–40 charms for the demo, with enough `×mult`, retrigger and scaling effects that a strong build is many times stronger than an unbuilt one. In S3 the strongest focused trick build was only about 2.6× an unbuilt one, which is too low.
 
@@ -296,11 +309,11 @@ Charms are the build-defining layer, equivalent to Balatro's jokers and CloverPi
   - shift draw odds
   - add a draw (§4.4)
   - grant a technique
-- **Techniques** modify one trick:
+- **Techniques** are Routine offers, not a separate system. Each modifies one trick:
   - **Lucky:** a chance to repeat that trick's value.
   - **Gold:** grows across waves.
   - **Echo:** at the bank, the trick adds one extra copy of itself for combos when that improves the payout. Echo is already implemented and must be offered.
-- **One voucher to commit,** like Balatro's Telescope: "Routine offers favour your most-drawn trick."
+- **One rare offer to commit,** like Balatro's Telescope: "Routine offers favour your most-drawn trick."
 - **Increments must be felt.** Moving 5% of draw chance or adding +0.5 mult is too small to notice. **[TUNE]**
 - **[CALL]** There is no always-available upgrade menu. Offers are random so that runs diverge and the player steers towards what they find.
 
@@ -308,22 +321,24 @@ Charms are the build-defining layer, equivalent to Balatro's jokers and CloverPi
 
 The shop between waves is where all building and all reading happens.
 
-**Categories (consolidated):**
+**Four categories, one stat stream:**
 
 | Category | Contains |
 |---|---|
 | Weapons | 9 automatic weapons in 3 types × 3 cadences, 6 slots, merge two equal copies into the next tier (max T4) |
-| Gear | Stat items with trade-offs and combat items, merged into one category |
+| Gear | Stat items with trade-offs and combat items, merged into one category. **The only source of stats.** |
 | Charms | §4.8 |
-| Routine | Packs and single offers, §4.9 |
-| Vouchers | Permanent run rules (charm slot, reroll discount, extra shelf, the commit voucher) |
+| Routine | Trick values, combo levels, draw odds, extra draws and techniques (§4.9) |
+
+**[CALL]** Vouchers are no longer a category. Permanent run rules, such as an extra charm slot, cheaper rerolls, an extra shelf slot or the commit offer, appear as rare offers in the row they affect.
+
+**[CALL]** XP and level-ups are removed, which leaves Gear as the single stat stream. This also removes the free +10 Max HP per level that grew defence for nothing, and the Pickup and XP gain stats that only served XP.
 
 **Offer rules:**
 - **Rarity** sets how often an offer appears, not only its price, and each rarity has a visible colour.
 - Charm and gear offers are **weighted towards the held build**. Weapons already are.
-- **Banish:** once per run, the player removes one offer from the pool for the rest of the run.
 - The shop keeps its existing conveniences: lock, separate rerolls per row, sell at 50%, combining weapons and the replace-a-slot flow with its net price.
-- **Level-ups** (from XP) stay a free stat choice of three before shopping.
+- **Deferred:** a once-per-run banish. Add it only if playtests show players need more control over offers.
 
 **Pearls:**
 - base pay per wave cleared
@@ -342,10 +357,11 @@ This is what keeps ICARUS from being a bullet-heaven with a score attached.
 Nobody can read mid-flight, so the payout must be **glanceable**:
 - It is led by sound, and climbs in pitch with each charm, as the existing charm notes already do.
 - It uses colour and one large number in the bottom scoreboard: **chips × mult = score**.
-- Each completed trick and combo pulses as it resolves. Bail symbols appear on the reels the moment you are hit.
+- Each completed trick and combo pulses as it resolves. A hit turns the trick in progress into a Bail on the reels at that moment, with a distinct sound.
 - A bust is unmistakable: the reels go dark and the jump scores zero.
+- The heat cue (§4.4) is a colour wash and a tone during the dive, readable without looking at the reels.
 
-Detail belongs in the shop. The "last flight · see why" breakdown shows every trick, combo, charm (paid or missed, with the reason), Bail and the HP bonus.
+Detail belongs in the shop. The "last flight · see why" breakdown shows every trick (landed or bailed), combo, chip bonus and charm (paid or missed, with the reason).
 
 ## 4.13 The power curve
 
@@ -372,11 +388,13 @@ These are binding design constraints, not aspirations. A slot-machine structure 
 
 ## 4.16 Open questions
 
-1. HP bonus: the conversion rate, whether it is additive or multiplicative, and any cap. (§4.6)
-2. The fall after a bust: its speed, and whether hits or kills count during it. (§4.6)
-3. Quota curve once extra draws are bought rather than free. (§4.3, §4.4)
-4. Whether to show a "this jump needs X" readout at breach. This was proposed and not decided.
-5. How much of the existing 17-charm list survives the one-line, rule-bending standard in §4.8.
+1. The fall after a bust: its speed, and therefore how much air clock a bust costs. (§4.6)
+2. Quota curve once extra draws are bought rather than free and XP levels are gone. (§4.3, §4.4, §4.10)
+3. Whether to show a "this jump needs X" readout alongside the heat cue. This was proposed and not decided.
+4. How much of the existing 17-charm list and the 10 combat items survive the one-line standard in §4.8.
+5. Heat bands: how many, and what expected mult each represents. (§4.4)
+
+**Considered and rejected (2026-10-25):** making airtime decide how many tricks complete. Every drawn trick still completes unless a hit bails it.
 
 ---
 
@@ -476,6 +494,8 @@ interface FlightFrame {
 ```
 
 Integrated ballistically with `AIR_GRAVITY = −18 m/s²` and negligible drag. Nothing controls it.
+
+> **Superseded in part (2026-10-25).** The demo uses air gravity of −15 m/s² (the user's movement settings), so the apex and airtime examples below are slightly low for it.
 
 Gravity is deliberately heavier than real. Real gravity makes long arcs floaty; this keeps them punchy.
 
@@ -640,12 +660,12 @@ At weapon level 8, with the matching passive held, a weapon evolves: new name, n
 ## 10.1 Within a run
 
 - **Between waves: the shop (§4.10).** This is where the build is made and where the player reads it.
-- **XP and levels:** kills drop XP. Each level grants one free stat choice from three options, drawn from the combat, defence and flight/economy groups, and is chosen before shopping.
-- **The upgrade pool still spans both phases**, or the build layer ends up orthogonal to the game:
+- **No XP or levels** (§4.10). All stats come from Gear in the shop. The demo still has XP and level-ups.
+- **The stat pool still spans both phases**, or the build layer ends up orthogonal to the game:
   - **Flight:** Lift, Hang, Air steering
   - **Combat:** type damage, Damage %, Attack speed, Crit, Reach, Area
-  - **Defence:** Max HP, Armour, Regen. Under §4.6 these are also score stats.
-  - **Economy:** Pickup, Luck, XP gain
+  - **Defence:** Max HP, Armour, Regen. Under §4.6 they protect landed tricks and prevent busts.
+  - **Economy:** Luck
 - **Launch shape is a build axis.** Builds that pay for long apexes and descents favour high launches. Builds that pay for breach and entry favour many short hops. Both must be viable.
 
 ## 10.2 Run structure
@@ -656,12 +676,12 @@ At weapon level 8, with the matching passive held, a weapon evolves: new name, n
 | Air clock | 20 s at wave 1, +5 s per wave, capped at 60 s; wave 20 is 90 s **[TUNE]** |
 | Launch speed | 30 m/s at wave 1, +5 m/s per wave (user rule; preserve) |
 | Bosses | Waves 10 and 20 |
-| Vouchers | Offered in the shops after waves 5, 10 and 15 |
+| Permanent-rule offers | *Target:* rare offers in the row they affect (§4.10). Demo: a voucher shown in the shops after waves 5, 10 and 15 |
 | Trick draws | *Target:* base 3, bought up to 6 (§4.4). Demo: free growth at waves 5/10/15 |
 | Quota | Escalates per wave from the expected kill value of that wave's spawn schedule **[TUNE]** after the draw change |
 | Loss | *Target:* missing a quota (§4.3); health busts jumps, it does not end runs (§4.6). Demo: 0 HP still ends the run |
 
-Escalation steps are **announced**. Boss waves and the voucher shops should each have a distinct sting. Visible dread is better pacing than invisible difficulty drift.
+Escalation steps are **announced**. Boss waves should have a distinct sting. Visible dread is better pacing than invisible difficulty drift.
 
 ## 10.3 Run summary
 
@@ -981,7 +1001,7 @@ Built in Phase 0, before any game content.
 
 ## 15.1 Levels
 
-> **Superseded in part (2026-10-25).** Tests for entry quality, perfect-entry apex growth, early-commit entries, draft guarantees and tier drops cover systems removed in §4. Their replacements are tests for the §4 rules: bank resolution order, HP bonus and busts, the Echo and Lucky techniques, offer rarity and build weighting.
+> **Superseded in part (2026-10-25).** Tests for entry quality, perfect-entry apex growth, early-commit entries, draft guarantees and tier drops cover systems removed in §4. Their replacements are tests for the §4 rules: bank resolution order, trick bails and busts, chip bonuses, the heat cue, the Echo and Lucky techniques, offer rarity and build weighting.
 
 **Unit.** Entry quality bands. Medium resolution with hysteresis. Tier lookup. Apex and airtime derivation. Arena bounds clamping. `toWorld` round-tripping within float tolerance. Draft weighting distributions. Loot table distributions.
 
@@ -1062,7 +1082,7 @@ Weapon system, all four weapons, projectiles, targeting, collisions, kills, dama
 
 ### Phase 5 — Reward
 
-> **Superseded in part (2026-10-25).** The reward phase now targets §4: chips × mult, tricks, combos, charms, HP bonus and busts, the shop and the economy. Tier loot, streaks and the altimeter are out.
+> **Superseded in part (2026-10-25).** The reward phase now targets §4: chips × mult, chip bonuses, tricks, combos, charms, trick bails and busts, the heat cue, the shop and the economy. Tier loot, streaks, the altimeter, XP and level-up drafts are out.
 XP, orbs, levels, the draft with weighting and guarantees, loot tables, streaks, combo, escalation, the altimeter and record lines, run summary.
 
 **Gate, two parts:**
