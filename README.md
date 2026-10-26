@@ -1,5 +1,7 @@
 # ICARUS — tricks as reels (S4)
 
+> **Design direction changed (2026-10-26).** `ICARUS_DESIGN.md` §4 and §10 now describe the next design: a five-slot trick routine of abilities placed on the flight, style score paid as pearls, weapon evolutions through trick tags, and death at 0 HP. This build (S4) still implements the previous slot-machine design, kept as Appendix A of the design doc.
+
 Open **ICARUS-demo.html** in a browser. This build implements the scoring and run design in `ICARUS_DESIGN.md` §4 and §10 (revised 2026-10-25).
 
 Hold **W / Up** underwater to carve, then release to launch. **Space** boosts. **W A S D / arrows** steer in the air; weapons fire automatically. **Esc** pauses.
