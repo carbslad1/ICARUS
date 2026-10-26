@@ -112,7 +112,7 @@ One cycle is a dive followed by a flight. These are medians from 291 bot flights
 - **Source:** the S4 demo, run headless by `qa/bot.cjs` with positions logged 10 times per second. There were four styles (low, mid, high, and mid turning round at launch) with one seed (7) each, and a simple shop policy (harpoon start; buys weapons plus Armour, Max HP, Regen, Damage % and Shot). Screenshots come from the same bot driving the real renderer.
 - **The bot is not a player.** It decides about every 0.27 s, keeps about 8 m from the nearest enemy, dodges three in four of the shots it notices, collects orbs when safe and never performs tricks.
 - **No data past wave 11 and none on bosses:** all bot runs ended on the quota at waves 7–11.
-- **The report** (filmstrips, arena heat maps and flight maps) was sent in the 2026-10-26 session. It isn't in the repo; regenerate it from the flight logs if needed.
+- **The report** (filmstrips, arena heat maps and flight maps) is `docs/flow-study/icarus-flow-study.html`. Its scripts and regeneration steps are in `docs/flow-study/`.
 
 ## 10. Tools for seeing the game
 
