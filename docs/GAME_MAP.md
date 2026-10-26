@@ -1,0 +1,160 @@
+# ICARUS game map: the demo as it is on 2026-10-26
+
+This is the shared understanding of the dolphin game (ICARUS) as of **2026-10-26**: what the playable demo does, how a flight actually unfolds (measured, not assumed), where the design is heading, and the rules the designer has set. Read it before discussing the demo, its design or its balance.
+
+- **Snapshot:** branch `design/scoring-revision-2026-10`, demo build at commit `5bdcf36` (the S4 build plus a flight-log export).
+- **Trust order:** the code beats this file; this file beats memory. Each fact below says where it comes from. If something here disagrees with the code, the code is right and this file is out of date.
+- **What's not verified:** human feel, device performance and anything past wave 11 in play (see §9).
+
+## 1. Two codebases in one repo
+
+| Path | What it is | Status |
+|---|---|---|
+| `src/`, `tests/`, `AGENTS.md` | The TypeScript game built in phases (deterministic `sim/`, fixed 1/120 s step). `AGENTS.md` holds its invariants and phase gates. | Phase 2 (the frame) implemented; its human playtest is pending. |
+| `source/` → `ICARUS-demo.html` | The playable scoring/shop **demo**: a minified v3 engine (`source/carve-reference.html`) with the demo's scripts injected by `node source/build.cjs`. | Build S4. Everything in §2–§8 describes this demo. |
+| `ICARUS_DESIGN.md` | The design doc. §4 and §10 (revised 2026-10-26) describe the **target** design; Appendix A describes S4, which the demo implements. | Target design not built yet. |
+| `qa/` | Headless and browser checks for the demo (`qa/load.cjs` runs the built HTML in a Node vm; `qa/bot.cjs` is the test bot). | All suites pass on S4 (see `README.md`). |
+
+Demo source files: `five-score.js` (scoring, charms), `five-combat.js` (combat items), `demo.js` (rules, shop, waves), `flightlog.js` (recorder), `score-cues.js`, `scoreboard.js`, `onboarding.js`, `shop.js`, plus CSS.
+
+## 2. Controls (demo)
+
+- **Underwater:** hold **W / Up** to carve, release to launch. **Space** boosts.
+- **In the air:** **W A S D / arrows** move the dolphin inside the arena. **Weapons fire automatically**; the player never aims or times shots.
+- **Esc** pauses. The pause menu and the end-of-run screen have **SAVE FLIGHT LOG** (§10).
+
+## 3. The loop and its real timings
+
+One cycle is a dive followed by a flight. These are medians from 291 bot flights (§9 has the limits).
+
+| Launch | Waves | Underwater | In the air | Peak height |
+|---|---|---|---|---|
+| Low hop (~30°) | 1–3 | 1.15 s | 2.3 s | 19 m |
+| Low hop | 7+ | 0.97 s | 4.7 s | 51 m |
+| Mid (~55°) | 1–3 | 1.7 s | 3.9 s | 38 m |
+| Mid | 7+ | 1.5 s | 6.8 s | 94 m |
+| High (~80°) | 1–3 | 2.7 s | 4.7 s | 49 m |
+| High | 7+ | 2.5 s | 8.1 s | 128 m |
+
+- **The water phase is about 1–3 seconds.** That's too short to read anything; the designer has said so explicitly.
+- **Launch speed is fixed per wave:** 30 m/s at wave 1, +5 m/s per wave (engine `Dd`; a locked designer rule).
+- **Threat tier comes from the launch angle only** (engine `YT`): tier = 1 + the number of thresholds 27°, 42°, 56° and 70° that the angle reaches. So below 27° is tier 1, and 70° or more is tier 5. Higher tiers mean harder enemies and better loot; this altitude-band risk/reward already exists.
+- **Release decides the flight.** Angle sets tier, height and air time together. After release the player only moves inside the arena that rides the arc.
+
+## 4. Space: the arena, the camera and where enemies are
+
+- **The arena** is 76 × 43.2 m (`arena.width`, `arena.height` in the engine settings) and travels along the ballistic arc. The dolphin's position is arena-local.
+- **The view** is 57 m wide (`frame.width`). The camera centres on the arena origin, not on local player movement (`AGENTS.md` invariant). A `frame.follow` setting of 0.28 exists, but its exact effect is unverified. Screenshots show the dolphin can reach the screen edge.
+- **Enemies spawn just outside the view's edge on a random side** (`demo.js` `spawn`, and the engine's `Obq`). Measured:
+  - 58% of enemy positions are horizontally off-screen; the median enemy sits 31 m from the arena centre.
+  - The median nearest enemy is 11–31 m away. Shot weapons reach 30 m, so most kills happen around the screen edge, and the centre of the screen is usually empty.
+- **The surface is the busiest place.** Enemies left over at water entry become **pursuers**: they wait at the surface and some follow underwater ("wet"). The first kill comes 0–0.7 s after breach. Between 3 and 10 pursuers gather at the landing point, and at waves 7+ up to 8 follow underwater.
+- **Kills are spread evenly over the flight.** The apex window (±10% of air time around the apex, so 20% of the time) gets 17% of kills; ascent gets 42% and descent 40%. No phase concentrates kills today.
+- **Hits are rare for a cautious player:** 59 hits in 291 bot flights, and 83% of flights had none. The bot keeps about 8 m away and dodges, so real players may differ.
+- **Kill mix:** chasers 56%, swarmers 24%, chargers 15%, turrets 4%. The roster also includes drifters, splitters (which split into two swarmers) and a boss (a large charger).
+
+## 5. Waves and the loss condition (S4 demo)
+
+- **Air clock:** 20 s at wave 1, +5 s per wave, capped at 60 s; wave 20 is 90 s (`clock`). It runs only in the air. When it runs out, enemies keep coming and the wave ends at the next water entry. There is no safe coast.
+- **The only way to lose is missing the wave's quota:** `quota = ceil(expectedChips(w) × 2.2 × 1.23^(w−1))`. Clearing wave 20 wins.
+- **Bosses:** on waves divisible by 10, once 30% of the clock's air time has passed. The demo's boss never despawns.
+- **0 HP busts the jump**, and does not end the run. The dolphin falls out of combat (`BUST.fall` 24), the jump banks nothing (half with Second wind), and you come back at 50% HP (`BUST.revive`).
+
+## 6. Scoring in S4: tricks as reels
+
+- **Every jump banks chips × mult at water entry.**
+  - Chips are kills plus bonus chips: multi-kill +1, apex kill +2, crit kill +1.
+  - Mult comes from tricks, combos and charms.
+- **Tricks are drawn reels** that play automatically in order across the flight. There are 3 draws by default; buying raises this to 6, and Loaded reels makes it 7. The five tricks are Front flip, Backflip, Corkscrew, Star pose and Spout.
+- **A hit bails the trick in progress**, shown as a red ✕; it pays nothing. Landed tricks keep their value.
+- **37 charms**, each at most two lines with at most one condition. They resolve left to right at the bank. No charm changes weapon damage.
+- **Pearls** are the currency: wave pay plus overscore pearls, which are capped at the base pay.
+
+## 7. Build layers (S4 demo)
+
+- **Weapons:** 9 automatic weapons in 3 types × 3 cadences, with 6 slots. Merging equal copies raises the tier, up to T4.
+
+  | Type | Rapid | Steady | Heavy |
+  |---|---|---|---|
+  | Close (6 m) | Fin | Sonic | Arc |
+  | Shot (30 m) | Minigun | Harpoon | Laser |
+  | Blast (18 m) | Flak | Rocket | Depth charge |
+
+- **Stats:**
+  - Combat: Close, Shot, Blast, Damage %, Attack speed, Crit, Reach, Area.
+  - Defence: Max HP, Armour, Regen.
+  - Flight: Lift, Hang, Air steering. Drive exists but is kept out of gear offers; whether level-up picks can offer it is unverified.
+  - Economy: Pickup, Luck, XP gain.
+- **XP:** kills drop orbs that you steer through to collect. Each level gives a free pick of three stats before the shop. **Levels give no free Max HP** (designer decision, 2026-10-25).
+- **Shop:** Weapons, Gear (stat and combat items), Charms and Routine (trick values, combo levels, draw odds, extra draws, techniques).
+  - Run rules (charm slot, reroll discount, extra shelf) are rare offers.
+  - Rarity is coloured and sets how often an offer appears.
+  - Lock, rerolls, selling at 50% and weapon replacement all exist.
+  - The trick scoreboard is always visible.
+
+## 8. Where the design is heading (not built)
+
+`ICARUS_DESIGN.md` §4 and §10 (2026-10-26) replace the slot-machine reels with a **five-slot trick routine**:
+
+- **The slots** are breach, ascent, apex, descent and entry.
+  - Tricks are abilities with visible attack shapes, and any trick can go in any slot.
+  - A routine holds one copy of each trick; extra copies level a trick up.
+  - All five slots are open from the start, but the run begins with one trick.
+- **Style score:** kills × the summed level of connected tricks, ×2 for a flight with no hits. It is paid as pearls on a diminishing curve. Score is an economy tool and never decides survival.
+- **0 HP ends the run;** there is no quota and no bust.
+- **Tags and weapon evolutions** connect tricks to weapons, and charms fold into trick upgrades and gear.
+- **First prototype:** Corkscrew, Star pose and Spout; breach, apex and entry slots only; one tag (Soaked); one evolution.
+
+**The flow study bears on this (§4).** Kills don't concentrate at any phase, and the action sits at the screen edges. A moment trick only connects if enemies are near the dolphin at that moment. Hits are rare for careful play, so "a hit cancels the trick" may rarely bite.
+
+## 9. How the flow numbers were measured, and their limits
+
+- **Source:** the S4 demo, run headless by `qa/bot.cjs` with positions logged 10 times per second. There were four styles (low, mid, high, and mid turning round at launch) with one seed (7) each, and a simple shop policy (harpoon start; buys weapons plus Armour, Max HP, Regen, Damage % and Shot). Screenshots come from the same bot driving the real renderer.
+- **The bot is not a player.** It decides about every 0.27 s, keeps about 8 m from the nearest enemy, dodges three in four of the shots it notices, collects orbs when safe and never performs tricks.
+- **No data past wave 11 and none on bosses:** all bot runs ended on the quota at waves 7–11.
+- **The report** (filmstrips, arena heat maps and flight maps) was sent in the 2026-10-26 session. It isn't in the repo; regenerate it from the flight logs if needed.
+
+## 10. Tools for seeing the game
+
+- **SAVE FLIGHT LOG** (`source/flightlog.js`) downloads JSON with:
+  - each flight's launch, dive samples (20 Hz) and air samples (10 Hz): inputs `[x, y, boost, w, turn]`, dolphin world and arena-local position, arena origin, enemies within 60 m (`[kind, local x, local y, hp]`) and pursuers
+  - kills, hits, the bank, wave results and shop actions
+
+  It only reads state. `icarusDemo.flightLog()` returns the same JSON. **Real player logs are the best next evidence;** ask the designer for them.
+- **Headless runs:** `qa/load.cjs` and `qa/bot.cjs`, with `flyer(controls, style, seed, {keep})`; the styles are low, mid and high × keep or turn.
+- **Browser:** use Playwright with `--enable-webgl --use-gl=angle --use-angle=swiftshader`. Rendering in the cloud container is software-only and slow; the 15-second render stress check fails there for that reason.
+- **Test-run side effect:** some QA scripts rewrite `reviews/*.json`. Restore those files with git instead of committing the test noise.
+
+## 11. Designer rules and corrections (keep these)
+
+**Locked rules:**
+- Launch speed is 30 m/s, +5 per wave.
+- Guns auto-fire.
+- There is no entry, landing or entry-angle grade; that feature was removed.
+- Charms must be readable in at most two lines.
+- No "this jump needs X" readout.
+- Airtime gating is rejected.
+- There is no safe coast after the clock.
+- XP orbs stay, without free Max HP. The heat cue is removed.
+
+**Corrections the designer made; don't repeat these mistakes:**
+- The water phase is about 1 s, so nothing can be read underwater, and nothing can be read in the air either while dodging.
+- The player can't time kills.
+- Altitude risk/reward already exists through threat tiers.
+
+**Priorities:**
+- Novelty and fundamentals, as with Balatro and Vampire Survivors.
+- The game should appeal to a Northernlion-style audience.
+- Tricks are the Tony Hawk layer. Removing them would turn the game into a Balatro clone.
+
+**Working rules:**
+- Be rigorous: ask instead of assuming.
+- Push only to the authorised branch, and open a PR only when asked.
+- The ethical constraints in design doc §4.13 are binding.
+
+## 12. Open questions waiting for the designer
+
+1. How the designer actually plays: low hops, high launches or a mix; turning round at launch; where the dolphin sits on screen; how often and where they get hit; whether enemies feel edge-borne. A flight log would answer most of this.
+2. The weapon–trick interaction: tricks reshaping weapon fire, and evolutions earned by kills during a trick.
+3. Stat questions: a projectile cap, the scope of attack speed, and how evolved weapons behave.
+4. The design doc §4.14 list: the full trick list, how stretch slots fire, the payout curve, evolutions, how charms fold in, and how tricks aim.

@@ -1,5 +1,12 @@
 # ICARUS working instructions
 
+## Game map
+
+Before discussing the demo, its design or its balance, read `docs/GAME_MAP.md`. It is the dated shared
+understanding of the playable demo (2026-10-26): controls, measured flight timings, arena and enemy placement,
+S4 scoring, build layers, where the design is heading, and the designer's locked rules and corrections.
+The code beats the map; update the map when the demo changes.
+
 ## Run and verify
 
 - Node 22 LTS; install with `npm ci` and `npx playwright install chromium`.
