@@ -6,6 +6,7 @@ Before discussing the demo, its design or its balance, read `docs/GAME_MAP.md`. 
 understanding of the playable demo (2026-10-26): controls, measured flight timings, arena and enemy placement,
 S4 scoring, build layers, where the design is heading, and the designer's locked rules and corrections.
 The code beats the map; update the map when the demo changes.
+For where the work stands, the decisions taken and how to continue it, read `docs/SESSION_HANDOFF.md`.
 
 ## Run and verify
 
