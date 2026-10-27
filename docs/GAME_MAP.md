@@ -129,10 +129,11 @@ One cycle is a dive followed by a flight. These are medians from 291 bot flights
 ## 10. Tools for seeing the game
 
 - **SAVE FLIGHT LOG** (`source/flightlog.js`) downloads JSON with:
-  - each flight's launch, dive samples (20 Hz) and air samples (10 Hz): inputs `[x, y, boost, w, turn]`, dolphin world and arena-local position, arena origin, enemies within 60 m (`[kind, local x, local y, hp]`) and pursuers
+  - each flight's launch, dive samples (20 Hz) and air samples (10 Hz): inputs `[x, y, boost, w, turn]`, dolphin world and arena-local position, arena origin, every air enemy (`[kind, local x, local y, hp]`; version 2 of the format, 2026-10-27) and pursuers
   - kills, hits, the bank, wave results and shop actions
 
-  It only reads state. `icarusDemo.flightLog()` returns the same JSON. **Real player logs are the best next evidence;** ask the designer for them.
+  It only reads state. `icarusDemo.flightLog()` returns the same JSON.
+- **`node qa/flightlog-metrics.cjs logs/*.json`** prints the plan's gate metrics (design doc §4.20). `qa/flightlog-bot.cjs` checks it against the bot baseline, which is saved in `docs/flow-study/bot-baseline-metrics.json`. **Real player logs are the best next evidence;** ask the designer for them.
 - **Headless runs:** `qa/load.cjs` and `qa/bot.cjs`, with `flyer(controls, style, seed, {keep})`; the styles are low, mid and high × keep or turn.
 - **Browser:** use Playwright with `--enable-webgl --use-gl=angle --use-angle=swiftshader`. Rendering in the cloud container is software-only and slow; the 15-second render stress check fails there for that reason.
 - **Test-run side effect:** some QA scripts rewrite `reviews/*.json`. Restore those files with git instead of committing the test noise.

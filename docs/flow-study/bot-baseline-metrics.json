@@ -1,0 +1,237 @@
+{
+ "files": 4,
+ "complete": true,
+ "ends": [
+  {
+   "mode": "dead",
+   "wave": 7,
+   "reason": "quota",
+   "kills": 816
+  },
+  {
+   "mode": "dead",
+   "wave": 11,
+   "reason": "quota",
+   "kills": 1965
+  },
+  {
+   "mode": "dead",
+   "wave": 8,
+   "reason": "quota",
+   "kills": 927
+  },
+  {
+   "mode": "dead",
+   "wave": 7,
+   "reason": "quota",
+   "kills": 825
+  }
+ ],
+ "all": {
+  "flights": 291,
+  "waterS": 1.5,
+  "airS": 4.6,
+  "peakM": 48,
+  "launchAngle": {
+   "median": 44,
+   "iqr": 34.4
+  },
+  "killsPerFlight": 12,
+  "killShare": {
+   "ascent": 42.2,
+   "apex": 17.5,
+   "descent": 40.3
+  },
+  "timeShare": {
+   "ascent": 40.5,
+   "apex": 20.3,
+   "descent": 39.3
+  },
+  "firstKillS": 0.1,
+  "nearestEnemyM": 23,
+  "enemyWithinReach": 62.8,
+  "offScreenEnemies": 58.2,
+  "enemiesOnScreen": 1,
+  "hitsPerFlight": 0.2,
+  "cleanFlights": 82.8,
+  "tricksLanded": 95.7
+ },
+ "byLaunch": {
+  "high (65°+)": {
+   "flights": 75,
+   "waterS": 2.4,
+   "airS": 6.1,
+   "peakM": 76.2,
+   "launchAngle": {
+    "median": 81.5,
+    "iqr": 7.8
+   },
+   "killsPerFlight": 17,
+   "killShare": {
+    "ascent": 39,
+    "apex": 17.9,
+    "descent": 43
+   },
+   "timeShare": {
+    "ascent": 40.5,
+    "apex": 20.3,
+    "descent": 39.3
+   },
+   "firstKillS": 0.2,
+   "nearestEnemyM": 22.3,
+   "enemyWithinReach": 63.8,
+   "offScreenEnemies": 54.1,
+   "enemiesOnScreen": 2,
+   "hitsPerFlight": 0.12,
+   "cleanFlights": 88,
+   "tricksLanded": 96
+  },
+  "low (<40°)": {
+   "flights": 142,
+   "waterS": 1,
+   "airS": 3.7,
+   "peakM": 35,
+   "launchAngle": {
+    "median": 30.7,
+    "iqr": 6.2
+   },
+   "killsPerFlight": 10,
+   "killShare": {
+    "ascent": 45.5,
+    "apex": 15.8,
+    "descent": 38.8
+   },
+   "timeShare": {
+    "ascent": 40.5,
+    "apex": 20.4,
+    "descent": 39
+   },
+   "firstKillS": 0.1,
+   "nearestEnemyM": 20.9,
+   "enemyWithinReach": 68.1,
+   "offScreenEnemies": 60.8,
+   "enemiesOnScreen": 1,
+   "hitsPerFlight": 0.21,
+   "cleanFlights": 82.4,
+   "tricksLanded": 96.3
+  },
+  "mid (40–65°)": {
+   "flights": 74,
+   "waterS": 1.6,
+   "airS": 5.2,
+   "peakM": 57.8,
+   "launchAngle": {
+    "median": 55.3,
+    "iqr": 7.3
+   },
+   "killsPerFlight": 13,
+   "killShare": {
+    "ascent": 40.6,
+    "apex": 20,
+    "descent": 39.4
+   },
+   "timeShare": {
+    "ascent": 40.3,
+    "apex": 20.1,
+    "descent": 39.6
+   },
+   "firstKillS": 0.1,
+   "nearestEnemyM": 27.4,
+   "enemyWithinReach": 54.4,
+   "offScreenEnemies": 58.5,
+   "enemiesOnScreen": 1,
+   "hitsPerFlight": 0.27,
+   "cleanFlights": 78.4,
+   "tricksLanded": 93.8
+  }
+ },
+ "byWave": {
+  "waves 1–3": {
+   "flights": 93,
+   "waterS": 1.7,
+   "airS": 3.3,
+   "peakM": 29.4,
+   "launchAngle": {
+    "median": 50.8,
+    "iqr": 44
+   },
+   "killsPerFlight": 5,
+   "killShare": {
+    "ascent": 38.7,
+    "apex": 19.1,
+    "descent": 42.2
+   },
+   "timeShare": {
+    "ascent": 40.8,
+    "apex": 20.3,
+    "descent": 38.9
+   },
+   "firstKillS": 0.6,
+   "nearestEnemyM": 18.1,
+   "enemyWithinReach": 68.5,
+   "offScreenEnemies": 54.9,
+   "enemiesOnScreen": 1,
+   "hitsPerFlight": 0.19,
+   "cleanFlights": 84.9,
+   "tricksLanded": 95.7
+  },
+  "waves 4–6": {
+   "flights": 105,
+   "waterS": 1.6,
+   "airS": 5.3,
+   "peakM": 57.7,
+   "launchAngle": {
+    "median": 54.9,
+    "iqr": 41.6
+   },
+   "killsPerFlight": 14,
+   "killShare": {
+    "ascent": 40.4,
+    "apex": 18.1,
+    "descent": 41.6
+   },
+   "timeShare": {
+    "ascent": 40.4,
+    "apex": 20.3,
+    "descent": 39.3
+   },
+   "firstKillS": 0.1,
+   "nearestEnemyM": 25.5,
+   "enemyWithinReach": 58.1,
+   "offScreenEnemies": 59.9,
+   "enemiesOnScreen": 1,
+   "hitsPerFlight": 0.11,
+   "cleanFlights": 89.5,
+   "tricksLanded": 97.4
+  },
+  "waves 7+": {
+   "flights": 93,
+   "waterS": 1,
+   "airS": 5.1,
+   "peakM": 60.1,
+   "launchAngle": {
+    "median": 33.5,
+    "iqr": 23.5
+   },
+   "killsPerFlight": 26,
+   "killShare": {
+    "ascent": 44.4,
+    "apex": 16.7,
+    "descent": 38.9
+   },
+   "timeShare": {
+    "ascent": 40.3,
+    "apex": 20.2,
+    "descent": 39.4
+   },
+   "firstKillS": 0,
+   "nearestEnemyM": 23.3,
+   "enemyWithinReach": 64,
+   "offScreenEnemies": 57.9,
+   "enemiesOnScreen": 3,
+   "hitsPerFlight": 0.31,
+   "cleanFlights": 73.1,
+   "tricksLanded": 94.2
+  }
+ }
+}

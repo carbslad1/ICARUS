@@ -4963,7 +4963,7 @@ const DemoFx={SHK:K/1920,CHARM:{'+chips':0x5ff2ff,'+mult':0xb98cff,'×mult':0xff
 // Flight log: records what happens in each flight (positions, enemies, input, kills, hits) and the shop actions
 // taken, so a real run can be exported as JSON and studied. Observation only: it reads state and never changes it.
 var FlightLog = (() => {
-  const VERSION = 1, AIR_EVERY = 12, WATER_EVERY = 6, MAX_SAMPLES = 40000, NEAR = 60;
+  const VERSION = 2, AIR_EVERY = 12, WATER_EVERY = 6, MAX_SAMPLES = 40000;
   const r1 = v => Math.round(v * 10) / 10, deg = a => r1(a * 180 / Math.PI);
   let log = null, run = null, flight = null, dive = [], tick = 0, samples = 0, prev = null;
   function reset(r) {
@@ -4979,7 +4979,7 @@ var FlightLog = (() => {
     if (m.kind === 'air') {
       s.o = [r1(m.origin.x), r1(m.origin.y)]; s.l = [r1(m.local.x), r1(m.local.y)];
       s.ph = r.hand ? DEMO.phase(r) : null;
-      if (samples < MAX_SAMPLES) s.en = r.enemies.filter(e => Math.hypot(e.pos.x - m.local.x, e.pos.y - m.local.y) <= NEAR).map(e => [e.kind, r1(e.pos.x), r1(e.pos.y), Math.round(e.hp)]);
+      if (samples < MAX_SAMPLES) s.en = r.enemies.map(e => [e.kind, r1(e.pos.x), r1(e.pos.y), Math.round(e.hp)]);
     } else s.v = [r1(m.velocity.x), r1(m.velocity.y)];
     if (samples < MAX_SAMPLES) s.pu = (r.pursuers || []).map(q => [r1(q.x), r1(q.y), q.wet ? 1 : 0]);
     samples++; return s;
@@ -5003,14 +5003,15 @@ var FlightLog = (() => {
     if (r !== run) reset(r);
     const m = r.medium, d = r.demo, hits = d.waveTelemetry?.hits || 0;
     if (r.wave !== prev.wave) { prev.wave = r.wave; prev.hits = 0; prev.history = 0 }
-    if (prev.kind === 'air' && m.kind === 'water') { closeFlight(r); prev.waterStart = r.time }
     if (prev.kind === 'water' && m.kind === 'air') openFlight(r);
-    if (prev.waterStart == null && m.kind === 'water') prev.waterStart = r.time;
+    // count this tick's kills and hits before a splashdown closes the flight, so the entry tick's belong to it
     if (flight) {
       const p = he(r);
       for (let k = prev.kills; k < r.kills; k++) flight.kills.push({ t: r1(r.time - flight.t0), x: r1(p.x), y: r1(p.y), ph: r.hand ? DEMO.phase(r) : null });
-      if (hits > prev.hits) flight.hits.push({ t: r1(r.time - flight.t0), hp: Math.round(r.hp), lost: Math.round(prev.hp - r.hp), ph: r.hand ? DEMO.phase(r) : null });
+      for (let k = prev.hits; k < hits; k++) flight.hits.push({ t: r1(r.time - flight.t0), hp: Math.round(r.hp), lost: Math.round(prev.hp - r.hp), ph: r.hand ? DEMO.phase(r) : null });
     }
+    if (prev.kind === 'air' && m.kind === 'water') { closeFlight(r); prev.waterStart = r.time }
+    if (prev.waterStart == null && m.kind === 'water') prev.waterStart = r.time;
     prev.kills = r.kills; prev.hits = hits; prev.hp = r.hp; prev.history = d.history.length; prev.kind = m.kind;
     tick++;
     if (r.mode === 'playing' && tick % (m.kind === 'air' ? AIR_EVERY : WATER_EVERY) === 0) {

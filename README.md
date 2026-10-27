@@ -19,7 +19,7 @@ Hold **W / Up** underwater to carve, then release to launch. **Space** boosts. *
 
 ## Flight log
 
-**SAVE FLIGHT LOG** in the pause menu (Esc) and on the end-of-run screen downloads a JSON record of the run so far: each flight's launch, dive and air samples (10 per second in the air, 20 underwater) with inputs, positions, nearby enemies and pursuers, plus kills, hits, banks, wave results and shop actions. It only observes and does not change the game (`source/flightlog.js`).
+**SAVE FLIGHT LOG** in the pause menu (Esc) and on the end-of-run screen downloads a JSON record of the run so far: each flight's launch, dive and air samples (10 per second in the air, 20 underwater) with inputs, positions, every enemy and pursuer, plus kills, hits, banks, wave results and shop actions. It only observes and does not change the game (`source/flightlog.js`).
 
 ## Source and checks
 
@@ -33,6 +33,8 @@ Headless suites (all pass on this build):
 | `qa/five-combat.cjs` | Combat items |
 | `qa/scoreboard.cjs` | Score cues match the bank, including bails and busts |
 | `qa/shop.cjs`, `qa/shop-ui.cjs`, `qa/weapon-shop.cjs` | Shop transactions, offer rules, rarity, previews |
+| `qa/flightlog-metrics.cjs` | Reads saved flight logs and prints the playtest metrics (kills and time by phase, nearest enemy, off-screen share, hits, launch spread, tricks landed) |
+| `qa/flightlog-bot.cjs` | Plays the flow-study bot runs, saves their flight logs and checks the metrics reproduce the study's baseline |
 | `qa/scoring-mechanics.cjs`, `qa/combat-integration.cjs`, `qa/score-stress.cjs` | Overtime, bosses, busts freezing combat, item hooks, CPU stress |
 
 Browser suites need Playwright: `qa/scoreboard-browser.cjs` (4 of 4 pass) and `qa/product-review.cjs --browser --round=S4` (8 of 8 runtime, 10 of 11 browser). The failing browser check is the 15-second rendered stress test, which reaches about 4.5 s of simulated air in this container's software-GL Chromium. The previous build measures the same once its renderer crash is fixed, so this is the environment, not a regression.

@@ -21,4 +21,6 @@ python3 $S/report.py                   # -> icarus-flow-study.html
 
 On 2026-10-26, rerunning `telemetry.cjs` on the current build reproduced the original flight data exactly, and `report.py` reproduced the committed report byte for byte from the same screenshots.
 
+`bot-baseline-metrics.json` is the same baseline measured from real flight logs by `qa/flightlog-metrics.cjs`; `qa/flightlog-bot.cjs` regenerates it and checks it against the study.
+
 For real play data, use **SAVE FLIGHT LOG** in the demo (pause menu or end-of-run screen); see `source/flightlog.js`.
