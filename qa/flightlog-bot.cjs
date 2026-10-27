@@ -13,10 +13,14 @@ const BASELINE = { flights: 291, hits: 59, kills: 4533, killsByPhase: { ascent: 
 const STYLES = ['low-keep', 'mid-keep', 'high-keep', 'mid-turn'], SEED = 7, MAX_WAVE = 16;
 // --space plays with step 1 on and reports its metrics instead of checking the baseline
 const SPACE = process.argv.includes('--space') ? 1 : 0;
+// --danger also plays with step 2 on (implies --space); --lead=x and --mines=n override its settings
+const DANGER = process.argv.includes('--danger') ? 1 : 0, opt = k => { const a = process.argv.find(a => a.startsWith('--' + k + '=')); return a ? +a.split('=')[1] : undefined };
+const TUNE = { space: SPACE || DANGER, danger: DANGER, ...(opt('lead') != null && { lead: opt('lead') }), ...(opt('mines') != null && { mines: opt('mines') }) };
 
+const DCOUNT = [];
 function run(style) {
   // the study ran before step 1's space changes, so they are switched off to reproduce it
-  const H = load(file, new Map([['icarus.scoreshow.tune', JSON.stringify({ space: SPACE })]]), { bake: true, modern: true }), D = H.DEMO, r = H.Hd(SEED, 'harpoon'), fly = flyer(H, style, SEED, { keep: 8 });
+  const H = load(file, new Map([['icarus.scoreshow.tune', JSON.stringify(TUNE)]]), { bake: true, modern: true }), D = H.DEMO, r = H.Hd(SEED, 'harpoon'), fly = flyer(H, style, SEED, { keep: 8 });
   const pref = ['Armour', 'Max HP', 'Regen', 'Damage %', 'Attack speed', 'Shot', 'Crit', 'Area', 'Lift', 'Hang', 'Air steering', 'Pickup', 'Luck', 'XP gain'];
   function shop() {
     const d = r.demo;
@@ -39,6 +43,7 @@ function run(style) {
     const intent = fly(r); if (r.medium.kind === 'air' && r.budget <= 0) intent.y = -1;
     H.sw(r, intent); ticks++;
   }
+  DCOUNT.push(r.dangerCount || { mines: 0, mineHits: 0 });
   return JSON.parse(H.FlightLog.exportJSON());
 }
 
@@ -50,7 +55,7 @@ const got = {
   killsByPhase: Object.fromEntries(['ascent', 'apex', 'descent'].map(p => [p, flights.reduce((a, f) => a + f.kills.filter(k => k.ph === p).length, 0)])),
   offScreen: r.all.offScreenEnemies
 };
-if (SPACE) { console.log(JSON.stringify({ space: 1, all: r.all, byLaunch: r.byLaunch, out }, null, 1)); process.exit(0) }
+if (SPACE || DANGER) { console.log(JSON.stringify({ ...TUNE, danger: DCOUNT.reduce((a, c) => ({ mines: a.mines + c.mines, mineHits: a.mineHits + c.mineHits }), { mines: 0, mineHits: 0 }), all: r.all, byLaunch: r.byLaunch, out }, null, 1)); process.exit(0) }
 // Event counts must match exactly; the off-screen share samples on a different tick grid, so it gets 1 point.
 const checks = [
   ['flights', got.flights === BASELINE.flights], ['hits', got.hits === BASELINE.hits], ['kills', got.kills === BASELINE.kills],

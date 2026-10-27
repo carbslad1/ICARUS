@@ -69,7 +69,7 @@ node qa/flightlog-metrics.cjs run.json     # metrics for any saved flight log (s
 |---|---|
 | 0: decide and baseline | **Done.** The demo is the prototype codebase. `qa/flightlog-metrics.cjs` is built; the bot baseline is checked (`docs/flow-study/bot-baseline-metrics.json`); the human baseline is 1 run, 24 flights (`docs/flow-study/human-baseline-2026-10-27.json`) |
 | 1: space | **Built, then revised after playtest 1. Playtest 2 pending** (needs the designer's flight log) |
-| 2: danger | Next: shots that lead the arc, hazards on the arc |
+| 2: danger | **Built locally 2026-10-27, playtest pending** (`source/danger.js`; see §4.20 row 2). Settings › Score: on/off, lead 0–1 (0.5), mines per flight 0–4 (3). Bot: `node qa/flightlog-bot.cjs out --danger [--lead=x] [--mines=n]` |
 | 3–15 | Not started |
 
 ### Step 1 as it is now
@@ -144,6 +144,10 @@ The human baseline, with step 1 off, was 0 hits in 24 flights and a median launc
 - Markers near the top of the view can sit under the air-remaining display.
 - In playtest 1 the designer ended wave 4 with two Harpoon T1s and two Minigun T1s unmerged. Merging may not be discoverable.
 - In headless Chromium at 1280×800, the title footer intercepted clicks on BEGIN RUN. This has not been confirmed for real users.
+
+## 8b. Reproducibility on the designer's Mac (2026-10-27)
+
+- `node qa/flightlog-bot.cjs` (step 1 off) prints 7 FAIL on the committed branch on the designer's M1 Mac with Node 22.16: 253 flights against the baseline's 291. The cause is not found; compare runs on one machine.
 
 ## 9. Working conventions used in this session
 
