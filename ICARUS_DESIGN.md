@@ -573,6 +573,21 @@ These are grounded in the flow study:
 - **The landing pool:** pursuers gather visibly at the predicted landing point. Landing in it is a choice.
 - **Aimed threats:** enemy shots lead your predicted arc.
 
+**Spawn profile and items:**
+- Spawning is driven by a per-run profile, so later items can change how and where enemies appear (designer request, 2026-10-27).
+- The profile holds:
+  - marker time
+  - distance ahead and sideways scatter
+  - minimum distance from the dolphin
+  - the pool window, size and height
+  - flocking weights
+- Items that change it should serve positional play. Examples to consider:
+  - longer markers
+  - spawns leaning toward a placed lure
+  - a larger or earlier pool
+  - flocks that keep tighter formation
+- **[OPEN]** Which spawn-altering items to build.
+
 **Clutch moments:**
 
 | Event | How it works |
@@ -667,7 +682,7 @@ These are mixed trick, weapon and item examples, shown as anchor · shape → ve
 | # | Step | Build | Automated check | Playtest asks | Gate |
 |---|---|---|---|---|---|
 | 0 | Decide and baseline | Choose the prototype codebase **[OPEN]**. Add a flight-log analyser that prints the metrics above. | The analyser reproduces the bot baseline | Play 3 runs of the current demo and save the logs | Baseline recorded from human play |
-| 1 | Space | Spawn inside the view, ahead on your arc, with a short telegraph; flocking chasers; the visible landing pool | Enemies' median distance from the screen centre below 20 m; nearest enemy below 15 m (bot) | Does the action happen where you are looking? | Both metrics met; you confirm |
+| 1 | Space | Spawn inside the view, ahead on your arc, with a short telegraph; flocking chasers; the visible landing pool. **Built 2026-10-27** (`source/space.js`, toggle in Settings › Score) | Enemies' median distance from the screen centre below 20 m; nearest enemy below 15 m (bot). **Bot: 10.5 m and 11.7 m, passed** | Does the action happen where you are looking? | Both metrics met; you confirm. **Playtest pending** |
 | 2 | Danger | Aimed shots that lead the arc; arc hazards | Bot hits per flight 0.6–1.2 | Do hits feel fair and avoidable? | You can say why each hit happened |
 | 3 | Flight verbs | Stomp-bounce, dive, dash refilled by stomps | Stomps per flight above 0; launch-angle spread wider than baseline | Do you steer to stomp and choose landings? | You change your route on purpose |
 | 4 | Rules reset | Remove the quota, reels and charms; 0 HP ends the run; style score with the clean streak and the pearl curve | Score suites rewritten and passing | Does the streak create tension on later flights? | You protect the streak by changing how you fly |

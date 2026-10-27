@@ -17,6 +17,15 @@ Hold **W / Up** underwater to carve, then release to launch. **Space** boosts. *
 - **Shop:** Weapons, Gear (stat and combat items), Charms and Routine (trick values, combo levels, draw odds, extra draws, Lucky/Gold/Echo techniques). Run rules (charm slot, reroll discount, extra shelf) appear as rare shelf offers. Rarity sets how often an offer appears and is shown in colour. The trick scoreboard with real combo odds is always visible in the shop.
 - **37 charms**, each readable in two lines with at most one condition: +chips, +mult, ×mult, pearls and rule changes (wildcard, payline doubling, Second wind, Safety net, Loaded reels). They resolve left to right at the bank. No charm changes weapon damage.
 
+## Step 1: space (2026-10-27)
+
+- **Spawns:** enemies now appear behind a red marker inside the view, ahead on your path.
+- **Flocking:** chasers flock together and follow your recent track.
+- **The landing pool:** in the last 3 s of a descent, new enemies hold above the predicted landing point, which is marked on the water. Land in it or steer beside it.
+- **Settings › Score** switches this off to compare with the old edge spawns.
+
+The code is in `source/space.js`; the design is in `ICARUS_DESIGN.md` §4.18 and §4.20.
+
 ## Flight log
 
 **SAVE FLIGHT LOG** in the pause menu (Esc) and on the end-of-run screen downloads a JSON record of the run so far: each flight's launch, dive and air samples (10 per second in the air, 20 underwater) with inputs, positions, every enemy and pursuer, plus kills, hits, banks, wave results and shop actions. It only observes and does not change the game (`source/flightlog.js`).

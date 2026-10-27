@@ -3,7 +3,15 @@
 This is the shared understanding of the dolphin game (ICARUS) as of **2026-10-26**: what the playable demo does, how a flight actually unfolds (measured, not assumed), where the design is heading, and the rules the designer has set. Read it before discussing the demo, its design or its balance.
 
 - **Snapshot:** branch `design/scoring-revision-2026-10`, demo build at commit `5bdcf36` (the S4 build plus a flight-log export).
-- **Design direction (§8, §11, §12) updated 2026-10-27** with the positional design decisions. The demo itself is unchanged since 2026-10-26.
+- **Design direction (§8, §11, §12) updated 2026-10-27** with the positional design decisions.
+- **Step 1 built, 2026-10-27** (`source/space.js`, on by default; toggle in Settings › Score). Spawns now appear behind markers inside the view, ahead on your path; chasers flock; late-descent spawns hold above the predicted landing point (the pool). **§3–§4 describe the demo with step 1 off**, as measured by the flow study. With it on, the bot measures:
+  - nearest enemy 11.7 m
+  - enemies 10.5 m from the screen centre
+  - 2.5% off-screen
+  - 0.43 hits per flight
+  - 21.6% of kills at the apex
+
+  These are saved in `docs/flow-study/bot-step1-metrics.json`.
 - **Trust order:** the code beats this file; this file beats memory. Each fact below says where it comes from. If something here disagrees with the code, the code is right and this file is out of date.
 - **What's not verified:** human feel, device performance and anything past wave 11 in play (see §9).
 
@@ -16,7 +24,7 @@ This is the shared understanding of the dolphin game (ICARUS) as of **2026-10-26
 | `ICARUS_DESIGN.md` | The design doc. §4 and §10 (revised 2026-10-26) describe the **target** design; Appendix A describes S4, which the demo implements. | Target design not built yet. |
 | `qa/` | Headless and browser checks for the demo (`qa/load.cjs` runs the built HTML in a Node vm; `qa/bot.cjs` is the test bot). | All suites pass on S4 (see `README.md`). |
 
-Demo source files: `five-score.js` (scoring, charms), `five-combat.js` (combat items), `demo.js` (rules, shop, waves), `flightlog.js` (recorder), `score-cues.js`, `scoreboard.js`, `onboarding.js`, `shop.js`, plus CSS.
+Demo source files: `five-score.js` (scoring, charms), `five-combat.js` (combat items), `demo.js` (rules, shop, waves), `space.js` (step 1: marked spawns, flocking, landing pool), `flightlog.js` (recorder), `score-cues.js`, `scoreboard.js`, `onboarding.js`, `shop.js`, plus CSS.
 
 ## 2. Controls (demo)
 
@@ -133,7 +141,7 @@ One cycle is a dive followed by a flight. These are medians from 291 bot flights
   - kills, hits, the bank, wave results and shop actions
 
   It only reads state. `icarusDemo.flightLog()` returns the same JSON.
-- **`node qa/flightlog-metrics.cjs logs/*.json`** prints the plan's gate metrics (design doc §4.20). `qa/flightlog-bot.cjs` checks it against the bot baseline, which is saved in `docs/flow-study/bot-baseline-metrics.json`. **Real player logs are the best next evidence;** ask the designer for them.
+- **`node qa/flightlog-metrics.cjs logs/*.json`** prints the plan's gate metrics (design doc §4.20). `qa/flightlog-bot.cjs` checks it against the bot baseline (step 1 off), which is saved in `docs/flow-study/bot-baseline-metrics.json`. `--space` plays with step 1 on and prints its metrics instead. **Real player logs are the best next evidence;** ask the designer for them.
 - **Headless runs:** `qa/load.cjs` and `qa/bot.cjs`, with `flyer(controls, style, seed, {keep})`; the styles are low, mid and high × keep or turn.
 - **Browser:** use Playwright with `--enable-webgl --use-gl=angle --use-angle=swiftshader`. Rendering in the cloud container is software-only and slow; the 15-second render stress check fails there for that reason.
 - **Test-run side effect:** some QA scripts rewrite `reviews/*.json`. Restore those files with git instead of committing the test noise.

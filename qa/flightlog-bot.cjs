@@ -1,18 +1,22 @@
 // Bot flight logs: plays the four flow-study bot runs (docs/flow-study) headless with the same seed and shop policy,
 // saves each run's SAVE FLIGHT LOG output, and checks that qa/flightlog-metrics.cjs reproduces the study's baseline.
 // It checks the recorder (it only observes, so the same flights happen) and the metrics script together.
-//   node qa/flightlog-bot.cjs [outDir]
+//   node qa/flightlog-bot.cjs [outDir] [--space]
 const fs = require('fs'), path = require('path');
 const { load } = require('./load.cjs'), { flyer } = require('./bot.cjs'), { analyse } = require('./flightlog-metrics.cjs');
 const root = path.resolve(__dirname, '..'), file = path.join(root, 'ICARUS-demo.html');
-const out = path.resolve(process.argv[2] || path.join(require('os').tmpdir(), 'icarus-flightlog-bot'));
+const outArg = process.argv.slice(2).find(a => !a.startsWith('--'));
+const out = path.resolve(outArg || path.join(require('os').tmpdir(), 'icarus-flightlog-bot'));
 
 // The flow study's baseline on the S4 build (docs/flow-study, 2026-10-26)
 const BASELINE = { flights: 291, hits: 59, kills: 4533, killsByPhase: { ascent: 1915, apex: 793, descent: 1825 }, offScreen: 18.63 };
 const STYLES = ['low-keep', 'mid-keep', 'high-keep', 'mid-turn'], SEED = 7, MAX_WAVE = 16;
+// --space plays with step 1 on and reports its metrics instead of checking the baseline
+const SPACE = process.argv.includes('--space') ? 1 : 0;
 
 function run(style) {
-  const H = load(file, new Map(), { bake: true, modern: true }), D = H.DEMO, r = H.Hd(SEED, 'harpoon'), fly = flyer(H, style, SEED, { keep: 8 });
+  // the study ran before step 1's space changes, so they are switched off to reproduce it
+  const H = load(file, new Map([['icarus.scoreshow.tune', JSON.stringify({ space: SPACE })]]), { bake: true, modern: true }), D = H.DEMO, r = H.Hd(SEED, 'harpoon'), fly = flyer(H, style, SEED, { keep: 8 });
   const pref = ['Armour', 'Max HP', 'Regen', 'Damage %', 'Attack speed', 'Shot', 'Crit', 'Area', 'Lift', 'Hang', 'Air steering', 'Pickup', 'Luck', 'XP gain'];
   function shop() {
     const d = r.demo;
@@ -46,6 +50,7 @@ const got = {
   killsByPhase: Object.fromEntries(['ascent', 'apex', 'descent'].map(p => [p, flights.reduce((a, f) => a + f.kills.filter(k => k.ph === p).length, 0)])),
   offScreen: r.all.offScreenEnemies
 };
+if (SPACE) { console.log(JSON.stringify({ space: 1, all: r.all, byLaunch: r.byLaunch, out }, null, 1)); process.exit(0) }
 // Event counts must match exactly; the off-screen share samples on a different tick grid, so it gets 1 point.
 const checks = [
   ['flights', got.flights === BASELINE.flights], ['hits', got.hits === BASELINE.hits], ['kills', got.kills === BASELINE.kills],
