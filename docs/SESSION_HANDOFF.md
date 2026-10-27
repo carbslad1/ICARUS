@@ -29,8 +29,8 @@ git checkout design/scoring-revision-2026-10
 
 1. Open `ICARUS-demo.html` in a browser. It is self-contained and needs no server.
 2. Controls:
-   - Underwater: hold **Space** to carve (always anticlockwise) and release to launch; there is no boost.
-   - In the air: **W A S D / arrows** move; weapons fire on their own.
+   - Underwater: hold **Space** to carve and release to launch; there is no boost.
+   - In the air: **W A S D / arrows** move; hold **S** to dive; **Space** dashes; land on enemies to stomp them; weapons fire on their own.
    - **Esc** pauses.
 3. **SAVE FLIGHT LOG** is in the pause menu and on the end-of-run screen.
 4. **Settings › Score** has:
@@ -70,7 +70,8 @@ node qa/flightlog-metrics.cjs run.json     # metrics for any saved flight log (s
 | 0: decide and baseline | **Done.** The demo is the prototype codebase. `qa/flightlog-metrics.cjs` is built; the bot baseline is checked (`docs/flow-study/bot-baseline-metrics.json`); the human baseline is 1 run, 24 flights (`docs/flow-study/human-baseline-2026-10-27.json`) |
 | 1: space | **Built, then revised after playtest 1. Playtest 2 pending** (needs the designer's flight log) |
 | 2: danger | **Built locally 2026-10-27, playtest pending** (`source/danger.js`; see §4.20 row 2). Settings › Score: on/off, lead 0–1 (0.5), mines per flight 0–4 (3). Bot: `node qa/flightlog-bot.cjs out --danger [--lead=x] [--mines=n]` |
-| 3–15 | Not started |
+| 3: flight verbs | **Built locally 2026-10-27, playtest pending** (`source/verbs.js`; §4.20 row 3) |
+| 4–15 | Not started |
 
 ### Step 1 as it is now
 

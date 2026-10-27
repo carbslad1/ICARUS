@@ -2,7 +2,7 @@
 // - Space carves (DEMO.tune.carve): Space is the carve key in place of W / up, under water and in the air (held into the
 //   splash it carves from the first frame; held through the surface it adds the corkscrew). W / up only move you in
 //   the air. Boost is gone. The touch button and gamepad A carve too.
-// - Carving is always anticlockwise (DEMO.tune.ccw): v3 turns the nose up toward the side you face, so a dive to the
+// - Carving is always anticlockwise (DEMO.tune.ccw, off by default: the designer reverted it after trying it): v3 turns the nose up toward the side you face, so a dive to the
 //   left carved clockwise. Here the carve always faces right, so a dive to the left first swings down through
 //   straight down and then up to the right. Letting go past straight up no longer turns you round.
 // - The water camera (DEMO.tune.sky, metres): the camera sits this far above the dolphin, so more of the screen is sky
@@ -19,7 +19,7 @@ var Controls = (() => {
     const b = document.getElementById('touch-boost');
     if (b) { b.textContent = carve() ? 'CARVE' : 'BOOST'; b.setAttribute('aria-label', carve() ? 'Hold to carve' : 'Hold to boost underwater') }
   }
-  const hint = air => { sync(); return air ? 'W A S D / arrows: steer' : carve() ? 'Hold Space to carve · release to launch' : 'Hold W / up to carve · release to launch · space to boost' };
+  const hint = air => { sync(); return air ? 'W A S D / arrows: steer' + (DEMO.tune.verbs ? ' · hold S to dive · Space dashes' : '') : carve() ? 'Hold Space to carve · release to launch' : 'Hold W / up to carve · release to launch · space to boost' };
   return { carve, ccw, key, hint };
 })();
 // input: with Space carving, w comes from Space, the touch button (Gr) or gamepad A, and nothing boosts

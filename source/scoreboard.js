@@ -148,7 +148,7 @@ var ScoreHUD = (() => {
 of=function(){if(!S?.demo||!document.getElementById('wave-number'))return;DemoOf();ScoreHUD.update(S);
   DemoSet('phase-label',S.demo.overtime?'OVERTIME · LAND TO BANK':S.medium.kind==='air'?'AIRBORNE':'SAFE WATER');
   DemoSet('budget-label',S.demo.overtime?'OVERTIME':'AIR REMAINING');DemoSet('budget-value',S.demo.overtime?'+'+Math.max(0,S.demo.air-DEMO.clock(S.wave)).toFixed(1)+'s':Math.max(0,S.budget).toFixed(1)+'s');document.querySelector('.budget-block')?.classList.toggle('in-overtime',!!S.demo.overtime);DemoSet('budget-caption',`${Math.round(S.wscore).toLocaleString('en-US')} / ${S.quota.toLocaleString('en-US')} BANKED`);
-  DemoSet('control-hint',S.medium.kind==='air'?'W A S D / arrows: steer':'Hold W / up to carve · release to launch · space to boost');
+  DemoSet('control-hint',Controls.hint(S.medium.kind==='air'));
   const fill=document.getElementById('budget-fill');if(fill)fill.style.width=`${Math.max(0,S.budget)/DEMO.clock(S.wave)*100}%`;
 };
 Ovn=function(r){if(r.events.some(e=>e.kind==='overtime')){ci='OVERTIME · ENEMIES KEEP COMING · LAND TO BANK';kr=2.2}if(r.events.some(e=>e.kind==='bust')){ci='BUST · 0 HP · FALLING TO THE WATER';kr=2}};

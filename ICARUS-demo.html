@@ -4356,7 +4356,7 @@ var DEMO = (() => {
     depth: {type:'Blast',cad:'Heavy',coef:1.5,damage:[24,36,52,80],cd:[64,56,48,40],range:18,crit:.03,cx:1.5,kb:9,blast:8.5,side:'Max HP',sideScale:.15,description:'A lobbed charge aimed to intercept its target. Max HP also adds damage.'}
   };
   // Hand-cap levers (structure doc 5.4): kept open and tunable, to be balanced in play. The tuning panel edits these live.
-  const TUNE_DEFAULT={bro:1,shake:1,flash:1,space:1,edge:.2,danger:1,lead:.5,mines:0,carve:1,ccw:1,sky:12};  // space: step 1 (space.js); edge: share of its spawns from the screen edge; danger, lead, mines: step 2 (danger.js)
+  const TUNE_DEFAULT={bro:1,shake:1,flash:1,space:1,edge:.2,danger:1,lead:.5,mines:0,carve:1,ccw:0,sky:12,verbs:1,hop:6,dive:2,dashes:2};  // space: step 1 (space.js); edge: share of its spawns from the screen edge; danger, lead, mines: step 2 (danger.js)
   const tune={...TUNE_DEFAULT};
   try{Object.assign(tune,JSON.parse(localStorage.getItem('icarus.scoreshow.tune')||'{}'))}catch(e){}
   const saveTune=()=>{try{localStorage.setItem('icarus.scoreshow.tune',JSON.stringify(tune))}catch(e){}};
@@ -4785,7 +4785,7 @@ SE=function(r,m,input,dt,depth){
   if(r.mode!=='playing')return;
   if(apex!==null&&apex<=t+1e-9&&!h.apex){h.apex=true;if(!r.armed)DEMO.fireCharms(r,'apex');r.events.push({kind:'apex',pos:he(r)});if(dt-t>1e-9)Il(r,input,dt-t,depth+1);return}
   if(land!==null&&land<=t+1e-9){
-    const pos=he(r);if(!r.armed&&!r.hand?.busted)FiveCombat.entry(r);DEMO.bank(r);Oxebag(r,pos,m);r.shots=[];if(typeof Danger!=='undefined')Danger.land(r);
+    const pos=he(r);if(!r.armed&&!r.hand?.busted)FiveCombat.entry(r);DEMO.bank(r);Oxebag(r,pos,m);r.shots=[];if(typeof Danger!=='undefined')Danger.land(r);if(typeof Verbs!=='undefined')Verbs.land(r);
     // as v3 carve: at the entry every enemy becomes a pursuer (or flies off, with pursuit off). Pursuers hold above the
     // sea while you swim and come back as enemies at the breach (Zq).
     for(const E of [...r.enemies])Qz.on?Pz(r,m,E):nw(r,m,E);r.enemies=[];
@@ -4843,7 +4843,7 @@ Owstarter=function(){return ''};
 
 /* Settings: one panel in tabs (T, the backquote key, or SCORE TUNING). Score holds the hand-cap levers (structure doc 5.4,
    kept open to balance in play); the other tabs hold the v3 carve's movement sliders, grouped by what they change. */
-const DemoTuneDefs=[['shake','Screen shake',0,2,.1],['flash','Enemy hit flash',0,1,.1],['space','Marked spawns ahead and flocking (step 1)',0,1,1,'check'],['edge','Step 1: share of spawns from the screen edge',0,1,.05],['danger','Leading shots and mines on the arc (step 2)',0,1,1,'check'],['lead','Step 2: how far shots lead you',0,1,.05],['mines','Step 2: mines per flight',0,4,1],['carve','Space carves (no boost)',0,1,1,'check'],['ccw','Carving always anticlockwise',0,1,1,'check'],['sky','Water camera: metres above the dolphin (0 = old camera)',0,20,.1]];
+const DemoTuneDefs=[['shake','Screen shake',0,2,.1],['flash','Enemy hit flash',0,1,.1],['space','Marked spawns ahead and flocking (step 1)',0,1,1,'check'],['edge','Step 1: share of spawns from the screen edge',0,1,.05],['danger','Leading shots and mines on the arc (step 2)',0,1,1,'check'],['lead','Step 2: how far shots lead you',0,1,.05],['mines','Step 2: mines per flight',0,4,1],['carve','Space carves (no boost)',0,1,1,'check'],['ccw','Carving always anticlockwise',0,1,1,'check'],['sky','Water camera: metres above the dolphin (0 = old camera)',0,20,.1],['verbs','Stomp, dive (S) and dash (Space) in the air (step 3)',0,1,1,'check'],['hop','Step 3: stomp lift (m/s)',0,15,.5],['dive','Step 3: dive gravity (x)',1,4,.1],['dashes','Step 3: dash charges',0,4,1]];
 const DemoTabs=[
   ['Score',null,'Each jump draws 3 tricks; buy more in the Routine row. A hit bails the trick in progress; 0 HP busts the jump.'],
   ['Launch',['Forward only','Rocket boost','Carve','Wave schedule'],'The carve and the launch. Launch speed rises5 per wave.'],
@@ -5253,7 +5253,7 @@ var Danger = (() => {
 // - Space carves (DEMO.tune.carve): Space is the carve key in place of W / up, under water and in the air (held into the
 //   splash it carves from the first frame; held through the surface it adds the corkscrew). W / up only move you in
 //   the air. Boost is gone. The touch button and gamepad A carve too.
-// - Carving is always anticlockwise (DEMO.tune.ccw): v3 turns the nose up toward the side you face, so a dive to the
+// - Carving is always anticlockwise (DEMO.tune.ccw, off by default: the designer reverted it after trying it): v3 turns the nose up toward the side you face, so a dive to the
 //   left carved clockwise. Here the carve always faces right, so a dive to the left first swings down through
 //   straight down and then up to the right. Letting go past straight up no longer turns you round.
 // - The water camera (DEMO.tune.sky, metres): the camera sits this far above the dolphin, so more of the screen is sky
@@ -5270,7 +5270,7 @@ var Controls = (() => {
     const b = document.getElementById('touch-boost');
     if (b) { b.textContent = carve() ? 'CARVE' : 'BOOST'; b.setAttribute('aria-label', carve() ? 'Hold to carve' : 'Hold to boost underwater') }
   }
-  const hint = air => { sync(); return air ? 'W A S D / arrows: steer' : carve() ? 'Hold Space to carve · release to launch' : 'Hold W / up to carve · release to launch · space to boost' };
+  const hint = air => { sync(); return air ? 'W A S D / arrows: steer' + (DEMO.tune.verbs ? ' · hold S to dive · Space dashes' : '') : carve() ? 'Hold Space to carve · release to launch' : 'Hold W / up to carve · release to launch · space to boost' };
   return { carve, ccw, key, hint };
 })();
 // input: with Space carving, w comes from Space, the touch button (Gr) or gamepad A, and nothing boosts
@@ -5298,6 +5298,106 @@ var Controls = (() => {
   r.cam=se(r.cam.x+r.camV.x*t,r.cam.y+r.camV.y*t);
   r.camLock=(r.camLock==null?0:r.camLock)+(0-(r.camLock||0))*Xe(t,.18);Ocl=r.camLock}}
 {if(typeof document!=='undefined'&&document.head){const st=document.createElement('style');st.textContent='body.space-carve .boost-meter{display:none}';document.head.appendChild(st)}}
+
+// Step 3 of the build-and-playtest plan (ICARUS_DESIGN.md §4.18, §4.20): flight verbs. Designer's answers, 2026-10-27.
+// - Stomp-bounce: coming down onto an enemy from above (moving down in the frame, relative to it) kills it and costs
+//   no HP, and lifts the whole flight: DEMO.tune.hop m/s (6) is added to the arc's upward speed, so a chain of stomps
+//   extends air time and moves the landing spot. Elites and bosses take 3x contact damage instead of dying. A stomp
+//   gives back one dash charge.
+// - Dive: holding S on the way down multiplies the flight's fall gravity by DEMO.tune.dive (2), so you choose where you
+//   land. S still moves you down in the frame as before; on the way up it does nothing extra.
+// - Dash (Space, in the air only): 3.5 m in 0.12 s the way you steer (or the way you move or face), untouchable
+//   throughout, ramming every enemy it passes through for 3x contact damage (9 + wave/5). DEMO.tune.dashes charges
+//   (2), all back at each water entry. A press in the last carve.arm s before the water only arms the carve (Space
+//   held into the splash carves), so it never dashes you into the water by accident.
+// Contact damage is v3's (9 + wave/5); the kills go through DEMO.damage like any weapon's, with weapon 'stomp' or 'ram'.
+var Verbs = (() => {
+  const PROFILE = Object.freeze({
+    dashDist: 3.5,          // m
+    dashTime: .12,          // s
+    ramScale: 3,            // x contact damage
+    stompMargin: .3,        // m added to the contact distance for a stomp
+    stompAbove: .25,        // m the dolphin must be above the enemy's centre
+    stompClose: 1,          // m/s the dolphin must be closing downward on the enemy, in the frame
+    stompGuard: .15         // s untouchable after a stomp
+  });
+  const on = r => !!(DEMO.tune.verbs && r?.demo);
+  const count = r => r.verbCount || (r.verbCount = { stomps: 0, dashes: 0, rams: 0, dives: 0 });
+  const contact = r => 9 + Math.floor(r.wave / 5);
+  const charges = r => (r.dashes ??= Math.round(DEMO.tune.dashes));
+  const big = e => e.role === 'boss' || e.boss === 'boss' || e.boss === 'elite';
+
+  // before v3's enemy step (so a stomp beats the contact damage it would otherwise deal)
+  function stomp(r, m) {
+    const P = PROFILE, me = m.local, v = m.velocity || { x: 0, y: 0 };
+    for (const e of [...r.enemies]) {
+      if (e.hp <= 0 || !r.enemies.includes(e)) continue;
+      const d = Math.hypot(e.pos.x - me.x, e.pos.y - me.y);
+      if (d > e.radius + 1 + P.stompMargin || me.y < e.pos.y + P.stompAbove || v.y - (e.velocity?.y || 0) > -P.stompClose) continue;
+      DEMO.damage(r, e, big(e) ? contact(r) * P.ramScale : e.hp, 'stomp');
+      m.vy += +DEMO.tune.hop || 0;
+      m.velocity = { x: v.x, y: Math.max(0, v.y) };
+      r.hurt = Math.max(r.hurt || 0, P.stompGuard);
+      r.dashes = Math.min(Math.round(DEMO.tune.dashes), charges(r) + 1);
+      count(r).stomps++;
+      r.events.push({ kind: 'stomp', pos: he(r) });
+      return;
+    }
+  }
+
+  // before the air step: the dive's extra gravity and a dash's start
+  function before(r, m, input, dt) {
+    if (input.y < -.5 && m.vy < 0 && DEMO.tune.dive > 1) { m.vy += ai * (DEMO.tune.dive - 1) * dt; count(r).dives += dt }
+    const press = !!input.dash && !r.dashHeld;
+    r.dashHeld = !!input.dash;
+    if (!press || r.dashT > 0 || charges(r) <= 0) return;
+    const yd = m.origin.y + m.local.y, vd = m.vy + m.velocity.y;
+    if (Ocv.arm > 0 && vd < 0 && yd < -vd * Ocv.arm) return;
+    let dx = input.x || 0, dy = input.y || 0;
+    if (Math.hypot(dx, dy) < .3) { dx = m.velocity.x; dy = m.velocity.y }
+    if (Math.hypot(dx, dy) < 1) { dx = Math.sign(m.vx) || 1; dy = 0 }
+    const n = Math.hypot(dx, dy);
+    r.dashDir = { x: dx / n, y: dy / n }; r.dashT = PROFILE.dashTime; r.dashHit = [];
+    r.dashes--; count(r).dashes++;
+    r.events.push({ kind: 'dash', pos: he(r) });
+  }
+
+  // after the air step: the dash moves you, keeps you untouchable and rams what it passes
+  function after(r, m, dt) {
+    if (!(r.dashT > 0)) return;
+    const P = PROFILE, step = Math.min(dt, r.dashT), sp = P.dashDist / P.dashTime, a = m.local;
+    const hw = Jt.width / 2 - 1.6, hh = Jt.height / 2 - 1.6;
+    const b = ye(Math.max(-hw, Math.min(hw, a.x + r.dashDir.x * sp * step)), Math.max(-hh, Math.min(hh, a.y + r.dashDir.y * sp * step)));
+    for (const e of [...r.enemies]) {
+      if (r.dashHit.includes(e.id) || e.hp <= 0) continue;
+      if (ew(e.pos, a, b) < e.radius + 1) { r.dashHit.push(e.id); count(r).rams++; DEMO.damage(r, e, contact(r) * P.ramScale, 'ram') }
+    }
+    m.local = b;
+    r.dashT -= step;
+    r.hurt = Math.max(r.hurt || 0, r.dashT + .02);
+  }
+
+  // at each water entry the charges come back and any dash ends
+  function land(r) { r.dashes = Math.round(DEMO.tune.dashes); r.dashT = 0 }
+
+  // dash charges as pips under the dolphin
+  function draw(R, r, m) {
+    const G = R.telegraphs, n = Math.round(DEMO.tune.dashes), have = charges(r);
+    if (n <= 0) return;
+    const X = R.sx(m.origin.x + m.local.x), Y = R.sy(m.origin.y + m.local.y) + 34;
+    for (let k = 0; k < n; k++) {
+      const x = X + (k - (n - 1) / 2) * 12;
+      k < have ? G.circle(x, Y, 3.5).fill({ color: yt.cyan, alpha: .85 }) : G.circle(x, Y, 3.5).stroke({ color: yt.cyan, width: 1.5, alpha: .4 });
+    }
+  }
+
+  return { PROFILE, on, count, stomp, before, after, land, draw };
+})();
+// input: Space is the dash key in the air (bots pass dash themselves)
+{const nf0=nf;nf=function(){const o=nf0();return{...o,dash:It.has(' ')}}}
+{const me0=ME;ME=function(r,t,e,i){if(Verbs.on(r)&&t?.kind==='air'&&i>0)Verbs.stomp(r,t);return me0(r,t,e,i)}}
+{const se0=SE;SE=function(r,t,e,i,s){if(!Verbs.on(r)||!(i>0))return se0(r,t,e,i,s);Verbs.before(r,t,e,i);const out=se0(r,t,e,i,s);if(r.medium===t&&t.kind==='air')Verbs.after(r,t,i);return out}}
+{const draw0=Otdraw;Otdraw=function(R,r,m,title){draw0(R,r,m,title);if(!title&&m?.kind==='air'&&Verbs.on(r))Verbs.draw(R,r,m)}}
 
 // Flight log: records what happens in each flight (positions, enemies, input, kills, hits) and the shop actions
 // taken, so a real run can be exported as JSON and studied. Observation only: it reads state and never changes it.
@@ -5535,7 +5635,7 @@ var ScoreHUD = (() => {
 of=function(){if(!S?.demo||!document.getElementById('wave-number'))return;DemoOf();ScoreHUD.update(S);
   DemoSet('phase-label',S.demo.overtime?'OVERTIME · LAND TO BANK':S.medium.kind==='air'?'AIRBORNE':'SAFE WATER');
   DemoSet('budget-label',S.demo.overtime?'OVERTIME':'AIR REMAINING');DemoSet('budget-value',S.demo.overtime?'+'+Math.max(0,S.demo.air-DEMO.clock(S.wave)).toFixed(1)+'s':Math.max(0,S.budget).toFixed(1)+'s');document.querySelector('.budget-block')?.classList.toggle('in-overtime',!!S.demo.overtime);DemoSet('budget-caption',`${Math.round(S.wscore).toLocaleString('en-US')} / ${S.quota.toLocaleString('en-US')} BANKED`);
-  DemoSet('control-hint',S.medium.kind==='air'?'W A S D / arrows: steer':'Hold W / up to carve · release to launch · space to boost');
+  DemoSet('control-hint',Controls.hint(S.medium.kind==='air'));
   const fill=document.getElementById('budget-fill');if(fill)fill.style.width=`${Math.max(0,S.budget)/DEMO.clock(S.wave)*100}%`;
 };
 Ovn=function(r){if(r.events.some(e=>e.kind==='overtime')){ci='OVERTIME · ENEMIES KEEP COMING · LAND TO BANK';kr=2.2}if(r.events.some(e=>e.kind==='bust')){ci='BUST · 0 HP · FALLING TO THE WATER';kr=2}};

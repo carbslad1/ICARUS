@@ -15,7 +15,7 @@ var DEMO = (() => {
     depth: {type:'Blast',cad:'Heavy',coef:1.5,damage:[24,36,52,80],cd:[64,56,48,40],range:18,crit:.03,cx:1.5,kb:9,blast:8.5,side:'Max HP',sideScale:.15,description:'A lobbed charge aimed to intercept its target. Max HP also adds damage.'}
   };
   // Hand-cap levers (structure doc 5.4): kept open and tunable, to be balanced in play. The tuning panel edits these live.
-  const TUNE_DEFAULT={bro:1,shake:1,flash:1,space:1,edge:.2,danger:1,lead:.5,mines:0,carve:1,ccw:1,sky:12};  // space: step 1 (space.js); edge: share of its spawns from the screen edge; danger, lead, mines: step 2 (danger.js)
+  const TUNE_DEFAULT={bro:1,shake:1,flash:1,space:1,edge:.2,danger:1,lead:.5,mines:0,carve:1,ccw:0,sky:12,verbs:1,hop:6,dive:2,dashes:2};  // space: step 1 (space.js); edge: share of its spawns from the screen edge; danger, lead, mines: step 2 (danger.js)
   const tune={...TUNE_DEFAULT};
   try{Object.assign(tune,JSON.parse(localStorage.getItem('icarus.scoreshow.tune')||'{}'))}catch(e){}
   const saveTune=()=>{try{localStorage.setItem('icarus.scoreshow.tune',JSON.stringify(tune))}catch(e){}};
@@ -444,7 +444,7 @@ SE=function(r,m,input,dt,depth){
   if(r.mode!=='playing')return;
   if(apex!==null&&apex<=t+1e-9&&!h.apex){h.apex=true;if(!r.armed)DEMO.fireCharms(r,'apex');r.events.push({kind:'apex',pos:he(r)});if(dt-t>1e-9)Il(r,input,dt-t,depth+1);return}
   if(land!==null&&land<=t+1e-9){
-    const pos=he(r);if(!r.armed&&!r.hand?.busted)FiveCombat.entry(r);DEMO.bank(r);Oxebag(r,pos,m);r.shots=[];if(typeof Danger!=='undefined')Danger.land(r);
+    const pos=he(r);if(!r.armed&&!r.hand?.busted)FiveCombat.entry(r);DEMO.bank(r);Oxebag(r,pos,m);r.shots=[];if(typeof Danger!=='undefined')Danger.land(r);if(typeof Verbs!=='undefined')Verbs.land(r);
     // as v3 carve: at the entry every enemy becomes a pursuer (or flies off, with pursuit off). Pursuers hold above the
     // sea while you swim and come back as enemies at the breach (Zq).
     for(const E of [...r.enemies])Qz.on?Pz(r,m,E):nw(r,m,E);r.enemies=[];
@@ -502,7 +502,7 @@ Owstarter=function(){return ''};
 
 /* Settings: one panel in tabs (T, the backquote key, or SCORE TUNING). Score holds the hand-cap levers (structure doc 5.4,
    kept open to balance in play); the other tabs hold the v3 carve's movement sliders, grouped by what they change. */
-const DemoTuneDefs=[['shake','Screen shake',0,2,.1],['flash','Enemy hit flash',0,1,.1],['space','Marked spawns ahead and flocking (step 1)',0,1,1,'check'],['edge','Step 1: share of spawns from the screen edge',0,1,.05],['danger','Leading shots and mines on the arc (step 2)',0,1,1,'check'],['lead','Step 2: how far shots lead you',0,1,.05],['mines','Step 2: mines per flight',0,4,1],['carve','Space carves (no boost)',0,1,1,'check'],['ccw','Carving always anticlockwise',0,1,1,'check'],['sky','Water camera: metres above the dolphin (0 = old camera)',0,20,.1]];
+const DemoTuneDefs=[['shake','Screen shake',0,2,.1],['flash','Enemy hit flash',0,1,.1],['space','Marked spawns ahead and flocking (step 1)',0,1,1,'check'],['edge','Step 1: share of spawns from the screen edge',0,1,.05],['danger','Leading shots and mines on the arc (step 2)',0,1,1,'check'],['lead','Step 2: how far shots lead you',0,1,.05],['mines','Step 2: mines per flight',0,4,1],['carve','Space carves (no boost)',0,1,1,'check'],['ccw','Carving always anticlockwise',0,1,1,'check'],['sky','Water camera: metres above the dolphin (0 = old camera)',0,20,.1],['verbs','Stomp, dive (S) and dash (Space) in the air (step 3)',0,1,1,'check'],['hop','Step 3: stomp lift (m/s)',0,15,.5],['dive','Step 3: dive gravity (x)',1,4,.1],['dashes','Step 3: dash charges',0,4,1]];
 const DemoTabs=[
   ['Score',null,'Each jump draws 3 tricks; buy more in the Routine row. A hit bails the trick in progress; 0 HP busts the jump.'],
   ['Launch',['Forward only','Rocket boost','Carve','Wave schedule'],'The carve and the launch. Launch speed rises5 per wave.'],
