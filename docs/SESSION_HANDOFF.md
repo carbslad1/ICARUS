@@ -29,7 +29,7 @@ git checkout design/scoring-revision-2026-10
 
 1. Open `ICARUS-demo.html` in a browser. It is self-contained and needs no server.
 2. Controls:
-   - Underwater: hold **W / Up** to carve and release to launch; **Space** boosts.
+   - Underwater: hold **Space** to carve (always anticlockwise) and release to launch; there is no boost.
    - In the air: **W A S D / arrows** move; weapons fire on their own.
    - **Esc** pauses.
 3. **SAVE FLIGHT LOG** is in the pause menu and on the end-of-run screen.
