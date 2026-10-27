@@ -1,4 +1,6 @@
 // Step 3 of the build-and-playtest plan (ICARUS_DESIGN.md §4.18, §4.20): flight verbs. Designer's answers, 2026-10-27.
+// PARKED (2026-10-27): off by default as an experimental feature. The designer wants stomp, dive and dash to become
+// tricks rather than standalone verbs; DEMO.tune.verbs 1 still turns them on.
 // - Stomp-bounce: coming down onto an enemy from above (moving down in the frame, relative to it) kills it and costs
 //   no HP, and lifts the whole flight: DEMO.tune.hop m/s (6) is added to the arc's upward speed, so a chain of stomps
 //   extends air time and moves the landing spot. Elites and bosses take 3x contact damage instead of dying. A stomp

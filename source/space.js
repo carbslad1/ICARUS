@@ -173,3 +173,35 @@ var Space = (() => {
 {const zq0=Zq;Zq=function(r){const n=r.enemies.length;zq0(r);if(Space.on(r))Space.recall(r,r.enemies.slice(n))}}  // pursuers return at the breach
 {const pz0=Pz;Pz=function(r,t,E){E.pool=null;return pz0(r,t,E)}}  // a pool enemy that becomes a pursuer stops holding
 {const draw0=Otdraw;Otdraw=function(R,r,m,title){draw0(R,r,m,title);if(!title&&m?.kind==='air'&&Space.on(r))Space.draw(R,r,m)}}
+// While the dolphin is under water, v3 flies each pursuer still above the water straight on in the direction it faced
+// at the splash, never turning toward the dolphin, so after a carve turns the dolphin round they leave the arena (bot,
+// 2026-10-27: 23% of them off-screen, up to 98 m away). With DEMO.tune.hold they instead hold a point above the water
+// ahead of the dolphin, on the side it is moving toward and inside the view (8-26 m ahead, 5-12 m up, lower when a deep
+// dive brings the view's top edge down, never under 1.5 m), easing in as they arrive.
+// Touching one under water still kills it, as v3's touchKill. Pursuers that went under, and lurkers, keep v3's step.
+Space.holdAbove = function (r, dt) {
+  const m = r.medium, d = m.pos, v = m.velocity, Cw = Ocs(r.wave), V = Ovv(r);
+  for (const p of r.pursuers || []) {
+    if (p.wet || p.lurk) continue;
+    p.px = p.x; p.py = p.y; p.age += dt;
+    const Fd = Math.abs(v.x) > Math.max(3, Cw * .12) ? Math.sign(v.x) : p.fd || Math.sign(v.x) || 1;
+    p.fd = Fd;
+    const w = 3.2 * p.tr, top = Math.max(Cw * 1.05 * Osp.spd, (p.kind === 'swarmer' ? 25 * Osp.small : 19 + r.wave * .13) * Osp.spd * p.sp);
+    const tx = d.x + Fd * (8 + (p.seed * 7.3 % 1) * 18), ty = Math.max(1.5, Math.min(5 + (p.seed * 3.1 % 1) * 7, V.y + V.h - 3));
+    const a = tx - p.x, b = ty - p.y, dist = Math.hypot(a, b);
+    let c = Math.atan2(b, a) - p.h; c = Math.atan2(Math.sin(c), Math.cos(c));
+    p.h += Math.max(-w * dt, Math.min(w * dt, c));
+    p.v += (Math.min(top, 2 + 2.5 * dist) - p.v) * Xe(dt, .35);
+    p.x += Math.cos(p.h) * p.v * dt; p.y = Math.max(1, p.y + Math.sin(p.h) * p.v * dt);
+  }
+  r.pursuers = (r.pursuers || []).filter(p => {
+    if (p.wet || p.lurk || Math.hypot(d.x - p.x, d.y - p.y) >= p.radius + 1) return true;
+    if (typeof touchKill === 'function') { touchKill(r, p); return false } return true;
+  });
+};
+{const pq0=Pq;Pq=function(r,e){
+  if(!DEMO.tune.hold||!r?.demo||r.medium?.kind!=='water'||!(e>0)||!r.pursuers?.length)return pq0(r,e);
+  const dry=r.pursuers.filter(p=>!p.wet&&!p.lurk);r.pursuers=r.pursuers.filter(p=>p.wet||p.lurk);
+  pq0(r,e);r.pursuers=(r.pursuers||[]).concat(dry);Space.holdAbove(r,e);
+  // v3's shock rings still push the held pursuers (a zero step: the rings don't grow twice, and each hits once)
+  if(typeof Orshock==='function'){const keep=r.pursuers;r.pursuers=keep.filter(p=>dry.includes(p));Orshock(r,0);r.pursuers=keep}}}
