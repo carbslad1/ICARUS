@@ -17,3 +17,5 @@
 .ss-reels{display:flex;justify-content:center;gap:6px;margin-bottom:4px;min-height:22px}.ss-reels span{font-size:18px;line-height:22px;width:22px;text-align:center;color:#58707a;text-shadow:0 2px 6px #02070e}.ss-reels span.revealed{color:#ff9dce;text-shadow:0 0 10px #ff8dbd}.ss-reels span.bailed{color:#ff5a5a;font-weight:900;text-shadow:0 0 10px #ff3b3b}.ss-reels.is-bust span{color:#3c464c;text-shadow:none}
 #score-hero.is-bust .ss-total strong,#score-hero.is-bust .ss-mult strong{color:#ff6b6b;text-shadow:0 2px 8px #02070e,0 0 18px #ff3b3b}.ss-particle.bail{color:#ff6b6b;font-size:26px}
 @media(max-height:550px){.ss-reels{min-height:16px;margin-bottom:2px}.ss-reels span{font-size:13px;line-height:16px;width:16px}}
+
+#score-hero.rules .ss-reels{display:none}

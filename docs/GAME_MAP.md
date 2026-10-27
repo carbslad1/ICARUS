@@ -63,6 +63,13 @@ One cycle is a dive followed by a flight. These are medians from 291 bot flights
 - **Hits are rare for a cautious player:** 59 hits in 291 bot flights, and 83% of flights had none. The bot keeps about 8 m away and dodges, so real players may differ.
 - **Kill mix:** chasers 56%, swarmers 24%, chargers 15%, turrets 4%. The roster also includes drifters, splitters (which split into two swarmers) and a boss (a large charger).
 
+## 5a. Step 4 rules (the default since 2026-10-27)
+
+- **0 HP ends the run.** There is no quota and no bust. A wave is survived: when its air clock runs out, enemies keep coming and it ends at the next water entry. Clearing a wave restores HP.
+- **Style score per flight** = kills this flight × mult × clean streak. The mult is 1 until step 5's tricks feed it. The streak counts clean flights in a row including this one, up to ×5; a hit puts it back to ×1; it survives the shop.
+- **Pearls** are the one shop currency (shown as ◈ in places): round(3 × √score) at each splashdown, plus each wave's clear pay (24 + 4 × wave) and 10% interest on saved pearls (at most 10).
+- **The shop** has no charms and no reel routines; their places go to weapons and gear. Settings › Score › "Style score rules" off restores S4 below.
+
 ## 5. Waves and the loss condition (S4 demo)
 
 - **Air clock:** 20 s at wave 1, +5 s per wave, capped at 60 s; wave 20 is 90 s (`clock`). It runs only in the air. When it runs out, enemies keep coming and the wave ends at the next water entry. There is no safe coast.

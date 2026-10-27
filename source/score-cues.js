@@ -9,7 +9,9 @@ var ScoreCues = (function () {
   function begin(r) {
     const h=r.hand;
     h.scoreShow={count:0,mult:0,base:0,combos:[],snapshot:clone(r.demo.score),finished:false};
-    emit(r,'start',{chips:0,mult:0,draws:h.drawn.length,quota:r.quota,waveScore:r.wscore});
+    // Step 4: the mult cell shows the clean streak this flight earns if it stays clean.
+    const rules=typeof DEMO!=='undefined'&&DEMO.tune.rules,streak=rules?Math.min(Math.max(1,Math.round(DEMO.tune.streakCap)),(r.demo.streak||0)+1):0;
+    emit(r,'start',{chips:0,mult:streak,draws:h.drawn.length,quota:r.quota,waveScore:r.wscore,rules:!!rules});
   }
   function chips(r,amount,pos,bonus) {
     emit(r,'chips',{amount,chips:r.hand.K,pos:pos?{...pos}:null,bonus:bonus||null});
@@ -58,6 +60,12 @@ var ScoreCues = (function () {
     p.finished=true;
     emit(r,'bank',{chips:result.chips,mult:result.mult,score:result.score,busted:!!h.busted,waveScore:r.wscore,quota:r.quota,met:r.wscore>=r.quota});
   }
-  return {begin,chips,bail,saved,bust,advance,tick,finish};
+  // Step 4: a hit puts the streak back to 1; at splashdown the score banks and pays its pearls.
+  function streakReset(r) {emit(r,'combo',{name:'Hit',amount:0,mult:1,reset:true});}
+  function style(r,o) {
+    const p=r.hand?.scoreShow;if(!p||p.finished)return;p.finished=true;
+    emit(r,'bank',{chips:o.chips,mult:o.mult*o.streak,score:o.score,busted:false,waveScore:r.wscore,quota:r.quota,met:false,pearls:o.pearls,streak:o.streak,clean:o.clean});
+  }
+  return {begin,chips,bail,saved,bust,advance,tick,finish,streakReset,style};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=ScoreCues;

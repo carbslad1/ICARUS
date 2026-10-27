@@ -83,7 +83,10 @@ var ScoreHUD = (() => {
   function apply(e,now){
     ensure();root.dataset.event=e.type;root.dataset.key=e.key;
     if(e.type==='start'){
-      model={...model,chips:0,mult:0,score:0,waveScore:e.waveScore,quota:e.quota,draws:e.draws,faces:[],bails:[],busted:false,banked:false};
+      model={...model,chips:0,mult:e.mult||0,score:0,waveScore:e.waveScore,quota:e.quota,draws:e.draws,faces:[],bails:[],busted:false,banked:false};
+      // Step 4: the mult cell is the clean streak and there are no reels
+      root.classList.toggle('rules',!!e.rules);const label=root.querySelector('.ss-mult .ss-label');if(label)label.textContent=e.rules?'STREAK':'MULT';
+      if(e.rules){set('flight',`FLIGHT ${String(e.hand).padStart(2,'0')} · WAVE ${e.wave}`);set('status','LAND TO BANK');set('total-label','SCORE');notice('KILLS × CLEAN STREAK · A HIT RESETS IT');return 0}
       shown.chips=shown.mult=shown.score=0;root.classList.remove('is-banked','is-combo','is-bust');
       set('flight',`FLIGHT ${String(e.hand).padStart(2,'0')} · WAVE ${e.wave}`);set('status','LAND TO BANK');set('total-label','SCORE');notice('KILLS FEED CHIPS · TRICKS FEED MULT');return 0;
     }
@@ -95,6 +98,7 @@ var ScoreHUD = (() => {
     if(e.type==='chips'){
       model.chips=e.chips;addition('chip-add','+'+number(e.amount)+(e.bonus?(e.bonus.apex?' APEX':e.bonus.multi?' MULTI':' CRIT'):''));pulse('chips',Math.min(1.5,.7+e.amount*.08));popup('chips','+'+number(e.amount),'chip',e.from);sound('chips');return 0;
     }
+    if(e.type==='combo'&&e.reset){model.mult=e.mult;addition('mult-add','HIT · ×1');notice('HIT · STREAK BACK TO ×1','bail');pulse('mult',1.2);popup('mult','×1','bail');sound('bail');return 0}
     if(['trick','combo','lucky','charm'].includes(e.type)){
       model.mult=e.mult;
       if(e.type==='trick'&&e.bailed){model.faces[e.count-1]=e.face;model.bails[e.count-1]=true;return reduced()?0:90}
@@ -109,7 +113,7 @@ var ScoreHUD = (() => {
       set('flight',`FLIGHT ${String(e.hand).padStart(2,'0')} · WAVE ${e.wave}`);
       model.chips=e.chips;model.mult=e.mult;model.score=e.score;model.waveScore=e.waveScore;model.quota=e.quota;model.banked=true;
       root.classList.add('is-banked');root.classList.remove('is-combo');set('total-label',e.busted?'BUSTED':'BANKED');set('status',e.met?'WAVE TARGET MET':'BANKED');addition('bank-add',e.busted&&!e.score?'BUST':'+'+number(e.score));
-      notice(e.busted?'BUST · '+(e.score?'SECOND WIND':'NOTHING BANKED'):e.score>0?(e.met?'WAVE TARGET MET':'SPLASH! SCORE BANKED'):'NO KILLS · TRICKS RETAINED','bank');pulse('score',1.6);pulse('chips',.6);pulse('mult',.8);sound('bank');
+      notice(e.pearls!=null?(e.score>0?`+${number(e.pearls)} PEARLS · STREAK ×${e.streak}`:`NO KILLS · STREAK ×${e.streak}`):e.busted?'BUST · '+(e.score?'SECOND WIND':'NOTHING BANKED'):e.score>0?(e.met?'WAVE TARGET MET':'SPLASH! SCORE BANKED'):'NO KILLS · TRICKS RETAINED','bank');pulse('score',1.6);pulse('chips',.6);pulse('mult',.8);sound('bank');
       if(e.score>0){popup('score','+'+number(e.score),'bank');if(!reduced()&&root.animate){root._bankAnim?.cancel();root._bankAnim=root.animate([{transform:'translateX(-50%) scale(1)'},{transform:'translateX(-50%) scale(1.035)',offset:.18},{transform:'translateX(-50%) scale(.99)',offset:.5},{transform:'translateX(-50%) scale(1)'}],{duration:530,easing:'cubic-bezier(.16,1,.3,1)'});}}
       hold=now+1000;return reduced()?0:720;
     }
@@ -147,7 +151,7 @@ var ScoreHUD = (() => {
 {const prior=Dl.prototype.events;Dl.prototype.events=function(events){return prior.call(this,events.filter(e=>!['bank','charm','scorecue'].includes(e.kind)))}}
 of=function(){if(!S?.demo||!document.getElementById('wave-number'))return;DemoOf();ScoreHUD.update(S);
   DemoSet('phase-label',S.demo.overtime?'OVERTIME · LAND TO BANK':S.medium.kind==='air'?'AIRBORNE':'SAFE WATER');
-  DemoSet('budget-label',S.demo.overtime?'OVERTIME':'AIR REMAINING');DemoSet('budget-value',S.demo.overtime?'+'+Math.max(0,S.demo.air-DEMO.clock(S.wave)).toFixed(1)+'s':Math.max(0,S.budget).toFixed(1)+'s');document.querySelector('.budget-block')?.classList.toggle('in-overtime',!!S.demo.overtime);DemoSet('budget-caption',`${Math.round(S.wscore).toLocaleString('en-US')} / ${S.quota.toLocaleString('en-US')} BANKED`);
+  DemoSet('budget-label',S.demo.overtime?'OVERTIME':'AIR REMAINING');DemoSet('budget-value',S.demo.overtime?'+'+Math.max(0,S.demo.air-DEMO.clock(S.wave)).toFixed(1)+'s':Math.max(0,S.budget).toFixed(1)+'s');document.querySelector('.budget-block')?.classList.toggle('in-overtime',!!S.demo.overtime);DemoSet('budget-caption',DEMO.tune.rules?`STREAK ×${S.demo.streak||0} · ${Math.round(S.xp).toLocaleString('en-US')} PEARLS`:`${Math.round(S.wscore).toLocaleString('en-US')} / ${S.quota.toLocaleString('en-US')} BANKED`);
   DemoSet('control-hint',Controls.hint(S.medium.kind==='air'));
   const fill=document.getElementById('budget-fill');if(fill)fill.style.width=`${Math.max(0,S.budget)/DEMO.clock(S.wave)*100}%`;
 };
