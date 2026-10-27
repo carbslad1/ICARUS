@@ -201,3 +201,30 @@ Space.holdAbove = function (r, held, dt) {
   pq0(r,e);r.pursuers=(r.pursuers||[]).concat(dry);Space.holdAbove(r,dry,e);
   // v3's shock rings still push the held pursuers (a zero step: the rings don't grow twice, and each hits once)
   if(typeof Orshock==='function'){const keep=r.pursuers;r.pursuers=keep.filter(p=>dry.includes(p));Orshock(r,0);r.pursuers=keep}}}
+// Spawning goes on while the dolphin swims (designer, 2026-10-27; DEMO.tune.wetspawn). v3's wave schedule only advances
+// in the air step, so a water stay paused it. Here it advances during water stays too, once the wave's first launch has
+// started it (the air clock still pauses), at its usual rate. There is no arena under water, so the schedule runs
+// against a still stand-in frame fixed where this stay began (r.wetFrame: origin on the water line, moving the way the
+// dolphin swims so step 1's markers lean ahead of it); each enemy appears behind its marker above the water in view
+// and at once becomes a pursuer held ahead of the dolphin (holdAbove), joining the arena at the next launch.
+Space.wetFrame = function (r) {
+  const m = r.medium;
+  const F = r.wetFrame || (r.wetFrame = { kind: 'air', origin: se(m.pos.x, 0), vx: 0, vy: 0, local: ye(0, 0), velocity: { x: 0, y: 0 }, elapsed: 1, wet: true });
+  F.local = ye(m.pos.x - F.origin.x, m.pos.y); F.vx = m.velocity.x; F.vy = m.velocity.y;
+  return F;
+};
+Space.wetSpawn = function (r, dt) {
+  if (r.bw !== r.wave || r.mode !== 'playing' || r.armed) return;
+  const F = Space.wetFrame(r), n = r.enemies.length;
+  Obs(r, F, dt);
+  for (const e of r.enemies.splice(n)) { Pz(r, F, e); const p = r.pursuers.at(-1); p.h = Math.atan2(0, -Math.sign(e.velocity.x) || 1); p.v = 0 }
+};
+// At the launch, markers still waiting move from the stand-in frame into the new arena (both sit on the water line).
+Space.wetLaunch = function (r) {
+  const F = r.wetFrame; r.wetFrame = null;
+  if (!F || !r.warns?.length || r.medium?.kind !== 'air') return;
+  for (const w of r.warns) w.x += F.origin.x - r.medium.origin.x;
+};
+{const pq1=Pq;Pq=function(r,e){if(DEMO.tune.wetspawn&&r?.demo&&r.medium?.kind==='water'&&e>0)Space.wetSpawn(r,e);return pq1(r,e)}}
+{const zq1=Zq;Zq=function(r){zq1(r);if(r?.demo)Space.wetLaunch(r)}}
+{const draw1=Otdraw;Otdraw=function(R,r,m,title){draw1(R,r,m,title);if(!title&&m?.kind==='water'&&r.wetFrame&&r.warns?.length&&Space.on(r))Space.draw(R,r,r.wetFrame)}}

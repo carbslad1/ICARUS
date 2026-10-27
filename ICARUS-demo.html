@@ -4356,7 +4356,7 @@ var DEMO = (() => {
     depth: {type:'Blast',cad:'Heavy',coef:1.5,damage:[24,36,52,80],cd:[64,56,48,40],range:18,crit:.03,cx:1.5,kb:9,blast:8.5,side:'Max HP',sideScale:.15,description:'A lobbed charge aimed to intercept its target. Max HP also adds damage.'}
   };
   // Hand-cap levers (structure doc 5.4): kept open and tunable, to be balanced in play. The tuning panel edits these live.
-  const TUNE_DEFAULT={bro:1,shake:1,flash:1,space:1,edge:.2,danger:1,lead:.5,mines:0,carve:1,ccw:0,sky:12,verbs:0,hop:6,dive:2,dashes:2,hold:1};  // space: step 1 (space.js); edge: share of its spawns from the screen edge; danger, lead, mines: step 2 (danger.js)
+  const TUNE_DEFAULT={bro:1,shake:1,flash:1,space:1,edge:.2,danger:1,lead:.5,mines:0,carve:1,ccw:0,sky:12,verbs:0,hop:6,dive:2,dashes:2,hold:1,wetspawn:1};  // space: step 1 (space.js); edge: share of its spawns from the screen edge; danger, lead, mines: step 2 (danger.js)
   const tune={...TUNE_DEFAULT};
   try{Object.assign(tune,JSON.parse(localStorage.getItem('icarus.scoreshow.tune')||'{}'))}catch(e){}
   const saveTune=()=>{try{localStorage.setItem('icarus.scoreshow.tune',JSON.stringify(tune))}catch(e){}};
@@ -4843,7 +4843,7 @@ Owstarter=function(){return ''};
 
 /* Settings: one panel in tabs (T, the backquote key, or SCORE TUNING). Score holds the hand-cap levers (structure doc 5.4,
    kept open to balance in play); the other tabs hold the v3 carve's movement sliders, grouped by what they change. */
-const DemoTuneDefs=[['shake','Screen shake',0,2,.1],['flash','Enemy hit flash',0,1,.1],['space','Marked spawns ahead and flocking (step 1)',0,1,1,'check'],['edge','Step 1: share of spawns from the screen edge',0,1,.05],['danger','Leading shots and mines on the arc (step 2)',0,1,1,'check'],['lead','Step 2: how far shots lead you',0,1,.05],['mines','Step 2: mines per flight',0,4,1],['carve','Space carves (no boost)',0,1,1,'check'],['ccw','Carving always anticlockwise',0,1,1,'check'],['sky','Water camera: metres above the dolphin (0 = old camera)',0,20,.1],['hold','Enemies above the water stay ahead of you in view while you swim',0,1,1,'check'],['verbs','Experimental: stomp, dive (S) and dash (Space) in the air (parked; to become tricks)',0,1,1,'check'],['hop','Step 3: stomp lift (m/s)',0,15,.5],['dive','Step 3: dive gravity (x)',1,4,.1],['dashes','Step 3: dash charges',0,4,1]];
+const DemoTuneDefs=[['shake','Screen shake',0,2,.1],['flash','Enemy hit flash',0,1,.1],['space','Marked spawns ahead and flocking (step 1)',0,1,1,'check'],['edge','Step 1: share of spawns from the screen edge',0,1,.05],['danger','Leading shots and mines on the arc (step 2)',0,1,1,'check'],['lead','Step 2: how far shots lead you',0,1,.05],['mines','Step 2: mines per flight',0,4,1],['carve','Space carves (no boost)',0,1,1,'check'],['ccw','Carving always anticlockwise',0,1,1,'check'],['sky','Water camera: metres above the dolphin (0 = old camera)',0,20,.1],['hold','Enemies above the water stay ahead of you in view while you swim',0,1,1,'check'],['wetspawn','Enemies keep spawning while you swim',0,1,1,'check'],['verbs','Experimental: stomp, dive (S) and dash (Space) in the air (parked; to become tricks)',0,1,1,'check'],['hop','Step 3: stomp lift (m/s)',0,15,.5],['dive','Step 3: dive gravity (x)',1,4,.1],['dashes','Step 3: dash charges',0,4,1]];
 const DemoTabs=[
   ['Score',null,'Each jump draws 3 tricks; buy more in the Routine row. A hit bails the trick in progress; 0 HP busts the jump.'],
   ['Launch',['Forward only','Rocket boost','Carve','Wave schedule'],'The carve and the launch. Launch speed rises5 per wave.'],
@@ -5163,6 +5163,33 @@ Space.holdAbove = function (r, held, dt) {
   pq0(r,e);r.pursuers=(r.pursuers||[]).concat(dry);Space.holdAbove(r,dry,e);
   // v3's shock rings still push the held pursuers (a zero step: the rings don't grow twice, and each hits once)
   if(typeof Orshock==='function'){const keep=r.pursuers;r.pursuers=keep.filter(p=>dry.includes(p));Orshock(r,0);r.pursuers=keep}}}
+// Spawning goes on while the dolphin swims (designer, 2026-10-27; DEMO.tune.wetspawn). v3's wave schedule only advances
+// in the air step, so a water stay paused it. Here it advances during water stays too, once the wave's first launch has
+// started it (the air clock still pauses), at its usual rate. There is no arena under water, so the schedule runs
+// against a still stand-in frame fixed where this stay began (r.wetFrame: origin on the water line, moving the way the
+// dolphin swims so step 1's markers lean ahead of it); each enemy appears behind its marker above the water in view
+// and at once becomes a pursuer held ahead of the dolphin (holdAbove), joining the arena at the next launch.
+Space.wetFrame = function (r) {
+  const m = r.medium;
+  const F = r.wetFrame || (r.wetFrame = { kind: 'air', origin: se(m.pos.x, 0), vx: 0, vy: 0, local: ye(0, 0), velocity: { x: 0, y: 0 }, elapsed: 1, wet: true });
+  F.local = ye(m.pos.x - F.origin.x, m.pos.y); F.vx = m.velocity.x; F.vy = m.velocity.y;
+  return F;
+};
+Space.wetSpawn = function (r, dt) {
+  if (r.bw !== r.wave || r.mode !== 'playing' || r.armed) return;
+  const F = Space.wetFrame(r), n = r.enemies.length;
+  Obs(r, F, dt);
+  for (const e of r.enemies.splice(n)) { Pz(r, F, e); const p = r.pursuers.at(-1); p.h = Math.atan2(0, -Math.sign(e.velocity.x) || 1); p.v = 0 }
+};
+// At the launch, markers still waiting move from the stand-in frame into the new arena (both sit on the water line).
+Space.wetLaunch = function (r) {
+  const F = r.wetFrame; r.wetFrame = null;
+  if (!F || !r.warns?.length || r.medium?.kind !== 'air') return;
+  for (const w of r.warns) w.x += F.origin.x - r.medium.origin.x;
+};
+{const pq1=Pq;Pq=function(r,e){if(DEMO.tune.wetspawn&&r?.demo&&r.medium?.kind==='water'&&e>0)Space.wetSpawn(r,e);return pq1(r,e)}}
+{const zq1=Zq;Zq=function(r){zq1(r);if(r?.demo)Space.wetLaunch(r)}}
+{const draw1=Otdraw;Otdraw=function(R,r,m,title){draw1(R,r,m,title);if(!title&&m?.kind==='water'&&r.wetFrame&&r.warns?.length&&Space.on(r))Space.draw(R,r,r.wetFrame)}}
 
 // Step 2 of the build-and-playtest plan (ICARUS_DESIGN.md §4.18, §4.20): danger.
 // - Aimed shots lead: a turret's shot (and the elite's, see below) aims part of the way from where the dolphin is to
