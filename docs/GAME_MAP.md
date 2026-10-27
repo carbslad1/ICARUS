@@ -70,6 +70,8 @@ One cycle is a dive followed by a flight. These are medians from 291 bot flights
 - **Pearls** are the one shop currency (shown as ◈ in places): round(3 × √score) at each splashdown, plus each wave's clear pay (24 + 4 × wave) and 10% interest on saved pearls (at most 10).
 - **The shop** has no charms and no reel routines; their places go to weapons and gear. Settings › Score › "Style score rules" off restores S4 below.
 
+- **The routine (step 5, `source/routine.js`):** three slots fire, Breach (as the arena opens), Apex and Entry (water contact, before the bank). Tricks: Corkscrew (setup, pushes within 8 m), Gravity anchor (setup, pulls within 20 m for 1.5 s; a hit cancels it), Star pose (payoff, bursts within 7 m), Spout (payoff, splashes 4–12 m around the landing point by peak height, soaks). The mult is 1 + connected trick levels + 1 per linked payoff (a payoff that hits enemies a setup moved this flight). The run starts with one trick picked on the title screen; the shop always has one trick place, and its routine panel moves tricks between slots.
+
 ## 5. Waves and the loss condition (S4 demo)
 
 - **Air clock:** 20 s at wave 1, +5 s per wave, capped at 60 s; wave 20 is 90 s (`clock`). It runs only in the air. When it runs out, enemies keep coming and the wave ends at the next water entry. There is no safe coast.

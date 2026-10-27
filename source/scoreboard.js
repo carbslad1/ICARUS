@@ -85,8 +85,8 @@ var ScoreHUD = (() => {
     if(e.type==='start'){
       model={...model,chips:0,mult:e.mult||0,score:0,waveScore:e.waveScore,quota:e.quota,draws:e.draws,faces:[],bails:[],busted:false,banked:false};
       // Step 4: the mult cell is the clean streak and there are no reels
-      root.classList.toggle('rules',!!e.rules);const label=root.querySelector('.ss-mult .ss-label');if(label)label.textContent=e.rules?'STREAK':'MULT';
-      if(e.rules){set('flight',`FLIGHT ${String(e.hand).padStart(2,'0')} · WAVE ${e.wave}`);set('status','LAND TO BANK');set('total-label','SCORE');notice('KILLS × CLEAN STREAK · A HIT RESETS IT');return 0}
+      root.classList.toggle('rules',!!e.rules);
+      if(e.rules){set('flight',`FLIGHT ${String(e.hand).padStart(2,'0')} · WAVE ${e.wave}`);set('status','LAND TO BANK');set('total-label','SCORE');notice('KILLS × (1 + TRICKS) × CLEAN STREAK');return 0}
       shown.chips=shown.mult=shown.score=0;root.classList.remove('is-banked','is-combo','is-bust');
       set('flight',`FLIGHT ${String(e.hand).padStart(2,'0')} · WAVE ${e.wave}`);set('status','LAND TO BANK');set('total-label','SCORE');notice('KILLS FEED CHIPS · TRICKS FEED MULT');return 0;
     }
@@ -98,6 +98,7 @@ var ScoreHUD = (() => {
     if(e.type==='chips'){
       model.chips=e.chips;addition('chip-add','+'+number(e.amount)+(e.bonus?(e.bonus.apex?' APEX':e.bonus.multi?' MULTI':' CRIT'):''));pulse('chips',Math.min(1.5,.7+e.amount*.08));popup('chips','+'+number(e.amount),'chip',e.from);sound('chips');return 0;
     }
+    if(e.type==='combo'&&e.trick){model.mult=e.mult;const what=e.cancelled?`${e.name.toUpperCase()} · CANCELLED`:e.missed?`${e.name.toUpperCase()} · MISSED`:`${e.name.toUpperCase()} +${multiplier(e.amount)}${e.linked?' · LINKED':''}`;addition('mult-add',what);notice(what,e.missed||e.cancelled?'bail':e.linked?'combo':'mult');if(!e.missed&&!e.cancelled){pulse('mult',e.linked?1.4:1);popup('mult','+'+multiplier(e.amount),'mult');sound(e.linked?'combo':'trick')}return reduced()?0:140}
     if(e.type==='combo'&&e.reset){model.mult=e.mult;addition('mult-add','HIT · ×1');notice('HIT · STREAK BACK TO ×1','bail');pulse('mult',1.2);popup('mult','×1','bail');sound('bail');return 0}
     if(['trick','combo','lucky','charm'].includes(e.type)){
       model.mult=e.mult;

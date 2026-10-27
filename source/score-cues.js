@@ -11,6 +11,7 @@ var ScoreCues = (function () {
     h.scoreShow={count:0,mult:0,base:0,combos:[],snapshot:clone(r.demo.score),finished:false};
     // Step 4: the mult cell shows the clean streak this flight earns if it stays clean.
     const rules=typeof DEMO!=='undefined'&&DEMO.tune.rules,streak=rules?Math.min(Math.max(1,Math.round(DEMO.tune.streakCap)),(r.demo.streak||0)+1):0;
+    h.scoreShow.trickMult=1;h.scoreShow.streak=streak;
     emit(r,'start',{chips:0,mult:streak,draws:h.drawn.length,quota:r.quota,waveScore:r.wscore,rules:!!rules});
   }
   function chips(r,amount,pos,bonus) {
@@ -61,11 +62,13 @@ var ScoreCues = (function () {
     emit(r,'bank',{chips:result.chips,mult:result.mult,score:result.score,busted:!!h.busted,waveScore:r.wscore,quota:r.quota,met:r.wscore>=r.quota});
   }
   // Step 4: a hit puts the streak back to 1; at splashdown the score banks and pays its pearls.
-  function streakReset(r) {emit(r,'combo',{name:'Hit',amount:0,mult:1,reset:true});}
+  function streakReset(r) {const p=r.hand?.scoreShow;if(p)p.streak=1;emit(r,'combo',{name:'Hit',amount:0,mult:p?p.trickMult:1,reset:true});}
+  // Step 5: a routine trick finished; the mult cell shows (1 + connected tricks) × the streak this flight would earn.
+  function trick(r,o) {const p=r.hand?.scoreShow;if(!p)return;p.trickMult+=o.amount;emit(r,'combo',{name:o.name,amount:o.amount,mult:p.trickMult*p.streak,linked:!!o.linked,missed:!!o.missed,cancelled:!!o.cancelled,trick:true});}
   function style(r,o) {
     const p=r.hand?.scoreShow;if(!p||p.finished)return;p.finished=true;
     emit(r,'bank',{chips:o.chips,mult:o.mult*o.streak,score:o.score,busted:false,waveScore:r.wscore,quota:r.quota,met:false,pearls:o.pearls,streak:o.streak,clean:o.clean});
   }
-  return {begin,chips,bail,saved,bust,advance,tick,finish,streakReset,style};
+  return {begin,chips,bail,saved,bust,advance,tick,finish,streakReset,style,trick};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=ScoreCues;

@@ -4290,6 +4290,7 @@ var ScoreCues = (function () {
     h.scoreShow={count:0,mult:0,base:0,combos:[],snapshot:clone(r.demo.score),finished:false};
     // Step 4: the mult cell shows the clean streak this flight earns if it stays clean.
     const rules=typeof DEMO!=='undefined'&&DEMO.tune.rules,streak=rules?Math.min(Math.max(1,Math.round(DEMO.tune.streakCap)),(r.demo.streak||0)+1):0;
+    h.scoreShow.trickMult=1;h.scoreShow.streak=streak;
     emit(r,'start',{chips:0,mult:streak,draws:h.drawn.length,quota:r.quota,waveScore:r.wscore,rules:!!rules});
   }
   function chips(r,amount,pos,bonus) {
@@ -4340,12 +4341,14 @@ var ScoreCues = (function () {
     emit(r,'bank',{chips:result.chips,mult:result.mult,score:result.score,busted:!!h.busted,waveScore:r.wscore,quota:r.quota,met:r.wscore>=r.quota});
   }
   // Step 4: a hit puts the streak back to 1; at splashdown the score banks and pays its pearls.
-  function streakReset(r) {emit(r,'combo',{name:'Hit',amount:0,mult:1,reset:true});}
+  function streakReset(r) {const p=r.hand?.scoreShow;if(p)p.streak=1;emit(r,'combo',{name:'Hit',amount:0,mult:p?p.trickMult:1,reset:true});}
+  // Step 5: a routine trick finished; the mult cell shows (1 + connected tricks) × the streak this flight would earn.
+  function trick(r,o) {const p=r.hand?.scoreShow;if(!p)return;p.trickMult+=o.amount;emit(r,'combo',{name:o.name,amount:o.amount,mult:p.trickMult*p.streak,linked:!!o.linked,missed:!!o.missed,cancelled:!!o.cancelled,trick:true});}
   function style(r,o) {
     const p=r.hand?.scoreShow;if(!p||p.finished)return;p.finished=true;
     emit(r,'bank',{chips:o.chips,mult:o.mult*o.streak,score:o.score,busted:false,waveScore:r.wscore,quota:r.quota,met:false,pearls:o.pearls,streak:o.streak,clean:o.clean});
   }
-  return {begin,chips,bail,saved,bust,advance,tick,finish,streakReset,style};
+  return {begin,chips,bail,saved,bust,advance,tick,finish,streakReset,style,trick};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=ScoreCues;
 
@@ -4701,7 +4704,10 @@ var DEMO = (() => {
     d.offers=held.slice(0,6);d.deferredOffers=held.slice(6);d.pack=null;d.weaponChoice=null;d.rerolls={shelf:0,pack:0};
     // Step 4: no charms or reel routines; their two places go to the shelf.
     if(tune.rules)d.offers=d.offers.filter(o=>!inRoutineRow(o));
-    const shelves=3+d.shelfBonus+(tune.rules?2:0);for(let i=d.offers.filter(o=>!inRoutineRow(o)).length;i<shelves&&d.offers.length<6;i++)d.offers.push(shelfOffer(r,i));
+    // Step 5: one of the six places is always a trick (a new one, or a copy that levels one you own).
+    if(tune.rules&&typeof Routine!=='undefined'&&!d.offers.some(o=>o.row==='trick'))d.offers.push({uid:++d.uid,row:'trick',id:Routine.IDS[Math.floor(ce(r)*Routine.IDS.length)],price:price(r,25)});
+    // with the rules, six places: one the trick, the rest weapons and gear
+    const shelves=3+d.shelfBonus+(tune.rules?3:0);for(let i=d.offers.filter(o=>!inRoutineRow(o)).length;i<shelves&&d.offers.length<6;i++)d.offers.push(shelfOffer(r,i));
     if(!tune.rules)for(let i=d.offers.filter(inRoutineRow).length;i<2&&d.offers.length<6;i++)d.offers.push(routineOffer(r,i));
   }
   function levelChoices(r){if(!r.lvup){r.demo.levelChoices=[];return}const types=new Set(r.slots.map(g=>weapons[g.id].type)),all=Object.keys(stats).filter(k=>k!=='Drive');r.demo.levelChoices=['combat','defence','flight'].map(group=>{const pool=all.filter(k=>(stats[k].group===group||group==='flight'&&stats[k].group==='economy')&&(!['Close','Shot','Blast'].includes(k)||types.has(k)));return{id:choose(r,pool),level:rarity(r)}})}
@@ -4745,10 +4751,12 @@ var DEMO = (() => {
     if(action==='weaponChoice'){const o=d.offers.find(x=>x.uid===+index);if(!o||o.bought||o.row!=='weapon'||d.pack||r.slots.length!==6)return false;d.weaponChoice=o.uid;return true}
     if(action==='weaponCancel'){d.weaponChoice=null;return true}
     if(action==='replaceWeapon'){const i=+index,o=d.offers.find(x=>x.uid===d.weaponChoice),g=r.slots[i];if(!g||!o||o.bought||o.row!=='weapon'||d.pack)return false;const refund=Math.floor((g.paid||0)/2),cost=o.price-refund;if(r.xp<cost)return false;const next=Owslot(o.id,o.level,++d.uid);next.paid=o.price;next.cd=0;r.slots[i]=next;r.xp-=cost;o.bought=true;o.locked=false;d.weaponChoice=null;sync(r);return true}
+    if(action==='trickMove'){const [id,slot]=String(index).split(':');return Routine.move(r,id,slot)}
     if(action==='buy'){const o=d.offers.find(x=>x.uid===+index);if(!o||o.bought||r.xp<o.price||d.pack)return false;
       if(o.row==='pack'&&o.id==='charm'&&d.charms.length>=charmSlots(r)){d.toast='Sell a charm or gain a charm slot before opening this Charm pack.';return false}
       if(o.row==='weapon'){if(r.slots.length>=6){const g=r.slots.find(g=>g.id===o.id&&g.lvl===o.level&&g.lvl<4);if(!g){d.toast='Choose a weapon to replace, or combine an existing pair.';return false}g.lvl++;g.paid=(g.paid||0)+o.price;g.cd=0}else{const g=Owslot(o.id,o.level,++d.uid);g.paid=o.price;g.cd=0;r.slots.push(g)}}
       else if(o.row==='charm'){if(d.charms.length>=charmSlots(r)||d.charms.includes(o.id))return false;d.charms.push(o.id);d.charmPaid[o.id]=o.price;d.charmFaces[o.id]=o.face}
+      else if(o.row==='trick'){Routine.add(r,o.id)}
       else if(o.row==='item'){FiveCombat.buy(r,o.id);(d.itemPaid??={})[o.id]=[...(d.itemPaid?.[o.id]||[]),o.price]}
       else if(o.row==='stat'){const a=items[o.id];addStat(r,a.up,a.value);if(a.down)addStat(r,a.down,-a.loss);d.statInventory.push({id:o.id,paid:o.price,uid:o.uid})}
       else if(o.row==='routine'){if(!packChoiceValid(r,o.choice)){d.toast='That upgrade is already at its cap.';return false}applyChoice(r,o.choice)}
@@ -4817,7 +4825,7 @@ SE=function(r,m,input,dt,depth){
   if(r.mode!=='playing')return;
   if(apex!==null&&apex<=t+1e-9&&!h.apex){h.apex=true;if(!r.armed)DEMO.fireCharms(r,'apex');r.events.push({kind:'apex',pos:he(r)});if(dt-t>1e-9)Il(r,input,dt-t,depth+1);return}
   if(land!==null&&land<=t+1e-9){
-    const pos=he(r);if(!r.armed&&!r.hand?.busted)FiveCombat.entry(r);DEMO.bank(r);Oxebag(r,pos,m);r.shots=[];if(typeof Danger!=='undefined')Danger.land(r);if(typeof Verbs!=='undefined')Verbs.land(r);
+    const pos=he(r);if(!r.armed&&!r.hand?.busted)FiveCombat.entry(r);if(typeof Routine!=='undefined'&&Routine.on(r))Routine.entry(r);DEMO.bank(r);Oxebag(r,pos,m);r.shots=[];if(typeof Danger!=='undefined')Danger.land(r);if(typeof Verbs!=='undefined')Verbs.land(r);
     // as v3 carve: at the entry every enemy becomes a pursuer (or flies off, with pursuit off). Pursuers hold above the
     // sea while you swim and come back as enemies at the breach (Zq).
     for(const E of [...r.enemies])Qz.on?Pz(r,m,E):nw(r,m,E);r.enemies=[];
@@ -4865,10 +4873,10 @@ of=function(){if(!S?.demo||!document.getElementById('wave-number'))return;DemoOf
   if(panel.innerHTML!==html)panel.innerHTML=html;panel.classList.toggle('in-air',air);
 };
 function DemoBind(){for(const b of hr.querySelectorAll('[data-demo]'))b.onclick=()=>{const a=b.dataset.demo,i=b.dataset.index;
-  if(a==='starter'){En=i;ql();return}if(a==='begin'){Zd(En);return}if(a==='tune'){document.getElementById('tune')?DemoPanel(false):DemoTune(true);return}if(a==='help'){const el=document.getElementById('demo-how');if(el)el.hidden=!el.hidden;return}if(a==='home'){ql();return}
+  if(a==='starter'){En=i;ql();return}if(a==='startTrick'){DemoStartTrick=i;ql();return}if(a==='begin'){Zd(En);return}if(a==='tune'){document.getElementById('tune')?DemoPanel(false):DemoTune(true);return}if(a==='help'){const el=document.getElementById('demo-how');if(el)el.hidden=!el.hidden;return}if(a==='home'){ql();return}
   if(a==='next'){if(DEMO.command(S,a,i)){ke=0;as=Br(S);sf()}else Xl();return}DEMO.command(S,a,i);Xl();if(a==='level'){(hr.querySelector('[data-demo=level]:not(:disabled)')||hr.querySelector('[data-demo=buy]:not(:disabled)'))?.focus({preventScroll:true})}else if(S.demo.pack){const choice=hr.querySelector('[data-demo=packPick]:not(:disabled)');choice?.focus({preventScroll:true});choice?.scrollIntoView?.({block:'nearest'})}
 }}
-ql=function(){ft='title';St=null;ur.reset();hr.innerHTML=`${_w()}<section class="title-content demo-title"><div class="eyebrow">CHIPS × MULT · SCORE FEEL TEST</div><h1>ICARUS<span>BUILD YOUR ASCENT</span></h1><p class="intro">Carve your launch.<br>Build the flight you want.</p><p class="title-description">Automatic weapons turn kills into chips.<br>Your tricks are the reels: they build mult.<br>Get hit and the trick in progress bails. Land to bank.</p><div class="demo-starters">${['sonic','harpoon','rocket'].map(id=>DemoButton('starter',id,`<b>${Owc[id].name}</b><span>${DEMO.weapons[id].type} · ${DEMO.weapons[id].description}</span>`,false,id===En?'selected':'')).join('')}</div><div class="launch-row">${DemoButton('begin','','BEGIN RUN ↗',false,'demo-primary')}${DemoButton('help','','HOW TO PLAY')}${DemoButton('tune','','SETTINGS')}</div><div id="demo-how" hidden><p><b>Launch:</b> hold ${Controls.carve()?'Space':'W or up'} to carve upward. Release to ride out.${Controls.carve()?'':' Space boosts.'} Water is safe and pauses the air clock.</p><p><b>Fight:</b> W A S D / arrows steer within your launch path. Weapons fire automatically. ${DEMO.tune.rules?'Each kill is a chip. Land in water to bank kills × your clean streak (up to ×5, back to ×1 when you take a hit) as pearls. Survive 20 waves; 0 HP ends the run.':"Kills give chips, plus bonus chips for multi-kills, apex kills and crits. Land in water to bank chips × mult. Meet every wave's quota for 20 waves; missing one ends the run."}</p><p><b>Tricks:</b> each jump draws tricks (3 to start; buy more) that play automatically, like reels. A hit bails the trick in progress: it pays nothing. At 0 HP the jump busts: you fall, bank nothing and come back at half HP.</p><p><b>Build:</b> kills drop XP orbs; steer through them to level up. Each level gives a free stat pick before the shop. Then buy weapons and gear for chips and survival, charms that rewrite the scoring, and Routine upgrades for your tricks. Charms resolve left to right at the bank.</p></div></section><footer class="title-footer"><div><b>${Object.keys(DEMO.weapons).length}</b><span>WEAPONS · SIX SLOTS</span></div><div><b>5</b><span>TRICKS · DRAWS 3→7</span></div><div><b>${Object.keys(FiveScore.charms).length}</b><span>CHARMS</span></div><div><b>${FiveCombat.catalogue.length}</b><span>COMBAT ITEMS</span></div></footer>`;Kl();DemoBind()};
+ql=function(){ft='title';St=null;ur.reset();hr.innerHTML=`${_w()}<section class="title-content demo-title"><div class="eyebrow">CHIPS × MULT · SCORE FEEL TEST</div><h1>ICARUS<span>BUILD YOUR ASCENT</span></h1><p class="intro">Carve your launch.<br>Build the flight you want.</p><p class="title-description">${DEMO.tune.rules?'Automatic weapons turn kills into chips.<br>Pick your first trick: it fires at Breach, Apex or Entry and builds mult.<br>Stay clean to grow your streak. Land to bank pearls.':'Automatic weapons turn kills into chips.<br>Your tricks are the reels: they build mult.<br>Get hit and the trick in progress bails. Land to bank.'}</p><div class="demo-starters">${['sonic','harpoon','rocket'].map(id=>DemoButton('starter',id,`<b>${Owc[id].name}</b><span>${DEMO.weapons[id].type} · ${DEMO.weapons[id].description}</span>`,false,id===En?'selected':'')).join('')}</div>${DEMO.tune.rules?(()=>{if(!DemoTrickTitle){DemoTrickTitle=[...Routine.IDS].sort(()=>Math.random()-.5).slice(0,3);DemoStartTrick=DemoTrickTitle[0]}return `<div class="demo-starters demo-tricks">${DemoTrickTitle.map(id=>{const T=Routine.TRICKS[id];return DemoButton('startTrick',id,`<b>${T.glyph} ${T.name}</b><span title="${T.text}">${T.kind==='setup'?'Setup':'Payoff'} · ${Routine.SLOT_NAMES[T.slot]}</span>`,false,id===DemoStartTrick?'selected':'')}).join('')}</div>`})():''}<div class="launch-row">${DemoButton('begin','','BEGIN RUN ↗',false,'demo-primary')}${DemoButton('help','','HOW TO PLAY')}${DemoButton('tune','','SETTINGS')}</div><div id="demo-how" hidden><p><b>Launch:</b> hold ${Controls.carve()?'Space':'W or up'} to carve upward. Release to ride out.${Controls.carve()?'':' Space boosts.'} Water is safe and pauses the air clock.</p><p><b>Fight:</b> W A S D / arrows steer within your launch path. Weapons fire automatically. ${DEMO.tune.rules?'Each kill is a chip. Land in water to bank kills × your clean streak (up to ×5, back to ×1 when you take a hit) as pearls. Survive 20 waves; 0 HP ends the run.':"Kills give chips, plus bonus chips for multi-kills, apex kills and crits. Land in water to bank chips × mult. Meet every wave's quota for 20 waves; missing one ends the run."}</p><p><b>Tricks:</b> each jump draws tricks (3 to start; buy more) that play automatically, like reels. A hit bails the trick in progress: it pays nothing. At 0 HP the jump busts: you fall, bank nothing and come back at half HP.</p><p><b>Build:</b> kills drop XP orbs; steer through them to level up. Each level gives a free stat pick before the shop. Then buy weapons and gear for chips and survival, charms that rewrite the scoring, and Routine upgrades for your tricks. Charms resolve left to right at the bank.</p></div></section><footer class="title-footer"><div><b>${Object.keys(DEMO.weapons).length}</b><span>WEAPONS · SIX SLOTS</span></div><div><b>5</b><span>TRICKS · DRAWS 3→7</span></div><div><b>${Object.keys(FiveScore.charms).length}</b><span>CHARMS</span></div><div><b>${FiveCombat.catalogue.length}</b><span>COMBAT ITEMS</span></div></footer>`;Kl();DemoBind()};
 jl=function(){const won=S.mode==='won';Ir(`<section class="scrim"><div class="summary-panel"><div class="eyebrow">${won?'TWENTY WAVES CLEARED':S.endReason==='hp'?'OUT OF HP':'QUOTA MISSED'}</div><h2>${won?'An extraordinary ascent.':'Every flight counts.'}</h2><p>${DEMO.tune.rules?`Wave ${S.wave} · ${S.kills} kills · ${S.earned||0} pearls earned · best streak ×${Math.max(0,...S.demo.history.map(h=>h.streak||0))}.`:`Wave ${S.wave} · ${S.wscore} / ${S.quota} banked · ${S.kills} kills.`}</p><p>${won?'Your build carried the run.':'Bigger banks come from more chips, more mult or fewer Bails: weapons, charms, Routine upgrades and gear.'}</p><div class="demo-summary-hands">${S.demo.history.slice(-5).map(h=>`<div>${h.busted?'BUST':`${h.chips} × ${DEMO.fmt(h.mult)}`} = <b>${h.score}</b><small>${h.cards.join(' · ')}${h.bails?.length?` · ${h.bails.length} Bail${h.bails.length>1?'s':''}`:''}</small></div>`).join('')}</div>${DemoButton('home','','BACK TO START',false,'demo-primary')}</div></section>`);DemoBind()};
 ls=function(){if(ft!=='game'||S.mode!=='playing')return;ft='pause';It.clear();Gr=false;je={x:0,y:0};ke=0;Ir(`<section class="scrim"><div class="modal pause-modal"><div class="eyebrow">TAKE A BREATH</div><h2>Your flight can wait.</h2><p>Hold ${Controls.carve()?'Space':'W / up'} underwater to carve. Release to launch${Controls.carve()?'':'; space boosts'}. In air, W A S D / arrows steer within the launch path.</p><p>Every drawn trick lands unless a hit bails it. At 0 HP the jump busts and banks nothing. Charms resolve at the bank. A flight with no kills keeps the same tricks.</p><p>Wave ${S.wave} · ${DEMO.tune.rules?`streak ×${S.demo.streak||0} · ${S.xp} pearls`:`${S.wscore} / ${S.quota} banked`} · ${S.budget.toFixed(1)}s air left.</p><div class="modal-actions">${kt('resume','RESUME FLIGHT ↗','primary')}${kt('end','END RUN')}${DemoButton('tune','','SETTINGS')}</div></div></section>`);DemoBind()};
 Owstarter=function(){return ''};
@@ -5488,6 +5496,142 @@ var Verbs = (() => {
 {const se0=SE;SE=function(r,t,e,i,s){if(!Verbs.on(r)||!(i>0))return se0(r,t,e,i,s);Verbs.before(r,t,e,i);const out=se0(r,t,e,i,s);if(r.medium===t&&t.kind==='air')Verbs.after(r,t,i);return out}}
 {const draw0=Otdraw;Otdraw=function(R,r,m,title){draw0(R,r,m,title);if(!title&&m?.kind==='air'&&Verbs.on(r))Verbs.draw(R,r,m)}}
 
+// Step 5 of the build-and-playtest plan (ICARUS_DESIGN.md §4.2-4.6, §4.20): the first routine. Designer's answers,
+// 2026-10-27: mult = 1 + the levels of the tricks that connect + 1 per linked payoff; payoffs hit like a weapon, setups
+// deal nothing; the run starts with one trick picked from three; the shop always has one trick place, from 25 pearls.
+// - Three slots fire this step: Breach (the first air step), Apex (the top of the arc) and Entry (water contact, before
+//   the splashdown banks). Ascent and Descent come with step 10. Any trick goes in any slot; one copy each; a bought
+//   copy of an owned trick levels it.
+// - Setups move enemies and mark them with the flight (e.setupBy). A payoff connects if it hits at least one enemy, and
+//   is linked if any enemy it hits was moved by a setup this flight. A setup connects if it moves at least one enemy;
+//   Gravity anchor holds for 1.5 s and a hit while it holds cancels it (it adds nothing).
+// - Only with the step 4 rules (DEMO.tune.rules); S4's reels stay as they were with them off.
+var Routine = (() => {
+  const P = Object.freeze({
+    corkR: 8, corkPush: 26,                 // m, m/s outward
+    anchorR: 20, anchorT: 1.5, anchorPull: 22, // m, s, m/s toward the point
+    starR: 7,                               // m (+1 per extra level)
+    spoutR0: 4, spoutPerM: .2, spoutMax: 12, // m at the landing point, + 0.2 per metre of the flight's peak height
+    base: 30, perLevel: .5, perWave: .1     // payoff damage: base × (1 + .5 per extra level) × Damage % × (1 + .1 per wave)
+  });
+  const TRICKS = Object.freeze({
+    cork:   { name: 'Corkscrew',      kind: 'setup',  slot: 'breach', glyph: '⤨', text: 'Pushes enemies within 8 m of you away.' },
+    anchor: { name: 'Gravity anchor', kind: 'setup',  slot: 'apex',   glyph: '◎', text: 'Pulls enemies within 20 m to where it fires, for 1.5 s.' },
+    star:   { name: 'Star pose',      kind: 'payoff', slot: 'apex',   glyph: '✦', text: 'Bursts enemies within 7 m of you.' },
+    spout:  { name: 'Spout',          kind: 'payoff', slot: 'entry',  glyph: '≋', text: 'Splashes enemies around your landing point and soaks them. Higher falls splash wider.' }
+  });
+  const IDS = Object.keys(TRICKS), SLOTS = ['breach', 'apex', 'entry'], SLOT_NAMES = { breach: 'Breach', apex: 'Apex', entry: 'Entry' };
+  const on = r => !!(DEMO.tune.rules && r?.demo);
+  const state = r => r.demo.routine || (r.demo.routine = { slots: { breach: null, apex: null, entry: null }, levels: {} });
+  const level = (r, id) => state(r).levels[id] || 0;
+  const unit = (x, y) => { const n = Math.hypot(x, y) || 1; return { x: x / n, y: y / n } };
+
+  // owning and placing
+  function add(r, id) {
+    const S = state(r); S.levels[id] = (S.levels[id] || 0) + 1;
+    if (SLOTS.some(s => S.slots[s] === id)) return;
+    const s = !S.slots[TRICKS[id].slot] ? TRICKS[id].slot : SLOTS.find(x => !S.slots[x]);
+    if (s) S.slots[s] = id;
+  }
+  // put an owned trick in a slot; whatever was there takes its old place (or the bench)
+  function move(r, id, slot) {
+    const S = state(r);
+    if (!S.levels[id] || !SLOTS.includes(slot)) return false;
+    const from = SLOTS.find(s => S.slots[s] === id) || null, there = S.slots[slot];
+    S.slots[slot] = id; if (from) S.slots[from] = there && there !== id ? there : null;
+    return true;
+  }
+  const bench = r => IDS.filter(id => level(r, id) && !SLOTS.some(s => state(r).slots[s] === id));
+  // three different tricks, drawn by the run's generator
+  function draw3(r) { const a = [...IDS]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(ce(r) * (i + 1)); [a[i], a[j]] = [a[j], a[i]] } return a.slice(0, 3) }
+  // the run's first trick: the one picked on the title screen (DemoStartTrick), or the first of three drawn
+  function start(r) {
+    const offers = draw3(r), pick = typeof DemoStartTrick !== 'undefined' && TRICKS[DemoStartTrick] ? DemoStartTrick : offers[0];
+    r.demo.trickOffers = offers; add(r, pick);
+  }
+  const damage = (r, id) => P.base * (1 + P.perLevel * (level(r, id) - 1)) * (r.stats.damage || 1) * (1 + P.perWave * (r.wave - 1));
+
+  // firing a slot
+  function near(r, x, y, R) { return r.enemies.filter(e => e.hp > 0 && Math.hypot(e.pos.x - x, e.pos.y - y) < R + (e.radius || 1)) }
+  function fire(r, m, slot) {
+    const h = r.hand, id = state(r).slots[slot];
+    (h.fired || (h.fired = {}))[slot] = true;
+    if (!id) return;
+    const T = TRICKS[id], lv = level(r, id), me = m.local, rec = { slot, id, name: T.name, level: lv, hits: 0, linked: false, connected: false };
+    (h.tricks || (h.tricks = [])).push(rec);
+    const fx = (kind, R, life) => (r.trickFx || (r.trickFx = [])).push({ kind, x: m.origin.x + me.x, y: m.origin.y + me.y, R, t: life, life });
+    if (id === 'cork') {
+      for (const e of near(r, me.x, me.y, P.corkR)) { const u = unit(e.pos.x - me.x, e.pos.y - me.y); e.velocity.x += u.x * P.corkPush; e.velocity.y += u.y * P.corkPush; e.setupBy = h.n; rec.hits++ }
+      fx('ring', P.corkR, .35); return settle(r, rec);
+    }
+    if (id === 'anchor') {
+      for (const e of near(r, me.x, me.y, P.anchorR)) { e.setupBy = h.n; rec.hits++ }
+      r.anchor = { x: me.x, y: me.y, t: P.anchorT, rec, n: h.n };
+      rec.pending = true; fx('anchor', P.anchorR, P.anchorT); return;
+    }
+    // payoffs: linked if anything they hit was moved by this flight's setups (checked before the damage kills it)
+    const R = id === 'star' ? P.starR + (lv - 1) : Math.min(P.spoutMax, P.spoutR0 + P.spoutPerM * Math.max(0, r.flightBest || 0));
+    const hit = near(r, me.x, me.y, R), amount = damage(r, id);
+    rec.linked = hit.some(e => e.setupBy === h.n);
+    for (const e of hit) { if (id === 'spout') e.soaked = true; DEMO.damage(r, e, amount, id); rec.hits++ }
+    fx(id === 'star' ? 'burst' : 'splash', R, .45);
+    settle(r, rec);
+  }
+  // a trick has finished: it connects if it hit something; the scoreboard shows what it adds
+  function settle(r, rec) {
+    rec.pending = false; rec.connected = rec.hits > 0 && !rec.cancelled;
+    const add = rec.connected ? rec.level + (rec.linked ? 1 : 0) : 0;
+    ScoreCues.trick(r, { name: rec.name, amount: add, linked: rec.connected && rec.linked, missed: !rec.connected, cancelled: !!rec.cancelled });
+  }
+
+  // each air step after v3's enemy step: the Breach and Apex slots, and Gravity anchor's pull
+  function step(r, m, dt) {
+    const h = r.hand; if (!h?.open || h.busted) return;
+    if (!h.fired?.breach) fire(r, m, 'breach');
+    if (h.apex && !h.fired?.apex) fire(r, m, 'apex');
+    const A = r.anchor;
+    if (A && A.n === h.n && A.rec.pending) {
+      for (const e of near(r, A.x, A.y, P.anchorR)) {
+        const u = unit(A.x - e.pos.x, A.y - e.pos.y), d = Math.hypot(A.x - e.pos.x, A.y - e.pos.y), sp = Math.min(P.anchorPull, d / Math.max(dt, .05));
+        e.velocity.x = u.x * sp; e.velocity.y = u.y * sp; e.setupBy = h.n;
+      }
+      A.t -= dt; if (A.t <= 0) { settle(r, A.rec); r.anchor = null }
+    }
+  }
+  // a hit cancels a trick in progress (only Gravity anchor lasts)
+  function onHit(r) { const A = r.anchor; if (A?.rec.pending && A.n === r.hand?.n) { A.rec.cancelled = true; settle(r, A.rec); r.anchor = null } }
+  // water contact, before the splashdown banks: the Entry slot, any anchor still holding completes, and the mult is set
+  function entry(r) {
+    const h = r.hand, m = r.medium; if (!h?.open || h.busted || m?.kind !== 'air') return;
+    if (!h.fired?.breach) fire(r, m, 'breach');
+    if (!h.fired?.apex && h.apex) fire(r, m, 'apex');
+    if (r.anchor?.rec.pending && r.anchor.n === h.n) { settle(r, r.anchor.rec); r.anchor = null }
+    if (!h.fired?.entry) fire(r, m, 'entry');
+    h.mult = 1 + (h.tricks || []).reduce((a, t) => a + (t.connected ? t.level + (t.linked ? 1 : 0) : 0), 0);
+  }
+
+  // trick visuals on the telegraph layer: a push ring, the anchor's pull, a burst, a splash
+  function draw(R, r) {
+    const G = R.telegraphs, keep = [];
+    for (const f of r.trickFx || []) {
+      f.t -= 1 / 60; if (f.t <= 0) continue; keep.push(f);
+      const X = R.sx(f.x), Y = R.sy(f.y), ppm = Math.abs(R.sx(f.x + 1) - X), k = 1 - f.t / f.life;
+      if (f.kind === 'ring') G.circle(X, Y, f.R * ppm * (.3 + .7 * k)).stroke({ color: yt.cyan, width: 3, alpha: .8 * (1 - k) });
+      else if (f.kind === 'burst') { G.circle(X, Y, f.R * ppm * (.4 + .6 * k)).fill({ color: yt.amber, alpha: .25 * (1 - k) }).stroke({ color: yt.amber, width: 3, alpha: .9 * (1 - k) }) }
+      else if (f.kind === 'splash') G.ellipse(X, Y, f.R * ppm * (.4 + .6 * k), f.R * ppm * .35).stroke({ color: yt.cyan, width: 3, alpha: .9 * (1 - k) });
+      else if (f.kind === 'anchor') { G.circle(X, Y, 6 + 4 * Math.sin(k * 30)).fill({ color: yt.white, alpha: .7 }); G.circle(X, Y, f.R * ppm * (1 - k)).stroke({ color: yt.white, width: 1.5, alpha: .35 }) }
+    }
+    r.trickFx = keep;
+  }
+
+  return { P, TRICKS, IDS, SLOTS, SLOT_NAMES, on, state, level, add, move, bench, draw3, start, damage, fire, step, onHit, entry, draw };
+})();
+var DemoStartTrick, DemoTrickTitle;  // the title screen's pick, and the three it shows
+{const hd0=Hd;Hd=function(...a){const r=hd0(...a);if(Routine.on(r))Routine.start(r);return r}}
+{const me0=ME;ME=function(r,t,e,i){me0(r,t,e,i);if(Routine.on(r)&&t?.kind==='air'&&i>0)Routine.step(r,t,i)}}
+{const hit0=DEMO.hit;DEMO.hit=function(r,a){const hp=r.hp;hit0(r,a);if(r.hp<hp&&Routine.on(r))Routine.onHit(r)}}
+{const draw0=Otdraw;Otdraw=function(R,r,m,title){draw0(R,r,m,title);if(!title&&r?.trickFx?.length)Routine.draw(R,r)}}
+
 // Flight log: records what happens in each flight (positions, enemies, input, kills, hits) and the shop actions
 // taken, so a real run can be exported as JSON and studied. Observation only: it reads state and never changes it.
 var FlightLog = (() => {
@@ -5661,8 +5805,8 @@ var ScoreHUD = (() => {
     if(e.type==='start'){
       model={...model,chips:0,mult:e.mult||0,score:0,waveScore:e.waveScore,quota:e.quota,draws:e.draws,faces:[],bails:[],busted:false,banked:false};
       // Step 4: the mult cell is the clean streak and there are no reels
-      root.classList.toggle('rules',!!e.rules);const label=root.querySelector('.ss-mult .ss-label');if(label)label.textContent=e.rules?'STREAK':'MULT';
-      if(e.rules){set('flight',`FLIGHT ${String(e.hand).padStart(2,'0')} · WAVE ${e.wave}`);set('status','LAND TO BANK');set('total-label','SCORE');notice('KILLS × CLEAN STREAK · A HIT RESETS IT');return 0}
+      root.classList.toggle('rules',!!e.rules);
+      if(e.rules){set('flight',`FLIGHT ${String(e.hand).padStart(2,'0')} · WAVE ${e.wave}`);set('status','LAND TO BANK');set('total-label','SCORE');notice('KILLS × (1 + TRICKS) × CLEAN STREAK');return 0}
       shown.chips=shown.mult=shown.score=0;root.classList.remove('is-banked','is-combo','is-bust');
       set('flight',`FLIGHT ${String(e.hand).padStart(2,'0')} · WAVE ${e.wave}`);set('status','LAND TO BANK');set('total-label','SCORE');notice('KILLS FEED CHIPS · TRICKS FEED MULT');return 0;
     }
@@ -5674,6 +5818,7 @@ var ScoreHUD = (() => {
     if(e.type==='chips'){
       model.chips=e.chips;addition('chip-add','+'+number(e.amount)+(e.bonus?(e.bonus.apex?' APEX':e.bonus.multi?' MULTI':' CRIT'):''));pulse('chips',Math.min(1.5,.7+e.amount*.08));popup('chips','+'+number(e.amount),'chip',e.from);sound('chips');return 0;
     }
+    if(e.type==='combo'&&e.trick){model.mult=e.mult;const what=e.cancelled?`${e.name.toUpperCase()} · CANCELLED`:e.missed?`${e.name.toUpperCase()} · MISSED`:`${e.name.toUpperCase()} +${multiplier(e.amount)}${e.linked?' · LINKED':''}`;addition('mult-add',what);notice(what,e.missed||e.cancelled?'bail':e.linked?'combo':'mult');if(!e.missed&&!e.cancelled){pulse('mult',e.linked?1.4:1);popup('mult','+'+multiplier(e.amount),'mult');sound(e.linked?'combo':'trick')}return reduced()?0:140}
     if(e.type==='combo'&&e.reset){model.mult=e.mult;addition('mult-add','HIT · ×1');notice('HIT · STREAK BACK TO ×1','bail');pulse('mult',1.2);popup('mult','×1','bail');sound('bail');return 0}
     if(['trick','combo','lucky','charm'].includes(e.type)){
       model.mult=e.mult;
@@ -5770,7 +5915,7 @@ globalThis.icarusDemo.guide=RunGuide;
 var ShopUI = (() => {
   const E=DemoEscape,B=DemoButton,F=FiveScore,faces=F.faces;
   const faceGlyph={spout:'≋',front:'↻',back:'↺',cork:'⤨',star:'✦'};
-  const iconCache=new Map(),opened=new Set();let focusCharm=0,focusWeapon=0;
+  const iconCache=new Map(),opened=new Set();let focusCharm=0,focusWeapon=0,focusTrick=null;
   const number=n=>Number(n.toFixed(2)).toLocaleString('en-US',{maximumFractionDigits:2});
   const signed=n=>(n>=0?'+':'')+number(n);
   const short={fin:'Rapid strikes cleave nearby enemies.',sonic:'A wide pulse pushes nearby enemies back.',arc:'Lightning chains through four targets.',minigun:'Rapid rounds focus one target.',harpoon:'Critical shots pierce enemies.',laser:'A heavy beam pierces three targets.',flak:'Three spreading shells burst into crowds.',rocket:'A blast clears the target and its neighbours.',depth:'Lob a heavy charge ahead of a moving target.'};
@@ -5791,6 +5936,7 @@ var ShopUI = (() => {
       const src=iconCache.get(id);if(src)return `<img class="shop-weapon-art" alt="" src="${src}">`;
       return `<span class="shop-symbol" aria-hidden="true">${E(Owc[id]?.glyph||'↣')}</span>`;
     }
+    if(kind==='trick')return `<span class="shop-symbol" aria-hidden="true">${E(Routine.TRICKS[id]?.glyph||'◇')}</span>`;
     const symbol=kind==='charm'?charmGlyph[F.charms[id]?.kind]:kind==='item'?itemGlyph[id]:kind==='face'?faceGlyph[id]:kind==='choice'?choiceGlyph[id]:kind==='pack'?{routine:'≡',charm:'◇'}[id]:kind==='voucher'?'⌑':kind==='stat'?'＋':'◇';
     return `<span class="shop-symbol" aria-hidden="true">${E(symbol||'◇')}</span>`;
   }
@@ -5826,6 +5972,7 @@ var ShopUI = (() => {
   function offerInfo(r,o){let name,summary,detailText,tag,tone='chips',impact='',iconKind=o.row,iconId=o.id,owned='',rarity=0;
     if(o.row==='weapon'){const x=weaponInfo(r,o),w=DEMO.weapons[o.id];name=Owc[o.id].name;tag=`WEAPON · ${w.type} · ${w.cad} · T${o.level}`;summary=short[o.id]+(w.type==='Close'?' +2 Armour.':'');impact=x.match?`Matching copy → T${x.mergeLevel}: ${Math.round(x.damage)} → ${Math.round(x.mergeDamage)} damage.`:x.owned?`Owned: ${x.ownedTiers.map(t=>'T'+t).join(', ')}. This adds T${o.level}.`:x.inventoryDelta;owned=x.owned?`${x.owned} OWNED`:'NEW WEAPON';rarity=Math.min(3,o.level);detailText=`<p>${E(w.description)}${w.type==='Close'?' Each Close weapon also gives +2 Armour.':''}</p><div class="shop-numbers"><span><b>${Math.round(x.damage)}</b> damage</span><span><b>${x.cooldown.toFixed(2)}s</b> cooldown</span><span><b>${number(x.range)}m</b> range</span><span><b>${Math.round(x.crit*100)}%</b> crit</span></div><p>${E(x.inventoryDelta)}</p>`;}
     else if(o.row==='charm'){const c=F.charms[o.id];name=c.name;tag=`CHARM · ${c.kind.toUpperCase()}`;summary=charmSummary(r,o.id,o.face);detailText=`<p>${E(F.charmText(o.id,o.face))}</p><p>Charms resolve left to right at the bank. They change score and pearls, never weapon damage.</p>`;tone=c.kind==='+chips'?'chips':'mult';impact=charmFit(r,o.id,o.face);owned=c.rarityName.toUpperCase();rarity=c.rarity;}
+    else if(o.row==='trick'){const T=Routine.TRICKS[o.id],lv=Routine.level(r,o.id);name=T.name;tag=`TRICK · ${T.kind.toUpperCase()} · ${Routine.SLOT_NAMES[T.slot].toUpperCase()}`;summary=T.text;tone='mult';iconKind='trick';impact=lv?`Owned at level ${lv}: this copy makes it level ${lv+1}.`:`Goes in ${Routine.SLOT_NAMES[T.slot]} if that slot is free.`;owned=lv?`LEVEL ${lv} OWNED`:'';detailText=`<p>${E(T.text)}</p><p>${T.kind==='setup'?'Setups move enemies and deal no damage. A payoff that hits enemies a setup moved this flight is linked: +1 mult.':'Payoffs hit like a weapon. Hitting enemies a setup moved this flight links them: +1 mult.'}</p>`;}
     else if(o.row==='item'){const x=FiveCombat.items[o.id];name=x.name;tag='GEAR · COMBAT';summary=x.text;detailText=`<p>${E(x.text)}</p><p>${E(x.copies||'')}</p>`;impact=r.demo.itemCounts[o.id]?`Own ${r.demo.itemCounts[o.id]} · ${x.copies}`:'Changes your attacks, defence or water entry.';tone=['I08','I10'].includes(o.id)?'defence':'chips';owned=r.demo.itemCounts[o.id]?`×${r.demo.itemCounts[o.id]} OWNED`:rarityName[x.rarity].toUpperCase();rarity=x.rarity;}
     else if(o.row==='stat'){const x=DEMO.items[o.id],g=DEMO.stats[x.up].group;name=x.name;tag=g==='defence'?'GEAR · DEFENCE':'GEAR · STAT';summary=DEMO.statText(x.up,x.value)+(x.down?' · '+DEMO.statText(x.down,-x.loss):'');impact=g==='defence'?'Fewer Bails and busts.':'Permanent for this run.';detailText=`<p>${E(summary)}</p><p>Current: ${E(DEMO.statText(x.up,r.demo.stats[x.up]))}.</p>`;tone=g==='defence'?'defence':'chips';}
     else if(o.row==='routine'){const x=choiceInfo(r,o.choice);name=x.title;tag='ROUTINE';summary=x.summary;impact=x.impact;tone='mult';iconKind='choice';iconId=o.choice.kind;detailText=`<p>${E(x.detail||'')}</p><p>Average mult ${number(x.before)} → <b>${number(x.after)}</b> (before charms).</p>${x.recent?`<p class="shop-recent">${E(x.recent)}</p>`:''}`;}
@@ -5847,8 +5994,12 @@ var ShopUI = (() => {
     const rows=faces.map(f=>`<div class="shop-repertoire-face"><span>${icon('face',f)}</span><b>${E(F.names[f])}${s.techniques[f]?` <small>${E(s.techniques[f].toUpperCase())}</small>`:''}</b><strong>${Math.round(s.weights[f]*100)}%<small>${number(F.value(s,f))} mult</small></strong></div>`).join('');
     const combos=F.combos.map(c=>`<div class="shop-combo-row"><span>${E(c.name)}</span><b>+${number(c.bonus*(1+F.groups[c.group].gain*s.routines[c.group]))}</b><small>${number(b.comboOdds[c.id]*100)}%</small></div>`).join('');
     return `<section class="shop-trick-board" aria-label="Your tricks"><div class="shop-section-caption"><b>YOUR TRICKS</b><span>${n} per jump · ×${number(b.meanMult)} average</span></div>${rows}<div class="shop-routine-levels">${Object.entries(s.routines).map(([k,v])=>`<span>${k} <b>${v}/${F.tune.routineCap}</b></span>`).join('')}</div><div class="shop-combo-table"><div class="shop-combo-row head"><span>Combo</span><b>Pays</b><small>Chance</small></div>${combos}</div><p class="shop-board-note">${E(b.label)} Chances use your draw odds and ${n} tricks.</p></section>`;}
+  // Step 5: the routine. Click a trick (in a slot or on the bench), then a slot, to move it there; free.
+  function routinePanel(r){const R=Routine,S=R.state(r),bench=R.bench(r);if(focusTrick&&!R.level(r,focusTrick))focusTrick=null;
+    const cell=id=>id?`<b>${E(R.TRICKS[id].glyph)} ${E(R.TRICKS[id].name)}</b><small>L${R.level(r,id)} · ${R.TRICKS[id].kind}</small>`:'<small>EMPTY</small>';
+    return `<section class="shop-charms shop-routine"><div class="shop-section-caption"><b>ROUTINE</b><span>${focusTrick?`Place ${E(R.TRICKS[focusTrick].name)}: choose a slot`:'Breach → Apex → Entry · click to move'}</span></div><div class="shop-charm-row">${R.SLOTS.map(s=>`<button class="shop-charm-slot ${S.slots[s]&&S.slots[s]===focusTrick?'selected':''}" data-shop="rslot" data-slot="${s}"><span class="shop-tag">${R.SLOT_NAMES[s].toUpperCase()}</span>${cell(S.slots[s])}</button>`).join('')}</div>${bench.length?`<div class="shop-charm-row">${bench.map(id=>`<button class="shop-charm-slot ${id===focusTrick?'selected':''}" data-shop="rtrick" data-id="${id}"><span class="shop-tag">BENCH</span>${cell(id)}</button>`).join('')}</div>`:''}</section>`}
   function buildrail(r){const d=r.demo;if(focusWeapon>=r.slots.length)focusWeapon=Math.max(0,r.slots.length-1);
-    return `<aside class="shop-build-rail" aria-label="Your current build"><div class="shop-rail-core"><div class="shop-section-caption"><b>YOUR WEAPONS</b><span>${r.slots.length}/6 slots</span></div><div class="shop-weapon-grid">${Array.from({length:6},(_,i)=>slot(r,r.slots[i],i)).join('')}</div>${weaponActions(r)}${charmpanel(r).split('<section class="shop-charm-selected">')[0]}</div><div class="shop-rail-details">${d.charms.length?'<section class="shop-charm-selected">'+charmpanel(r).split('<section class="shop-charm-selected">')[1]:''}${trickBoard(r)}<details class="shop-build-details" data-inspect="combat-items" ${opened.has('combat-items')?'open':''}><summary>Combat gear <small>${Object.values(d.itemCounts).reduce((a,n)=>a+n,0)} owned</small></summary>${Object.entries(d.itemCounts).filter(([id,n])=>n>0).map(([id,n])=>`<div class="shop-owned-item"><span>${icon('item',id)}</span><div><b>${E(FiveCombat.items[id].name)} ×${n}</b><p>${E(FiveCombat.items[id].text)}</p>${B('itemSell',id,`SELL ${Math.floor((d.itemPaid[id]?.at(-1)||0)/2)} ◈`)}</div></div>`).join('')||'<p>No combat gear yet.</p>'}</details><details class="shop-build-details" data-inspect="stats" ${opened.has('stats')?'open':''}><summary>Stats & trade-offs</summary><div class="shop-stat-list">${Object.entries(d.stats).filter(([k])=>k!=='Drive').map(([k,v])=>`<span>${E(DEMO.statText(k,v))}</span>`).join('')}</div>${d.statInventory.map(a=>`<div class="shop-stat-sale">${E(DEMO.items[a.id].name)}${B('statSell',a.uid,`SELL ${Math.floor(a.paid/2)} ◈`)}</div>`).join('')}</details></div></aside>`;
+    return `<aside class="shop-build-rail" aria-label="Your current build"><div class="shop-rail-core"><div class="shop-section-caption"><b>YOUR WEAPONS</b><span>${r.slots.length}/6 slots</span></div><div class="shop-weapon-grid">${Array.from({length:6},(_,i)=>slot(r,r.slots[i],i)).join('')}</div>${weaponActions(r)}${DEMO.tune.rules?routinePanel(r):charmpanel(r).split('<section class="shop-charm-selected">')[0]}</div><div class="shop-rail-details">${!DEMO.tune.rules&&d.charms.length?'<section class="shop-charm-selected">'+charmpanel(r).split('<section class="shop-charm-selected">')[1]:''}${DEMO.tune.rules?'':trickBoard(r)}<details class="shop-build-details" data-inspect="combat-items" ${opened.has('combat-items')?'open':''}><summary>Combat gear <small>${Object.values(d.itemCounts).reduce((a,n)=>a+n,0)} owned</small></summary>${Object.entries(d.itemCounts).filter(([id,n])=>n>0).map(([id,n])=>`<div class="shop-owned-item"><span>${icon('item',id)}</span><div><b>${E(FiveCombat.items[id].name)} ×${n}</b><p>${E(FiveCombat.items[id].text)}</p>${B('itemSell',id,`SELL ${Math.floor((d.itemPaid[id]?.at(-1)||0)/2)} ◈`)}</div></div>`).join('')||'<p>No combat gear yet.</p>'}</details><details class="shop-build-details" data-inspect="stats" ${opened.has('stats')?'open':''}><summary>Stats & trade-offs</summary><div class="shop-stat-list">${Object.entries(d.stats).filter(([k])=>k!=='Drive').map(([k,v])=>`<span>${E(DEMO.statText(k,v))}</span>`).join('')}</div>${d.statInventory.map(a=>`<div class="shop-stat-sale">${E(DEMO.items[a.id].name)}${B('statSell',a.uid,`SELL ${Math.floor(a.paid/2)} ◈`)}</div>`).join('')}</details></div></aside>`;
   }
   function pack(r){const p=r.demo.pack;if(!p)return '';return `<section class="shop-choice-panel tone-mult"><header><span class="shop-tag">OPEN ${E(p.id.toUpperCase())} PACK</span><h3>Choose ${p.remaining}${p.taken?' more':''}</h3><p>Keep the option that supports your build.</p></header>${p.fallback?`<p role="status">${E(p.fallback)}</p>`:''}<div class="shop-pack-options">${p.choices.map((c,i)=>{const x=choiceInfo(r,c);return `<article class="shop-pack-choice ${c.used?'used':''}"><div class="shop-choice-name"><span class="shop-art">${c.kind==='charm'?icon('charm',c.id):icon('choice',c.kind)}</span><h4>${E(x.title||'Routine')}</h4></div><p class="shop-effect">${E(x.summary||'')}</p><p class="shop-fit">${E(x.impact||'')}</p>${x.kind!=='charm'?`<p class="shop-mean">Average mult ${number(x.before)} → <b>${number(x.after)}</b></p>`:''}${detail('choice-'+i,`<p>${E(x.detail||'')}</p>${x.recent?`<p class="shop-recent">${E(x.recent)}</p>`:''}<small>${E(x.scope||'')}</small>`)}${B('packPick',i,c.used?'CHOSEN':'CHOOSE',c.used||!DEMO.packChoiceValid(r,c),'shop-buy')}</article>`}).join('')}</div>${B('packSkip','','CLOSE · DISCARD UNUSED CHOICES',false,'shop-close-pack')}</section>`}
   function replacement(r){const d=r.demo,o=d.offers.find(x=>x.uid===d.weaponChoice&&!x.bought);if(!o)return '';return `<section class="shop-choice-panel tone-chips"><header><span class="shop-tag">REPLACE A WEAPON</span><h3>${E(Owc[o.id].name)} · T${o.level}</h3><p>Choose the slot to sell. Each price includes that slot’s resale value.</p></header><div class="shop-replacements">${r.slots.map((g,i)=>{const refund=Math.floor((g.paid||0)/2),cost=o.price-refund,preview={...r,demo:{...d,stats:{...d.stats}},stats:{...r.stats},slots:r.slots.map(q=>({...q}))};preview.slots[i]={...g,id:o.id,lvl:o.level};DEMO.sync(preview);const old=statsForWeapon(r,g.id,g.lvl),next=statsForWeapon(preview,o.id,o.level);return `<div class="shop-replace-option">${icon('weapon',g.id)}<b>${E(Owc[g.id].name)} T${g.lvl}</b><p>${Math.round(old.damage)} → ${Math.round(next.damage)} damage<br>${old.cooldown.toFixed(2)}s → ${next.cooldown.toFixed(2)}s cooldown</p>${B('replaceWeapon',i,`${cost>=0?'PAY '+cost:'RECEIVE '+(-cost)} ◈`,r.xp<cost)}<small>Includes ${refund} ◈ refund</small></div>`}).join('')}</div>${B('weaponCancel','','CANCEL · KEEP CURRENT BUILD')}</section>`}
@@ -5861,6 +6012,8 @@ var ShopUI = (() => {
     DemoBind();const pane=document.querySelector('.shop-offers'),detailRail=document.querySelector('.shop-rail-details');if(pane)pane.scrollTop=scroll;if(detailRail)detailRail.scrollTop=railScroll;
     for(const e of document.querySelectorAll('[data-inspect]'))e.ontoggle=()=>e.open?opened.add(e.dataset.inspect):opened.delete(e.dataset.inspect);
     for(const e of document.querySelectorAll('[data-shop="charm"]'))e.onclick=()=>{focusCharm=+e.dataset.slot;show()};
+    for(const e of document.querySelectorAll('[data-shop="rtrick"]'))e.onclick=()=>{focusTrick=focusTrick===e.dataset.id?null:e.dataset.id;show()};
+    for(const e of document.querySelectorAll('[data-shop="rslot"]'))e.onclick=()=>{const s=e.dataset.slot,id=Routine.state(r).slots[s];if(focusTrick&&focusTrick!==id){DEMO.command(r,'trickMove',focusTrick+':'+s);focusTrick=null}else focusTrick=id&&focusTrick!==id?id:null;show()};
     for(const e of document.querySelectorAll('[data-shop="weapon"]'))e.onclick=()=>{focusWeapon=+e.dataset.slot;show()};
     for(const e of document.querySelectorAll('.shop-slot-merge'))e.setAttribute('aria-label','Combine matching weapon copies');
     for(const e of document.querySelectorAll('.shop-slot-sell'))e.setAttribute('aria-label','Sell this weapon');

@@ -72,7 +72,8 @@ node qa/flightlog-metrics.cjs run.json     # metrics for any saved flight log (s
 | 2: danger | **Built locally 2026-10-27, playtest pending** (`source/danger.js`; see §4.20 row 2). Settings › Score: on/off, lead 0–1 (0.5), mines per flight 0–4 (3). Bot: `node qa/flightlog-bot.cjs out --danger [--lead=x] [--mines=n]` |
 | 3: flight verbs | **Built, then parked 2026-10-27** (`source/verbs.js`, off; to become tricks) |
 | 4: rules reset | **Built locally 2026-10-27** (`demo.js` `style`, `finish`, `hit`; `qa/rules.cjs`); playtest pending |
-| 5–15 | Not started |
+| 5: first routine | **Built locally 2026-10-27** (`source/routine.js`, `qa/routine.cjs`); playtest pending |
+| 6–15 | Not started |
 
 ### Step 1 as it is now
 
