@@ -178,12 +178,12 @@ var Space = (() => {
 // 2026-10-27: 23% of them off-screen, up to 98 m away). With DEMO.tune.hold they instead hold a point above the water
 // ahead of the dolphin, on the side it is moving toward and inside the view (8-26 m ahead, 5-12 m up, lower when a deep
 // dive brings the view's top edge down, never under 1.5 m), easing in as they arrive.
-// Touching one under water still kills it, as v3's touchKill. Pursuers that went under, and lurkers, keep v3's step.
-Space.holdAbove = function (r, dt) {
+// Touching one gives no kill (the demo has no touch kills in the water). Pursuers that went under, and lurkers, keep
+// v3's step; only the pursuers above the water when the step begins are held, so none is stepped twice.
+Space.holdAbove = function (r, held, dt) {
   const m = r.medium, d = m.pos, v = m.velocity, Cw = Ocs(r.wave), V = Ovv(r);
-  for (const p of r.pursuers || []) {
-    if (p.wet || p.lurk) continue;
-    p.px = p.x; p.py = p.y; p.age += dt;
+  for (const p of held) {
+    p.px = p.x; p.py = p.y; p.age += dt; p.lurk = false;
     const Fd = Math.abs(v.x) > Math.max(3, Cw * .12) ? Math.sign(v.x) : p.fd || Math.sign(v.x) || 1;
     p.fd = Fd;
     const w = 3.2 * p.tr, top = Math.max(Cw * 1.05 * Osp.spd, (p.kind === 'swarmer' ? 25 * Osp.small : 19 + r.wave * .13) * Osp.spd * p.sp);
@@ -194,14 +194,10 @@ Space.holdAbove = function (r, dt) {
     p.v += (Math.min(top, 2 + 2.5 * dist) - p.v) * Xe(dt, .35);
     p.x += Math.cos(p.h) * p.v * dt; p.y = Math.max(1, p.y + Math.sin(p.h) * p.v * dt);
   }
-  r.pursuers = (r.pursuers || []).filter(p => {
-    if (p.wet || p.lurk || Math.hypot(d.x - p.x, d.y - p.y) >= p.radius + 1) return true;
-    if (typeof touchKill === 'function') { touchKill(r, p); return false } return true;
-  });
 };
 {const pq0=Pq;Pq=function(r,e){
   if(!DEMO.tune.hold||!r?.demo||r.medium?.kind!=='water'||!(e>0)||!r.pursuers?.length)return pq0(r,e);
   const dry=r.pursuers.filter(p=>!p.wet&&!p.lurk);r.pursuers=r.pursuers.filter(p=>p.wet||p.lurk);
-  pq0(r,e);r.pursuers=(r.pursuers||[]).concat(dry);Space.holdAbove(r,e);
+  pq0(r,e);r.pursuers=(r.pursuers||[]).concat(dry);Space.holdAbove(r,dry,e);
   // v3's shock rings still push the held pursuers (a zero step: the rings don't grow twice, and each hits once)
   if(typeof Orshock==='function'){const keep=r.pursuers;r.pursuers=keep.filter(p=>dry.includes(p));Orshock(r,0);r.pursuers=keep}}}
