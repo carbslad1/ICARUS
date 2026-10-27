@@ -19,10 +19,11 @@ Hold **W / Up** underwater to carve, then release to launch. **Space** boosts. *
 
 ## Step 1: space (2026-10-27)
 
-- **Spawns:** enemies now appear behind a red marker inside the view, ahead on your path.
-- **Flocking:** chasers flock together and follow your recent track.
-- **The landing pool:** in the last 3 s of a descent, new enemies hold above the predicted landing point, which is marked on the water. Land in it or steer beside it.
-- **Settings › Score** switches this off to compare with the old edge spawns.
+- **Spawns:** most enemies now appear behind a red marker inside the view, ahead on your path and at least 10 m above the water. About one in five still enters from the screen edge; Settings › Score has a slider for this.
+- **Flocking:** chasers flock about 6 m apart and follow your recent track.
+- **Turning round:** enemies left beyond the screen after you turn underwater re-enter at the screen edge at the breach.
+- **The landing pool** is built but off: spawns at the water line felt unfair in playtest 1.
+- **Settings › Score** switches step 1 off to compare with the old edge spawns.
 
 The code is in `source/space.js`; the design is in `ICARUS_DESIGN.md` §4.18 and §4.20.
 

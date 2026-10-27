@@ -4,14 +4,12 @@ This is the shared understanding of the dolphin game (ICARUS) as of **2026-10-26
 
 - **Snapshot:** branch `design/scoring-revision-2026-10`, demo build at commit `5bdcf36` (the S4 build plus a flight-log export).
 - **Design direction (§8, §11, §12) updated 2026-10-27** with the positional design decisions.
-- **Step 1 built, 2026-10-27** (`source/space.js`, on by default; toggle in Settings › Score). Spawns now appear behind markers inside the view, ahead on your path; chasers flock; late-descent spawns hold above the predicted landing point (the pool). **§3–§4 describe the demo with step 1 off**, as measured by the flow study. With it on, the bot measures:
-  - nearest enemy 11.7 m
-  - enemies 10.5 m from the screen centre
-  - 2.5% off-screen
-  - 0.43 hits per flight
-  - 21.6% of kills at the apex
-
-  These are saved in `docs/flow-study/bot-step1-metrics.json`.
+- **Step 1 built and revised after playtest 1, 2026-10-27** (`source/space.js`, on by default; Settings › Score has a toggle and an edge-share slider). **§3–§4 describe the demo with step 1 off**, as measured by the flow study.
+  - About 80% of spawns appear behind markers inside the view, ahead on your path, at least 10 m above the water. The rest enter from the screen edge.
+  - Chasers flock about 6 m apart and follow your recent track.
+  - Enemies left beyond the screen after you turn underwater re-enter at the edge at the breach.
+  - The landing pool is built but off: the designer found water-line spawns unfair.
+  - With it on, the bot measures nearest enemy 12 m, enemies 15.3 m from the screen centre, 3.1% off-screen, 0.5 hits per flight and 20% of kills at the apex. These are saved in `docs/flow-study/bot-step1-metrics.json`.
 - **Trust order:** the code beats this file; this file beats memory. Each fact below says where it comes from. If something here disagrees with the code, the code is right and this file is out of date.
 - **What's not verified:** human feel, device performance and anything past wave 11 in play (see §9).
 

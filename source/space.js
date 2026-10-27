@@ -1,8 +1,11 @@
 // Step 1 of the build-and-playtest plan (ICARUS_DESIGN.md §4.18, §4.20): positional space.
-// - Spawns appear behind a marker inside the view, leaning toward the direction of travel. Late in the descent they go
-//   to the pool at the predicted landing point instead.
-// - Pool enemies hold above the water at that point until the dolphin comes close, so landing in it is a choice.
+// - Most spawns appear behind a marker inside the view, leaning toward the direction of travel and kept 10 m above the
+//   water; a share set in Settings (20% by default) still comes in from the screen edge, as v3's did.
 // - Chasers, swarmers and splitters flock: they keep apart, bunch with neighbours and follow the dolphin's recent track.
+// - Enemies that come back at the breach from beyond the screen (left behind when the dolphin turned underwater)
+//   re-enter at the screen edge instead of being lost.
+// - The landing pool (late spawns holding above the predicted landing point) is built but off: the designer found
+//   spawns at the water line unfair (2026-10-27).
 // The profile lives on the run (r.space) so later items can change how spawns work. DEMO.tune.space 0 keeps v3's edge
 // spawns, straight chasing and no pool. All randomness comes from the run's seeded generator (ce).
 var Space = (() => {
@@ -12,13 +15,15 @@ var Space = (() => {
     spread: 9,              // m of sideways scatter
     minDist: 10,            // m kept between a new spawn and the dolphin
     margin: 3,              // m kept inside the view's edge
+    minHeight: 10,          // m above the water kept by marked spawns
+    pool: false,            // the landing pool; off since the 2026-10-27 playtest
     poolWindow: 3,          // s before the predicted landing when spawns go to the pool
     poolRadius: 6,          // m of scatter around the landing point
     poolHeight: 6,          // m above the water that pool enemies hold (plus up to 2)
     poolRelease: 11,        // m: closer than this, or once hurt, a pool enemy attacks
     flockRadius: 12,        // m within which flockers count as neighbours
-    separation: 3.5,        // m flockers try to keep between each other
-    weights: Object.freeze({ trail: .55, cohesion: .25, separation: 1.4, align: .15 }),
+    separation: 6,          // m flockers try to keep between each other (3.5 felt crowded, 2026-10-27)
+    weights: Object.freeze({ trail: .55, cohesion: .1, separation: 1.8, align: .15 }),
     trailDelay: .5          // s behind the dolphin that flockers follow
   });
   const FLOCK = new Set(['chaser', 'swarmer', 'splitter']);
@@ -40,7 +45,7 @@ var Space = (() => {
   function place(r, m, q) {
     const P = profile(r), V = Ovv(r), o = m.origin, me = m.local, L = landing(r, m);
     let x, y, pool = null;
-    if (L && L.t <= P.poolWindow && Math.abs(L.wx - o.x) <= V.w - P.margin) {
+    if (P.pool && L && L.t <= P.poolWindow && Math.abs(L.wx - o.x) <= V.w - P.margin) {
       pool = { wx: L.wx + (ce(r) * 2 - 1) * P.poolRadius, h: P.poolHeight + ce(r) * 2 };
       x = pool.wx - o.x; y = -o.y + pool.h;
     } else ({ x, y } = ahead(r, m));
@@ -52,7 +57,7 @@ var Space = (() => {
   // A point in the view ahead of the dolphin along the direction of travel, scattered sideways, not too close.
   function ahead(r, m) {
     const P = profile(r), V = Ovv(r), o = m.origin, me = m.local;
-    const half = V.w - P.margin, top = V.y - o.y + V.h - P.margin, low = Math.min(top, Math.max(V.y - o.y - V.h + P.margin, -o.y + 2));
+    const half = V.w - P.margin, top = V.y - o.y + V.h - P.margin, low = Math.min(top, Math.max(V.y - o.y - V.h + P.margin, -o.y + P.minHeight));
     const dir = unit(m.vx, m.vy), d = P.ahead[0] + ce(r) * (P.ahead[1] - P.ahead[0]), off = (ce(r) * 2 - 1) * P.spread;
     let x = clamp(me.x + dir.x * d - dir.y * off, -half, half), y = clamp(me.y + dir.y * d + dir.x * off, low, top);
     const dx = x - me.x, dy = y - me.y, dist = Math.hypot(dx, dy);
@@ -61,13 +66,15 @@ var Space = (() => {
   }
 
   // Resolves markers (in place of v3's Obs wrapper, so no marker is counted down twice); pool markers follow their anchor.
+  // Every marker stays minHeight above the water, which rises toward the arena on a descent while the marker waits.
   function resolve(r, m, dt) {
     if (!r.warns?.length) return;
-    const keep = [];
+    const P = profile(r), keep = [];
     for (const w of r.warns) {
       // a pool marker still waiting after the next breach (a quick hop) is placed ahead on the new flight instead
       if (w.pool && m.vy > 0) { w.pool = null; Object.assign(w, ahead(r, m)); w.s = w.x >= m.local.x ? 1 : -1 }
       if (w.pool) { w.x = w.pool.wx - m.origin.x; w.y = -m.origin.y + w.pool.h }
+      else w.y = Math.max(w.y, -m.origin.y + P.minHeight);
       w.t -= dt;
       if (w.t > 0) { keep.push(w); continue }
       const n = r.enemies.length;
@@ -133,7 +140,7 @@ var Space = (() => {
       G.moveTo(X - s, Y - s).lineTo(X + s, Y + s).moveTo(X + s, Y - s).lineTo(X - s, Y + s).stroke({ color: yt.hostile, width: 2.5, alpha: .4 + .5 * k });
       G.circle(X, Y, s * 1.35).stroke({ color: yt.hostile, width: 1.5, alpha: .2 + .35 * pulse });
     }
-    const L = landing(r, m);
+    const L = P.pool && landing(r, m);
     if (L && L.t <= P.poolWindow + 1) {
       const X = R.sx(L.wx), Y = R.sy(0), ppm = Math.abs(R.sx(L.wx + 1) - X), a = clamp(1 - (L.t - P.poolWindow), .25, 1);
       G.ellipse(X, Y, P.poolRadius * ppm, 1.2 * ppm).stroke({ color: yt.cyan, width: 2, alpha: .55 * a });
@@ -141,10 +148,28 @@ var Space = (() => {
     }
   }
 
-  return { PROFILE, on, profile, landing, place, resolve, after, draw };
+  // Whether this spawn keeps v3's edge entry: a share of them, set in Settings › Score (DEMO.tune.edge), drawn by the
+  // run's generator. At 0.35 the bot's enemies sat 26 m from the screen centre; at 0.2, 15 m (2026-10-27, one seed).
+  const edge = r => ce(r) < DEMO.tune.edge;
+
+  // At the breach, enemies returning from beyond the screen's side edges come back just inside them.
+  function recall(r, returned) {
+    const m = r.medium;
+    if (m?.kind !== 'air' || !returned.length) return;
+    const half = Ovv(r).w, h = Jt.height / 2;
+    for (const e of returned) {
+      if (Math.abs(e.pos.x) <= half) continue;
+      const side = Math.sign(e.pos.x);
+      e.pos = ye(side * (half - 1.5), clamp(e.pos.y, -m.origin.y + e.radius + 2, h - 2));
+      e.velocity = { x: -side * 18 * Osp.spd, y: 0 };
+    }
+  }
+
+  return { PROFILE, on, profile, landing, place, ahead, edge, resolve, after, draw, recall };
 })();
-{const obq0=Obq;Obq=function(r,t,q){if(Space.on(r)&&t?.kind==='air')return Space.place(r,t,q);return obq0(r,t,q)}}
+{const obq0=Obq;Obq=function(r,t,q){if(Space.on(r)&&t?.kind==='air'&&!Space.edge(r))return Space.place(r,t,q);return obq0(r,t,q)}}
 {const obs0=Obs;Obs=function(r,t,i){if(!Space.on(r)||t?.kind!=='air')return obs0(r,t,i);Space.resolve(r,t,i);return Obs0(r,t,i)}}
 {const me0=ME;ME=function(r,t,e,i){me0(r,t,e,i);if(Space.on(r)&&t?.kind==='air'&&i>0)Space.after(r,t,i)}}
+{const zq0=Zq;Zq=function(r){const n=r.enemies.length;zq0(r);if(Space.on(r))Space.recall(r,r.enemies.slice(n))}}  // pursuers return at the breach
 {const pz0=Pz;Pz=function(r,t,E){E.pool=null;return pz0(r,t,E)}}  // a pool enemy that becomes a pursuer stops holding
 {const draw0=Otdraw;Otdraw=function(R,r,m,title){draw0(R,r,m,title);if(!title&&m?.kind==='air'&&Space.on(r))Space.draw(R,r,m)}}

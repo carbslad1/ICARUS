@@ -570,7 +570,14 @@ These are grounded in the flow study:
   - Low: surface packs.
   - Mid: flocks crossing the arc.
   - High: sparse elites guarding the apex.
-- **The landing pool:** pursuers gather visibly at the predicted landing point. Landing in it is a choice.
+- **The landing pool:** pursuers gather visibly at the predicted landing point, so landing in it is a choice.
+  - **Built and switched off after the first playtest (2026-10-27):** spawns holding at the water line felt unfair.
+  - **[OPEN]** Whether the pool returns in another form, for example existing enemies gathering, never new spawns.
+- **Step 1 playtest rules (2026-10-27):**
+  - No spawn closer than 10 m to the water.
+  - About one spawn in five still enters from the screen edge (a slider in Settings › Score).
+  - Flockers keep about 6 m apart; 3.5 m felt crowded.
+  - Enemies returning at the breach from beyond the screen (left behind when the dolphin turned underwater) re-enter at the screen edge instead of being lost.
 - **Aimed threats:** enemy shots lead your predicted arc.
 
 **Spawn profile and items:**
@@ -682,7 +689,7 @@ These are mixed trick, weapon and item examples, shown as anchor · shape → ve
 | # | Step | Build | Automated check | Playtest asks | Gate |
 |---|---|---|---|---|---|
 | 0 | Decide and baseline | Choose the prototype codebase **[OPEN]**. Add a flight-log analyser that prints the metrics above. | The analyser reproduces the bot baseline | Play 3 runs of the current demo and save the logs | Baseline recorded from human play |
-| 1 | Space | Spawn inside the view, ahead on your arc, with a short telegraph; flocking chasers; the visible landing pool. **Built 2026-10-27** (`source/space.js`, toggle in Settings › Score) | Enemies' median distance from the screen centre below 20 m; nearest enemy below 15 m (bot). **Bot: 10.5 m and 11.7 m, passed** | Does the action happen where you are looking? | Both metrics met; you confirm. **Playtest pending** |
+| 1 | Space | Spawn inside the view, ahead on your arc, with a short telegraph; flocking chasers; the visible landing pool. **Built 2026-10-27** (`source/space.js`, toggle in Settings › Score). **Revised after playtest 1:** pool off, 10 m spawn floor, 20% edge entries, looser flocks, enemies recalled at breach | Enemies' median distance from the screen centre below 20 m; nearest enemy below 15 m (bot). **Bot after revision: 15.3 m and 12 m, passed** | Does the action happen where you are looking? | Both metrics met; you confirm. **Playtest 1: flocking good but crowded, water-line spawns unfair, wanted edge entries and no lost enemies (all addressed). Playtest 2 pending** |
 | 2 | Danger | Aimed shots that lead the arc; arc hazards | Bot hits per flight 0.6–1.2 | Do hits feel fair and avoidable? | You can say why each hit happened |
 | 3 | Flight verbs | Stomp-bounce, dive, dash refilled by stomps | Stomps per flight above 0; launch-angle spread wider than baseline | Do you steer to stomp and choose landings? | You change your route on purpose |
 | 4 | Rules reset | Remove the quota, reels and charms; 0 HP ends the run; style score with the clean streak and the pearl curve | Score suites rewritten and passing | Does the streak create tension on later flights? | You protect the streak by changing how you fly |

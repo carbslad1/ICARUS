@@ -1,7 +1,7 @@
 {
-  "built": "2026-10-27T03:53:01.436Z",
+  "built": "2026-10-27T04:33:07.131Z",
   "referenceSha256": "9e8c37dbffd6ca31aac94a19b69d5c4418d230ed482c9726aed57ca37a581180",
-  "outputSha256": "cc80b734c437ceddc5b6ab7c3701555c6ceef9e134ed66b69c8fdfc48eecde9f",
+  "outputSha256": "455b4966dedf0952464edc8e11f9d775de75adf6f83da7cb628c20fa43bd2113",
   "reference": "source/carve-reference.html",
   "output": "ICARUS-demo.html"
 }
