@@ -27,7 +27,7 @@ Demo source files: `five-score.js` (scoring, charms), `five-combat.js` (combat i
 ## 2. Controls (demo)
 
 - **Underwater:** hold **Space** to carve, release to launch (since 2026-10-27; `source/controls.js`). Carving always turns **anticlockwise**: a dive to the left swings down through straight down, then up to the right. **There is no boost.** Holding Space in the air arms the carve for the splash; held through the surface it adds the corkscrew. Settings › Score can restore W carving with Space boost, and facing-based direction.
-- **Water camera:** sits 7.2 m above the dolphin (setting: 0 restores v3's camera), so the dolphin is a third of the way up the view. It has no velocity lead in either direction. The pan from the arena centre to the dolphin at the splash is unchanged.
+- **Water camera:** sits 12 m above the dolphin (setting: 0 restores v3's camera; 7.2 m showed too little sky in the first playtest), so the dolphin is about a fifth of the way up the view. It has no velocity lead in either direction. The pan from the arena centre to the dolphin at the splash is unchanged.
 - **In the air:** **W A S D / arrows** move the dolphin inside the arena. **Weapons fire automatically**; the player never aims or times shots.
 - **Esc** pauses. The pause menu and the end-of-run screen have **SAVE FLIGHT LOG** (§10).
 

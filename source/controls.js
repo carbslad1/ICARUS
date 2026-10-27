@@ -6,7 +6,7 @@
 //   left carved clockwise. Here the carve always faces right, so a dive to the left first swings down through
 //   straight down and then up to the right. Letting go past straight up no longer turns you round.
 // - The water camera (DEMO.tune.sky, metres): the camera sits this far above the dolphin, so more of the screen is sky
-//   (7.2 m puts the dolphin a third of the way up a 43.2 m view). It has no lead from your velocity in either
+//   (12 m, the default since the first playtest, puts the dolphin about a fifth of the way up a 43.2 m view; 7.2 m showed too little sky). It has no lead from your velocity in either
 //   direction, so it never swings sideways when a carve turns you round. 0 keeps v3's camera.
 var Controls = (() => {
   const carve = () => !!DEMO.tune.carve, ccw = () => !!DEMO.tune.ccw;
