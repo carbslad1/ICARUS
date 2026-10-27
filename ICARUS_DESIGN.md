@@ -556,7 +556,7 @@ Trade-off items follow Brotato, for example "+Mass, −Lift".
 ## 4.18 Space, enemies and flight
 
 These are grounded in the flow study:
-- 58% of enemy positions were off-screen.
+- Enemies sat at the screen edges: a median 31 m from the centre of a ±38.4 m view, with 18% off-screen while entering.
 - Kills followed time evenly across phases.
 - A cautious bot took 0.2 hits per flight.
 - Agency ended at release.
@@ -564,7 +564,7 @@ These are grounded in the flow study:
 **Enemy placement:**
 - **Spawn on the predicted arc.** Formations sit ahead, above and at the landing zone, so the launch angle is a choice of route.
 - **Telegraph formations underwater** as silhouettes above the surface. The read is visual, not text.
-- **Fit the arena to the view.** Either make the 76 m arena match the 57 m view, or zoom the camera to fit the enemies. Nothing fights you from off-screen.
+- **The whole arena is already in view:** a letterboxed 16:9 frame, 76.8 m wide. The problem is that enemies spawn just outside the side edges and stay near them. Spawning inside the view, ahead on the arc, fixes it.
 - **Flocking chasers** bunch up and trail your path, so the descent can sweep back through them.
 - **Formation shape by altitude band** (the threat tiers stay):
   - Low: surface packs.
@@ -655,18 +655,19 @@ These are mixed trick, weapon and item examples, shown as anchor · shape → ve
 
 **Linear:** one change per step. Each step has a build, an automated check and a human playtest, and moves on only when its gate passes.
 
-- **The flight log measures every step:** kills per phase, distance to the nearest enemy, off-screen enemy share, hits per flight, launch-angle spread and trick connect rates.
+- **The flight log measures every step:** kills per phase, distance to the nearest enemy, enemies' distance from the screen centre, off-screen enemy share, hits per flight, launch-angle spread and trick connect rates.
 - **The 2026-10-26 bot baseline:**
   - Apex kill share: 17% (the apex window is 20% of flight time).
   - Median nearest enemy: 11–31 m.
-  - Off-screen enemy share: 58%.
+  - Enemies' median distance from the screen centre: 31 m in a ±38.4 m view (18% off-screen).
+  - Human baseline, 1 run, 24 flights (`docs/flow-study/human-baseline-2026-10-27.json`): 0 hits, apex kill share 17.7% (19% of time), nearest enemy 25.5 m, enemies 32 m from the centre, median launch 74°.
   - Hits per flight: 0.2.
 - **All gate numbers are [TUNE].**
 
 | # | Step | Build | Automated check | Playtest asks | Gate |
 |---|---|---|---|---|---|
 | 0 | Decide and baseline | Choose the prototype codebase **[OPEN]**. Add a flight-log analyser that prints the metrics above. | The analyser reproduces the bot baseline | Play 3 runs of the current demo and save the logs | Baseline recorded from human play |
-| 1 | Space | Fit the arena to the view; spawn on the arc; flocking chasers; the visible landing pool | Off-screen share below 25%; nearest enemy below 15 m (bot) | Does the action happen where you are looking? | Both metrics met; you confirm |
+| 1 | Space | Spawn inside the view, ahead on your arc, with a short telegraph; flocking chasers; the visible landing pool | Enemies' median distance from the screen centre below 20 m; nearest enemy below 15 m (bot) | Does the action happen where you are looking? | Both metrics met; you confirm |
 | 2 | Danger | Aimed shots that lead the arc; arc hazards | Bot hits per flight 0.6–1.2 | Do hits feel fair and avoidable? | You can say why each hit happened |
 | 3 | Flight verbs | Stomp-bounce, dive, dash refilled by stomps | Stomps per flight above 0; launch-angle spread wider than baseline | Do you steer to stomp and choose landings? | You change your route on purpose |
 | 4 | Rules reset | Remove the quota, reels and charms; 0 HP ends the run; style score with the clean streak and the pearl curve | Score suites rewritten and passing | Does the streak create tension on later flights? | You protect the streak by changing how you fly |

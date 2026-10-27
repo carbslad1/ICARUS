@@ -4963,14 +4963,14 @@ const DemoFx={SHK:K/1920,CHARM:{'+chips':0x5ff2ff,'+mult':0xb98cff,'×mult':0xff
 // Flight log: records what happens in each flight (positions, enemies, input, kills, hits) and the shop actions
 // taken, so a real run can be exported as JSON and studied. Observation only: it reads state and never changes it.
 var FlightLog = (() => {
-  const VERSION = 2, AIR_EVERY = 12, WATER_EVERY = 6, MAX_SAMPLES = 40000;
+  const VERSION = 3, AIR_EVERY = 12, WATER_EVERY = 6, MAX_SAMPLES = 40000;
   const r1 = v => Math.round(v * 10) / 10, deg = a => r1(a * 180 / Math.PI);
   let log = null, run = null, flight = null, dive = [], tick = 0, samples = 0, prev = null;
   function reset(r) {
     run = r; flight = null; dive = []; tick = 0; samples = 0;
     prev = { kind: r.medium.kind, kills: r.kills, hp: r.hp, hits: 0, wave: r.wave, history: 0 };
     log = { format: 'icarus-flightlog', version: VERSION, build: globalThis.icarusDemo?.version || 'demo', exported: null,
-      starter: r.starter ?? null, seed: r.seed ?? null, units: 'metres, seconds, degrees. x,y: dolphin world position; o: arena origin; l: dolphin arena-local position; en: [kind, local x, local y, hp]; pu: pursuers [world x, world y, wet]; in: [x, y, boost, w, turn]; kills and hits record the dolphin position',
+      starter: r.starter ?? null, seed: r.seed ?? null, units: 'metres, seconds, degrees. x,y: dolphin world position; o: arena origin; l: dolphin arena-local position; en: [kind, local x, local y, hp]; pu: pursuers [world x, world y, wet]; in: [x, y, boost, w, turn]; kills and hits record the dolphin position; view: the visible half-width in metres',
       waves: [], flights: [], shop: [], end: null };
   }
   function input(i) { return i ? [r1(i.x || 0), r1(i.y || 0), i.boost ? 1 : 0, i.w ? 1 : 0, r1(i.turn || 0)] : null }
@@ -4986,7 +4986,7 @@ var FlightLog = (() => {
   }
   function openFlight(r) {
     const m = r.medium, a = Math.atan2(m.vy, Math.abs(m.vx));
-    flight = { wave: r.wave, t0: r1(r.time), launch: { angle: deg(a), speed: r1(Math.hypot(m.vx, m.vy)) }, tier: r.tier ?? null,
+    flight = { wave: r.wave, t0: r1(r.time), view: r1(Ovv(r).w), launch: { angle: deg(a), speed: r1(Math.hypot(m.vx, m.vy)) }, tier: r.tier ?? null,
       water: prev.waterStart != null ? r1(r.time - prev.waterStart) : null, dive, kills: [], hits: [], samples: [] };
     dive = [];
   }

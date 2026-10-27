@@ -45,10 +45,10 @@ One cycle is a dive followed by a flight. These are medians from 291 bot flights
 ## 4. Space: the arena, the camera and where enemies are
 
 - **The arena** is 76 × 43.2 m (`arena.width`, `arena.height` in the engine settings) and travels along the ballistic arc. The dolphin's position is arena-local.
-- **The view** is 57 m wide (`frame.width`). The camera centres on the arena origin, not on local player movement (`AGENTS.md` invariant). A `frame.follow` setting of 0.28 exists, but its exact effect is unverified. Screenshots show the dolphin can reach the screen edge.
+- **The view shows the whole arena.** In the air the camera locks to the arena origin, and the view locks to the arena's 43.2 m height ("Lock view to arena", on by default). The game letterboxes a 16:9 frame, so the view is 76.8 m wide whatever the window's shape. This was measured at runtime and confirmed with 16:10 and 4:3 screenshots on 2026-10-27. Earlier versions of this map said 57 m, from the `frame.width` setting, which the lock overrides. The arena's ±38 m bounds sit at the view's edge, so the dolphin can reach the screen edge.
 - **Enemies spawn just outside the view's edge on a random side** (`demo.js` `spawn`, and the engine's `Obq`). Measured:
-  - 58% of enemy positions are horizontally off-screen; the median enemy sits 31 m from the arena centre.
-  - The median nearest enemy is 11–31 m away. Shot weapons reach 30 m, so most kills happen around the screen edge, and the centre of the screen is usually empty.
+  - The median enemy sits 31 m from the centre, near the edge of a ±38.4 m view; 18% of enemy positions are off-screen, entering from the sides. A human run on 2026-10-27 measured 32 m and 16%.
+  - The median nearest enemy is 11–31 m away. Shot weapons reach 30 m, so most kills happen toward the screen edges, and the centre of the screen is usually empty.
 - **The surface is the busiest place.** Enemies left over at water entry become **pursuers**: they wait at the surface and some follow underwater ("wet"). The first kill comes 0–0.7 s after breach. Between 3 and 10 pursuers gather at the landing point, and at waves 7+ up to 8 follow underwater.
 - **Kills are spread evenly over the flight.** The apex window (±10% of air time around the apex, so 20% of the time) gets 17% of kills; ascent gets 42% and descent 40%. No phase concentrates kills today.
 - **Hits are rare for a cautious player:** 59 hits in 291 bot flights, and 83% of flights had none. The bot keeps about 8 m away and dodges, so real players may differ.
@@ -117,7 +117,7 @@ One cycle is a dive followed by a flight. These are medians from 291 bot flights
 - **Rejected (2026-10-27):** proximity scaling (Pressure, Point-blank, Graze).
 - **The plan (§4.20):** 16 linear steps, each with a build, an automated check, a playtest question and a gate measured with the flight log. Step 0 is choosing which codebase prototypes the routine: the demo or `src/`.
 
-**Why: the flow study (§4).** Enemies sat off-screen and kills were spread evenly over the flight. Hits were rare for careful play, and agency ended at release. Each part of the new design targets one of these.
+**Why: the flow study (§4).** Enemies sat at the screen edges and kills were spread evenly over the flight. Hits were rare for careful play, and agency ended at release. Each part of the new design targets one of these.
 
 ## 9. How the flow numbers were measured, and their limits
 

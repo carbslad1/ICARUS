@@ -23,7 +23,7 @@ def world_svg(f,title,W=560,H=300):
     o.append('</svg>');return ''.join(o)
 def arena_svg(f,title,W=380,H=216):
     sx=W/76;sy=H/43.2;X=lambda x:(x+38)*sx;Y=lambda y:H-(y+21.6)*sy
-    o=[f'<svg viewBox="0 0 {W} {H}" class="map arena" role="img" aria-label="{title}"><rect class="frame" x="0" y="0" width="{W}" height="{H}"/><rect class="view" x="{X(-28.5):.1f}" y="0" width="{57*sx:.1f}" height="{H}"/>']
+    o=[f'<svg viewBox="0 0 {W} {H}" class="map arena" role="img" aria-label="{title}"><rect class="frame" x="0" y="0" width="{W}" height="{H}"/><rect class="view" x="{X(-38.4):.1f}" y="0" width="{76.8*sx:.1f}" height="{H}"/>']
     for s in f['samples'][::2]:
         for e in s['en']:o.append(f'<circle class="en" cx="{X(e[1]):.1f}" cy="{Y(e[2]):.1f}" r="1.5"/>')
     o.append('<polyline class="path" points="'+' '.join(f'{X(s["lx"]):.1f},{Y(s["ly"]):.1f}' for s in f['samples'])+'"/>')

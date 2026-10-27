@@ -35,11 +35,11 @@ def dens(g,cls,label):
       for i in range(nx):
         v=g[j][i]
         if v: o.append(f'<rect class="{cls}" x="{i*SX}" y="{Hd-(j+1)*SY}" width="{SX-1}" height="{SY-1}" style="opacity:{0.12+0.88*math.sqrt(v/mx):.2f}"/>')
-    vx0=(38-28.5)/CW*SX;vx1=(38+28.5)/CW*SX
+    vx0=(38-38.4)/CW*SX;vx1=(38+38.4)/CW*SX  # the view is 76.8 m wide (whole arena, letterboxed 16:9)
     o.append(f'<rect class="view" x="{vx0:.1f}" y="0" width="{vx1-vx0:.1f}" height="{Hd}"/>')
     cx=38/CW*SX;cy=Hd-21.6/CW*SY
     o.append(f'<circle class="range" clip-path="url(#{cid})" cx="{cx}" cy="{cy}" r="{30/CW*SX}"/><circle class="me" cx="{cx}" cy="{cy}" r="4"/>')
-    o.append(f'<text class="tick" x="{vx0:.1f}" y="{Hd+14}" text-anchor="middle">−28.5 m</text><text class="tick" x="{vx1:.1f}" y="{Hd+14}" text-anchor="middle">+28.5 m</text><text class="tick" x="0" y="{Hd+14}">−38</text><text class="tick" x="{Wd}" y="{Hd+14}" text-anchor="end">+38</text>')
+    o.append(f'<text class="tick" x="0" y="{Hd+14}">−38 m</text><text class="tick" x="{Wd/2}" y="{Hd+14}" text-anchor="middle">view ±38.4 m (dashed)</text><text class="tick" x="{Wd}" y="{Hd+14}" text-anchor="end">+38 m</text>')
     o.append('</svg>');return ''.join(o)
 arenaE=dens(grid,'cellE','Where enemies are inside the arena, all flights');arenaD=dens(dol,'cellD','Where the bot dolphin is inside the arena, all flights')
 # 3. kill phase vs time share

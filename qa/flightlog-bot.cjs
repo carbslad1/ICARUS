@@ -8,7 +8,7 @@ const root = path.resolve(__dirname, '..'), file = path.join(root, 'ICARUS-demo.
 const out = path.resolve(process.argv[2] || path.join(require('os').tmpdir(), 'icarus-flightlog-bot'));
 
 // The flow study's baseline on the S4 build (docs/flow-study, 2026-10-26)
-const BASELINE = { flights: 291, hits: 59, kills: 4533, killsByPhase: { ascent: 1915, apex: 793, descent: 1825 }, offScreen: 58.28 };
+const BASELINE = { flights: 291, hits: 59, kills: 4533, killsByPhase: { ascent: 1915, apex: 793, descent: 1825 }, offScreen: 18.63 };
 const STYLES = ['low-keep', 'mid-keep', 'high-keep', 'mid-turn'], SEED = 7, MAX_WAVE = 16;
 
 function run(style) {

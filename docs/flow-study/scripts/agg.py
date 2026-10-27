@@ -13,7 +13,7 @@ for (style,b),fs in sorted(rows.items()):
     for s in f['samples']:
       ds=[math.hypot(e[1]-s['lx'],e[2]-s['ly']) for e in s['en']]
       if ds: dist.append(min(ds)); near.append(1 if min(ds)<=30 else 0)
-      onscreen.append(sum(1 for e in s['en'] if abs(e[1]-s['lx'])<=28.5))
+      onscreen.append(sum(1 for e in s['en'] if abs(e[1])<=38.4))
   ph={}
   for f in fs:
     for k in f['kills']: ph[k['phase']]=ph.get(k['phase'],0)+1

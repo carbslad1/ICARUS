@@ -21,6 +21,8 @@ python3 $S/report.py                   # -> icarus-flow-study.html
 
 On 2026-10-26, rerunning `telemetry.cjs` on the current build reproduced the original flight data exactly, and `report.py` reproduced the committed report byte for byte from the same screenshots.
 
+**Corrected 2026-10-27:** the first report assumed a 57 m view and said 58% of enemies were off-screen. The view is really 76.8 m wide, because the game locks the view to the arena and letterboxes 16:9, so 18% are off-screen. The report and its scripts were corrected and regenerated.
+
 `bot-baseline-metrics.json` is the same baseline measured from real flight logs by `qa/flightlog-metrics.cjs`; `qa/flightlog-bot.cjs` regenerates it and checks it against the study.
 
 For real play data, use **SAVE FLIGHT LOG** in the demo (pause menu or end-of-run screen); see `source/flightlog.js`.

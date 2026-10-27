@@ -46,13 +46,14 @@ ol.find li{margin-bottom:10px}
 <li>The S4 demo build, run headless by the test bot at 120 steps per second, with positions logged 10 times per second. Screenshots come from the same bot driving the real renderer.</li>
 <li>Four styles, one seed each: low hop (~30°), mid (~55°), high (~80°), and mid turning round at launch. The bot starts with the harpoon and buys weapons plus Armour, Max HP, Regen, Damage and Shot.</li>
 <li>In the air the bot keeps about 8 m from the nearest enemy, dodges shots it notices (3 in 4), and collects orbs when safe. <b>It is not you.</b> Read every number as "what a cautious, average bot does".</li>
+<li><b>Corrected 2026-10-27.</b> The first version assumed a 57 m view (the <code>frame.width</code> setting) and reported 58% of enemies off-screen. The game actually locks the view to the arena and letterboxes a 16:9 frame, so the view is 76.8 m wide and 18% are off-screen. Every other number is unchanged.</li>
 <li>All four bot runs ended on the quota at waves 7–11, so there's nothing here past wave 11 and nothing on bosses. The wave 9 screenshots were skipped because the browser run lost before wave 9.</li>
 </ul></div>
 
 <div class="facts">
 <div class="fact"><div class="n">1.0–2.7 s</div><div class="l">underwater per dive, low hop to high launch</div></div>
 <div class="fact"><div class="n">2.3–8.1 s</div><div class="l">in the air per flight, wave 1 low hop to wave 7+ high</div></div>
-<div class="fact"><div class="n">58%</div><div class="l">of enemy positions sit horizontally outside the visible screen</div></div>
+<div class="fact"><div class="n">31 m</div><div class="l">median enemy distance from the screen centre, in a view ±38.4 m wide (18% off-screen)</div></div>
 <div class="fact"><div class="n">0.2</div><div class="l">hits taken per flight by the bot (59 hits in 291 flights)</div></div>
 </div>
 
@@ -63,12 +64,12 @@ ol.find li{margin-bottom:10px}
 <p><b>Launch decides almost everything.</b> Launch speed is fixed per wave. The angle at release sets the threat tier (about 30° → tier 2, 55° → 3, 80° or more → 5), the peak height (19 m for a wave 1 low hop, up to 128 m for a wave 7+ high launch) and the air time. After release you steer only inside the arena that travels along the arc.</p>
 
 <h2>2. Where things are in the arena</h2>
-<p>The arena is 76 × 43.2 m and rides along the ballistic arc. <b>The camera follows the arena, not the dolphin.</b> The dashed box is the visible 57 m width; the green ring is a 30 m weapon range around the arena centre. Darker cells were occupied more often.</p>
+<p>The arena is 76 × 43.2 m and rides along the ballistic arc. <b>The camera follows the arena, not the dolphin.</b> The dashed box is the visible 76.8 m width, which covers the whole arena; the green ring is a 30 m weapon range around the arena centre. Darker cells were occupied more often.</p>
 <div class="two">
 <figure style="margin:0">{{ARENA_E}}<figcaption>Enemies (red), all air samples</figcaption></figure>
 <figure style="margin:0">{{ARENA_D}}<figcaption>The bot dolphin (green), all air samples</figcaption></figure>
 </div>
-<p>Enemies come in from the side edges of the arena, mostly outside the screen; the median enemy sits 31 m from the centre horizontally. The bot drifts a median of 18 m off centre and sometimes reaches the edge, which puts the dolphin at the edge of the screen. That's visible in the wave 5 climb frame below.</p>
+<p>Enemies come in from just outside the side edges and stay near them. The median enemy sits 31 m from the centre horizontally, close to the edge of the ±38.4 m view; 18% are off-screen while entering. The bot drifts a median of 18 m off centre and sometimes reaches the edge, which puts the dolphin at the edge of the screen. That's visible in the wave 5 climb frame below.</p>
 
 <h2>3. Filmstrips</h2>
 <h3>Wave 5, low hop</h3>{{S_LOW}}

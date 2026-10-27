@@ -4,9 +4,11 @@
 //   node qa/flightlog-metrics.cjs run1.json [run2.json ...] [--json]
 const fs = require('fs');
 
-// The view is 57 m wide (frame.width) and centred on the arena origin, so an enemy is off-screen horizontally
-// when its arena-local |x| exceeds half of that. Weapon reach for Shot weapons is 30 m.
-const VIEW_HALF = 28.5, REACH = 30, PHASES = ['ascent', 'apex', 'descent'];
+// In the air the camera locks to the arena origin and the view to the arena's 43.2 m height ("Lock view to arena",
+// on by default). The game letterboxes a 16:9 frame, so the view is 76.8 m wide whatever the window's shape, and an
+// enemy is off-screen when its arena-local |x| exceeds 38.4 m. Version 3 logs record the actual half-width per flight
+// (f.view); older logs use 38.4. Weapon reach for Shot weapons is 30 m.
+const VIEW_HALF = 38.4, REACH = 30, PHASES = ['ascent', 'apex', 'descent'];
 
 const median = a => { if (!a.length) return null; const s = [...a].sort((x, y) => x - y), m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2 };
 const quantile = (a, q) => { if (!a.length) return null; const s = [...a].sort((x, y) => x - y), i = (s.length - 1) * q, lo = Math.floor(i); return s[lo] + (s[Math.ceil(i)] - s[lo]) * (i - lo) };
@@ -18,7 +20,7 @@ function waveBand(w) { return w <= 3 ? 'waves 1–3' : w <= 6 ? 'waves 4–6' : 
 
 function measure(flights, complete) {
   const kills = { ascent: 0, apex: 0, descent: 0 }, time = { ascent: 0, apex: 0, descent: 0 };
-  const nearest = [], onScreen = [], firstKill = [];
+  const nearest = [], onScreen = [], firstKill = [], fromCentre = [];
   let enemyN = 0, offN = 0, near = 0, withEnemy = 0, hits = 0, clean = 0, drawn = 0, bailed = 0;
   for (const f of flights) {
     for (const k of f.kills) if (k.ph in kills) kills[k.ph]++;
@@ -29,10 +31,10 @@ function measure(flights, complete) {
       if (s.k !== 'a') continue;
       if (s.ph in time) time[s.ph]++;
       if (!s.en) continue;
-      let best = Infinity, on = 0;
+      let best = Infinity, on = 0; const half = f.view || VIEW_HALF;
       for (const e of s.en) {
-        best = Math.min(best, Math.hypot(e[1] - s.l[0], e[2] - s.l[1]));
-        enemyN++; if (Math.abs(e[1]) > VIEW_HALF) offN++; else on++;
+        best = Math.min(best, Math.hypot(e[1] - s.l[0], e[2] - s.l[1])); fromCentre.push(Math.abs(e[1]));
+        enemyN++; if (Math.abs(e[1]) > half) offN++; else on++;
       }
       onScreen.push(on);
       if (s.en.length) { withEnemy++; nearest.push(best); if (best <= REACH) near++ }
@@ -55,6 +57,7 @@ function measure(flights, complete) {
     // version 1 logs kept only enemies within 60 m, so their off-screen share undercounts
     offScreenEnemies: complete ? pct(offN, enemyN) : null,
     enemiesOnScreen: round(median(onScreen)),
+    enemyFromCentreM: round(median(fromCentre), 1),
     hitsPerFlight: round(flights.length ? hits / flights.length : null),
     cleanFlights: pct(clean, flights.length),
     tricksLanded: drawn ? pct(drawn - bailed, drawn) : null
@@ -81,10 +84,10 @@ function analyse(logs) {
 function print(r) {
   const rows = [['all flights', r.all], ...Object.entries(r.byLaunch), ...Object.entries(r.byWave)];
   const fmt = v => v == null ? '–' : String(v);
-  const head = ['group', 'flights', 'water s', 'air s', 'angle', 'angle IQR', 'kills', 'kills asc/apex/desc %', 'time asc/apex/desc %', 'nearest m', 'within 30 m %', 'off-screen %', 'hits/flight', 'clean %', 'tricks landed %'];
+  const head = ['group', 'flights', 'water s', 'air s', 'angle', 'angle IQR', 'kills', 'kills asc/apex/desc %', 'time asc/apex/desc %', 'nearest m', 'within 30 m %', 'enemy from centre m', 'off-screen %', 'hits/flight', 'clean %', 'tricks landed %'];
   const body = rows.map(([name, m]) => [name, m.flights, m.waterS, m.airS, m.launchAngle.median, m.launchAngle.iqr, m.killsPerFlight,
     PHASES.map(p => fmt(m.killShare[p])).join('/'), PHASES.map(p => fmt(m.timeShare[p])).join('/'), m.nearestEnemyM, m.enemyWithinReach,
-    m.offScreenEnemies, m.hitsPerFlight, m.cleanFlights, m.tricksLanded].map(fmt));
+    m.enemyFromCentreM, m.offScreenEnemies, m.hitsPerFlight, m.cleanFlights, m.tricksLanded].map(fmt));
   const w = head.map((h, i) => Math.max(h.length, ...body.map(b => b[i].length)));
   const line = c => c.map((v, i) => i ? v.padStart(w[i]) : v.padEnd(w[i])).join('  ');
   console.log(`${r.files} log(s); ends: ${r.ends.map(e => e ? `${e.mode} at wave ${e.wave}${e.reason ? ' (' + e.reason + ')' : ''}` : 'unfinished').join('; ')}`);
