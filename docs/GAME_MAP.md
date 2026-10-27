@@ -3,6 +3,7 @@
 This is the shared understanding of the dolphin game (ICARUS) as of **2026-10-26**: what the playable demo does, how a flight actually unfolds (measured, not assumed), where the design is heading, and the rules the designer has set. Read it before discussing the demo, its design or its balance.
 
 - **Snapshot:** branch `design/scoring-revision-2026-10`, demo build at commit `5bdcf36` (the S4 build plus a flight-log export).
+- **Design direction (§8, §11, §12) updated 2026-10-27** with the positional design decisions. The demo itself is unchanged since 2026-10-26.
 - **Trust order:** the code beats this file; this file beats memory. Each fact below says where it comes from. If something here disagrees with the code, the code is right and this file is out of date.
 - **What's not verified:** human feel, device performance and anything past wave 11 in play (see §9).
 
@@ -94,18 +95,29 @@ One cycle is a dive followed by a flight. These are medians from 291 bot flights
 
 ## 8. Where the design is heading (not built)
 
-`ICARUS_DESIGN.md` §4 and §10 (2026-10-26) replace the slot-machine reels with a **five-slot trick routine**:
+`ICARUS_DESIGN.md` §4 (revised 2026-10-27) and §10 replace the slot-machine reels with a **five-slot routine of positional setups and payoffs**:
 
-- **The slots** are breach, ascent, apex, descent and entry.
-  - Tricks are abilities with visible attack shapes, and any trick can go in any slot.
+- **The routine:**
+  - The slots are breach, ascent, apex, descent and entry, and any trick can go in any slot.
   - A routine holds one copy of each trick; extra copies level a trick up.
   - All five slots are open from the start, but the run begins with one trick.
-- **Style score:** kills × the summed level of connected tricks, ×2 for a flight with no hits. It is paid as pearls on a diminishing curve. Score is an economy tool and never decides survival.
+- **Setups and payoffs:** setups move, hold or status enemies; payoffs consume them. A payoff on enemies your own setup moved is **linked** and adds style mult.
+- **The positional grammar (§4.16):** every effect is anchor + trigger + shape + verb.
+  - Anchors are body (Ahead, Behind, Above, Below, Around), path (Trajectory, Wake, Arc), landmark (breach, apex and landing points, the surface) and target.
+  - There are two layers: the arena rides the arc, while the world layer, including the surface, sweeps through it. This is still to be verified in play.
+  - Enemies have exposed sides, and there are three hard surfaces: enemies, frozen blocks and the water (drowning).
+- **Statuses replace tags:** Soaked, Shock, Burn, Freeze and Bleed, plus three reactions (Conduct, Flash-freeze, Steam). Each status changes where enemies go.
+- **Classes (§4.17):** 12 Brotato-style classes with set bonuses at 2, 4 and 6. Weapons have a delivery (Close, Shot or Blast) and one or two classes, and tricks count as one item toward set bonuses. The roster target is Brotato's weapon count; the exact number is open.
+- **Evolutions are earned by feats:** a T4 weapon plus its positional feat performed N times.
+- **Style score:** chips × mult × clean streak, paid as pearls on a diminishing curve. The **clean streak carries across flights**, and a hit resets it.
 - **0 HP ends the run;** there is no quota and no bust.
-- **Tags and weapon evolutions** connect tricks to weapons, and charms fold into trick upgrades and gear.
-- **First prototype:** Corkscrew, Star pose and Spout; breach, apex and entry slots only; one tag (Soaked); one evolution.
+- **Space (§4.18):**
+  - Enemies spawn on the arc, the arena fits the view, chasers flock and the landing pool is visible.
+  - Shots lead your arc; there are clutch events and new flight verbs (stomp-bounce, dive, dash).
+- **Rejected (2026-10-27):** proximity scaling (Pressure, Point-blank, Graze).
+- **The plan (§4.20):** 16 linear steps, each with a build, an automated check, a playtest question and a gate measured with the flight log. Step 0 is choosing which codebase prototypes the routine: the demo or `src/`.
 
-**The flow study bears on this (§4).** Kills don't concentrate at any phase, and the action sits at the screen edges. A moment trick only connects if enemies are near the dolphin at that moment. Hits are rare for careful play, so "a hit cancels the trick" may rarely bite.
+**Why: the flow study (§4).** Enemies sat off-screen and kills were spread evenly over the flight. Hits were rare for careful play, and agency ended at release. Each part of the new design targets one of these.
 
 ## 9. How the flow numbers were measured, and their limits
 
@@ -134,6 +146,8 @@ One cycle is a dive followed by a flight. These are medians from 291 bot flights
 - Charms must be readable in at most two lines.
 - No "this jump needs X" readout.
 - Airtime gating is rejected.
+- Proximity scaling is rejected (2026-10-27).
+- The clean streak carries across flights; evolutions are earned by feats; tricks count toward class set bonuses (2026-10-27).
 - There is no safe coast after the clock.
 - XP orbs stay, without free Max HP. The heat cue is removed.
 
@@ -155,6 +169,9 @@ One cycle is a dive followed by a flight. These are medians from 291 bot flights
 ## 12. Open questions waiting for the designer
 
 1. How the designer actually plays: low hops, high launches or a mix; turning round at launch; where the dolphin sits on screen; how often and where they get hit; whether enemies feel edge-borne. A flight log would answer most of this.
-2. The weapon–trick interaction: tricks reshaping weapon fire, and evolutions earned by kills during a trick.
-3. Stat questions: a projectile cap, the scope of attack speed, and how evolved weapons behave.
-4. The design doc §4.14 list: the full trick list, how stretch slots fire, the payout curve, evolutions, how charms fold in, and how tricks aim.
+2. Which codebase prototypes the routine: the demo or `src/` (design doc §4.20, step 0).
+3. Brotato's exact weapon count, which is the roster target.
+4. Whether the clean streak survives the shop between waves.
+5. Kill-lift versus stomp-bounce.
+6. Stat questions: a projectile cap, the scope of attack speed, and how evolved weapons behave.
+7. The rest of the design doc §4.14 list.

@@ -8,6 +8,8 @@
 > **Revision 2026-10-25: scoring and run structure.** §4 (Reward architecture and scoring) and §10 (Progression) have been rewritten to the chips × mult design developed in the playable demo (`source/`, built to `ICARUS-demo.html`). Several original systems were removed from the design: the altimeter as the score, apex tiers and tier loot, entry-quality grading and perfect-entry streaks, and speed compounding across cycles. Sections that still describe them carry a **Superseded** note pointing to §4. Movement, frame architecture and the binding rules in §13–15 are unchanged by this revision.
 >
 > **Revision 2026-10-26: the routine.** §4 and §10 were rewritten again. Tricks are now a five-slot routine of abilities placed on the flight; style pays pearls; 0 HP ends the run. The 2026-10-25 slot-machine design, which the S4 demo implements, is kept as Appendix A.
+>
+> **Revision 2026-10-27: positional play.** §4 adds the positional effect grammar (§4.16), classes (§4.17), space and flight rules (§4.18), example effects (§4.19) and a linear build-and-playtest plan (§4.20). Statuses replace tags, evolutions are earned by feats, and a clean streak across flights replaces the per-flight ×2.
 
 ---
 
@@ -182,21 +184,35 @@ Bounds are necessary: without them the player could fly straight down to the wat
 
 # 4. Reward architecture: the routine
 
-**Revised 2026-10-26.** This section replaces the 2026-10-25 slot-machine design, which is preserved as Appendix A and is what the S4 demo build implements. This is the target design for the next build; the demo does not implement it yet. Numbers marked **[TUNE]** are starting points; the structure beside them is the requirement. **[CALL]** marks decisions made in the designer's favour that can be overridden cheaply. **[OPEN]** marks unresolved questions, which must be raised rather than guessed.
+**Revised 2026-10-27.** This section replaces the 2026-10-25 slot-machine design, which is preserved as Appendix A and is what the S4 demo build implements. It is the target design for the next build; the demo does not implement it yet.
+
+- The 2026-10-27 revision adds the positional effect grammar (§4.16), classes (§4.17), space and flight rules (§4.18), example effects (§4.19) and the build-and-playtest plan (§4.20).
+- It also records three designer decisions: the clean streak carries across flights, evolutions are earned by feats, and tricks count toward class set bonuses.
+- It is grounded in the flow study (`docs/flow-study/`, summarised in `docs/GAME_MAP.md`).
+
+Markers:
+- **[TUNE]**: a starting number; the structure beside it is the requirement.
+- **[CALL]**: a decision made in the designer's favour that can be overridden cheaply.
+- **[OPEN]**: an unresolved question, to be raised rather than guessed.
+- **[VERIFY]**: a claim that follows from the engine's structure but has not been tested in play.
 
 ## 4.1 The thesis
 
-> **Build a five-move routine. Your dolphin performs it through every flight. Style earns the pearls that buy your power.**
+> **Build a five-move routine. Your dolphin performs it through every flight. Where you fly decides what it hits. Style earns the pearls that buy your power.**
 
 | Layer | Reference | Role in ICARUS |
 |---|---|---|
-| Survive waves; shop between them; auto-firing weapons | Brotato | Combat, survival and the build skeleton |
-| Combine weapons with matching tricks to evolve them | Vampire Survivors, Ball x Pit | Discovery and builds that break the game |
-| Tricks performed through the flight | Tony Hawk's Pro Skater | The routine: abilities placed on the flight, and the style score |
+| Survive waves; shop between them; auto-firing weapons; classes and stats | Brotato | Combat, survival and build diversity |
+| Status reactions and weapon evolutions earned by play | Ball x Pit, Vampire Survivors | Discovery and builds that break the game |
+| Tricks performed through the flight | Tony Hawk's Pro Skater | The routine: setups and payoffs placed on the flight, the style score and the clean streak |
 
 What the player should feel: **"I flew that way because of my routine, and that is why those enemies died."**
 
-The test for every trick: **when the player changes a trick, do they change how they fly?** If not, the trick needs work.
+Two tests apply to every trick, weapon and item:
+1. **When the player changes it, do they change how they fly?** If not, it needs work.
+2. **Does it name one anchor and one verb (§4.16)?** If not, it's a stat, not an effect.
+
+**Positional play is the priority.** Movement, trajectory, herding enemies and positioning decide outcomes. **Proximity scaling** (power rising with nearby enemy count) was **considered and rejected** (designer decision, 2026-10-27).
 
 ## 4.2 The flight and its five slots
 
@@ -210,79 +226,124 @@ Every flight passes through five phases. Each phase is a routine slot.
 | **Descent** | Stretch | Repeatedly while falling **[TUNE]** interval |
 | **Entry** | Moment | Once, at water contact |
 
-- **Launch shape decides what the routine does.** A high launch gives long ascent and descent stretches. A low hop reaches the moments quickly and allows more flights.
+- **Launch shape decides what the routine does.** A high launch gives long ascent and descent stretches. A low hop reaches the moments quickly, allows more flights and keeps the water surface in reach (§4.16).
 - **The player controls where the moments happen,** through launch and steering: where the apex peaks and where the dolphin lands. Weapons keep aiming and firing automatically.
+- **Each phase asks a positional question:**
+
+  | Phase | Question |
+  |---|---|
+  | Release | Which route through the formations? |
+  | Ascent | Herd the enemies, or avoid them? |
+  | Apex | Where do I peak? |
+  | Descent | Do I sweep the chasers? |
+  | Entry | Do I land in the pool? |
 
 ## 4.3 Tricks and the routine
 
 - **A trick is an ability with a visible attack shape** that its animation explains. Tricks fire automatically when their slot's phase arrives.
-- **Any trick can go in any slot.** There is no base phase restriction.
+- **Tricks are setups or payoffs** (§4.16 D):
+  - **Setups** move, hold or status enemies and deal little or no damage.
+  - **Payoffs** consume setups.
+  - A payoff that hits enemies your own setup moved or statused is **linked** (§4.6).
+- **Any trick can go in any slot.** There is no base phase restriction. Order matters because setups must fire before the payoffs that consume them.
 - **Each trick fills one slot.** A routine cannot hold two copies of the same trick. Buying another copy of an owned trick **levels it up**, like merging weapons.
 - **All five slots are open from wave 1**, but the run starts with **one trick**. **[CALL]** It is chosen from three offers at the start of the run, alongside the starting weapon.
 - **The routine persists** until the player changes it in the shop. **[CALL]** Rearranging is free.
+- **Each trick carries a class tag** (§4.17) and **counts as one item toward class set bonuses** (designer decision, 2026-10-27).
 - **Phase bonuses come only through upgrades**, for example "Spout: double damage in the Entry slot". They are never a base rule players must learn.
 
-**Starting trick identities to prototype.** These are roles, not balance values.
+**Starting trick identities to prototype.** These are roles, not balance values. §4.19 has more.
 
-| Trick | Attack | Tag (see §4.5) | Natural slot |
-|---|---|---|---|
-| **Corkscrew** | Repulsion burst that pushes enemies away | Repelled | Breach: clears space as the arena opens |
-| **Spout** | Water blast centred on the dolphin, hitting enemies near the surface | Soaked | Entry: hits pursuers gathered at the water |
-| **Star pose** | Outward burst | none at base | Apex: place the peak inside a cluster |
-| **Front flip** | Sweep ahead of the dolphin | none at base | Ascent: pass through the side of a group |
-| **Backflip** | Sweep behind the dolphin | none at base | Descent: strike enemies chasing you |
+| Trick | Anchor · shape → verb | Setup or payoff | Class | Natural slot |
+|---|---|---|---|---|
+| **Corkscrew** | Around · burst → Push | Setup | Sonic | Breach: clears space as the arena opens |
+| **Gravity anchor** | Apex point · point → Pull | Setup | Current | Apex, or the stretch before a payoff |
+| **Star pose** | Around · burst → Burst | Payoff | Blast | Apex: place the peak inside a cluster |
+| **Spout** | Landing point · splash → Splash, applies Soaked | Payoff | Tide | Entry: hits the landing pool; size scales with fall height |
+| **Front flip** | Ahead · ram → Ram (invulnerable) | Payoff | Ram | Ascent: line up a path through enemies |
+| **Backflip** | Behind · sweep → Sweep | Payoff | Blade | Descent: strike enemies chasing you |
 
-The pool must grow beyond the five slots, to about 10–15 tricks, so that choosing a routine is a real decision. **[OPEN]** The full trick list.
+The pool must grow to about 10–15 tricks at first, so that choosing a routine is a real decision. **[OPEN]** The full trick list.
 
 ## 4.4 Trick upgrades
 
 - **Levels** come from extra copies. They raise power and style value (§4.6).
-- **Transformations** are choices offered as a trick levels. Each keeps the trick's trigger and identity while changing its shape:
-  - Corkscrew: **Fork** (wider fan) or **Drill** (piercing column).
+- **Transformations** are choices offered as a trick levels. Each keeps the trick's trigger, anchor and identity while changing its shape:
+  - Corkscrew: **Fork** (wider fan) or **Drill** (a piercing column).
   - Spout: **Broad splash** (more water covered) or **Lingering wake** (the landing attack stays active for pursuers arriving later).
-- **Tag upgrades** add or strengthen a tag. Examples: Corkscrew gains **Marked** (marked enemies take more critical hits); Spout's water reaches enemies in the air.
+- **Status upgrades** add or strengthen a status (§4.5). Examples: Corkscrew applies Soaked; Spout's water reaches enemies in the air.
 - **The former charms are folded into trick upgrades and gear.** Their flight-phase ideas become trick upgrades or style conditions, for example "Star pose: +2 style if it hits 5 or more enemies". Score-only charms are removed. A few economy effects may survive as gear.
-- **Later layer:** named sequences, where specific tricks in adjacent slots form a combo with a bonus (for example Corkscrew → Star pose). Add these only after single tricks feel good.
+- **Later layer:** named sequences, where specific setup → payoff pairs in adjacent slots carry a bonus. Add these only after linking (§4.6) feels good.
 
-## 4.5 Tags and weapon evolutions
+## 4.5 Statuses, reactions and evolutions
 
-Tricks apply **tags** to enemies. Weapons have **tag payoffs**. This is where the trick layer and the weapon layer meet.
+**Statuses replace the earlier tags.** That makes it one system, not two.
 
-| Tag | Applied by (examples) | Weapon payoff (examples) |
+**Rule:** a status must change where enemies go, or what they become in space. Plain damage over time or slowing adds nothing to positional play.
+
+| Status | Applied by (examples) | What it does in space | Payoff |
+|---|---|---|---|
+| **Soaked** | Spout, Breach wave, Blowhole | Soaked enemies sink toward the surface, which feeds the landing pool | Conducts Shock; flash-freezes |
+| **Shock** | Arc, Storm cell | Jumps between enemies within 5 m **[TUNE]**, so it rewards clusters | Chain length = cluster size |
+| **Burn** | Flak, Fire wake | Spreads when enemies touch, so a bunched group ignites | Pull a group together first |
+| **Freeze** (stacks of chill, then frozen) | Depth charge, Ice wake, Bubble net | A frozen enemy is a solid block: it blocks other enemies and can be stomped off | A ram or stomp shatters it into an area blast |
+| **Bleed** | Fin, Harpoon critical hits | Other enemies are drawn to bleeding ones, so enemies herd themselves | A burst where they gather |
+
+**Reactions (three at most):**
+- **Conduct:** Soaked plus Shock chains through every soaked enemy.
+- **Flash-freeze:** Soaked plus chill freezes instantly.
+- **Steam:** Burn plus Soaked makes a cloud that blinds turrets. It's a defensive positioning tool.
+
+**Caps and colour:** at most 5 statuses and 3 reactions, each with its own colour. The screen is small and flights are short. Slow folds into Freeze; Pierce is a projectile property, not a status; Marked folds into Sonar effects.
+
+**Evolutions are earned by feats** (designer decision, 2026-10-27):
+- **Rule:** a **T4 weapon** plus **its feat performed N times** **[TUNE]** offers that weapon's evolution in the shop. Each feat is written in the grammar of §4.16, so mastering positioning unlocks power.
+- **Telegraph:** the shop shows feat progress as soon as the player holds the weapon, and shows what the evolution does.
+- **Limit:** at most one evolution per weapon. Each one changes the weapon's shape or role, not just its numbers.
+
+| Weapon | Feat | Evolution |
 |---|---|---|
-| **Marked** | Corkscrew (upgrade) | More critical damage; Harpoon executes Marked enemies when evolved |
-| **Soaked** | Spout | Arc chains further through Soaked enemies |
-| **Bleed** | Upgrades | Damage over time; Fin cleaves spread it |
-| **Repelled** | Corkscrew | Blast weapons deal more to enemies knocked together |
+| Arc | Conduct through 50 soaked enemies | **Storm:** chains are unlimited through Soaked |
+| Harpoon | Pierce 3 or more enemies lined up, 20 times | **Tether harpoon:** pulls hit enemies onto your path, turning a payoff weapon into a setup |
+| Depth charge | Shatter 30 frozen enemies | **Glacier:** the blast area freezes into stompable blocks |
+| Flak | Ignite 40 enemies through spread | **Fire wake:** your path burns |
+| Fin | Bleed 30 lured enemies | **Blood fin:** every hit lures nearby enemies |
 
-- **Evolution rule [CALL]:** a **T4 weapon** plus a **trick carrying the matching tag at level 3 or higher** **[TUNE]** unlocks that weapon's evolution in the shop.
-- **Evolutions must be telegraphed.** As soon as the player holds either half, the shop shows the requirement and what the evolution does. Recipes may be discovered, but they are never hidden once you hold a half (Ball x Pit's recipe helper is the model).
-- **[OPEN]** The evolution list: one per weapon to start.
+**[OPEN]** The evolution list for every weapon as the roster grows (§4.17).
 
 ## 4.6 Style score and payout
 
-The style score is Tony Hawk's: **kills are the base, the routine is the multiplier.** It is paid at splashdown and converted to pearls. It never decides survival.
+The style score is Tony Hawk's: **kills are the base, the routine is the multiplier, and a clean streak raises the stakes.** It is paid at splashdown and converted to pearls. It never decides survival.
 
 ```
 chips  = enemies killed during this flight
 mult   = sum of the style values of connected tricks
          (style value = the trick's level, so 1 at level 1)
-         × 2 if the whole flight was clean (no hits taken)
-score  = chips × mult
+         + 1 for each linked payoff [TUNE]
+streak = clean flights in a row, counting this one (1 if this flight took a hit) [TUNE cap]
+score  = chips × mult × streak
 pearls = payout curve(score)
 ```
 
-- **A trick connects** if it performed without being interrupted **and** hit at least one enemy. A trick that fires into empty air adds nothing. **[CALL]** Placing the apex in the cluster is what earns the mult.
-- **A hit cancels the trick in progress.** It adds nothing to mult, and the flight loses its clean ×2.
-- **Wave 1:** one trick, so mult is 0, 1 or 2. Mult grows with tricks and levels: five level-3 tricks give 15, or 30 for a clean flight.
+- **A trick connects** if it performed without being interrupted **and** hit at least one enemy. A trick that fires into empty air adds nothing. **[CALL]**
+- **A payoff is linked** when it hits enemies that your own setup moved or statused during the same flight.
+- **The clean streak carries across flights** (designer decision, 2026-10-27). It replaces the per-flight ×2. A hit resets it to 1. The longer it lives, the more each flight risks, so the last flights of a wave carry the stakes. **[OPEN]** Whether the streak survives the shop between waves.
+- **A hit cancels the trick in progress** and resets the streak.
 - **Payout curve [TUNE]:** diminishing returns, either tiers or a square-root curve. Great style earns more pearls without running away with the economy.
-- The splashdown cascade stays as the presentation: each connected trick, then the clean bonus, then the payout in pearls.
+- **The splashdown cascade** stays as the presentation: each connected trick, linked bonuses, the streak, then the payout in pearls.
 
 ## 4.7 Danger and the loss condition
 
 - **0 HP ends the run**, as in Brotato. There is no quota and no bust.
 - **A wave is survived, not scored.** Each wave has an air clock that runs only in flight. When it runs out, enemies keep coming and the wave ends at the next water entry. There is no safe coast (user rule, 2026-10).
-- **Getting hit** costs HP, cancels the trick in progress and loses the flight's clean ×2. Defence protects both your run and your income.
+- **Getting hit** costs HP, cancels the trick in progress and resets the clean streak. Defence protects both your run and your income.
+- **Danger is positional:**
+  - Enemy shots lead your predicted arc.
+  - Hazards sit on your path.
+  - Enemies have exposed sides.
+  - Closing nets force a route (§4.18).
+
+  The flow study measured 0.2 hits per flight for a cautious bot, too few for the cancel and the streak to bite. **[TUNE]** Target about 1 hit per flight for an average player.
 - Clearing a wave restores HP and opens the shop.
 
 ## 4.8 Shop and economy
@@ -291,7 +352,7 @@ pearls = payout curve(score)
 
 | Category | Contains |
 |---|---|
-| Weapons | 9 automatic weapons (3 types × 3 cadences), 6 slots, merge equal copies to tier up (max T4), evolutions when unlocked (§4.5) |
+| Weapons | Automatic weapons, each with a delivery (Close, Shot, Blast) and one or two classes (§4.17); 6 slots; merge equal copies to tier up (max T4); evolutions when their feat is met (§4.5). **Target roster: Brotato's weapon count.** **[OPEN]** The exact number: the sources found on 2026-10-27 disagree (45 and 51, both older guides). The class structure scales to 60–80. |
 | Tricks | New tricks and extra copies (which level owned tricks), with transformation choices on level-up |
 | Gear | Stat items with trade-offs and combat items, now also carrying the useful parts of the former charms |
 
@@ -300,20 +361,25 @@ pearls = payout curve(score)
 - **XP and level-ups stay:** kills drop orbs collected in the air, and each level gives a free stat pick from three before the shop. Levels add no Max HP by themselves (user decision, 2026-10-25).
 - **Offer rules:**
   - Rarity sets frequency as well as price and has a visible colour.
-  - Offers lean towards the held build; trick offers lean towards tags your weapons pay off.
+  - Offers lean toward the held build: classes you're collecting, and statuses your weapons pay off.
   - Lock, separate rerolls, sell at 50% and the weapon-replacement flow stay.
 - **Pearls:** wave pay, the style payout (§4.6), and interest on saved pearls (capped) **[TUNE]**.
 
 ## 4.9 Flight language
 
-**Every system speaks the flight.** Each new weapon, trick, gear item or evolution should answer: *which part of the jump does this make you want to own?* That means breach, ascent, apex, descent, entry, how high you launch, or how many jumps you take.
+**Every system speaks the flight.** Each new weapon, trick, gear item or evolution should answer: *which part of the jump does this make you want to own?* That means breach, ascent, apex, descent, entry, how high you launch, how many jumps you take, or where enemies are relative to you. Every effect names **one anchor and one verb** (§4.16).
 
 ## 4.10 Presentation
 
 - **Tricks are seen, not read.** Each trick's attack is visible where it happens, so the player learns the routine by watching it work.
 - **A cancelled trick is unmistakable:** a clear break in the animation and a distinct sound.
-- **The splashdown cascade** shows connected tricks, the clean bonus and the pearl payout, led by sound with pitch climbing per trick.
-- **The shop shows the routine** as five slots along a drawn flight arc, with each trick's tag and the evolutions it is working towards.
+- **Statuses read by colour and motion:** soaked enemies drip and sink, frozen ones are solid blocks, and bleeding ones trail red.
+- **The splashdown cascade** shows connected tricks, linked bonuses, the streak and the pearl payout, led by sound with pitch climbing per trick.
+- **The shop shows the routine** as five slots along a drawn flight arc, with each trick's anchor, class and status, plus feat progress toward evolutions.
+- **Effects without readouts:**
+  - Hitstop on multi-kills and stomps.
+  - A glowing screen rim in the direction of enemies coming from off-screen.
+  - A ghost of the landing zone during the descent, showing the pool as it grows.
 
 ## 4.11 The power curve
 
@@ -322,6 +388,15 @@ The run must have the power-inversion shape: you start cautious and end as the h
 ## 4.12 Cross-run progression
 
 **[CALL]** Minimal and achievement-based, not grind-based. Milestones unlock content: tricks, weapons, evolutions, and **starting dolphins with a passive that bends a rule**. These are the cheapest large source of run variety, as characters are in Brotato and Ball x Pit. **Deterministic, skill-gated, no random unlock rolls and no permanent stat upgrades.**
+
+Starting dolphins to prototype:
+
+| Dolphin | Passive |
+|---|---|
+| Orca | No guns; ram and stomp only; damage = speed |
+| Spinner | Tricks fire twice; weapons −40% |
+| River dolphin | A longer water phase; the Mud ring trick is free |
+| Hector's | Tiny hitbox, high steering, 60% HP |
 
 ## 4.13 Ethical constraints
 
@@ -336,12 +411,16 @@ These are binding design constraints, not aspirations.
 
 ## 4.14 Open questions
 
-1. The full trick list (about 10–15) and each trick's attack shape. (§4.3)
+1. The full trick list (about 10–15 at first) and each trick's anchor, shape and verb. (§4.3, §4.19)
 2. How stretch slots fire: pulse interval or continuous aura. (§4.2)
 3. The pearl payout curve and wave difficulty without a quota. (§4.6, §4.7)
-4. The evolution list, one per weapon to start. (§4.5)
+4. The evolution list as the roster grows. (§4.5)
 5. Which former charms become trick upgrades, which become gear, and which are removed. (§4.4)
 6. Whether trick attacks aim relative to the dolphin's facing or at the nearest enemy.
+7. Brotato's exact weapon count, which is the roster target. (§4.8)
+8. Whether the clean streak survives the shop between waves. (§4.6)
+9. Kill-lift versus stomp-bounce, if both extend air time. (§4.18)
+10. Which codebase prototypes the routine: the demo or `src/`. (§4.20, step 0)
 
 ## 4.15 Considered and rejected
 
@@ -350,18 +429,258 @@ These are binding design constraints, not aspirations.
 - **A "this jump needs X" readout.**
 - **A pre-launch heat cue** rating the next tricks. Built in S4 and removed: it added a system while rarely saying more than cold or warm.
 - **A wave quota as the loss condition.** Replaced by survival (§4.7). Score is now an economy tool.
+- **Proximity scaling** (Pressure, Point-blank, Graze): rejected by the designer, 2026-10-27. Positional play comes from anchors, sides and hard surfaces instead.
+- **Tags as a separate system from statuses**, **Slow** and **Pierce as a status**: folded together (§4.5).
+- **Shop-level evolutions** (a T4 weapon plus a level-3 tagged trick): replaced by feats (§4.5).
+- **A per-flight clean ×2:** replaced by the clean streak (§4.6).
 
-## 4.16 First prototype
+## 4.16 Positional effect grammar
 
-Deliberately small, on a separate branch from S4:
+### A. Two layers **[VERIFY]**
 
-- **Tricks:** Corkscrew, Star pose and Spout.
-- **Slots:** Breach, Apex and Entry only, so no stretch-slot rules are needed yet.
-- **Content:** one tag (Soaked) and one weapon evolution that pays it off.
-- **Not yet:** no transformations and no named sequences.
-- **Scoring:** style score as in §4.6, survival as the loss condition.
+The engine keeps enemies in arena-local coordinates, and the arena rides the ballistic arc (§3, and `AGENTS.md`).
 
-**What to watch:** do players deliberately place the apex and the landing to make their tricks connect? Then add Front flip as an alternative and check whether choosing it changes their route.
+| Layer | What's in it | How it moves on screen |
+|---|---|---|
+| **Arena layer** | The dolphin, enemies, most effects | Rides with you |
+| **World layer** | The water surface, altitude bands, landmarks, placed world objects | Sweeps through the arena at flight speed, opposite to your travel |
+
+**Consequences:**
+- **"On trajectory" effects are world objects you fly through.** As they pass, they sweep across everything trailing you.
+- **The surface is only in reach near breach and entry**, and stays near for low hops. Surface effects suit low hops; Apex and Above effects suit high launches.
+- **Ahead changes meaning by phase:** it is Above on the way up and Below on the way down.
+
+Prototype one world-layer object before relying on any of this (§4.20, step 6).
+
+### B. Anchors (where)
+
+| Family | Anchors | Definition |
+|---|---|---|
+| **Body** | Ahead, Behind | Along your direction of travel |
+| | Above, Below | World vertical |
+| | Around | A radius around the dolphin |
+| **Path** | Trajectory | Points ahead on your predicted arc (world layer) |
+| | Wake | A trail streaming behind you (arena layer) |
+| | Arc | The whole remaining predicted path |
+| **Landmark** | Breach point, Apex point, Landing point | Phase-locked points |
+| | Surface | The water line, which is a hard surface (E) |
+| | Underwater | Passive effects only; the water phase is about 1 s |
+| **Target** | Nearest, Densest cluster, Elite | Chosen by the game |
+| | Statused | For example, all Soaked enemies |
+| | Between | A link between two enemies |
+| | Placed | An object you left behind |
+
+### C. Triggers, shapes and verbs
+
+- **Triggers:**
+  - Routine tricks fire on phase slots: Breach, Ascent, Apex, Descent, Entry.
+  - Weapons and items fire on events: on kill, stomp, dash, status applied, reaction, or hit taken.
+- **Shapes:** point, burst, cone, line, ring, wall, field (it persists), chain, projectile.
+
+### D. Verbs
+
+| Setup (moves or holds enemies; little damage) | Payoff (consumes the setup) |
+|---|---|
+| Pull, Push, Hold, Line-up, Lift, Sink, Lure, Decoy, Tether, Status | Burst, Sweep, Ram, Stomp, Splash, Detonate, Chain, Pierce, Shatter, Drown |
+
+### E. Enemy sides and hard surfaces
+
+Enemies need sides, or Above, Below and Behind don't matter:
+
+| Enemy | Exposed from | Positional ask |
+|---|---|---|
+| Shielder | Behind | Pass it, or turn round |
+| Turtle | Below | Hit it from underneath; it's best fought in the ascent |
+| Spiker | Above only | Stomp it; it's best fought in the descent |
+| Diver (from water) | Its exposed side faces the surface | Surface effects |
+| Flock | Any side, but scatters from Ahead | Pull it before you hit it |
+
+Push verbs need something to push enemies into. There are three hard surfaces:
+1. **Enemies:** bowling, with impact damage to both.
+2. **Frozen blocks:** a wall that shatters on impact.
+3. **The water surface:** air enemies knocked into it **drown** (heavy damage). Water-type enemies are immune. The surface is a ring-out edge, like Into the Breach.
+
+### F. Design rules
+
+1. Every effect is **anchor + trigger + shape + verb (+ status)** and fits in two lines.
+2. Setups deal little or no damage; payoffs consume setups; a linked payoff scores (§4.6).
+3. Each class owns its anchors (§4.17), so set bonuses push a positional playstyle, not just bigger numbers.
+4. Enemies have exposed sides.
+5. There are three hard surfaces.
+
+## 4.17 Classes
+
+**Structure:**
+- Each weapon has one **delivery** (Close, Shot or Blast; Brotato's melee and ranged split) and one or two **classes**.
+- **Set bonuses** apply at 2, 4 and 6 items of a class **[TUNE]**. Weapons count, and **tricks count as one item each** (§4.3).
+- Each class owns a set of anchors and a verb. **[TUNE]** The working list is 12 classes × 5–7 weapons, about 60–80 weapons, pending the roster target (§4.8).
+
+| Class | Owns (anchor → verb) | Status | Set bonus scales | Launch affinity |
+|---|---|---|---|---|
+| **Blade** | Ahead and Around → Sweep | Bleed | Bleed lure radius | Any |
+| **Sonic** | Ahead cone → Push | — | Impact damage | Any |
+| **Precise** | Ahead line → Pierce | — | Pierce count | Any |
+| **Storm** | Between → Chain | Shock | Chain jumps | Any |
+| **Tide** | Surface, Below and Landing → Splash or Drown | Soaked | Drown damage | Low hops |
+| **Frost** | Wake and Field → Hold | Freeze | Shatter damage | Any |
+| **Flare** | Wake and Trajectory → Field | Burn | Spread range | Any |
+| **Blast** | Cluster → Detonate | — | Blast size | Any |
+| **Sky** | Above and Apex → falling strikes or Stomp | — | Altitude | High launches |
+| **Current** | Point → Pull or Tether | — | Pull radius | Any |
+| **Pod** | Placed → Decoy or Lure | — | Number of decoys | Any |
+| **Ram** | Body → Ram or Stomp (damage from speed) | — | Dash charges | Any |
+
+**Mapping the current 9 weapons:**
+
+| Weapon | Delivery | Class(es) |
+|---|---|---|
+| Fin | Close | Blade |
+| Sonic | Close | Sonic |
+| Arc | Close | Storm |
+| Minigun | Shot | Precise |
+| Harpoon | Shot | Precise, Current |
+| Laser | Shot | Precise, Sky |
+| Flak | Blast | Blast, Flare |
+| Rocket | Blast | Blast |
+| Depth charge | Blast | Blast, Tide |
+
+**Movement stats** join the Brotato-style stat pool:
+- Lift: arc height.
+- Hang: how long the apex holds.
+- Air steering.
+- Mass: fall speed and ram damage, at the cost of steering.
+- Drag: slower, tighter arcs.
+
+Trade-off items follow Brotato, for example "+Mass, −Lift".
+
+## 4.18 Space, enemies and flight
+
+These are grounded in the flow study:
+- 58% of enemy positions were off-screen.
+- Kills followed time evenly across phases.
+- A cautious bot took 0.2 hits per flight.
+- Agency ended at release.
+
+**Enemy placement:**
+- **Spawn on the predicted arc.** Formations sit ahead, above and at the landing zone, so the launch angle is a choice of route.
+- **Telegraph formations underwater** as silhouettes above the surface. The read is visual, not text.
+- **Fit the arena to the view.** Either make the 76 m arena match the 57 m view, or zoom the camera to fit the enemies. Nothing fights you from off-screen.
+- **Flocking chasers** bunch up and trail your path, so the descent can sweep back through them.
+- **Formation shape by altitude band** (the threat tiers stay):
+  - Low: surface packs.
+  - Mid: flocks crossing the arc.
+  - High: sparse elites guarding the apex.
+- **The landing pool:** pursuers gather visibly at the predicted landing point. Landing in it is a choice.
+- **Aimed threats:** enemy shots lead your predicted arc.
+
+**Clutch moments:**
+
+| Event | How it works |
+|---|---|
+| Closing nets | Scripted rings, walls or pincers close in with one gap. Find it, or break the net with a payoff. |
+| Treasure runner | A loot enemy crosses the arc for about 2 s **[TUNE]**. Catching it is a choice, not a must. |
+| Shielded elites | Only hurt from behind or above. |
+| Arc hazards | Telegraphed mines or beams on your predicted path. |
+| Landing standoff | The pool, and the wave's final convergence after the clock runs out, sit at the landing zone. |
+
+**Flight verbs:**
+- **Stomp-bounce:** landing on an enemy from above gives a small hop and a kill.
+- **Dive (S in the air):** fast-fall to choose your landing spot.
+- **Dash:** charges pass through enemies with ram damage; stomps refill them **[TUNE]**.
+- **Hang:** holds the apex.
+- **Turning round at launch** carries you back through the group following you.
+- **[OPEN]** Kill-lift (close-range kills give a small upward impulse) as an alternative to stomp-bounce. Neither one gates tricks by airtime.
+
+## 4.19 Example effects and combos
+
+These are mixed trick, weapon and item examples, shown as anchor · shape → verb.
+
+### Body
+
+| Effect | Class | Anchor · shape → verb | Text |
+|---|---|---|---|
+| Bow wave | Sonic | Ahead · cone → Push | Pushes enemies Ahead to the sides. Opens a lane. |
+| Narwhal lance | Precise | Ahead · line → Pierce | +1 pierce for each enemy lined up Ahead. |
+| Slipstream | Current | Behind · field → Line-up | Enemies Behind you fall into single file. |
+| Tail slap | Sonic | Behind · burst → Push | Knocks enemies Behind into whatever is beyond them. |
+| Blowhole | Tide | Above · spray → Soaked | Soaks enemies Above you. |
+| Belly flop | Ram | Below · stomp → Push + Sink | Drives enemies Below you downward, toward the surface. |
+| Star pose | Blast | Around · burst → Burst | Bursts all enemies Around you. |
+
+### Path
+
+| Effect | Class | Anchor · shape → verb | Text |
+|---|---|---|---|
+| Minefield | Blast | Trajectory · 3 mines → Detonate | Places mines on your arc. They sweep through everything chasing you. |
+| Chum line | Pod | Trajectory · bait → Lure | Bait ahead on your arc pulls enemies into your path. |
+| Fire wake | Flare | Wake · field → Burn | Your trail ignites whatever follows you. |
+| Ice wake | Frost | Wake · field → Freeze | Your trail freezes chasers into a wall behind you. |
+| Rainbow | Sky | Arc · beam → Payoff | At apex, a beam lights your whole descent path. |
+
+### Landmarks
+
+| Effect | Class | Anchor · shape → verb | Text |
+|---|---|---|---|
+| Breach wave | Tide | Breach · ring → Lift + Soaked | Throws surface enemies up into your climb, soaked. |
+| Echo | Pod | Breach · decoy → Decoy | A decoy holds the pursuers at the surface. It detonates when you land near it. |
+| Gravity anchor | Current | Apex · point → Pull | Pulls everything Around you to the apex point for 1.5 s. |
+| Hang strike | Sky | Apex · falling strikes → Payoff | Strikes fall on enemies Below your apex. |
+| Target zone | Tide | Landing · field → Soaked | Soaks enemies near your landing point during the descent. |
+| Spout | Tide | Landing · splash → Splash | Splash size scales with fall height. |
+| Riptide | Tide | Surface · field → Sink | Drags enemies near the surface under. They drown. |
+| Mud ring | Tide | Underwater · carve → Lift | Carving a circle drives water enemies up into your breach. |
+
+### Targets
+
+| Effect | Class | Anchor · shape → verb | Text |
+|---|---|---|---|
+| Kelp line | Current | Between · tether → Tether | Links two enemies; fly between them and they slam together. |
+| Storm cell | Storm | Cluster · chain → Chain | Shock jumps through the densest cluster. |
+| Harpoon tether | Precise, Current | Elite · line → Tether | Pulls the elite onto your path. |
+| Conductor | Storm | Statused · chain → Chain | Every Soaked enemy conducts when you Spout. |
+
+### Combos
+
+| Name | Chain | Best launch |
+|---|---|---|
+| **Drown** | Bow wave at ascent clears a lane → Belly flop in descent drives enemies Below into the surface | Low hop |
+| **Bowling** | Gravity anchor groups enemies at apex → Tail slap fires them into each other | Mid |
+| **Minefield run** | Minefield at breach → the chasing pack follows you through it | Any |
+| **Conductor** | Breach wave soaks the surface pack → Storm cell at apex chains through every soaked enemy | Low or mid |
+| **Glacier steps** | Ice wake freezes chasers → stomp-bounce across the blocks in descent → shatter | High |
+| **Bait and splash** | Echo at breach holds the pursuers → Spout lands on the decoy (detonate plus splash) | Any |
+| **Single file** | Slipstream lines chasers up Behind → Backflip and Narwhal lance pierce the line | Mid |
+
+## 4.20 Build and playtest plan
+
+**Linear:** one change per step. Each step has a build, an automated check and a human playtest, and moves on only when its gate passes.
+
+- **The flight log measures every step:** kills per phase, distance to the nearest enemy, off-screen enemy share, hits per flight, launch-angle spread and trick connect rates.
+- **The 2026-10-26 bot baseline:**
+  - Apex kill share: 17% (the apex window is 20% of flight time).
+  - Median nearest enemy: 11–31 m.
+  - Off-screen enemy share: 58%.
+  - Hits per flight: 0.2.
+- **All gate numbers are [TUNE].**
+
+| # | Step | Build | Automated check | Playtest asks | Gate |
+|---|---|---|---|---|---|
+| 0 | Decide and baseline | Choose the prototype codebase **[OPEN]**. Add a flight-log analyser that prints the metrics above. | The analyser reproduces the bot baseline | Play 3 runs of the current demo and save the logs | Baseline recorded from human play |
+| 1 | Space | Fit the arena to the view; spawn on the arc; flocking chasers; the visible landing pool | Off-screen share below 25%; nearest enemy below 15 m (bot) | Does the action happen where you are looking? | Both metrics met; you confirm |
+| 2 | Danger | Aimed shots that lead the arc; arc hazards | Bot hits per flight 0.6–1.2 | Do hits feel fair and avoidable? | You can say why each hit happened |
+| 3 | Flight verbs | Stomp-bounce, dive, dash refilled by stomps | Stomps per flight above 0; launch-angle spread wider than baseline | Do you steer to stomp and choose landings? | You change your route on purpose |
+| 4 | Rules reset | Remove the quota, reels and charms; 0 HP ends the run; style score with the clean streak and the pearl curve | Score suites rewritten and passing | Does the streak create tension on later flights? | You protect the streak by changing how you fly |
+| 5 | First routine | Breach, Apex and Entry slots; Corkscrew (setup), Gravity anchor (setup), Star pose (payoff), Spout (payoff, Soaked); linking | Apex kill share above 30% with Star pose at apex | Do you place the apex and the landing to connect tricks? | Yes, and the trick order matters to you |
+| 6 | World layer | One trajectory object (Minefield) | It sweeps through the arena as predicted | Do you lead chasers through it? | The two-layer model holds (§4.16 A) |
+| 7 | Statuses | Soaked and Shock, then Conduct; then Freeze and shatter | Reaction counts per flight above 0 | Do you herd enemies to set up reactions? | You chase reactions deliberately |
+| 8 | Sides and surfaces | Shielder, Spiker, Turtle; drowning at the surface; frozen walls | Kills by side and by surface logged | Do Above, Below and Behind change your path? | Yes for at least two of the three |
+| 9 | Clutch events | Closing nets, treasure runner, landing standoff | Events fire at the designed rate | Which moments felt like close calls? | At least one clutch moment per wave |
+| 10 | Stretch slots | Ascent and Descent slots (pulse or aura **[OPEN]**) | Kills per phase stay uneven, tracking the routine | Do long arcs feel worth taking? | High and low launches are both viable |
+| 11 | Classes | Class tags on the 9 weapons and on tricks; set bonuses | Bot class builds each clear wave 10 | Does collecting a class change how you fly? | At least 3 classes play differently |
+| 12 | Evolutions | Feats and 2 evolutions (Arc → Storm, Depth charge → Glacier) | Feats reachable by about wave 12 | Was the evolution a goal you worked toward? | You plan your play around the feat |
+| 13 | Starting dolphins | Orca and Spinner | Both clear wave 10 with the bot | Does each one change how you play from wave 1? | Yes for both |
+| 14 | Content scale-up | Grow the roster toward the target, class by class, 10–15 tricks, more statuses only within the caps | Content lint: every effect has one anchor and one verb, and fits in two lines | Full runs | The power curve (§4.11) shows in a full run |
+| 15 | Port | Move the validated rules into `src/` through its phase gates (§17, `AGENTS.md`) | `npm run verify` | The `src/` Phase 2 playtest, then onward | Per `AGENTS.md` |
 
 ---
 
@@ -595,7 +914,7 @@ Benchmark: 400 enemies + 300 projectiles at 120 Hz under 4 ms per step in Node. 
 
 ## 9.2 Weapons
 
-> **Superseded (2026-10-25).** The demo ships nine weapons in a 3 × 3 grid of type (Close, Shot, Blast) × cadence (Rapid, Steady, Heavy), 6 slots, and merging two equal copies into the next tier (max T4). They auto-target the nearest enemy. Weapons now evolve with matching trick tags (§4.5). Weapons that reward a movement pattern, as described below, remain a valid direction under §4.9.
+> **Superseded (2026-10-25).** The demo ships nine weapons in a 3 × 3 grid of type (Close, Shot, Blast) × cadence (Rapid, Steady, Heavy), 6 slots, and merging two equal copies into the next tier (max T4). They auto-target the nearest enemy. Weapons now carry classes (§4.17) and evolve through feats (§4.5). Weapons that reward a movement pattern, as described below, remain a valid direction under §4.9.
 
 Up to 6 instances, each on its own cooldown with its own targeting rule. Ship four, each expressing a different relationship to the free-movement layer:
 
@@ -608,11 +927,13 @@ Four weapons with genuinely different geometry beats twelve that differ only in 
 
 ## 9.3 Evolutions
 
+> **Superseded (2026-10-27).** Evolutions are earned by feats: a T4 weapon plus its positional feat performed N times (§4.5).
+
 At weapon level 8, with the matching passive held, a weapon evolves: new name, new visual signature, a qualitative rather than quantitative change. Evolutions are a 2–4 minute beat and they must be **telegraphed** — show the requirement in the HUD as soon as the player holds either half. A goal the player can see coming is worth more than a surprise.
 
 ## 9.4 Damage
 
-> **Superseded in part (2026-10-25).** The demo uses Armour, critical multipliers per weapon tier and per-type damage stats. Armour now also protects the style score, since hits cancel tricks (§4.6). Tricks apply tags such as Marked that change damage (§4.5).
+> **Superseded in part (2026-10-25).** The demo uses Armour, critical multipliers per weapon tier and per-type damage stats. Armour now also protects the style score, since hits cancel tricks (§4.6). Tricks and weapons apply statuses that change where enemies go (§4.5).
 
 `damage = base × (1 + levelScaling) × critRoll`, crit a binary 2× roll. No armour, resistances or penetration in v1 — they multiply the tuning surface without adding decisions.
 
