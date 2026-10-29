@@ -37,6 +37,11 @@ git checkout design/scoring-revision-2026-10
    - "Marked spawns ahead and flocking (step 1)": on or off.
    - "Step 1: share of spawns from the screen edge": 0.2 by default.
 
+## 3b. Always-current demo and playtest loadout (2026-10-30)
+
+- `node source/watch.cjs` rebuilds `ICARUS-demo.html` whenever a file in `source/` changes. Claude sessions in the Dolphin game folder also rebuild after each edit through a hook in that folder's `.claude/settings.json`.
+- The title screen's **PLAYTEST LOADOUT** sets the starting weapons, tricks, wave and pearls, and switches the parked abilities, leading shots, rules, carve key and mines. It is saved in the browser (`icarus.scoreshow.loadout`) and applies only while "Use this loadout" is ticked.
+
 ## 4. Build and check (Node 20.19+; the session used 22)
 
 ```sh
