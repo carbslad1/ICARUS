@@ -83,6 +83,19 @@ test('kills carry the side they came from', () => {
   const r = run(), e = foe(r, 0, -5, 1); hit(r, e, 10, 'harpoon'); assert.equal(r.hand.kills.at(-1).side, 'above', 'the dolphin was above it');
 });
 
+// Brotato-style movement (base game): turrets keep range, drifters hover around, splitters hold an offset, chasers chase
+test('Brotato movement: each role holds its distance; chasers still close in', () => {
+  const r = run({}, 8), roles = {};
+  for (const [k, x, y] of [['turret', 8, 0], ['drifter', 30, 10], ['splitter', -5, -5], ['chaser', 25, -10]]) { const e = foe(r, x, y); e.kind = k; e.timer = 1e9; roles[k] = e }
+  for (let t = 0; t < 4 * 120; t++) { r.hurt = 99; H.ME(r, r.medium, { x: 0, y: 0 }, 1 / 120) }
+  const d = k => Math.hypot(roles[k].pos.x, roles[k].pos.y), off = roles.splitter.mv.off;
+  assert.ok(Math.abs(d('turret') - roles.turret.mv.range) < 1.5, `turret at ${d('turret').toFixed(1)} m, its range ${roles.turret.mv.range.toFixed(1)}`);
+  assert.ok(d('drifter') > 6 && d('drifter') < 17, 'drifter hovers ' + d('drifter').toFixed(1));
+  assert.ok(Math.hypot(roles.splitter.pos.x - off.x, roles.splitter.pos.y - off.y) < 2, 'splitter on its offset');
+  assert.ok(d('chaser') < 2.5, 'the chaser closed in');
+  return { turret: +d('turret').toFixed(1), drifter: +d('drifter').toFixed(1), splitter: +d('splitter').toFixed(1), chaser: +d('chaser').toFixed(1) };
+});
+
 // step 10: stretch slots
 test('Ascent pulses every 0.6 s while climbing at a third of the power; it connects once, adding its level once', () => {
   const r = run({ ascent: 'bow' }), e = foe(r, 4, 6.2); r.medium.vy = 30;  // ahead on a climb to the up-right

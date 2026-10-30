@@ -4369,7 +4369,7 @@ var DEMO = (() => {
     depth: {type:'Blast',cad:'Heavy',coef:1.5,damage:[24,36,52,80],cd:[64,56,48,40],range:18,crit:.03,cx:1.5,kb:9,blast:8.5,side:'Max HP',sideScale:.15,description:'A lobbed charge aimed to intercept its target. Max HP also adds damage.'}
   };
   // Hand-cap levers (structure doc 5.4): kept open and tunable, to be balanced in play. The tuning panel edits these live.
-  const TUNE_DEFAULT={bro:1,shake:1,flash:1,space:1,edge:.2,danger:1,lead:.5,mines:0,carve:1,ccw:0,sky:12,verbs:0,hop:6,dive:2,dashes:2,hold:1,wetspawn:1,rules:1,payK:3,streakCap:5,well:60,sides:1};  // sides: step 8 (armoured enemies)  // well: Gravity anchor's pull, m/s²  // rules, payK, streakCap: step 4 (style score)  // space: step 1 (space.js); edge: share of its spawns from the screen edge; danger, lead, mines: step 2 (danger.js)
+  const TUNE_DEFAULT={bro:1,shake:1,flash:1,space:1,edge:.2,danger:1,lead:.5,mines:0,carve:1,ccw:0,sky:12,verbs:0,hop:6,dive:2,dashes:2,hold:1,wetspawn:1,rules:1,payK:3,streakCap:5,well:60,sides:1,moves:1};  // sides: step 8 (armoured enemies)  // well: Gravity anchor's pull, m/s²  // rules, payK, streakCap: step 4 (style score)  // space: step 1 (space.js); edge: share of its spawns from the screen edge; danger, lead, mines: step 2 (danger.js)
   const tune={...TUNE_DEFAULT};
   try{Object.assign(tune,JSON.parse(localStorage.getItem('icarus.scoreshow.tune')||'{}'))}catch(e){}
   const saveTune=()=>{try{localStorage.setItem('icarus.scoreshow.tune',JSON.stringify(tune))}catch(e){}};
@@ -4884,7 +4884,7 @@ Owstarter=function(){return ''};
 
 /* Settings: one panel in tabs (T, the backquote key, or SCORE TUNING). Score holds the hand-cap levers (structure doc 5.4,
    kept open to balance in play); the other tabs hold the v3 carve's movement sliders, grouped by what they change. */
-const DemoTuneDefs=[['shake','Screen shake',0,2,.1],['flash','Enemy hit flash',0,1,.1],['space','Marked spawns ahead and flocking (step 1)',0,1,1,'check'],['edge','Step 1: share of spawns from the screen edge',0,1,.05],['danger','Leading shots and mines on the arc (step 2)',0,1,1,'check'],['lead','Step 2: how far shots lead you',0,1,.05],['mines','Step 2: mines per flight',0,4,1],['carve','Space carves (no boost)',0,1,1,'check'],['ccw','Carving always anticlockwise',0,1,1,'check'],['sky','Water camera: metres above the dolphin (0 = old camera)',0,20,.1],['rules','Style score rules (step 4): no quota, reels or charms; 0 HP ends the run',0,1,1,'check'],['payK','Step 4: pearls per flight = k × √score',0,10,.5],['streakCap','Step 4: clean streak cap',1,10,1],['well','Gravity anchor pull (m/s²)',0,150,5],['sides','Armoured enemies (step 8)',0,1,1,'check'],['hold','Enemies above the water stay ahead of you in view while you swim',0,1,1,'check'],['wetspawn','Enemies keep spawning while you swim',0,1,1,'check'],['verbs','Experimental: stomp, dive (S) and dash (Space) in the air (parked; to become tricks)',0,1,1,'check'],['hop','Step 3: stomp lift (m/s)',0,15,.5],['dive','Step 3: dive gravity (x)',1,4,.1],['dashes','Step 3: dash charges',0,4,1]];
+const DemoTuneDefs=[['shake','Screen shake',0,2,.1],['flash','Enemy hit flash',0,1,.1],['space','Marked spawns ahead and flocking (step 1)',0,1,1,'check'],['edge','Step 1: share of spawns from the screen edge',0,1,.05],['danger','Leading shots and mines on the arc (step 2)',0,1,1,'check'],['lead','Step 2: how far shots lead you',0,1,.05],['mines','Step 2: mines per flight',0,4,1],['carve','Space carves (no boost)',0,1,1,'check'],['ccw','Carving always anticlockwise',0,1,1,'check'],['sky','Water camera: metres above the dolphin (0 = old camera)',0,20,.1],['rules','Style score rules (step 4): no quota, reels or charms; 0 HP ends the run',0,1,1,'check'],['payK','Step 4: pearls per flight = k × √score',0,10,.5],['streakCap','Step 4: clean streak cap',1,10,1],['well','Gravity anchor pull (m/s²)',0,150,5],['sides','Armoured enemies (step 8)',0,1,1,'check'],['moves','Brotato enemy movement: turrets keep range, drifters hover, splitters hold an offset',0,1,1,'check'],['hold','Enemies above the water stay ahead of you in view while you swim',0,1,1,'check'],['wetspawn','Enemies keep spawning while you swim',0,1,1,'check'],['verbs','Experimental: stomp, dive (S) and dash (Space) in the air (parked; to become tricks)',0,1,1,'check'],['hop','Step 3: stomp lift (m/s)',0,15,.5],['dive','Step 3: dive gravity (x)',1,4,.1],['dashes','Step 3: dash charges',0,4,1]];
 const DemoTabs=[
   ['Score',null,'Each jump draws 3 tricks; buy more in the Routine row. A hit bails the trick in progress; 0 HP busts the jump.'],
   ['Launch',['Forward only','Rocket boost','Carve','Wave schedule'],'The carve and the launch. Launch speed rises5 per wave.'],
@@ -5496,6 +5496,67 @@ var Verbs = (() => {
 {const me0=ME;ME=function(r,t,e,i){if(Verbs.on(r)&&t?.kind==='air'&&i>0)Verbs.stomp(r,t);return me0(r,t,e,i)}}
 {const se0=SE;SE=function(r,t,e,i,s){if(!Verbs.on(r)||!(i>0))return se0(r,t,e,i,s);Verbs.before(r,t,e,i);const out=se0(r,t,e,i,s);if(r.medium===t&&t.kind==='air')Verbs.after(r,t,i);return out}}
 {const draw0=Otdraw;Otdraw=function(R,r,m,title){draw0(R,r,m,title);if(!title&&m?.kind==='air'&&Verbs.on(r))Verbs.draw(R,r,m)}}
+
+// Brotato-style enemy movement (designer, 2026-10-30; base game only, not the DLC). In Brotato most enemies chase, but
+// some keep their distance, some fly to random points around the player and some hold their own offset from the player.
+// Without these every enemy crowds the dolphin, so the guns always have a crowd and the placement tricks add little
+// (qa/placement.cjs). ICARUS's existing kinds take the base-game roles, at Brotato's distances scaled by player speed
+// (Brotato's player moves 450 px/s, the dolphin 34.2 m/s in the air: 1 px ≈ 0.076 m):
+// - turret → keep range like a Spitter: 300 ± 100 px ≈ 23 ± 8 m away, backing off when you close in (it still shoots);
+// - drifter → random points around you like a Fly: 150 ± 50 px ≈ 11 ± 4 m, picking a new point on arrival;
+// - splitter → its own fixed offset like a Slasher: up to 300 px ≈ 23 m around you, kept as you move;
+// - elites (not chargers, which keep their dash) → random points around you like a Gargoyle: 23 ± 8 m.
+// Chasers, swarmers and chargers chase as before. The movement replaces v3's steering for these enemies only, at their
+// own speed, behind DEMO.tune.moves. All randomness comes from the run's seeded generator (ce).
+var Movement = (() => {
+  const PX = 34.2 / 450;                                  // metres per Brotato pixel
+  const ROLES = Object.freeze({
+    keep:   { range: 300 * PX, spread: 100 * PX },       // Spitter
+    around: { range: 150 * PX, spread: 50 * PX },        // Fly
+    offset: { range: 300 * PX },                          // Slasher
+    elite:  { range: 300 * PX, spread: 100 * PX }        // Gargoyle
+  });
+  const on = r => !!(DEMO.tune.moves && r?.demo);
+  // which role an enemy plays, fixed when first seen
+  function role(r, e) {
+    if (e.mv !== undefined) return e.mv?.role || null;
+    let k = null;
+    if (e.boss === 'elite') k = e.kind === 'charger' ? null : 'elite';
+    else if (e.role || e.boss) k = null;
+    else k = e.kind === 'turret' ? 'keep' : e.kind === 'drifter' ? 'around' : e.kind === 'splitter' ? 'offset' : null;
+    if (!k) { e.mv = null; return null }
+    const R = ROLES[k];
+    e.mv = { role: k, range: R.range + (R.spread ? (ce(r) * 2 - 1) * R.spread : 0) };
+    if (k === 'offset') e.mv.off = { x: (ce(r) * 2 - 1) * R.range, y: (ce(r) * 2 - 1) * R.range };
+    return k;
+  }
+  const speed = (r, e) => (e.kind === 'swarmer' ? 25 * Osp.small : 19 + r.wave * .13) * Osp.spd * (typeof FiveCombat !== 'undefined' ? FiveCombat.movementScale(r, e) : 1);
+  function pick(r, e, me) { const a = ce(r) * Math.PI * 2, d = e.mv.role === 'around' || e.mv.role === 'elite' ? ROLES[e.mv.role].range + (ce(r) * 2 - 1) * ROLES[e.mv.role].spread : e.mv.range; e.mv.pt = { x: me.x + Math.cos(a) * d, y: me.y + Math.sin(a) * d } }
+  // where this enemy wants to be now, in the arena
+  function target(r, e, me) {
+    const k = e.mv.role;
+    if (k === 'keep') { const dx = e.pos.x - me.x, dy = e.pos.y - me.y, n = Math.hypot(dx, dy) || 1; return { x: me.x + dx / n * e.mv.range, y: me.y + dy / n * e.mv.range } }
+    if (k === 'offset') return { x: me.x + e.mv.off.x, y: me.y + e.mv.off.y };
+    if (!e.mv.pt || Math.hypot(e.mv.pt.x - e.pos.x, e.mv.pt.y - e.pos.y) < 1.5) pick(r, e, me);
+    return e.mv.pt;
+  }
+  // around v3's enemy step: note each role enemy's velocity before it, then steer it to its own target instead
+  function before(r) { for (const e of r.enemies) if (e.hp > 0 && role(r, e)) e.mv.v0 = { x: e.velocity.x, y: e.velocity.y } }
+  function after(r, m, dt) {
+    const me = m.local, k = Xe(dt, .3);
+    for (const e of r.enemies) {
+      if (!e.mv?.v0 || e.hp <= 0) continue;
+      if (e.heldT > 0 || e.st?.frozen > 0 || e.driveT > 0 || e.knockT > 0) { e.mv.v0 = null; continue }   // tricks and statuses win
+      const T = target(r, e, me), dx = T.x - e.pos.x, dy = T.y - e.pos.y, d = Math.hypot(dx, dy), s = speed(r, e) * Math.min(1, d / 3);
+      const want = d > .05 ? { x: dx / d * s, y: dy / d * s } : { x: 0, y: 0 };
+      const v = { x: e.mv.v0.x + (want.x - e.mv.v0.x) * k, y: e.mv.v0.y + (want.y - e.mv.v0.y) * k };
+      // v3 already moved it this step with its own velocity: correct the position to the role's velocity
+      e.pos = ye(e.pos.x + (v.x - e.velocity.x) * dt, e.pos.y + (v.y - e.velocity.y) * dt); e.velocity = v; e.mv.v0 = null;
+    }
+  }
+  return { PX, ROLES, on, role, before, after };
+})();
+{const me0=ME;ME=function(r,t,e,i){const on=Movement.on(r)&&t?.kind==='air'&&i>0;if(on)Movement.before(r);me0(r,t,e,i);if(on)Movement.after(r,t,i)}}
 
 // Steps 7 and 8 of the build-and-playtest plan (ICARUS_DESIGN.md §4.5, §4.16 E, §4.20). Designer's answers, 2026-10-30.
 // Step 7, statuses (each changes where enemies go or what they become):
@@ -6330,7 +6391,7 @@ var Loadout = (() => {
       <section><h4>Weapons</h4>${desc('Up to six. They fire on their own in the air. T1–T4 is the tier; two equal copies merge into the next tier.')}${weaponRows}</section>
       <section><h4>Tricks${T.rules ? '' : ' (needs Style score rules on)'}</h4>${desc('Breach fires as you leave the water, Ascent and Descent pulse while you climb and fall, Apex at the top, Entry as you land. Air tricks place enemies for your guns (a gun kill on them links: +1 mult); water tricks drown or splash. L1–L4 is the level.')}${trickRows}</section>
       <section><h4>Start</h4>${desc('The wave to begin on (its air clock and enemies) and the pearls in hand for the first shop.')}<label>Wave <input type="number" min="1" max="20" data-lo="wave" value="${+cfg.wave || 1}"></label><label>Pearls <input type="number" min="0" max="9999" data-lo="pearls" value="${+cfg.pearls || 0}"></label></section>
-      <section><h4>Abilities and rules</h4>${chk('verbs', 'Stomp, dive (S) and dash (Space) — experimental', 'Land on enemies to kill them and lift the arc; hold S to fall faster; Space dashes 3.5 m (2 charges). Parked: meant to become tricks.')}${chk('danger', 'Leading shots', 'Turret and elite shots aim where you are heading, so flying straight gets punished.')}${chk('rules', 'Style score rules (off = S4)', 'On: no quota, 0 HP ends the run, kills × tricks × clean streak pay pearls. Off: the old reels, charms and quota.')}${chk('sides', 'Armoured enemies', 'From wave 3 Shielders (hit from behind), Turtles (from below) and Spikers (from above) take 20% from their armoured side.')}${chk('carve', 'Space carves', 'Hold Space under water to carve, release to launch (no boost). Off: W carves and Space boosts.')}<div class="lo-row lo-wide"><label>Mines per flight <input type="number" min="0" max="4" data-tune-n="mines" value="${+T.mines || 0}"></label>${desc('Hostile mines placed on your path ahead, behind a marker. One hit each.')}</div></section>
+      <section><h4>Abilities and rules</h4>${chk('verbs', 'Stomp, dive (S) and dash (Space) — experimental', 'Land on enemies to kill them and lift the arc; hold S to fall faster; Space dashes 3.5 m (2 charges). Parked: meant to become tricks.')}${chk('danger', 'Leading shots', 'Turret and elite shots aim where you are heading, so flying straight gets punished.')}${chk('rules', 'Style score rules (off = S4)', 'On: no quota, 0 HP ends the run, kills × tricks × clean streak pay pearls. Off: the old reels, charms and quota.')}${chk('moves', 'Brotato enemy movement', 'Base-game Brotato roles: turrets keep about 23 m away like Spitters, drifters fly to points around you like Flies, splitters hold their own spot around you like Slashers, elites hover like Gargoyles. Chasers still chase.')}${chk('sides', 'Armoured enemies', 'From wave 3 Shielders (hit from behind), Turtles (from below) and Spikers (from above) take 20% from their armoured side.')}${chk('carve', 'Space carves', 'Hold Space under water to carve, release to launch (no boost). Off: W carves and Space boosts.')}<div class="lo-row lo-wide"><label>Mines per flight <input type="number" min="0" max="4" data-tune-n="mines" value="${+T.mines || 0}"></label>${desc('Hostile mines placed on your path ahead, behind a marker. One hit each.')}</div></section>
       <footer><button data-lo-reset>RESET LOADOUT</button><button data-lo-close class="lo-done">DONE</button></footer></div>`;
   }
   function read(panel) {
