@@ -78,7 +78,8 @@ node qa/flightlog-metrics.cjs run.json     # metrics for any saved flight log (s
 | 3: flight verbs | **Built, then parked 2026-10-27** (`source/verbs.js`, off; to become tricks) |
 | 4: rules reset | **Built locally 2026-10-27** (`demo.js` `style`, `finish`, `hit`; `qa/rules.cjs`); playtest pending |
 | 5: first routine | **Built locally 2026-10-27** (`source/routine.js`, `qa/routine.cjs`); playtest pending |
-| 6–15 | Not started |
+| 6: world layer | **Built 2026-10-30**: Minefield trick (`source/routine.js`); playtest pending |
+| 7–15 | Not started |
 
 ### Step 1 as it is now
 
