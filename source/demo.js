@@ -332,8 +332,9 @@ var DEMO = (() => {
     if(c.kind==='routine')return FiveScore.routine(s,c.id);if(c.kind==='polish')return FiveScore.polish(s,c.face);if(c.kind==='transfer')return FiveScore.transfer(s,c.donor,c.recipient);
     if(c.kind==='technique')return FiveScore.technique(s,c.face,c.id);if(c.kind==='draw')return FiveScore.addDraw(s);if(c.kind==='focus'){if(s.focus)return false;s.focus=true;return true}return false}
   const ruleIds=r=>['charm','reroll',...(r.demo.shelfBonus<1?['shelf']:[])];
+  // weapon offers: 35% guns you own, 35% your guns' types, 15% guns your tricks feed (step 4 rules), the rest any
   function offer(r,row){const d=r.demo,uid=++d.uid;
-    if(row==='weapon'){const owned=r.slots.map(g=>g.id),types=r.slots.map(g=>weapons[g.id].type),pool=Object.keys(weapons),q=ce(r),id=q<.35?choose(r,owned):q<.7?choose(r,pool.filter(k=>types.includes(weapons[k].type))):choose(r,pool),level=q<.35&&ce(r)<.7?choose(r,r.slots.filter(g=>g.id===id&&g.lvl<4).map(g=>g.lvl))||Math.min(rarity(r),1+Math.floor(r.wave/4)):Math.min(rarity(r),1+Math.floor(r.wave/4));return {uid,row,id,level,price:price(r,[12,24,48,96][level-1])}}
+    if(row==='weapon'){const owned=r.slots.map(g=>g.id),types=r.slots.map(g=>weapons[g.id].type),pool=Object.keys(weapons),q=ce(r),fed=tune.rules&&typeof Routine!=='undefined'?Routine.gunsFor(r):[],id=q<.35?choose(r,owned):q<.7?choose(r,pool.filter(k=>types.includes(weapons[k].type))):q<.85&&fed.length?choose(r,fed):choose(r,pool),level=q<.35&&ce(r)<.7?choose(r,r.slots.filter(g=>g.id===id&&g.lvl<4).map(g=>g.lvl))||Math.min(rarity(r),1+Math.floor(r.wave/4)):Math.min(rarity(r),1+Math.floor(r.wave/4));return {uid,row,id,level,price:price(r,[12,24,48,96][level-1])}}
     if(row==='charm'){const id=weighted(r,charmPool(r),id=>rarityWeight(r,charms[id].rarity)*charmFit(r,id));if(!id)return offer(r,'gear');return {uid,row,id,face:charms[id].bound?boundFace(r):null,price:price(r,charms[id].price)}}
     if(row==='gear')return offer(r,ce(r)<.45?'item':'stat');
     if(row==='item'){const pool=Object.keys(FiveCombat.items).filter(id=>!(id==='I05'&&r.wave<5)&&!(id==='I07'&&r.wave<3));const id=weighted(r,pool,id=>rarityWeight(r,FiveCombat.items[id].rarity)*gearFit(r,'item',id));return {uid,row,id,price:price(r,FiveCombat.items[id].price||18)}}
@@ -351,7 +352,7 @@ var DEMO = (() => {
     // Step 4: no charms or reel routines; their two places go to the shelf.
     if(tune.rules)d.offers=d.offers.filter(o=>!inRoutineRow(o));
     // Step 5: one of the six places is always a trick (a new one, or a copy that levels one you own).
-    if(tune.rules&&typeof Routine!=='undefined'&&!d.offers.some(o=>o.row==='trick'))d.offers.push({uid:++d.uid,row:'trick',id:Routine.IDS[Math.floor(ce(r)*Routine.IDS.length)],price:price(r,25)});
+    if(tune.rules&&typeof Routine!=='undefined'&&!d.offers.some(o=>o.row==='trick'))d.offers.push({uid:++d.uid,row:'trick',id:Routine.offerId(r),price:price(r,25)});
     // with the rules, six places: one the trick, the rest weapons and gear
     const shelves=3+d.shelfBonus+(tune.rules?3:0);for(let i=d.offers.filter(o=>!inRoutineRow(o)).length;i<shelves&&d.offers.length<6;i++)d.offers.push(shelfOffer(r,i));
     if(!tune.rules)for(let i=d.offers.filter(inRoutineRow).length;i<2&&d.offers.length<6;i++)d.offers.push(routineOffer(r,i));

@@ -81,6 +81,7 @@ node qa/flightlog-metrics.cjs run.json     # metrics for any saved flight log (s
 | 6: world layer | **Built 2026-10-30**: Minefield trick (`source/routine.js`); playtest pending |
 | 7–10: statuses, sides, stretch slots | **Built 2026-10-30** (`source/statuses.js`, `source/routine.js`, `qa/statuses.cjs`); playtest pending |
 | Trick redesign | **2026-10-30, designer:** air tricks are effects only (guns do the damage); only water tricks damage; impacts removed. Audit: guns kill mostly placed enemies (50–86% in two-trick routines), but placing does not raise gun kills yet (everything is already within the starter Harpoon's 30 m), water tricks dominate kills, and most tricks still favour high launches. `qa/routine.cjs --gate` and `qa/statuses.cjs --gate` step 10 now fail for that reason |
+| Gun pairing (option 1) | **2026-10-30:** each placement trick names the guns it feeds (Gravity anchor: Blast; Chum line, Slipstream: piercing; Eddy (new), Bubble net: Close; Breach wave: Arc); the shop's trick place and weapon offers lean toward matching pairs. **Finding (`node qa/placement.cjs .`): placement changes gun damage by only −6% to +8%, because chasers crowd the dolphin by themselves and every gun aims at the nearest enemy.** Positioning needs guns that aim by position or enemies that do not come to you; not decided |
 | 11–15 | Not started |
 
 ### Step 1 as it is now

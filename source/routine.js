@@ -17,6 +17,7 @@ var Routine = (() => {
     chumFrom: 6, chumTo: 18, chumR: 22, chumT: 1.5, chumPull: 45, // a bait line 6-18 m ahead along the arc
     slipBack: 4, slipLen: 16, slipR: 20, slipT: 2, slipPull: 40,  // a file 4-20 m behind you
     bubbleR: 9, bubbleT: 1,                 // m, s held still
+    eddyR: 14, eddyRing: 4.5, eddyT: 1.5, eddySpin: 10, // m it reaches, m ring (inside Close reach, outside contact), s, m/s round
     bowR: 14, bowCone: .55, bowPush: 28,    // m, half-angle (rad), m/s sideways
     breachR: 18, breachLow: 8, breachLift: 22, // m across, enemies below 8 m altitude, m/s up
     frostT: 2, frostR: 2.5, frostEvery: .3, // s the wake lasts, m from your path, s between chill stacks
@@ -33,6 +34,7 @@ var Routine = (() => {
     chum:     { name: 'Chum line',      kind: 'effect', slot: 'ascent',  glyph: '⋯', helps: 'piercing guns', text: 'Bait 6-18 m ahead on your arc for 1.5 s: enemies within 22 m line up along your path.' },
     slip:     { name: 'Slipstream',     kind: 'effect', slot: 'descent', glyph: '≫', helps: 'piercing guns', text: 'For 2 s, chasers behind you fall into single file 4-20 m back.' },
     bubble:   { name: 'Bubble net',     kind: 'effect', slot: 'apex',    glyph: '◌', helps: 'every gun',     text: 'Holds enemies within 9 m of you still for 1 s.' },
+    eddy:     { name: 'Eddy',           kind: 'effect', slot: 'apex',    glyph: '↻', helps: 'Close guns',    text: 'For 1.5 s, enemies within 14 m are drawn onto a ring 4.5 m around you and circle it, inside Close reach.' },
     bow:      { name: 'Bow wave',       kind: 'effect', slot: 'breach',  glyph: '⋀', helps: 'your streak',   text: 'Pushes enemies ahead of you aside, opening a lane.' },
     breach:   { name: 'Breach wave',    kind: 'effect', slot: 'breach',  glyph: '⌇', helps: 'Arc (Conduct)', text: 'Lifts enemies near the surface up into your climb and soaks them.' },
     frost:    { name: 'Frost wake',     kind: 'effect', slot: 'descent', glyph: '❄', helps: 'shatter',       text: 'For 2 s your path chills whatever follows it; three chills freeze an enemy.' },
@@ -42,6 +44,9 @@ var Routine = (() => {
     flop:     { name: 'Belly flop',     kind: 'water',  slot: 'descent', glyph: '⤓', helps: 'drowning',      text: 'Drives enemies below you straight down into the water to drown.' },
     undertow: { name: 'Undertow',       kind: 'water',  slot: 'entry',   glyph: '∪', helps: 'drowning',      text: 'As you land, pulls enemies within 12 m of the landing point under with you: they drown.' }
   });
+  // the guns each placement trick feeds (option 1, designer 2026-10-30): a cluster for Blast guns, a line through the
+  // dolphin for piercing guns, a ring inside 6 m for Close guns, soaked enemies for Arc. The shop leans on these.
+  const GUNS = Object.freeze({ anchor: ['flak', 'rocket', 'depth'], chum: ['laser', 'harpoon'], slip: ['laser', 'harpoon'], eddy: ['fin', 'sonic', 'arc'], bubble: ['fin', 'sonic', 'arc'], breach: ['arc'] });
   const IDS = Object.keys(TRICKS), SLOTS = ['breach', 'ascent', 'apex', 'descent', 'entry'];
   const SLOT_NAMES = { breach: 'Breach', ascent: 'Ascent', apex: 'Apex', descent: 'Descent', entry: 'Entry' };
   const STRETCH = new Set(['ascent', 'descent']);
@@ -76,6 +81,13 @@ var Routine = (() => {
     const offers = draw3(r), pick = typeof DemoStartTrick !== 'undefined' && TRICKS[DemoStartTrick] ? DemoStartTrick : offers[0];
     r.demo.trickOffers = offers; add(r, pick);
   }
+  // the shop's trick place: tricks that feed the guns you hold come up more often (1 + 2 per matching gun held)
+  function offerId(r) {
+    const held = r.slots.map(g => g.id), w = IDS.map(id => 1 + 2 * held.filter(g => (GUNS[id] || []).includes(g)).length);
+    let q = ce(r) * w.reduce((a, b) => a + b, 0); for (let i = 0; i < IDS.length; i++) { q -= w[i]; if (q < 0) return IDS[i] } return IDS.at(-1);
+  }
+  // guns the routine you own feeds (for the shop's weapon offers)
+  const gunsFor = r => [...new Set(Object.keys(state(r).levels).flatMap(id => GUNS[id] || []))];
   const damage = (r, id) => P.base * (1 + P.perLevel * (level(r, id) - 1)) * (r.stats.damage || 1) * (1 + P.perWave * (r.wave - 1));
   function near(r, x, y, R) { return r.enemies.filter(e => e.hp > 0 && Math.hypot(e.pos.x - x, e.pos.y - y) < R + (e.radius || 1)) }
   const alt = (m, e) => m.origin.y + e.pos.y;           // an enemy's height above the water
@@ -112,6 +124,7 @@ var Routine = (() => {
       case 'anchor': { const at = { x: me.x + d.x * P.anchorAhead, y: me.y + d.y * P.anchorAhead }; hold('well', { x: at.x, y: at.y, R: P.anchorR }, P.anchorT); fx('anchor', P.anchorR, P.anchorT, at); break }
       case 'chum': hold('chum', { d }, P.chumT); fx('line', P.chumTo, P.chumT, me); break;
       case 'slip': hold('slip', {}, P.slipT); break;
+      case 'eddy': hold('eddy', {}, P.eddyT); fx('ring', P.eddyRing, P.eddyT, me); break;
       case 'bubble': for (const e of near(r, me.x, me.y, P.bubbleR)) { e.heldT = Math.max(e.heldT || 0, P.bubbleT * (stretch ? 1 : 1)); e.heldAt = { ...e.pos }; affect(r, e, rec) } fx('ring', P.bubbleR, .4, me); break;
       case 'bow': for (const e of near(r, me.x, me.y, P.bowR)) {
         const rx = e.pos.x - me.x, ry = e.pos.y - me.y, along = rx * d.x + ry * d.y; if (along <= 0 || Math.acos(Math.min(1, along / (Math.hypot(rx, ry) || 1))) > P.bowCone) continue;
@@ -127,7 +140,7 @@ var Routine = (() => {
         fx('splash', R, .45, me, slot === 'entry'); break;
       }
     }
-    if (!stretch && !['anchor', 'chum', 'slip', 'frost', 'buoys', 'riptide'].includes(id)) settle(r, rec);
+    if (!stretch && !['anchor', 'chum', 'slip', 'eddy', 'frost', 'buoys', 'riptide'].includes(id)) settle(r, rec);
   }
   // a trick has finished: it connects if it affected an enemy; links are added when the bank sets the mult
   function settle(r, rec) {
@@ -153,6 +166,13 @@ var Routine = (() => {
       }
       if (E.kind === 'slip') {   // chasers behind fall onto the line straight back from the dolphin
         for (const e of near(r, me.x, me.y, P.slipR)) { const rx = e.pos.x - me.x, ry = e.pos.y - me.y, s = rx * d.x + ry * d.y; if (s > -2) continue; const back = Math.max(P.slipBack, Math.min(P.slipBack + P.slipLen, -s)), u = unit(me.x - d.x * back - e.pos.x, me.y - d.y * back - e.pos.y); e.velocity.x += u.x * P.slipPull * E.power * dt; e.velocity.y += u.y * P.slipPull * E.power * dt; affect(r, e, E.rec) }
+      }
+      if (E.kind === 'eddy') {   // onto a ring around the dolphin, circling it
+        for (const e of near(r, me.x, me.y, P.eddyR)) {
+          const rx = e.pos.x - me.x, ry = e.pos.y - me.y, d = Math.hypot(rx, ry) || 1, u = { x: rx / d, y: ry / d }, k = Math.min(1, 10 * dt);
+          const want = { x: u.x * (P.eddyRing - d) * 6 - u.y * P.eddySpin * E.power, y: u.y * (P.eddyRing - d) * 6 + u.x * P.eddySpin * E.power };
+          e.velocity.x += (want.x - e.velocity.x) * k; e.velocity.y += (want.y - e.velocity.y) * k; affect(r, e, E.rec);
+        }
       }
       if (E.kind === 'rip') {    // a drag down toward the water for enemies low over it
         for (const e of near(r, me.x, me.y, P.ripR)) { if (alt(m, e) > P.ripLow) continue; e.velocity.y -= P.ripPull * Math.max(E.power, .6) * dt; e.knockT = .3; e.floor = Math.min(e.floor ?? 0, 0); if (!(e.st?.soaked > 0)) Status.soak(e); affect(r, e, E.rec) }
@@ -222,7 +242,7 @@ var Routine = (() => {
     r.trickFx = keep;
   }
 
-  return { P, TRICKS, IDS, SLOTS, SLOT_NAMES, STRETCH, on, state, level, add, move, bench, draw3, start, damage, affect, killed, fire, settle, step, onHit, entry, draw };
+  return { P, TRICKS, GUNS, offerId, gunsFor, IDS, SLOTS, SLOT_NAMES, STRETCH, on, state, level, add, move, bench, draw3, start, damage, affect, killed, fire, settle, step, onHit, entry, draw };
 })();
 var DemoStartTrick, DemoTrickTitle;  // the title screen's pick, and the three it shows
 {const hd0=Hd;Hd=function(...a){const r=hd0(...a);if(Routine.on(r))Routine.start(r);return r}}

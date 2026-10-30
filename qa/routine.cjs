@@ -72,6 +72,31 @@ test('Bubble net holds enemies around you still for 1 s; Bow wave pushes enemies
   assert.ok(a.velocity.y > 20, 'pushed aside (upward: it sat above the path)'); assert.equal(behind.velocity.y, 0);
 });
 
+test('Eddy draws enemies onto a ring inside Close reach (6 m) but outside contact, even while they chase', () => {
+  const r = run({ apex: 'eddy' }), list = [[12, 0], [-8, 9], [3, -11], [1.5, 1]].map(([x, y]) => { const e = foe(r, x, y); e.timer = 0; return e }); r.hand.apex = true;
+  for (let i = 0; i < 150; i++) { r.hurt = 99; H.ME(r, r.medium, { x: 0, y: 0 }, 1 / 120) }
+  const d = list.map(e => Math.hypot(e.pos.x, e.pos.y)); assert.ok(d.every(x => x > 2.5 && x < 6), d.map(x => x.toFixed(1)).join(' '));
+  return d.map(x => +x.toFixed(1));
+});
+
+test('the shop leans: the trick place favours tricks that feed the guns you hold; weapon offers favour guns your tricks feed', () => {
+  const count = (guns, tricks) => {
+    const n = {};
+    for (let seed = 1; seed <= 150; seed++) {
+      const r = H.Hd(seed, 'harpoon'); r.slots = guns.map(id => H.Owslot(id, 1, ++r.demo.uid)); r.demo.routine = { slots: {}, levels: Object.fromEntries(tricks.map(t => [t, 1])) };
+      const id = R.offerId(r); n[id] = (n[id] || 0) + 1;
+      r.wave = 3; r.mode = 'shop'; r.demo.offers = []; D.shop(r); for (const o of r.demo.offers.filter(o => o.row === 'weapon')) n['gun:' + o.id] = (n['gun:' + o.id] || 0) + 1;
+    }
+    return n;
+  };
+  const blast = count(['rocket', 'flak'], []), close = count(['fin', 'sonic'], []), fed = count(['minigun'], ['chum']);
+  assert.ok((blast.anchor || 0) > (close.anchor || 0) * 2, `anchor offered ${blast.anchor} with Blast guns vs ${close.anchor} with Close`);
+  assert.ok((close.eddy || 0) > (blast.eddy || 0) * 2, `eddy offered ${close.eddy} with Close guns vs ${blast.eddy} with Blast`);
+  const pierce = (fed['gun:laser'] || 0) + (fed['gun:harpoon'] || 0), plain = count(['minigun'], []), pierce0 = (plain['gun:laser'] || 0) + (plain['gun:harpoon'] || 0);
+  assert.ok(pierce > pierce0, `piercing guns offered ${pierce} with Chum line vs ${pierce0} without`);
+  return { anchor: [blast.anchor, close.anchor], eddy: [close.eddy, blast.eddy], piercingGuns: [pierce, pierce0] };
+});
+
 test('Breach wave lifts enemies near the surface up into the climb and soaks them', () => {
   const r = run({ breach: 'breach' }); r.medium.origin.y = 0; const low = foe(r, 6, 4), high = foe(r, 6, 20); step(r);
   assert.ok(low.velocity.y >= 22 && low.st.soaked > 0); assert.equal(high.velocity.y, 0);
