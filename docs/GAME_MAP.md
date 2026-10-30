@@ -72,6 +72,10 @@ One cycle is a dive followed by a flight. These are medians from 291 bot flights
 
 - **The routine (step 5, `source/routine.js`):** three slots fire, Breach (as the arena opens), Apex and Entry (water contact, before the bank). Tricks: Corkscrew (setup, pushes within 8 m), Gravity anchor (setup, a gravity well for 1.5 s: enemies within 20 m keep chasing but bend toward it; it rides with the camera; a hit cancels it), Minefield (payoff, step 6: 3 mines fixed in the world ahead on your arc that sweep back through whatever chases you), Star pose (payoff, bursts within 7 m), Spout (payoff, splashes 4–12 m around the landing point by peak height, soaks). The mult is 1 + connected trick levels + 1 per linked payoff (a payoff that hits enemies a setup moved this flight). The run starts with one trick picked on the title screen; the shop always has one trick place, and its routine panel moves tricks between slots.
 
+- **Five slots (step 10):** Ascent and Descent re-fire their trick every 0.6 s at a third of its power while climbing or falling. Eight tricks: Corkscrew, Gravity anchor and Closing net (setups); Star pose, Spout, Minefield, Bounty and Standoff (payoffs).
+- **Statuses (step 7, `source/statuses.js`):** Spout soaks, Arc shocks (jumps within 5 m), Depth charge chills (3 = frozen block). Reactions: Conduct, Flash-freeze, Shatter.
+- **Sides and surfaces (step 8):** from wave 3 some enemies are Shielders, Turtles or Spikers, armoured except from behind, below or above (20% through armour). Soaked or pushed enemies driven into the water drown; pushed enemies smash into each other and into frozen blocks.
+
 ## 5. Waves and the loss condition (S4 demo)
 
 - **Air clock:** 20 s at wave 1, +5 s per wave, capped at 60 s; wave 20 is 90 s (`clock`). It runs only in the air. When it runs out, enemies keep coming and the wave ends at the next water entry. There is no safe coast.

@@ -35,7 +35,7 @@ exports.load = function (file, store = new Map(), opts = {}) {
   for (const [x, y] of opts.patch || []) { if (!code.includes(x)) throw Error('patch anchor not found: ' + x.slice(0, 60)); code = code.split(x).join(y); }
   const END = '})();\n/*! Bundled license';
   if (!code.includes(END)) throw Error('bundle end not found');
-  const extra=['FlightLog','Ovv','Zd','Zd0','Xl','jl','ql','of','hr','ft','as','Ocbar','Orhud','iw','Ovr','Owe','wE','EE','DEMO','FiveScore','FiveCombat','ScoreCues','ScoreHUD','RunGuide','ShopUI','Ir','Yl','Routine','Space','Danger','Verbs','Controls','Loadout'];
+  const extra=['FlightLog','Ovv','Zd','Zd0','Xl','jl','ql','of','hr','ft','as','Ocbar','Orhud','iw','Ovr','Owe','wE','EE','DEMO','FiveScore','FiveCombat','ScoreCues','ScoreHUD','RunGuide','ShopUI','Ir','Yl','Routine','Space','Danger','Verbs','Controls','Loadout','Status'];
   const hook = 'globalThis.__H={get S(){return S},' + [...new Set([...NAMES,...extra])].map(n => `get ${n}(){return typeof ${n}!=="undefined"?${n}:undefined}`).join(',') + '};\n';
   code = code.replace(END, hook + END);
   const any = new Proxy(function () {}, { get: (t, k) => k === Symbol.toPrimitive ? (() => 0) : k === 'then' ? undefined : k === 'length' ? 0 : any,

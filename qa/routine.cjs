@@ -80,7 +80,7 @@ test('Spout at Entry splashes and soaks around the landing point; higher flights
   const rows = [];
   for (const best of [0, 20, 60]) {
     const r = run({ entry: 'spout' }); r.flightBest = best; const e = foe(r, 6.5, 0);
-    land(r); rows.push([best, e.soaked === true]);
+    land(r); rows.push([best, e.st?.soaked > 0]);
   }
   assert.deepEqual(rows.map(x => x[1]), [false, true, true], '4 m at no height, 8 m at 20 m, 12 m (the cap) at 60 m');
   return rows;
