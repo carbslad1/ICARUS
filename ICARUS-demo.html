@@ -4369,7 +4369,7 @@ var DEMO = (() => {
     depth: {type:'Blast',cad:'Heavy',coef:1.5,damage:[24,36,52,80],cd:[64,56,48,40],range:18,crit:.03,cx:1.5,kb:9,blast:8.5,side:'Max HP',sideScale:.15,description:'A lobbed charge aimed to intercept its target. Max HP also adds damage.'}
   };
   // Hand-cap levers (structure doc 5.4): kept open and tunable, to be balanced in play. The tuning panel edits these live.
-  const TUNE_DEFAULT={bro:1,shake:1,flash:1,space:1,edge:.2,danger:1,lead:.5,mines:0,carve:1,ccw:0,sky:12,verbs:0,hop:6,dive:2,dashes:2,hold:1,wetspawn:1,rules:1,payK:3,streakCap:5,well:60,sides:1,moves:1,pierce:1};  // pierce: Laser and Harpoon pierce by tier  // sides: step 8 (armoured enemies)  // well: Gravity anchor's pull, m/s²  // rules, payK, streakCap: step 4 (style score)  // space: step 1 (space.js); edge: share of its spawns from the screen edge; danger, lead, mines: step 2 (danger.js)
+  const TUNE_DEFAULT={bro:1,shake:1,flash:1,space:1,edge:.2,danger:1,lead:.5,mines:0,carve:1,ccw:0,sky:12,verbs:0,hop:6,dive:2,dashes:2,hold:1,wetspawn:1,rules:1,payK:3,streakCap:5,well:60,sides:1,moves:1,pierce:1,trickPool:1};  // trickPool: offer only the shortlist being proven (docs/TRICK_LAB.md)  // pierce: Laser and Harpoon pierce by tier  // sides: step 8 (armoured enemies)  // well: Gravity anchor's pull, m/s²  // rules, payK, streakCap: step 4 (style score)  // space: step 1 (space.js); edge: share of its spawns from the screen edge; danger, lead, mines: step 2 (danger.js)
   const tune={...TUNE_DEFAULT};
   try{Object.assign(tune,JSON.parse(localStorage.getItem('icarus.scoreshow.tune')||'{}'))}catch(e){}
   const saveTune=()=>{try{localStorage.setItem('icarus.scoreshow.tune',JSON.stringify(tune))}catch(e){}};
@@ -4878,14 +4878,14 @@ function DemoBind(){for(const b of hr.querySelectorAll('[data-demo]'))b.onclick=
   if(a==='starter'){En=i;ql();return}if(a==='startTrick'){DemoStartTrick=i;ql();return}if(a==='begin'){Zd(En);return}if(a==='tune'){document.getElementById('tune')?DemoPanel(false):DemoTune(true);return}if(a==='help'){const el=document.getElementById('demo-how');if(el)el.hidden=!el.hidden;return}if(a==='home'){ql();return}
   if(a==='next'){if(DEMO.command(S,a,i)){ke=0;as=Br(S);sf()}else Xl();return}DEMO.command(S,a,i);Xl();if(a==='level'){(hr.querySelector('[data-demo=level]:not(:disabled)')||hr.querySelector('[data-demo=buy]:not(:disabled)'))?.focus({preventScroll:true})}else if(S.demo.pack){const choice=hr.querySelector('[data-demo=packPick]:not(:disabled)');choice?.focus({preventScroll:true});choice?.scrollIntoView?.({block:'nearest'})}
 }}
-ql=function(){ft='title';St=null;ur.reset();hr.innerHTML=`${_w()}<section class="title-content demo-title"><div class="eyebrow">CHIPS × MULT · SCORE FEEL TEST</div><h1>ICARUS<span>BUILD YOUR ASCENT</span></h1><p class="intro">Carve your launch.<br>Build the flight you want.</p><p class="title-description">${DEMO.tune.rules?'Automatic weapons turn kills into chips.<br>Pick your first trick: it fires at Breach, Apex or Entry and builds mult.<br>Stay clean to grow your streak. Land to bank pearls.':'Automatic weapons turn kills into chips.<br>Your tricks are the reels: they build mult.<br>Get hit and the trick in progress bails. Land to bank.'}</p><div class="demo-starters">${['sonic','harpoon','rocket'].map(id=>DemoButton('starter',id,`<b>${Owc[id].name}</b><span>${DEMO.weapons[id].type} · ${DEMO.weapons[id].description}</span>`,false,id===En?'selected':'')).join('')}</div>${DEMO.tune.rules?(()=>{if(!DemoTrickTitle){DemoTrickTitle=[...Routine.IDS].sort(()=>Math.random()-.5).slice(0,3);DemoStartTrick=DemoTrickTitle[0]}return `<div class="demo-starters demo-tricks">${DemoTrickTitle.map(id=>{const T=Routine.TRICKS[id];return DemoButton('startTrick',id,`<b>${T.glyph} ${T.name}</b><span title="${T.text}">${T.kind==='water'?'Water':'Effect'} · ${Routine.SLOT_NAMES[T.slot]}</span>`,false,id===DemoStartTrick?'selected':'')}).join('')}</div>`})():''}<div class="launch-row">${DemoButton('begin','','BEGIN RUN ↗',false,'demo-primary')}${DemoButton('help','','HOW TO PLAY')}${DemoButton('tune','','SETTINGS')}</div><div id="demo-how" hidden><p><b>Launch:</b> hold ${Controls.carve()?'Space':'W or up'} to carve upward. Release to ride out.${Controls.carve()?'':' Space boosts.'} Water is safe and pauses the air clock.</p><p><b>Fight:</b> W A S D / arrows steer within your launch path. Weapons fire automatically. ${DEMO.tune.rules?'Each kill is a chip. Land in water to bank kills × your clean streak (up to ×5, back to ×1 when you take a hit) as pearls. Survive 20 waves; 0 HP ends the run.':"Kills give chips, plus bonus chips for multi-kills, apex kills and crits. Land in water to bank chips × mult. Meet every wave's quota for 20 waves; missing one ends the run."}</p><p><b>Tricks:</b> each jump draws tricks (3 to start; buy more) that play automatically, like reels. A hit bails the trick in progress: it pays nothing. At 0 HP the jump busts: you fall, bank nothing and come back at half HP.</p><p><b>Build:</b> kills drop XP orbs; steer through them to level up. Each level gives a free stat pick before the shop. Then buy weapons and gear for chips and survival, charms that rewrite the scoring, and Routine upgrades for your tricks. Charms resolve left to right at the bank.</p></div></section><footer class="title-footer"><div><b>${Object.keys(DEMO.weapons).length}</b><span>WEAPONS · SIX SLOTS</span></div><div><b>5</b><span>TRICKS · DRAWS 3→7</span></div><div><b>${Object.keys(FiveScore.charms).length}</b><span>CHARMS</span></div><div><b>${FiveCombat.catalogue.length}</b><span>COMBAT ITEMS</span></div></footer>`;Kl();DemoBind()};
+ql=function(){ft='title';St=null;ur.reset();hr.innerHTML=`${_w()}<section class="title-content demo-title"><div class="eyebrow">CHIPS × MULT · SCORE FEEL TEST</div><h1>ICARUS<span>BUILD YOUR ASCENT</span></h1><p class="intro">Carve your launch.<br>Build the flight you want.</p><p class="title-description">${DEMO.tune.rules?'Automatic weapons turn kills into chips.<br>Pick your first trick: it fires at Breach, Apex or Entry and builds mult.<br>Stay clean to grow your streak. Land to bank pearls.':'Automatic weapons turn kills into chips.<br>Your tricks are the reels: they build mult.<br>Get hit and the trick in progress bails. Land to bank.'}</p><div class="demo-starters">${['sonic','harpoon','rocket'].map(id=>DemoButton('starter',id,`<b>${Owc[id].name}</b><span>${DEMO.weapons[id].type} · ${DEMO.weapons[id].description}</span>`,false,id===En?'selected':'')).join('')}</div>${DEMO.tune.rules?(()=>{if(!DemoTrickTitle){DemoTrickTitle=[...Routine.pool()].sort(()=>Math.random()-.5).slice(0,3);DemoStartTrick=DemoTrickTitle[0]}return `<div class="demo-starters demo-tricks">${DemoTrickTitle.map(id=>{const T=Routine.TRICKS[id];return DemoButton('startTrick',id,`<b>${T.glyph} ${T.name}</b><span title="${T.text}">${T.kind==='water'?'Water':'Effect'} · ${Routine.SLOT_NAMES[T.slot]}</span>`,false,id===DemoStartTrick?'selected':'')}).join('')}</div>`})():''}<div class="launch-row">${DemoButton('begin','','BEGIN RUN ↗',false,'demo-primary')}${DemoButton('help','','HOW TO PLAY')}${DemoButton('tune','','SETTINGS')}</div><div id="demo-how" hidden><p><b>Launch:</b> hold ${Controls.carve()?'Space':'W or up'} to carve upward. Release to ride out.${Controls.carve()?'':' Space boosts.'} Water is safe and pauses the air clock.</p><p><b>Fight:</b> W A S D / arrows steer within your launch path. Weapons fire automatically. ${DEMO.tune.rules?'Each kill is a chip. Land in water to bank kills × your clean streak (up to ×5, back to ×1 when you take a hit) as pearls. Survive 20 waves; 0 HP ends the run.':"Kills give chips, plus bonus chips for multi-kills, apex kills and crits. Land in water to bank chips × mult. Meet every wave's quota for 20 waves; missing one ends the run."}</p><p><b>Tricks:</b> each jump draws tricks (3 to start; buy more) that play automatically, like reels. A hit bails the trick in progress: it pays nothing. At 0 HP the jump busts: you fall, bank nothing and come back at half HP.</p><p><b>Build:</b> kills drop XP orbs; steer through them to level up. Each level gives a free stat pick before the shop. Then buy weapons and gear for chips and survival, charms that rewrite the scoring, and Routine upgrades for your tricks. Charms resolve left to right at the bank.</p></div></section><footer class="title-footer"><div><b>${Object.keys(DEMO.weapons).length}</b><span>WEAPONS · SIX SLOTS</span></div><div><b>5</b><span>TRICKS · DRAWS 3→7</span></div><div><b>${Object.keys(FiveScore.charms).length}</b><span>CHARMS</span></div><div><b>${FiveCombat.catalogue.length}</b><span>COMBAT ITEMS</span></div></footer>`;Kl();DemoBind()};
 jl=function(){const won=S.mode==='won';Ir(`<section class="scrim"><div class="summary-panel"><div class="eyebrow">${won?'TWENTY WAVES CLEARED':S.endReason==='hp'?'OUT OF HP':'QUOTA MISSED'}</div><h2>${won?'An extraordinary ascent.':'Every flight counts.'}</h2><p>${DEMO.tune.rules?`Wave ${S.wave} · ${S.kills} kills · ${S.earned||0} pearls earned · best streak ×${Math.max(0,...S.demo.history.map(h=>h.streak||0))}.`:`Wave ${S.wave} · ${S.wscore} / ${S.quota} banked · ${S.kills} kills.`}</p><p>${won?'Your build carried the run.':'Bigger banks come from more chips, more mult or fewer Bails: weapons, charms, Routine upgrades and gear.'}</p><div class="demo-summary-hands">${S.demo.history.slice(-5).map(h=>`<div>${h.busted?'BUST':`${h.chips} × ${DEMO.fmt(h.mult)}`} = <b>${h.score}</b><small>${h.cards.join(' · ')}${h.bails?.length?` · ${h.bails.length} Bail${h.bails.length>1?'s':''}`:''}</small></div>`).join('')}</div>${DemoButton('home','','BACK TO START',false,'demo-primary')}</div></section>`);DemoBind()};
 ls=function(){if(ft!=='game'||S.mode!=='playing')return;ft='pause';It.clear();Gr=false;je={x:0,y:0};ke=0;Ir(`<section class="scrim"><div class="modal pause-modal"><div class="eyebrow">TAKE A BREATH</div><h2>Your flight can wait.</h2><p>Hold ${Controls.carve()?'Space':'W / up'} underwater to carve. Release to launch${Controls.carve()?'':'; space boosts'}. In air, W A S D / arrows steer within the launch path.</p><p>Every drawn trick lands unless a hit bails it. At 0 HP the jump busts and banks nothing. Charms resolve at the bank. A flight with no kills keeps the same tricks.</p><p>Wave ${S.wave} · ${DEMO.tune.rules?`streak ×${S.demo.streak||0} · ${S.xp} pearls`:`${S.wscore} / ${S.quota} banked`} · ${S.budget.toFixed(1)}s air left.</p><div class="modal-actions">${kt('resume','RESUME FLIGHT ↗','primary')}${kt('end','END RUN')}${DemoButton('tune','','SETTINGS')}</div></div></section>`);DemoBind()};
 Owstarter=function(){return ''};
 
 /* Settings: one panel in tabs (T, the backquote key, or SCORE TUNING). Score holds the hand-cap levers (structure doc 5.4,
    kept open to balance in play); the other tabs hold the v3 carve's movement sliders, grouped by what they change. */
-const DemoTuneDefs=[['shake','Screen shake',0,2,.1],['flash','Enemy hit flash',0,1,.1],['space','Marked spawns ahead and flocking (step 1)',0,1,1,'check'],['edge','Step 1: share of spawns from the screen edge',0,1,.05],['danger','Leading shots and mines on the arc (step 2)',0,1,1,'check'],['lead','Step 2: how far shots lead you',0,1,.05],['mines','Step 2: mines per flight',0,4,1],['carve','Space carves (no boost)',0,1,1,'check'],['ccw','Carving always anticlockwise',0,1,1,'check'],['sky','Water camera: metres above the dolphin (0 = old camera)',0,20,.1],['rules','Style score rules (step 4): no quota, reels or charms; 0 HP ends the run',0,1,1,'check'],['payK','Step 4: pearls per flight = k × √score',0,10,.5],['streakCap','Step 4: clean streak cap',1,10,1],['well','Gravity anchor pull (m/s²)',0,150,5],['sides','Armoured enemies (step 8)',0,1,1,'check'],['pierce','Pierce by tier: Laser hits 3-6 enemies, Harpoon always pierces 1 and crits 1 more per tier',0,1,1,'check'],['moves','Brotato enemy movement: turrets keep range, drifters hover, splitters hold an offset',0,1,1,'check'],['hold','Enemies above the water stay ahead of you in view while you swim',0,1,1,'check'],['wetspawn','Enemies keep spawning while you swim',0,1,1,'check'],['verbs','Experimental: stomp, dive (S) and dash (Space) in the air (parked; to become tricks)',0,1,1,'check'],['hop','Step 3: stomp lift (m/s)',0,15,.5],['dive','Step 3: dive gravity (x)',1,4,.1],['dashes','Step 3: dash charges',0,4,1]];
+const DemoTuneDefs=[['shake','Screen shake',0,2,.1],['flash','Enemy hit flash',0,1,.1],['space','Marked spawns ahead and flocking (step 1)',0,1,1,'check'],['edge','Step 1: share of spawns from the screen edge',0,1,.05],['danger','Leading shots and mines on the arc (step 2)',0,1,1,'check'],['lead','Step 2: how far shots lead you',0,1,.05],['mines','Step 2: mines per flight',0,4,1],['carve','Space carves (no boost)',0,1,1,'check'],['ccw','Carving always anticlockwise',0,1,1,'check'],['sky','Water camera: metres above the dolphin (0 = old camera)',0,20,.1],['rules','Style score rules (step 4): no quota, reels or charms; 0 HP ends the run',0,1,1,'check'],['payK','Step 4: pearls per flight = k × √score',0,10,.5],['streakCap','Step 4: clean streak cap',1,10,1],['well','Gravity anchor pull (m/s²)',0,150,5],['sides','Armoured enemies (step 8)',0,1,1,'check'],['trickPool','Trick pool: only the shortlist being proven (Eddy, Gravity anchor, Riptide, Snare buoys)',0,1,1,'check'],['pierce','Pierce by tier: Laser hits 3-6 enemies, Harpoon always pierces 1 and crits 1 more per tier',0,1,1,'check'],['moves','Brotato enemy movement: turrets keep range, drifters hover, splitters hold an offset',0,1,1,'check'],['hold','Enemies above the water stay ahead of you in view while you swim',0,1,1,'check'],['wetspawn','Enemies keep spawning while you swim',0,1,1,'check'],['verbs','Experimental: stomp, dive (S) and dash (Space) in the air (parked; to become tricks)',0,1,1,'check'],['hop','Step 3: stomp lift (m/s)',0,15,.5],['dive','Step 3: dive gravity (x)',1,4,.1],['dashes','Step 3: dash charges',0,4,1]];
 const DemoTabs=[
   ['Score',null,'Each jump draws 3 tricks; buy more in the Routine row. A hit bails the trick in progress; 0 HP busts the jump.'],
   ['Launch',['Forward only','Rocket boost','Carve','Wave schedule'],'The carve and the launch. Launch speed rises5 per wave.'],
@@ -5722,12 +5722,13 @@ var Status = (() => {
 //   an enemy an air trick affected.
 // - Only with the step 4 rules (DEMO.tune.rules); S4's reels stay as they were with them off.
 var Routine = (() => {
-  const P = Object.freeze({
+  // P is live: the Trick Lab's sliders change these numbers while you play (docs/TRICK_LAB.md); DEFAULTS keeps the originals
+  const P = {
     anchorR: 30, anchorT: 1.5, anchorKeep: 3, // m it reaches around the target, s, m around you it leaves alone; pull DEMO.tune.well (m/s²)
     chumFrom: 4, chumTo: 18, chumR: 22, chumT: 1.5, chumPull: 45, // a line 4-18 m out through the nearest enemy
     slipBack: 4, slipLen: 16, slipR: 20, slipT: 2, slipPull: 40,  // a file 4-20 m back through the nearest enemy behind you
     bubbleR: 9, bubbleT: 1,                 // m, s held still
-    eddyR: 14, eddyRing: 4.5, eddyT: 1.5, eddySpin: 10, // m it reaches, m ring (inside Close reach, outside contact), s, m/s round
+    eddyR: 18, eddyRing: 4.5, eddyT: 1.5, eddySpin: 10, // m it reaches, m ring (inside Close reach, outside contact), s, m/s round
     bowR: 14, bowCone: .55, bowPush: 28,    // m, half-angle (rad), m/s sideways
     breachR: 18, breachLow: 8, breachLift: 22, // m across, enemies below 8 m altitude, m/s up
     frostT: 2, frostR: 2.5, frostEvery: .3, // s the wake lasts, m from your path, s between chill stacks
@@ -5738,13 +5739,14 @@ var Routine = (() => {
     undertowR: 12, undertowLow: 6,          // m around the landing point, enemies below 6 m altitude
     pulse: .6, pulsePower: 1 / 3,           // s between stretch pulses; their power
     base: 30, perLevel: .5, perWave: .1     // water damage: base × (1 + .5 per extra level) × Damage % × (1 + .1 per wave)
-  });
+  };
+  const DEFAULTS = Object.freeze({ ...P });
   const TRICKS = Object.freeze({
     anchor:   { name: 'Gravity anchor', kind: 'effect', slot: 'apex',    glyph: '◎', helps: 'Blast guns',    text: 'For 1.5 s, a gravity well sits on the enemy your guns aim at (the nearest): enemies within 30 m of it bend into a cluster there.' },
     chum:     { name: 'Chum line',      kind: 'effect', slot: 'ascent',  glyph: '⋯', helps: 'piercing guns', text: 'For 1.5 s, enemies within 22 m line up 4-18 m out along the line from you through the enemy your guns aim at.' },
     slip:     { name: 'Slipstream',     kind: 'effect', slot: 'descent', glyph: '≫', helps: 'piercing guns', text: 'For 2 s, chasers behind you fall into single file 4-20 m back, through the nearest of them.' },
     bubble:   { name: 'Bubble net',     kind: 'effect', slot: 'apex',    glyph: '◌', helps: 'every gun',     text: 'Holds enemies within 9 m of you still for 1 s.' },
-    eddy:     { name: 'Eddy',           kind: 'effect', slot: 'apex',    glyph: '↻', helps: 'Close guns',    text: 'For 1.5 s, enemies within 14 m are drawn onto a ring 4.5 m around you and circle it, inside Close reach.' },
+    eddy:     { name: 'Eddy',           kind: 'effect', slot: 'apex',    glyph: '↻', helps: 'Close guns',    text: 'For 1.5 s, enemies within 18 m are drawn onto a ring 4.5 m around you and circle it, inside Close reach. Best on low hops.' },
     bow:      { name: 'Bow wave',       kind: 'effect', slot: 'breach',  glyph: '⋀', helps: 'your streak',   text: 'Pushes enemies ahead of you aside, opening a lane.' },
     breach:   { name: 'Breach wave',    kind: 'effect', slot: 'breach',  glyph: '⌇', helps: 'Arc (Conduct)', text: 'Lifts enemies near the surface up into your climb and soaks them.' },
     frost:    { name: 'Frost wake',     kind: 'effect', slot: 'descent', glyph: '❄', helps: 'shatter',       text: 'For 2 s your path chills whatever follows it; three chills freeze an enemy.' },
@@ -5786,15 +5788,18 @@ var Routine = (() => {
     return true;
   }
   const bench = r => IDS.filter(id => level(r, id) && !SLOTS.some(s => state(r).slots[s] === id));
-  function draw3(r) { const a = [...IDS]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(ce(r) * (i + 1)); [a[i], a[j]] = [a[j], a[i]] } return a.slice(0, 3) }
+  // the pool normal play offers (DEMO.tune.trickPool 1: the shortlist being proven, docs/TRICK_LAB.md; 0: every trick)
+  const FOCUS = Object.freeze(['eddy', 'anchor', 'riptide', 'buoys']);
+  const pool = () => DEMO.tune.trickPool ? FOCUS : IDS;
+  function draw3(r) { const a = [...pool()]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(ce(r) * (i + 1)); [a[i], a[j]] = [a[j], a[i]] } return a.slice(0, 3) }
   function start(r) {
     const offers = draw3(r), pick = typeof DemoStartTrick !== 'undefined' && TRICKS[DemoStartTrick] ? DemoStartTrick : offers[0];
     r.demo.trickOffers = offers; add(r, pick);
   }
   // the shop's trick place: tricks that feed the guns you hold come up more often (1 + 2 per matching gun held)
   function offerId(r) {
-    const held = r.slots.map(g => g.id), w = IDS.map(id => 1 + 2 * held.filter(g => (GUNS[id] || []).includes(g)).length);
-    let q = ce(r) * w.reduce((a, b) => a + b, 0); for (let i = 0; i < IDS.length; i++) { q -= w[i]; if (q < 0) return IDS[i] } return IDS.at(-1);
+    const ids = pool(), held = r.slots.map(g => g.id), w = ids.map(id => 1 + 2 * held.filter(g => (GUNS[id] || []).includes(g)).length);
+    let q = ce(r) * w.reduce((a, b) => a + b, 0); for (let i = 0; i < ids.length; i++) { q -= w[i]; if (q < 0) return ids[i] } return ids.at(-1);
   }
   // guns the routine you own feeds (for the shop's weapon offers)
   const gunsFor = r => [...new Set(Object.keys(state(r).levels).flatMap(id => GUNS[id] || []))];
@@ -5971,7 +5976,7 @@ var Routine = (() => {
     r.trickFx = keep;
   }
 
-  return { P, TRICKS, GUNS, offerId, gunsFor, IDS, SLOTS, SLOT_NAMES, STRETCH, on, state, level, add, move, bench, draw3, start, damage, affect, killed, fire, settle, step, onHit, entry, draw };
+  return { P, DEFAULTS, FOCUS, pool, TRICKS, GUNS, offerId, gunsFor, IDS, SLOTS, SLOT_NAMES, STRETCH, on, state, level, add, move, bench, draw3, start, damage, affect, killed, fire, settle, step, onHit, entry, draw };
 })();
 var DemoStartTrick, DemoTrickTitle;  // the title screen's pick, and the three it shows
 {const hd0=Hd;Hd=function(...a){const r=hd0(...a);if(Routine.on(r))Routine.start(r);return r}}
@@ -6450,6 +6455,125 @@ var Loadout = (() => {
 .lo-panel .lo-check{grid-column:1/-1;justify-content:flex-start}.lo-panel .lo-row{display:flex;flex-direction:column;gap:2px}.lo-panel .lo-wide{grid-column:1/-1}.lo-panel .lo-desc{display:block;grid-column:1/-1;color:#7fa3a6;font-size:11px;line-height:1.35}.lo-panel .lo-main{margin-top:10px;color:#baffed}
 @media(max-width:480px){.lo-panel section{grid-template-columns:1fr}}`;document.head.appendChild(st)}}
 try{if(typeof document!=='undefined'&&ft==='title')ql()}catch(e){}  // the title may have drawn before this file ran
+
+// Trick Lab (docs/TRICK_LAB.md; designer, 2026-10-30): play one trick at a time and tune how it feels.
+// A title-screen button opens it: pick the trick, its slot and level, two guns and a wave; options to not die, to hold
+// the air clock (an endless wave) and for the Brotato enemy movement; live sliders for the trick's numbers (Routine.P).
+// In a lab run, B switches the trick off and on so the two can be felt back to back, and a readout after each flight
+// shows the launch angle and style, air time, the enemies the trick touched, and kills (and how many it had placed).
+// Saved in this browser (icarus.scoreshow.lab). Only a run started from the lab uses it.
+var Lab = (() => {
+  const KEY = 'icarus.scoreshow.lab';
+  // the live numbers each trick exposes: [key in Routine.P (or tune:key in DEMO.tune), label, min, max, step]
+  const PARAMS = {
+    eddy: [['eddyR', 'Reach (m)', 6, 30, .5], ['eddyRing', 'Ring radius (m)', 2.5, 6, .1], ['eddyT', 'Lasts (s)', .5, 4, .1], ['eddySpin', 'Spin (m/s)', 0, 25, .5]],
+    anchor: [['anchorR', 'Reach around the target (m)', 8, 40, 1], ['anchorT', 'Lasts (s)', .5, 4, .1], ['anchorKeep', 'Leaves alone within (m)', 0, 8, .5], ['tune:well', 'Pull (m/s²)', 0, 150, 5]],
+    riptide: [['ripR', 'Reach (m)', 8, 35, 1], ['ripLow', 'Only enemies below (m altitude)', 3, 25, 1], ['ripPull', 'Drag down (m/s²)', 20, 250, 5], ['ripT', 'Lasts (s)', .3, 3, .1]],
+    buoys: [['buoyTouch', 'Reach (m)', .5, 5, .1]],
+    bubble: [['bubbleR', 'Reach (m)', 3, 20, .5], ['bubbleT', 'Holds (s)', .2, 3, .1]],
+    chum: [['chumR', 'Reach (m)', 8, 35, 1], ['chumPull', 'Pull (m/s²)', 10, 200, 5], ['chumT', 'Lasts (s)', .5, 4, .1]],
+    slip: [['slipR', 'Reach (m)', 8, 35, 1], ['slipPull', 'Pull (m/s²)', 10, 200, 5], ['slipT', 'Lasts (s)', .5, 4, .1]],
+    bow: [['bowR', 'Reach (m)', 5, 30, .5], ['bowPush', 'Push (m/s)', 5, 60, 1]],
+    breach: [['breachR', 'Reach (m)', 5, 35, 1], ['breachLift', 'Lift (m/s)', 5, 50, 1]],
+    frost: [['frostT', 'Lasts (s)', .5, 5, .1], ['frostR', 'Trail width (m)', .5, 6, .1]],
+    flop: [['flopR', 'Reach sideways (m)', 2, 15, .5], ['flopDrive', 'Drive down (m/s)', 10, 80, 1], ['flopT', 'Drives for (s)', .2, 2, .1]],
+    spout: [['spoutR0', 'Splash radius (m)', 1, 12, .5], ['spoutMax', 'Largest splash (m)', 4, 25, .5]],
+    undertow: [['undertowR', 'Reach (m)', 4, 30, 1], ['undertowLow', 'Only enemies below (m altitude)', 1, 15, .5]]
+  };
+  const blank = () => ({ trick: 'eddy', slot: null, level: 1, guns: ['fin', 'sonic'], tier: 1, wave: 5, immortal: 1, endless: 1, moves: 1, params: {} });
+  let cfg = blank(), active = false, off = false;
+  try { cfg = { ...blank(), ...JSON.parse(localStorage.getItem(KEY) || '{}') } } catch (e) {}
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(cfg)) } catch (e) {} };
+  const get = k => k.startsWith('tune:') ? DEMO.tune[k.slice(5)] : Routine.P[k];
+  function setParam(k, v) { cfg.params[k] = v; if (k.startsWith('tune:')) DEMO.tune[k.slice(5)] = v; else Routine.P[k] = v }
+  // the slider values apply in the lab (panel and lab runs) only; the title puts the defaults back (reset)
+  const wellDefault = DEMO.tune.well;
+  function applyParams() { Object.assign(Routine.P, Routine.DEFAULTS); DEMO.tune.well = wellDefault; for (const [k, v] of Object.entries(cfg.params)) setParam(k, v) }
+  function reset() { Object.assign(Routine.P, Routine.DEFAULTS); DEMO.tune.well = wellDefault }
+  const slotOf = () => cfg.slot || Routine.TRICKS[cfg.trick]?.slot || 'apex';
+
+  // a lab run: the guns, the one trick, the wave
+  function apply(r) {
+    if (!active || !r?.demo) return r;
+    const d = r.demo;
+    r.slots = cfg.guns.filter(id => DEMO.weapons[id]).map(id => { const g = Owslot(id, cfg.tier, ++d.uid); g.paid = 0; g.cd = 0; return g });
+    d.routine = { slots: { [slotOf()]: cfg.trick }, levels: { [cfg.trick]: cfg.level } };
+    if (cfg.wave !== r.wave) { r.wave = cfg.wave; DEMO.wave(r) }
+    DEMO.sync(r); r.hp = r.stats.maxHp; r.lab = { flights: [], off: false };
+    return r;
+  }
+  // B: the trick off and on in a lab run
+  function toggle(r) { if (!r?.lab) return; off = !off; r.lab.off = off; const S = r.demo.routine; S.slots = off ? {} : { [slotOf()]: cfg.trick }; readout(r, off ? `${Routine.TRICKS[cfg.trick].name} OFF (B to switch back on)` : `${Routine.TRICKS[cfg.trick].name} ON`) }
+
+  // the readout after each flight, and a running average per jump style, split by trick on and off
+  const style = deg => deg < 40 ? 'low' : deg < 67 ? 'mid' : 'high';
+  function flight(r) {
+    const h = r.hand; if (!r.lab || !h) return;
+    const deg = Math.round(Math.abs(Math.atan2(Math.sin(h.launch.angle), Math.abs(Math.cos(h.launch.angle)))) * 180 / Math.PI), t = (h.tricks || []).find(x => x.id === cfg.trick);
+    const f = { deg, style: style(deg), air: +(h.activeAir || h.air || 0).toFixed(1), touched: t?.hits || 0, kills: h.kills.length, placed: h.kills.filter(k => k.placed).length, drowned: h.kills.filter(k => k.surface === 'water').length, hits: h.hits, on: !r.lab.off };
+    r.lab.flights.push(f);
+    const rows = ['low', 'mid', 'high'].map(s => { const on = r.lab.flights.filter(x => x.style === s && x.on), offs = r.lab.flights.filter(x => x.style === s && !x.on); const k = L => L.length ? (L.reduce((a, x) => a + x.kills, 0) / L.reduce((a, x) => a + x.air, 0)).toFixed(1) : '–'; return `${s}: ${k(on)} kills/air-s on (${on.length})${offs.length ? ` · ${k(offs)} off (${offs.length})` : ''}` });
+    readout(r, `${f.on ? Routine.TRICKS[cfg.trick].name : 'NO TRICK'} · launch ${deg}° (${f.style}) · ${f.air} s in the air\nmoved ${f.touched} · kills ${f.kills} (${f.placed} it placed${f.drowned ? `, ${f.drowned} drowned` : ''}) · hits ${f.hits}\n${rows.join('\n')}`);
+  }
+  function readout(r, text) {
+    if (typeof document === 'undefined') return;
+    let el = document.getElementById('lab-readout');
+    if (!el) { el = document.createElement('div'); el.id = 'lab-readout'; document.body.appendChild(el) }
+    el.textContent = 'TRICK LAB · B: trick off/on\n' + text; el.hidden = false;
+  }
+
+  // the panel
+  const E = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const opt = (v, label, sel) => `<option value="${E(v)}" ${sel ? 'selected' : ''}>${E(label)}</option>`;
+  function html() {
+    const T = Routine.TRICKS, order = [...Routine.FOCUS, ...Routine.IDS.filter(id => !Routine.FOCUS.includes(id))], X = T[cfg.trick];
+    const sliders = (PARAMS[cfg.trick] || []).map(([k, label, lo, hi, st]) => { const v = +get(k); return `<label class="lab-slider">${E(label)} <input type="range" min="${lo}" max="${hi}" step="${st}" value="${v}" data-param="${k}"><b>${v}</b></label>` }).join('');
+    const gunSel = i => `<select data-lab="gun${i}">${opt('', '— none —', !cfg.guns[i])}${Object.keys(DEMO.weapons).map(id => opt(id, `${Owc[id]?.name || id} · ${DEMO.weapons[id].type}`, cfg.guns[i] === id)).join('')}</select>`;
+    return `<div class="lo-panel lab-panel" role="dialog" aria-label="Trick lab"><header><b>TRICK LAB</b><button data-lab-close>✕</button></header>
+      <small class="lo-desc">One trick at a time. Tune it until it feels right, then check it with <code>node qa/jumpstyle.cjs ${E(cfg.trick)}</code>. In the run, B switches the trick off and on.</small>
+      <section><h4>Trick</h4><label>Trick <select data-lab="trick">${order.map(id => opt(id, T[id].name + (Routine.FOCUS.includes(id) ? '' : ' (parked)'), id === cfg.trick)).join('')}</select></label>
+        <label>Slot <select data-lab="slot">${opt('', 'natural (' + Routine.SLOT_NAMES[X.slot] + ')', !cfg.slot)}${Routine.SLOTS.map(s => opt(s, Routine.SLOT_NAMES[s], cfg.slot === s)).join('')}</select></label>
+        <label>Level <select data-lab="level">${[1, 2, 3, 4].map(l => opt(l, 'L' + l, cfg.level === l)).join('')}</select></label>
+        <small class="lo-desc lo-wide">${E(X.kind === 'water' ? 'Water' : 'Effect')} · helps ${E(X.helps)}: ${E(X.text)}</small></section>
+      <section><h4>Its numbers (live)</h4>${sliders || '<small class="lo-desc">No sliders for this trick yet.</small>'}<button data-lab-defaults class="lo-wide">DEFAULT NUMBERS</button></section>
+      <section><h4>Guns and wave</h4><label>Gun 1 ${gunSel(0)}</label><label>Gun 2 ${gunSel(1)}</label><label>Tier <select data-lab="tier">${[1, 2, 3, 4].map(l => opt(l, 'T' + l, cfg.tier === l)).join('')}</select></label><label>Wave <input type="number" min="1" max="20" data-lab="wave" value="${cfg.wave}"></label></section>
+      <section><h4>Options</h4><label class="lo-check"><input type="checkbox" data-lab="immortal" ${cfg.immortal ? 'checked' : ''}> Can't die (hits still count)</label><label class="lo-check"><input type="checkbox" data-lab="endless" ${cfg.endless ? 'checked' : ''}> Endless wave (air clock held)</label><label class="lo-check"><input type="checkbox" data-lab="moves" ${cfg.moves ? 'checked' : ''}> Brotato enemy movement</label></section>
+      <footer><button data-lab-close>CLOSE</button><button data-lab-start class="lo-done">START LAB RUN ↗</button></footer></div>`;
+  }
+  function read(panel) {
+    const v = n => panel.querySelector(`[data-lab="${n}"]`);
+    const trick = v('trick').value; if (trick !== cfg.trick) { cfg.trick = trick; cfg.slot = null; const g = Routine.GUNS[trick]; if (g) cfg.guns = g.slice(0, 2) } else cfg.slot = v('slot').value || null;
+    cfg.level = +v('level').value; cfg.guns = [v('gun0')?.value, v('gun1')?.value].filter(Boolean); cfg.tier = +v('tier').value; cfg.wave = Math.max(1, Math.min(20, +v('wave').value || 1));
+    for (const k of ['immortal', 'endless', 'moves']) cfg[k] = v(k).checked ? 1 : 0;
+    save();
+  }
+  function open() {
+    close(); applyParams(); const wrap = document.createElement('div'); wrap.id = 'trick-lab'; wrap.className = 'lo-scrim'; wrap.innerHTML = html(); document.body.appendChild(wrap);
+    const panel = wrap.querySelector('.lab-panel');
+    panel.addEventListener('change', e => { if (e.target.dataset.param) return; read(panel); open() });
+    for (const s of panel.querySelectorAll('[data-param]')) s.oninput = () => { setParam(s.dataset.param, +s.value); s.nextElementSibling.textContent = s.value; save() };
+    panel.querySelector('[data-lab-defaults]').onclick = () => { cfg.params = {}; applyParams(); save(); open() };
+    for (const b of wrap.querySelectorAll('[data-lab-close]')) b.onclick = () => close();
+    panel.querySelector('[data-lab-start]').onclick = () => { read(panel); close(); start() };
+  }
+  function close() { document.getElementById('trick-lab')?.remove() }
+  function start() { active = true; off = false; DEMO.tune.moves = cfg.moves; applyParams(); if (typeof Zd === 'function') Zd(typeof En !== 'undefined' ? En : 'harpoon') }
+  const button = () => `<button class="lo-open lab-open" data-lab-open>⚗ TRICK LAB</button>`;
+  return { PARAMS, reset, apply, toggle, flight, open, close, start, button, get config() { return cfg }, get active() { return active }, set active(v) { active = v } };
+})();
+{const hd0=Hd;Hd=function(...a){return Lab.apply(hd0(...a))}}
+// can't die and endless wave in a lab run; B toggles the trick
+{const hit0=DEMO.hit;DEMO.hit=function(r,a){hit0(r,a);if(r?.lab&&Lab.config.immortal&&r.hp<=0){r.hp=1;if(r.mode==='dead'){r.mode='playing';r.endReason=null}}}}
+{const me0=ME;ME=function(r,t,e,i){if(r?.lab&&Lab.config.endless)r.budget=Math.max(r.budget,5);return me0(r,t,e,i)}}
+{const bank0=DEMO.bank;DEMO.bank=function(r){const h=r.hand;bank0(r);if(r?.lab&&h)Lab.flight(r)}}
+{if(typeof window!=='undefined')window.addEventListener('keydown',e=>{if(e.key==='b'||e.key==='B'){if(typeof S!=='undefined'&&S?.lab){Lab.toggle(S);e.preventDefault()}}})}
+// the title: a button next to the loadout's; leaving to the title ends the lab
+{const ql0=ql;ql=function(){Lab.active=false;Lab.reset();document.getElementById('lab-readout')?.remove();ql0();const t=hr.querySelector('.demo-title .launch-row');if(t){t.insertAdjacentHTML('beforeend',Lab.button());t.querySelector('[data-lab-open]').onclick=()=>Lab.open()}}}
+{if(typeof document!=='undefined'&&document.head){const st=document.createElement('style');st.textContent=`
+.lab-panel .lab-slider{grid-column:1/-1;display:grid;grid-template-columns:1fr 160px 44px;gap:8px;align-items:center}.lab-panel .lab-slider b{text-align:right;color:#baffed}
+.lab-panel code{color:#baffed}
+#lab-readout{position:fixed;left:12px;top:64px;z-index:40;max-width:420px;padding:8px 10px;background:#04131bdd;border:1px solid #89ffe044;color:#cfe7e8;font:12px/1.45 var(--mono,monospace);white-space:pre-line;pointer-events:none}`;document.head.appendChild(st)}}
+try{if(typeof document!=='undefined'&&ft==='title')ql()}catch(e){}
 
 })();
 /*! Bundled license information:

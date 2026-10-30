@@ -12,12 +12,13 @@
 //   an enemy an air trick affected.
 // - Only with the step 4 rules (DEMO.tune.rules); S4's reels stay as they were with them off.
 var Routine = (() => {
-  const P = Object.freeze({
+  // P is live: the Trick Lab's sliders change these numbers while you play (docs/TRICK_LAB.md); DEFAULTS keeps the originals
+  const P = {
     anchorR: 30, anchorT: 1.5, anchorKeep: 3, // m it reaches around the target, s, m around you it leaves alone; pull DEMO.tune.well (m/s²)
     chumFrom: 4, chumTo: 18, chumR: 22, chumT: 1.5, chumPull: 45, // a line 4-18 m out through the nearest enemy
     slipBack: 4, slipLen: 16, slipR: 20, slipT: 2, slipPull: 40,  // a file 4-20 m back through the nearest enemy behind you
     bubbleR: 9, bubbleT: 1,                 // m, s held still
-    eddyR: 14, eddyRing: 4.5, eddyT: 1.5, eddySpin: 10, // m it reaches, m ring (inside Close reach, outside contact), s, m/s round
+    eddyR: 18, eddyRing: 4.5, eddyT: 1.5, eddySpin: 10, // m it reaches, m ring (inside Close reach, outside contact), s, m/s round
     bowR: 14, bowCone: .55, bowPush: 28,    // m, half-angle (rad), m/s sideways
     breachR: 18, breachLow: 8, breachLift: 22, // m across, enemies below 8 m altitude, m/s up
     frostT: 2, frostR: 2.5, frostEvery: .3, // s the wake lasts, m from your path, s between chill stacks
@@ -28,13 +29,14 @@ var Routine = (() => {
     undertowR: 12, undertowLow: 6,          // m around the landing point, enemies below 6 m altitude
     pulse: .6, pulsePower: 1 / 3,           // s between stretch pulses; their power
     base: 30, perLevel: .5, perWave: .1     // water damage: base × (1 + .5 per extra level) × Damage % × (1 + .1 per wave)
-  });
+  };
+  const DEFAULTS = Object.freeze({ ...P });
   const TRICKS = Object.freeze({
     anchor:   { name: 'Gravity anchor', kind: 'effect', slot: 'apex',    glyph: '◎', helps: 'Blast guns',    text: 'For 1.5 s, a gravity well sits on the enemy your guns aim at (the nearest): enemies within 30 m of it bend into a cluster there.' },
     chum:     { name: 'Chum line',      kind: 'effect', slot: 'ascent',  glyph: '⋯', helps: 'piercing guns', text: 'For 1.5 s, enemies within 22 m line up 4-18 m out along the line from you through the enemy your guns aim at.' },
     slip:     { name: 'Slipstream',     kind: 'effect', slot: 'descent', glyph: '≫', helps: 'piercing guns', text: 'For 2 s, chasers behind you fall into single file 4-20 m back, through the nearest of them.' },
     bubble:   { name: 'Bubble net',     kind: 'effect', slot: 'apex',    glyph: '◌', helps: 'every gun',     text: 'Holds enemies within 9 m of you still for 1 s.' },
-    eddy:     { name: 'Eddy',           kind: 'effect', slot: 'apex',    glyph: '↻', helps: 'Close guns',    text: 'For 1.5 s, enemies within 14 m are drawn onto a ring 4.5 m around you and circle it, inside Close reach.' },
+    eddy:     { name: 'Eddy',           kind: 'effect', slot: 'apex',    glyph: '↻', helps: 'Close guns',    text: 'For 1.5 s, enemies within 18 m are drawn onto a ring 4.5 m around you and circle it, inside Close reach. Best on low hops.' },
     bow:      { name: 'Bow wave',       kind: 'effect', slot: 'breach',  glyph: '⋀', helps: 'your streak',   text: 'Pushes enemies ahead of you aside, opening a lane.' },
     breach:   { name: 'Breach wave',    kind: 'effect', slot: 'breach',  glyph: '⌇', helps: 'Arc (Conduct)', text: 'Lifts enemies near the surface up into your climb and soaks them.' },
     frost:    { name: 'Frost wake',     kind: 'effect', slot: 'descent', glyph: '❄', helps: 'shatter',       text: 'For 2 s your path chills whatever follows it; three chills freeze an enemy.' },
@@ -76,15 +78,18 @@ var Routine = (() => {
     return true;
   }
   const bench = r => IDS.filter(id => level(r, id) && !SLOTS.some(s => state(r).slots[s] === id));
-  function draw3(r) { const a = [...IDS]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(ce(r) * (i + 1)); [a[i], a[j]] = [a[j], a[i]] } return a.slice(0, 3) }
+  // the pool normal play offers (DEMO.tune.trickPool 1: the shortlist being proven, docs/TRICK_LAB.md; 0: every trick)
+  const FOCUS = Object.freeze(['eddy', 'anchor', 'riptide', 'buoys']);
+  const pool = () => DEMO.tune.trickPool ? FOCUS : IDS;
+  function draw3(r) { const a = [...pool()]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(ce(r) * (i + 1)); [a[i], a[j]] = [a[j], a[i]] } return a.slice(0, 3) }
   function start(r) {
     const offers = draw3(r), pick = typeof DemoStartTrick !== 'undefined' && TRICKS[DemoStartTrick] ? DemoStartTrick : offers[0];
     r.demo.trickOffers = offers; add(r, pick);
   }
   // the shop's trick place: tricks that feed the guns you hold come up more often (1 + 2 per matching gun held)
   function offerId(r) {
-    const held = r.slots.map(g => g.id), w = IDS.map(id => 1 + 2 * held.filter(g => (GUNS[id] || []).includes(g)).length);
-    let q = ce(r) * w.reduce((a, b) => a + b, 0); for (let i = 0; i < IDS.length; i++) { q -= w[i]; if (q < 0) return IDS[i] } return IDS.at(-1);
+    const ids = pool(), held = r.slots.map(g => g.id), w = ids.map(id => 1 + 2 * held.filter(g => (GUNS[id] || []).includes(g)).length);
+    let q = ce(r) * w.reduce((a, b) => a + b, 0); for (let i = 0; i < ids.length; i++) { q -= w[i]; if (q < 0) return ids[i] } return ids.at(-1);
   }
   // guns the routine you own feeds (for the shop's weapon offers)
   const gunsFor = r => [...new Set(Object.keys(state(r).levels).flatMap(id => GUNS[id] || []))];
@@ -261,7 +266,7 @@ var Routine = (() => {
     r.trickFx = keep;
   }
 
-  return { P, TRICKS, GUNS, offerId, gunsFor, IDS, SLOTS, SLOT_NAMES, STRETCH, on, state, level, add, move, bench, draw3, start, damage, affect, killed, fire, settle, step, onHit, entry, draw };
+  return { P, DEFAULTS, FOCUS, pool, TRICKS, GUNS, offerId, gunsFor, IDS, SLOTS, SLOT_NAMES, STRETCH, on, state, level, add, move, bench, draw3, start, damage, affect, killed, fire, settle, step, onHit, entry, draw };
 })();
 var DemoStartTrick, DemoTrickTitle;  // the title screen's pick, and the three it shows
 {const hd0=Hd;Hd=function(...a){const r=hd0(...a);if(Routine.on(r))Routine.start(r);return r}}
