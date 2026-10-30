@@ -40,29 +40,28 @@ test('a run starts with one trick from three different offers, in its natural sl
   const id = Object.keys(S.levels)[0]; assert.equal(S.slots[R.TRICKS[id].slot], id);
 });
 
-test('Gravity anchor gathers enemies into a cluster 10 m ahead of you, not onto you', () => {
-  const r = run({ apex: 'anchor' }), list = [foe(r, 0, 12), foe(r, 18, -8), foe(r, 4, -14)]; r.hand.apex = true;
-  const spread = () => { const cx = list.reduce((a, e) => a + e.pos.x, 0) / 3, cy = list.reduce((a, e) => a + e.pos.y, 0) / 3; return list.reduce((a, e) => a + Math.hypot(e.pos.x - cx, e.pos.y - cy), 0) / 3 };
-  const s0 = spread(); let s1 = s0, cx = 0, minD = 1e9;
-  for (let i = 0; i < 90; i++) { move(r, 1); s1 = Math.min(s1, spread()); minD = Math.min(minD, ...list.map(e => Math.hypot(e.pos.x, e.pos.y))) }
-  cx = list.reduce((a, e) => a + e.pos.x, 0) / 3;
-  assert.ok(s1 < s0 * .6, `spread ${s0.toFixed(1)} → ${s1.toFixed(1)}`); assert.ok(cx > 3, 'the cluster sits ahead (+x): ' + cx.toFixed(1));
-  assert.ok(minD > 2, 'none dragged onto the dolphin: closest ' + minD.toFixed(1));
-  return { spread: [+s0.toFixed(1), +s1.toFixed(1)], closest: +minD.toFixed(1) };
+// the formations are built around the enemy the guns aim at: the nearest
+const offLine = (e, me, a) => Math.abs((e.pos.x - me.x) * -a.y + (e.pos.y - me.y) * a.x);
+test('Gravity anchor gathers enemies into a cluster on the nearest enemy, the guns\' target, not onto you', () => {
+  const r = run({ apex: 'anchor' }), t = foe(r, 8, 0), list = [foe(r, 20, 12), foe(r, 16, -14), foe(r, -4, 18)]; r.hand.apex = true;
+  const toT = () => list.reduce((a, e) => a + Math.hypot(e.pos.x - t.pos.x, e.pos.y - t.pos.y), 0) / list.length, s0 = toT(); let best = s0, minD = 1e9;
+  for (let i = 0; i < 120; i++) { move(r, 1); best = Math.min(best, toT()); minD = Math.min(minD, ...list.map(e => Math.hypot(e.pos.x, e.pos.y))) }
+  assert.ok(best < s0 * .4, `mean distance to the target ${s0.toFixed(1)} → ${best.toFixed(1)} m`); assert.ok(minD > 2, 'none dragged onto the dolphin: closest ' + minD.toFixed(1));
+  return { toTarget: [+s0.toFixed(1), +best.toFixed(1)], closestToDolphin: +minD.toFixed(1) };
 });
 
-test('Chum line lines enemies up along your path ahead', () => {
-  const r = run({ apex: 'chum' }), list = [foe(r, 10, 12), foe(r, 14, -10), foe(r, 6, 8)]; r.hand.apex = true;
-  const off = () => list.reduce((a, e) => a + Math.abs(e.pos.y), 0) / 3, o0 = off(); let best = o0;
+test('Chum line lines enemies up along the line from you through the nearest enemy', () => {
+  const r = run({ apex: 'chum' }), t = foe(r, 6, 6), list = [foe(r, 14, -4), foe(r, -2, 15), foe(r, 18, 9)]; r.hand.apex = true; const a = { x: Math.SQRT1_2, y: Math.SQRT1_2 }, me = { x: 0, y: 0 };
+  const off = () => list.reduce((s, e) => s + offLine(e, me, a), 0) / list.length, o0 = off(); let best = o0;
   for (let i = 0; i < 150; i++) { move(r, 1); best = Math.min(best, off()) }
-  assert.ok(best < o0 * .5, `off the line ${o0.toFixed(1)} → ${best.toFixed(1)} m`); return [+o0.toFixed(1), +best.toFixed(1)];
+  assert.ok(best < o0 * .4, `off the line ${o0.toFixed(1)} → ${best.toFixed(1)} m`); return [+o0.toFixed(1), +best.toFixed(1)];
 });
 
-test('Slipstream files chasers behind you into a line', () => {
-  const r = run({ apex: 'slip' }), list = [foe(r, -8, 10), foe(r, -14, -9), foe(r, -6, -6)]; r.hand.apex = true;
-  const off = () => list.reduce((a, e) => a + Math.abs(e.pos.y), 0) / 3, o0 = off(); let best = o0;
+test('Slipstream files chasers behind you onto the line through the nearest of them', () => {
+  const r = run({ apex: 'slip' }), t = foe(r, -6, -2), list = [foe(r, -12, 8), foe(r, -15, -9), foe(r, -9, -12)]; r.hand.apex = true; const a = { x: -6 / Math.hypot(6, 2), y: -2 / Math.hypot(6, 2) }, me = { x: 0, y: 0 };
+  const off = () => list.reduce((s, e) => s + offLine(e, me, a), 0) / list.length, o0 = off(); let best = o0;
   for (let i = 0; i < 200; i++) { move(r, 1); best = Math.min(best, off()) }
-  assert.ok(best < o0 * .5, `off the file ${o0.toFixed(1)} → ${best.toFixed(1)} m`); return [+o0.toFixed(1), +best.toFixed(1)];
+  assert.ok(best < o0 * .4, `off the file ${o0.toFixed(1)} → ${best.toFixed(1)} m`); return [+o0.toFixed(1), +best.toFixed(1)];
 });
 
 test('Bubble net holds enemies around you still for 1 s; Bow wave pushes enemies ahead aside', () => {
@@ -139,7 +138,7 @@ test('Spout and Undertow damage at the landing; Spout splashes wider from higher
 });
 
 test('linking: a gun kill of an enemy a trick placed links it; mult = 1 + level + link', () => {
-  const r = run({ apex: 'anchor' }), e = foe(r, 8, 0), other = foe(r, 40, 0); r.hand.apex = true; move(r, 30);
+  const r = run({ apex: 'anchor' }), target = foe(r, 8, 0), e = foe(r, 18, 8), other = foe(r, 60, 0); r.hand.apex = true; move(r, 30);
   gun(r, other); assert.ok(!r.hand.tricks[0].linked, 'a kill of an enemy it never touched does not link');
   gun(r, e); assert.ok(r.hand.tricks[0].linked);
   const h = land(r); assert.equal(h.mult, 3); return h.mult;

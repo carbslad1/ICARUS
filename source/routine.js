@@ -13,9 +13,9 @@
 // - Only with the step 4 rules (DEMO.tune.rules); S4's reels stay as they were with them off.
 var Routine = (() => {
   const P = Object.freeze({
-    anchorAhead: 10, anchorR: 20, anchorT: 1.5, // m ahead of you, m it reaches, s; pull strength DEMO.tune.well (m/s²)
-    chumFrom: 6, chumTo: 18, chumR: 22, chumT: 1.5, chumPull: 45, // a bait line 6-18 m ahead along the arc
-    slipBack: 4, slipLen: 16, slipR: 20, slipT: 2, slipPull: 40,  // a file 4-20 m behind you
+    anchorR: 30, anchorT: 1.5, anchorKeep: 3, // m it reaches around the target, s, m around you it leaves alone; pull DEMO.tune.well (m/s²)
+    chumFrom: 4, chumTo: 18, chumR: 22, chumT: 1.5, chumPull: 45, // a line 4-18 m out through the nearest enemy
+    slipBack: 4, slipLen: 16, slipR: 20, slipT: 2, slipPull: 40,  // a file 4-20 m back through the nearest enemy behind you
     bubbleR: 9, bubbleT: 1,                 // m, s held still
     eddyR: 14, eddyRing: 4.5, eddyT: 1.5, eddySpin: 10, // m it reaches, m ring (inside Close reach, outside contact), s, m/s round
     bowR: 14, bowCone: .55, bowPush: 28,    // m, half-angle (rad), m/s sideways
@@ -30,9 +30,9 @@ var Routine = (() => {
     base: 30, perLevel: .5, perWave: .1     // water damage: base × (1 + .5 per extra level) × Damage % × (1 + .1 per wave)
   });
   const TRICKS = Object.freeze({
-    anchor:   { name: 'Gravity anchor', kind: 'effect', slot: 'apex',    glyph: '◎', helps: 'Blast guns',    text: 'A gravity well 10 m ahead of you for 1.5 s: enemies within 20 m bend into a cluster there.' },
-    chum:     { name: 'Chum line',      kind: 'effect', slot: 'ascent',  glyph: '⋯', helps: 'piercing guns', text: 'Bait 6-18 m ahead on your arc for 1.5 s: enemies within 22 m line up along your path.' },
-    slip:     { name: 'Slipstream',     kind: 'effect', slot: 'descent', glyph: '≫', helps: 'piercing guns', text: 'For 2 s, chasers behind you fall into single file 4-20 m back.' },
+    anchor:   { name: 'Gravity anchor', kind: 'effect', slot: 'apex',    glyph: '◎', helps: 'Blast guns',    text: 'For 1.5 s, a gravity well sits on the enemy your guns aim at (the nearest): enemies within 30 m of it bend into a cluster there.' },
+    chum:     { name: 'Chum line',      kind: 'effect', slot: 'ascent',  glyph: '⋯', helps: 'piercing guns', text: 'For 1.5 s, enemies within 22 m line up 4-18 m out along the line from you through the enemy your guns aim at.' },
+    slip:     { name: 'Slipstream',     kind: 'effect', slot: 'descent', glyph: '≫', helps: 'piercing guns', text: 'For 2 s, chasers behind you fall into single file 4-20 m back, through the nearest of them.' },
     bubble:   { name: 'Bubble net',     kind: 'effect', slot: 'apex',    glyph: '◌', helps: 'every gun',     text: 'Holds enemies within 9 m of you still for 1 s.' },
     eddy:     { name: 'Eddy',           kind: 'effect', slot: 'apex',    glyph: '↻', helps: 'Close guns',    text: 'For 1.5 s, enemies within 14 m are drawn onto a ring 4.5 m around you and circle it, inside Close reach.' },
     bow:      { name: 'Bow wave',       kind: 'effect', slot: 'breach',  glyph: '⋀', helps: 'your streak',   text: 'Pushes enemies ahead of you aside, opening a lane.' },
@@ -91,6 +91,9 @@ var Routine = (() => {
   const damage = (r, id) => P.base * (1 + P.perLevel * (level(r, id) - 1)) * (r.stats.damage || 1) * (1 + P.perWave * (r.wave - 1));
   function near(r, x, y, R) { return r.enemies.filter(e => e.hp > 0 && Math.hypot(e.pos.x - x, e.pos.y - y) < R + (e.radius || 1)) }
   const alt = (m, e) => m.origin.y + e.pos.y;           // an enemy's height above the water
+  const dist = (e, me) => Math.hypot(e.pos.x - me.x, e.pos.y - me.y);
+  // the nearest living enemy meeting a condition: the one the guns aim at
+  function nearest(r, me, ok) { let best = null, bd = 1e9; for (const e of r.enemies) { if (e.hp <= 0 || !ok(e)) continue; const q = dist(e, me); if (q < bd) { bd = q; best = e } } return best }
 
   // an effect touched this enemy this flight: it counts toward connecting, and a later kill of it links the trick
   function affect(r, e, rec) {
@@ -121,7 +124,7 @@ var Routine = (() => {
     const fx = (kind, R, life, at, world) => (r.trickFx || (r.trickFx = [])).push(world ? { kind, x: m.origin.x + at.x, y: m.origin.y + at.y, R, t: life, life } : { kind, lx: at.x, ly: at.y, R, t: life, life });
     const hold = (kind, extra, t) => { (r.effects || (r.effects = [])).push({ kind, rec, n: h.n, t: (stretch ? P.pulse : t), power, ...extra }) };
     switch (id) {
-      case 'anchor': { const at = { x: me.x + d.x * P.anchorAhead, y: me.y + d.y * P.anchorAhead }; hold('well', { x: at.x, y: at.y, R: P.anchorR }, P.anchorT); fx('anchor', P.anchorR, P.anchorT, at); break }
+      case 'anchor': hold('well', { x: me.x + d.x * 10, y: me.y + d.y * 10, R: P.anchorR }, P.anchorT); break;
       case 'chum': hold('chum', { d }, P.chumT); fx('line', P.chumTo, P.chumT, me); break;
       case 'slip': hold('slip', {}, P.slipT); break;
       case 'eddy': hold('eddy', {}, P.eddyT); fx('ring', P.eddyRing, P.eddyT, me); break;
@@ -160,12 +163,20 @@ var Routine = (() => {
     const me = m.local, d = dir(m), keep = [];
     for (const E of r.effects || []) {
       if (E.n !== h.n) continue;
-      if (E.kind === 'well') { const g = (+DEMO.tune.well || 0) * E.power; for (const e of near(r, E.x, E.y, E.R)) { const u = unit(E.x - e.pos.x, E.y - e.pos.y); e.velocity.x += u.x * g * dt; e.velocity.y += u.y * g * dt; affect(r, e, E.rec) } }
-      if (E.kind === 'chum') {   // toward the nearest point of a bait line ahead of the dolphin
-        for (const e of near(r, me.x, me.y, P.chumR)) { const rx = e.pos.x - me.x, ry = e.pos.y - me.y, s = Math.max(P.chumFrom, Math.min(P.chumTo, rx * d.x + ry * d.y)), u = unit(me.x + d.x * s - e.pos.x, me.y + d.y * s - e.pos.y); e.velocity.x += u.x * P.chumPull * E.power * dt; e.velocity.y += u.y * P.chumPull * E.power * dt; affect(r, e, E.rec) }
+      // The formations are built around the enemy the guns aim at: like Brotato's, ICARUS's guns fire at the nearest enemy
+      // (designer, 2026-10-30), so the cluster or the line has to form on it to be worth anything to them.
+      if (E.kind === 'well') {   // the well sits on the nearest enemy within 30 m; enemies within 3 m of you are left alone
+        const t = nearest(r, me, e => dist(e, me) <= 30); if (t) { E.x = t.pos.x; E.y = t.pos.y; E.on = t.id }
+        const g = (+DEMO.tune.well || 0) * E.power;
+        for (const e of near(r, E.x, E.y, E.R)) { if (e.id === E.on || dist(e, me) < P.anchorKeep) continue; const u = unit(E.x - e.pos.x, E.y - e.pos.y); e.velocity.x += u.x * g * dt; e.velocity.y += u.y * g * dt; affect(r, e, E.rec) }
       }
-      if (E.kind === 'slip') {   // chasers behind fall onto the line straight back from the dolphin
-        for (const e of near(r, me.x, me.y, P.slipR)) { const rx = e.pos.x - me.x, ry = e.pos.y - me.y, s = rx * d.x + ry * d.y; if (s > -2) continue; const back = Math.max(P.slipBack, Math.min(P.slipBack + P.slipLen, -s)), u = unit(me.x - d.x * back - e.pos.x, me.y - d.y * back - e.pos.y); e.velocity.x += u.x * P.slipPull * E.power * dt; e.velocity.y += u.y * P.slipPull * E.power * dt; affect(r, e, E.rec) }
+      if (E.kind === 'chum') {   // onto the line from the dolphin through the nearest enemy, 4-18 m out
+        const t = nearest(r, me, e => dist(e, me) <= P.chumR), a = t ? unit(t.pos.x - me.x, t.pos.y - me.y) : d; E.axis = a;
+        for (const e of near(r, me.x, me.y, P.chumR)) { const rx = e.pos.x - me.x, ry = e.pos.y - me.y, s = Math.max(P.chumFrom, Math.min(P.chumTo, rx * a.x + ry * a.y)), u = unit(me.x + a.x * s - e.pos.x, me.y + a.y * s - e.pos.y); e.velocity.x += u.x * P.chumPull * E.power * dt; e.velocity.y += u.y * P.chumPull * E.power * dt; affect(r, e, E.rec) }
+      }
+      if (E.kind === 'slip') {   // chasers behind file onto the line from the dolphin through the nearest one behind
+        const t = nearest(r, me, e => dist(e, me) <= P.slipR && (e.pos.x - me.x) * d.x + (e.pos.y - me.y) * d.y < -2), b = t ? unit(t.pos.x - me.x, t.pos.y - me.y) : { x: -d.x, y: -d.y }; E.axis = b;
+        for (const e of near(r, me.x, me.y, P.slipR)) { const rx = e.pos.x - me.x, ry = e.pos.y - me.y, s = rx * b.x + ry * b.y; if (s < 2) continue; const back = Math.max(P.slipBack, Math.min(P.slipBack + P.slipLen, s)), u = unit(me.x + b.x * back - e.pos.x, me.y + b.y * back - e.pos.y); e.velocity.x += u.x * P.slipPull * E.power * dt; e.velocity.y += u.y * P.slipPull * E.power * dt; affect(r, e, E.rec) }
       }
       if (E.kind === 'eddy') {   // onto a ring around the dolphin, circling it
         for (const e of near(r, me.x, me.y, P.eddyR)) {
@@ -224,8 +235,10 @@ var Routine = (() => {
     }
     if (o) for (const E of r.effects || []) {
       const m = r.medium, d = dir(m), me = m.local, X = v => R.sx(o.x + v), Y = v => R.sy(o.y + v);
-      if (E.kind === 'chum') G.moveTo(X(me.x + d.x * P.chumFrom), Y(me.y + d.y * P.chumFrom)).lineTo(X(me.x + d.x * P.chumTo), Y(me.y + d.y * P.chumTo)).stroke({ color: yt.amber, width: 3, alpha: .7 });
-      if (E.kind === 'slip') G.moveTo(X(me.x - d.x * P.slipBack), Y(me.y - d.y * P.slipBack)).lineTo(X(me.x - d.x * (P.slipBack + P.slipLen)), Y(me.y - d.y * (P.slipBack + P.slipLen))).stroke({ color: yt.cyan, width: 2, alpha: .5 });
+      const a = E.axis || d;
+      if (E.kind === 'well') { G.circle(X(E.x), Y(E.y), 7).fill({ color: yt.white, alpha: .7 }); G.circle(X(E.x), Y(E.y), 14).stroke({ color: yt.white, width: 1.5, alpha: .4 }) }
+      if (E.kind === 'chum') G.moveTo(X(me.x + a.x * P.chumFrom), Y(me.y + a.y * P.chumFrom)).lineTo(X(me.x + a.x * P.chumTo), Y(me.y + a.y * P.chumTo)).stroke({ color: yt.amber, width: 3, alpha: .7 });
+      if (E.kind === 'slip') G.moveTo(X(me.x + a.x * P.slipBack), Y(me.y + a.y * P.slipBack)).lineTo(X(me.x + a.x * (P.slipBack + P.slipLen)), Y(me.y + a.y * (P.slipBack + P.slipLen))).stroke({ color: yt.cyan, width: 2, alpha: .5 });
       if (E.kind === 'frost') for (let i = 0; i < E.trail.length; i += 6) G.circle(X(E.trail[i].x), Y(E.trail[i].y), 3).fill({ color: yt.white, alpha: .5 });
     }
     if (o) for (const e of r.enemies) if (e.heldT > 0) { const ppm = Math.abs(R.sx(o.x + e.pos.x + 1) - R.sx(o.x + e.pos.x)); G.circle(R.sx(o.x + e.pos.x), R.sy(o.y + e.pos.y), (e.radius + .8) * ppm).stroke({ color: yt.cyan, width: 2, alpha: .8 }) }
