@@ -8,14 +8,14 @@ var DEMO = (() => {
     sonic: {type:'Close',cad:'Steady',coef:.9,damage:[5,8,11,16],cd:[36,32,28,24],range:6,crit:.03,cx:1.5,kb:13,side:'Armour',sideScale:.5,description:'A wide cone clears space. Armour also adds damage.'},
     arc: {type:'Close',cad:'Heavy',coef:1.5,damage:[10,14,19,28],cd:[42,38,34,30],range:6,crit:.03,cx:1.5,kb:3,description:'Lightning jumps to three further nearby enemies.'},
     minigun: {type:'Shot',cad:'Rapid',coef:.7,damage:[8,11,15,20],cd:[15,15,13,11],range:30,crit:[.05,.07,.09,.12],cx:2.5,kb:1,description:'Fast single-target rounds. Flat Shot damage scales every round.'},
-    harpoon: {type:'Shot',cad:'Steady',coef:.9,damage:[14,24,36,50],cd:[40,36,32,28],range:30,crit:[.3,.35,.4,.45],cx:[2.25,2.5,2.75,3],kb:2,side:'Luck',sideScale:.1,description:'Accurate shots. Critical hits pierce; Luck also adds damage.'},
-    laser: {type:'Shot',cad:'Heavy',coef:1.5,damage:[30,38,48,65],cd:[58,58,56,52],range:30,crit:[.1,.12,.15,.2],cx:[2.25,2.5,2.75,3],kb:0,description:'An instant beam pierces two additional enemies.'},
+    harpoon: {type:'Shot',cad:'Steady',coef:.9,damage:[14,24,36,50],cd:[40,36,32,28],range:30,crit:[.3,.35,.4,.45],cx:[2.25,2.5,2.75,3],kb:2,side:'Luck',sideScale:.1,description:'Accurate shots through 2 enemies; critical hits pierce one more per tier. Luck also adds damage.'},
+    laser: {type:'Shot',cad:'Heavy',coef:1.5,damage:[30,38,48,65],cd:[58,58,56,52],range:30,crit:[.1,.12,.15,.2],cx:[2.25,2.5,2.75,3],kb:0,description:'An instant beam through a line of enemies: 3 at T1, up to 6 at T4, losing 20% at each.'},
     flak: {type:'Blast',cad:'Rapid',coef:.7,damage:[4,6,9,13],cd:[42,38,34,30],range:18,crit:.03,cx:1.5,kb:4,blast:4,description:'Three shells spread into small explosions.'},
     rocket: {type:'Blast',cad:'Steady',coef:.9,damage:[10,16,25,38],cd:[56,48,42,36],range:18,crit:.03,cx:1.5,kb:7,blast:7,description:'A guided aim point and an impact blast. Edge hits deal less damage.'},
     depth: {type:'Blast',cad:'Heavy',coef:1.5,damage:[24,36,52,80],cd:[64,56,48,40],range:18,crit:.03,cx:1.5,kb:9,blast:8.5,side:'Max HP',sideScale:.15,description:'A lobbed charge aimed to intercept its target. Max HP also adds damage.'}
   };
   // Hand-cap levers (structure doc 5.4): kept open and tunable, to be balanced in play. The tuning panel edits these live.
-  const TUNE_DEFAULT={bro:1,shake:1,flash:1,space:1,edge:.2,danger:1,lead:.5,mines:0,carve:1,ccw:0,sky:12,verbs:0,hop:6,dive:2,dashes:2,hold:1,wetspawn:1,rules:1,payK:3,streakCap:5,well:60,sides:1,moves:1};  // sides: step 8 (armoured enemies)  // well: Gravity anchor's pull, m/s²  // rules, payK, streakCap: step 4 (style score)  // space: step 1 (space.js); edge: share of its spawns from the screen edge; danger, lead, mines: step 2 (danger.js)
+  const TUNE_DEFAULT={bro:1,shake:1,flash:1,space:1,edge:.2,danger:1,lead:.5,mines:0,carve:1,ccw:0,sky:12,verbs:0,hop:6,dive:2,dashes:2,hold:1,wetspawn:1,rules:1,payK:3,streakCap:5,well:60,sides:1,moves:1,pierce:1};  // pierce: Laser and Harpoon pierce by tier  // sides: step 8 (armoured enemies)  // well: Gravity anchor's pull, m/s²  // rules, payK, streakCap: step 4 (style score)  // space: step 1 (space.js); edge: share of its spawns from the screen edge; danger, lead, mines: step 2 (danger.js)
   const tune={...TUNE_DEFAULT};
   try{Object.assign(tune,JSON.parse(localStorage.getItem('icarus.scoreshow.tune')||'{}'))}catch(e){}
   const saveTune=()=>{try{localStorage.setItem('icarus.scoreshow.tune',JSON.stringify(tune))}catch(e){}};
@@ -232,12 +232,13 @@ var DEMO = (() => {
           r.events.push({kind:'beam',pos:Mr(m.origin,at),to:Mr(m.origin,e.pos),weapon:'arc'});damage(r,e,amount*Math.pow(.85,i),'arc',0,0,0,crit);at=e.pos}
       }else if(g.id==='laser'){
         const line=T.map(e=>({e,u:(e.pos.x-me.x)*c+(e.pos.y-me.y)*sn})).filter(q=>q.u>0&&q.u<range+q.e.radius&&Math.abs(-(q.e.pos.x-me.x)*sn+(q.e.pos.y-me.y)*c)<q.e.radius+1).sort((a,b)=>a.u-b.u);
-        line.slice(0,3).forEach((q,i)=>damage(r,q.e,amount*Math.pow(.8,i),g.id,0,0,0,crit));r.events.push({kind:'beam',pos:Mr(m.origin,me),to:Mr(m.origin,{x:me.x+c*range,y:me.y+sn*range}),weapon:g.id,crit});
+        // pierce by tier (DEMO.tune.pierce, after Brotato's tiered pierce): 3 enemies at T1 up to 6 at T4; off: always 3
+        line.slice(0,tune.pierce?2+l:3).forEach((q,i)=>damage(r,q.e,amount*Math.pow(.8,i),g.id,0,0,0,crit));r.events.push({kind:'beam',pos:Mr(m.origin,me),to:Mr(m.origin,{x:me.x+c*range,y:me.y+sn*range}),weapon:g.id,crit});
       }else{
         for(let j=0;j<(g.id==='flak'?3:1);j++){
           const a=angle+(g.id==='flak'?(j-1)*.16:0),speed=d.type==='Shot'?100:70,gravity=g.id==='depth'?25:0,flight=Math.max(.15,Math.min(.8,Math.hypot(target.pos.x-me.x,target.pos.y-me.y)/speed));
           const velocity=gravity?{x:(target.pos.x-me.x)/flight+target.velocity.x,y:(target.pos.y-me.y)/flight+target.velocity.y+gravity*flight/2}:{x:Math.cos(a)*speed,y:Math.sin(a)*speed};
-          r.shots.push({id:++r.id,weapon:g.id,pos:{...me},velocity,damage:amount,radius:g.id==='depth'?.55:.3,life:gravity?flight+.15:(range+3)/speed,pierce:g.id==='harpoon'&&crit?2:1,pdr:0,hit:[],slot:r.slots.indexOf(g),ctx:{...r.demo.currentAttack},crit,kb:d.kb,ex:(d.blast||0)*(1+s.Area),g:gravity});
+          r.shots.push({id:++r.id,weapon:g.id,pos:{...me},velocity,damage:amount,radius:g.id==='depth'?.55:.3,life:gravity?flight+.15:(range+3)/speed,pierce:g.id==='harpoon'?(tune.pierce?(crit?2+l:2):(crit?2:1)):1,pdr:g.id==='harpoon'&&tune.pierce?.2:0,hit:[],slot:r.slots.indexOf(g),ctx:{...r.demo.currentAttack},crit,kb:d.kb,ex:(d.blast||0)*(1+s.Area),g:gravity});
         }
       }
       r.events.push({kind:'shot',pos:Mr(m.origin,me),weapon:g.id,slot:r.slots.indexOf(g)});r.demo.currentAttack=null;
@@ -266,7 +267,7 @@ var DEMO = (() => {
       if(!live)continue;
       for(const e of [...r.enemies]){if(sh.life<=0||sh.hit.includes(e.id)||ew(e.pos,from,sh.pos)>sh.radius+e.radius)continue;
         sh.hit.push(e.id);const dx=e.pos.x-from.x,dy=e.pos.y-from.y,dist=Math.hypot(dx,dy)||1;damage(r,e,sh.damage,sh.weapon,dx/dist,dy/dist,sh.kb,sh.crit,sh.ctx);
-        if(sh.ex){burst(r,e.pos.x,e.pos.y,sh.ex,sh.damage,sh.weapon,sh.kb,e.id,sh.crit,sh.ctx);sh.ex=0}if(--sh.pierce<=0)sh.life=0;
+        if(sh.ex){burst(r,e.pos.x,e.pos.y,sh.ex,sh.damage,sh.weapon,sh.kb,e.id,sh.crit,sh.ctx);sh.ex=0}sh.damage*=1-(sh.pdr||0);if(--sh.pierce<=0)sh.life=0;
       }
       if(sh.life<=0&&sh.ex){burst(r,sh.pos.x,sh.pos.y,sh.ex,sh.damage,sh.weapon,sh.kb,0,sh.crit,sh.ctx);sh.ex=0}
     }
@@ -530,7 +531,7 @@ Owstarter=function(){return ''};
 
 /* Settings: one panel in tabs (T, the backquote key, or SCORE TUNING). Score holds the hand-cap levers (structure doc 5.4,
    kept open to balance in play); the other tabs hold the v3 carve's movement sliders, grouped by what they change. */
-const DemoTuneDefs=[['shake','Screen shake',0,2,.1],['flash','Enemy hit flash',0,1,.1],['space','Marked spawns ahead and flocking (step 1)',0,1,1,'check'],['edge','Step 1: share of spawns from the screen edge',0,1,.05],['danger','Leading shots and mines on the arc (step 2)',0,1,1,'check'],['lead','Step 2: how far shots lead you',0,1,.05],['mines','Step 2: mines per flight',0,4,1],['carve','Space carves (no boost)',0,1,1,'check'],['ccw','Carving always anticlockwise',0,1,1,'check'],['sky','Water camera: metres above the dolphin (0 = old camera)',0,20,.1],['rules','Style score rules (step 4): no quota, reels or charms; 0 HP ends the run',0,1,1,'check'],['payK','Step 4: pearls per flight = k × √score',0,10,.5],['streakCap','Step 4: clean streak cap',1,10,1],['well','Gravity anchor pull (m/s²)',0,150,5],['sides','Armoured enemies (step 8)',0,1,1,'check'],['moves','Brotato enemy movement: turrets keep range, drifters hover, splitters hold an offset',0,1,1,'check'],['hold','Enemies above the water stay ahead of you in view while you swim',0,1,1,'check'],['wetspawn','Enemies keep spawning while you swim',0,1,1,'check'],['verbs','Experimental: stomp, dive (S) and dash (Space) in the air (parked; to become tricks)',0,1,1,'check'],['hop','Step 3: stomp lift (m/s)',0,15,.5],['dive','Step 3: dive gravity (x)',1,4,.1],['dashes','Step 3: dash charges',0,4,1]];
+const DemoTuneDefs=[['shake','Screen shake',0,2,.1],['flash','Enemy hit flash',0,1,.1],['space','Marked spawns ahead and flocking (step 1)',0,1,1,'check'],['edge','Step 1: share of spawns from the screen edge',0,1,.05],['danger','Leading shots and mines on the arc (step 2)',0,1,1,'check'],['lead','Step 2: how far shots lead you',0,1,.05],['mines','Step 2: mines per flight',0,4,1],['carve','Space carves (no boost)',0,1,1,'check'],['ccw','Carving always anticlockwise',0,1,1,'check'],['sky','Water camera: metres above the dolphin (0 = old camera)',0,20,.1],['rules','Style score rules (step 4): no quota, reels or charms; 0 HP ends the run',0,1,1,'check'],['payK','Step 4: pearls per flight = k × √score',0,10,.5],['streakCap','Step 4: clean streak cap',1,10,1],['well','Gravity anchor pull (m/s²)',0,150,5],['sides','Armoured enemies (step 8)',0,1,1,'check'],['pierce','Pierce by tier: Laser hits 3-6 enemies, Harpoon always pierces 1 and crits 1 more per tier',0,1,1,'check'],['moves','Brotato enemy movement: turrets keep range, drifters hover, splitters hold an offset',0,1,1,'check'],['hold','Enemies above the water stay ahead of you in view while you swim',0,1,1,'check'],['wetspawn','Enemies keep spawning while you swim',0,1,1,'check'],['verbs','Experimental: stomp, dive (S) and dash (Space) in the air (parked; to become tricks)',0,1,1,'check'],['hop','Step 3: stomp lift (m/s)',0,15,.5],['dive','Step 3: dive gravity (x)',1,4,.1],['dashes','Step 3: dash charges',0,4,1]];
 const DemoTabs=[
   ['Score',null,'Each jump draws 3 tricks; buy more in the Routine row. A hit bails the trick in progress; 0 HP busts the jump.'],
   ['Launch',['Forward only','Rocket boost','Carve','Wave schedule'],'The carve and the launch. Launch speed rises5 per wave.'],
