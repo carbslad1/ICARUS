@@ -675,6 +675,8 @@ These are mixed trick, weapon and item examples, shown as anchor · shape → ve
 
 ## 4.20 Build and playtest plan
 
+> **Trick redesign (2026-10-30, designer):** in the air the guns do all the damage; tricks are effects (move, hold, line up, status) that place enemies for them, and only water tricks damage (drowning, splashes). Star pose, Standoff, Bounty, Corkscrew, Closing net and Minefield were replaced by Gravity anchor (a well ahead), Chum line, Slipstream, Bubble net, Bow wave, Breach wave, Frost wake, Snare buoys (the step 6 world object, now freezing instead of exploding), Spout, Riptide, Belly flop and Undertow. A trick links when a gun or water kill takes an enemy it affected. Impacts were removed. The step rows below record what was built before this change.
+
 **Linear:** one change per step. Each step has a build, an automated check and a human playtest, and moves on only when its gate passes.
 
 - **The flight log measures every step:** kills per phase, distance to the nearest enemy, enemies' distance from the screen centre, off-screen enemy share, hits per flight, launch-angle spread and trick connect rates.

@@ -5,15 +5,14 @@
 // - Chill (from Depth charge): three stacks within 3 s freeze the enemy solid for 2 s. A frozen enemy stops, deals no
 //   contact damage and is a block other enemies bounce off.
 // - Reactions: Conduct (Shock on a soaked enemy runs through every soaked enemy, 50% each); Flash-freeze (chill on a
-//   soaked enemy freezes it at once); Shatter (a payoff, ram, mine, stomp or impact on a frozen enemy breaks it in a
-//   4 m blast, the frozen one taking double).
+//   soaked enemy freezes it at once); Shatter (any gun hit, or a water trick, on a frozen enemy breaks it in a 4 m
+//   blast, the frozen one taking double).
 // Step 8, sides and hard surfaces:
 // - From wave 3 some enemies have an armoured body (DEMO.tune.sides): a Shielder is exposed only from behind, a Turtle
 //   only from below, a Spiker only from above (and touching a Spiker other than from above hurts double). Hits from an
 //   armoured side do 20%. Area effects (shock, mines, splashes, blasts, drowning) ignore sides.
-// - Drowning: a soaked or knocked enemy driven down into the water takes a drowning hit (4× a payoff: heavy).
-// - Impacts: a knocked enemy (pushed by Corkscrew or Closing net) moving faster than 14 m/s into another enemy or a frozen
-//   block hits both for half a payoff; a frozen block hit this way shatters.
+// - Drowning: a soaked or knocked enemy driven down into the water takes a drowning hit (4× the water base: heavy).
+// - No impacts: pushed enemies do not damage each other (designer, 2026-10-30: in the air only the guns do damage).
 // - Kills carry the side they came from and the surface involved (h.kills[].side, .surface); reactions are counted per
 //   flight (h.reactions). Only with the step 4 rules on, like the routine.
 var Status = (() => {
@@ -23,11 +22,11 @@ var Status = (() => {
     chillN: 3, chillT: 3, frozenT: 2,      // stacks to freeze; s a stack lasts; s frozen
     shatterR: 4, shatterShare: .6,         // m; share of a payoff dealt to the others
     armour: .2,                            // damage share through an armoured side
-    drown: 4, impact: .5, impactSpeed: 14, // × a payoff
+    drown: 4,                              // × the water base
     sideFrom: 3, sideOdds: { shielder: .1, turtle: .08, spiker: .07 }
   });
-  const AREA = new Set(['shock', 'conduct', 'shatter', 'impact', 'drown', 'mines', 'spout', 'standoff']);
-  const SHATTERS = new Set(['star', 'spout', 'mines', 'bounty', 'standoff', 'ram', 'stomp', 'impact']);
+  const AREA = new Set(['shock', 'conduct', 'shatter', 'drown', 'spout', 'undertow']);
+  const shatters = w => w in DEMO.weapons || ['shock', 'conduct', 'stomp', 'ram'].includes(w) || (typeof Routine !== 'undefined' && Routine.TRICKS[w]?.kind === 'water');
   const on = r => !!(DEMO.tune.rules && r?.demo);
   const st = e => e.st || (e.st = { soaked: 0, shock: 0, chill: 0, chillT: 0, frozen: 0 });
   const payoff = r => typeof Routine !== 'undefined' ? Routine.P.base * (r.stats.damage || 1) * (1 + Routine.P.perWave * (r.wave - 1)) : 30;
@@ -59,14 +58,16 @@ var Status = (() => {
     const w = ctx?.weapon, s = st(e);
     if (ctx?.killed) {
       const k = r.hand?.kills?.at(-1);
-      if (k && !k.side) { k.side = AREA.has(w) ? 'area' : side(r, e); k.surface = w === 'drown' ? 'water' : w === 'impact' ? (ctx.surface || 'enemy') : null; k.armour = e.armour || null; k.weapon = w }
-      if (typeof Routine !== 'undefined') Routine.bountyKill(r, e);
+      if (k && !k.side) { k.side = AREA.has(w) ? 'area' : side(r, e); k.surface = w === 'drown' ? 'water' : null; k.armour = e.armour || null; k.weapon = w; k.placed = !!(e.affected && e.affected.n === r.hand?.n) }
+      if (typeof Routine !== 'undefined') Routine.killed(r, e, w);
     }
-    if (s.frozen > 0 && SHATTERS.has(w) && !e.shattered) shatter(r, e);
+    if (s.frozen > 0 && shatters(w) && !e.shattered) shatter(r, e);
     if (ctx?.killed || e.hp <= 0) return;
     if (w === 'arc') shock(r, e, ctx.amount || 0);
-    if (w === 'depth') { if (s.soaked > 0 && !(s.frozen > 0)) { freeze(e); react(r, 'flashFreeze') } else if (!(s.frozen > 0)) { s.chill++; s.chillT = P.chillT; if (s.chill >= P.chillN) freeze(e) } }
+    if (w === 'depth') chill(r, e);
   }
+  // a chill stack (Depth charge, Frost wake): three freeze; on a soaked enemy one freezes at once (Flash-freeze)
+  function chill(r, e) { const s = st(e); if (s.frozen > 0) return; if (s.soaked > 0) { freeze(e); react(r, 'flashFreeze') } else { s.chill++; s.chillT = P.chillT; if (s.chill >= P.chillN) freeze(e) } }
   // Shock: through the cluster; Conduct: through every soaked enemy
   function shock(r, e, amount) {
     const s = st(e), seen = new Set([e.id]); s.shock = 1;
@@ -88,7 +89,7 @@ var Status = (() => {
     const o = r.medium.origin; (r.trickFx || (r.trickFx = [])).push({ kind: 'burst', x: o.x + e.pos.x, y: o.y + e.pos.y, R: P.shatterR, t: .35, life: .35 });
   }
 
-  // around v3's enemy step: frozen blocks sit it out; then sinking, timers, impacts and drowning
+  // around v3's enemy step: frozen blocks sit it out; then sinking, timers and drowning
   function beforeStep(r, m) {
     r.frozenOut = r.enemies.filter(e => e.st?.frozen > 0); if (r.frozenOut.length) r.enemies = r.enemies.filter(e => !(e.st?.frozen > 0));
     // touching a Spiker other than from above hurts double (DEMO.hit reads r.spikeMul during this step)
@@ -106,21 +107,12 @@ var Status = (() => {
       if (s.chillT > 0 && (s.chillT -= dt) <= 0) s.chill = 0;
       if (s.frozen > 0) { s.frozen -= dt; e.velocity = { x: 0, y: 0 }; if (e.frozenAt) e.pos = ye(e.frozenAt.x, e.frozenAt.y) }
     }
-    if (!DEMO.tune.sides) return;
     const D = payoff(r);
     for (const e of [...r.enemies]) {
       if (dead.has(e) || e.hp <= 0) continue;
       // drowning: a soaked or knocked enemy driven down into the water
       const y = m.origin.y + e.pos.y;
       if ((e.st?.soaked > 0 || e.knockT > 0) && y < e.radius + .4 && e.velocity.y + m.vy < -3 && !(e.st?.frozen > 0)) { react(r, 'drown'); hurt(r, e, D * P.drown, 'drown'); if (e.hp <= 0) dead.add(e); continue }
-      // impacts: a knocked enemy into another enemy or a frozen block
-      if (!(e.knockT > 0) || Math.hypot(e.velocity.x, e.velocity.y) < P.impactSpeed) continue;
-      const o = r.enemies.find(o => o !== e && o.hp > 0 && !dead.has(o) && Math.hypot(o.pos.x - e.pos.x, o.pos.y - e.pos.y) < (o.radius || 1) + (e.radius || 1));
-      if (!o) continue;
-      const frozen = o.st?.frozen > 0, ctx = w => ({ primary: false, weapon: 'impact', base: D * P.impact, surface: frozen ? 'frozen' : 'enemy' });
-      e.knockT = 0; react(r, frozen ? 'frozenImpact' : 'impact');
-      DEMO.damage(r, e, D * P.impact, 'impact', 0, 0, 0, false, ctx()); DEMO.damage(r, o, D * P.impact, 'impact', 0, 0, 0, false, ctx());
-      if (e.hp > 0) { const u = { x: e.pos.x - o.pos.x, y: e.pos.y - o.pos.y }, n = Math.hypot(u.x, u.y) || 1; e.velocity = { x: u.x / n * 8, y: u.y / n * 8 } }
     }
   }
 
@@ -146,7 +138,7 @@ var Status = (() => {
       if (e.armour === 'shielder') { const v = e.velocity, n = Math.hypot(v.x, v.y) || 1, a = Math.atan2(-v.y / n, v.x / n); G.arc(X, Y, rr + 4, a - .9, a + .9).stroke({ color: yt.white, width: 4, alpha: .85 }) }
     }
   }
-  return { P, on, st, soak, freeze, side, before, after, shock, shatter, beforeStep, afterStep, arm, draw };
+  return { P, on, st, soak, freeze, chill, side, before, after, shock, shatter, beforeStep, afterStep, arm, draw };
 })();
 {const b0=FiveCombat.beforeDamage;FiveCombat.beforeDamage=function(r,e,a,ctx){return Status.before(r,e,b0.call(FiveCombat,r,e,a,ctx),ctx)}}
 {const a0=FiveCombat.afterDamage;FiveCombat.afterDamage=function(r,e,ctx){a0.call(FiveCombat,r,e,ctx);Status.after(r,e,ctx)}}

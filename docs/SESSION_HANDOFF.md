@@ -79,7 +79,8 @@ node qa/flightlog-metrics.cjs run.json     # metrics for any saved flight log (s
 | 4: rules reset | **Built locally 2026-10-27** (`demo.js` `style`, `finish`, `hit`; `qa/rules.cjs`); playtest pending |
 | 5: first routine | **Built locally 2026-10-27** (`source/routine.js`, `qa/routine.cjs`); playtest pending |
 | 6: world layer | **Built 2026-10-30**: Minefield trick (`source/routine.js`); playtest pending |
-| 7–10: statuses, sides, clutch tricks, stretch slots | **Built 2026-10-30** (`source/statuses.js`, `source/routine.js`, `qa/statuses.cjs`); playtest pending |
+| 7–10: statuses, sides, stretch slots | **Built 2026-10-30** (`source/statuses.js`, `source/routine.js`, `qa/statuses.cjs`); playtest pending |
+| Trick redesign | **2026-10-30, designer:** air tricks are effects only (guns do the damage); only water tricks damage; impacts removed. Audit: guns kill mostly placed enemies (50–86% in two-trick routines), but placing does not raise gun kills yet (everything is already within the starter Harpoon's 30 m), water tricks dominate kills, and most tricks still favour high launches. `qa/routine.cjs --gate` and `qa/statuses.cjs --gate` step 10 now fail for that reason |
 | 11–15 | Not started |
 
 ### Step 1 as it is now

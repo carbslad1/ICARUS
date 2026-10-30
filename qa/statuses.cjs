@@ -1,5 +1,5 @@
-// Steps 7-10 (ICARUS_DESIGN.md §4.5, §4.16 E, §4.20; designer's answers 2026-10-30): statuses and reactions, enemy
-// sides and hard surfaces, the clutch tricks, and the Ascent/Descent pulse slots.
+// Steps 7, 8 and 10 (ICARUS_DESIGN.md §4.5, §4.16 E, §4.20; designer's answers 2026-10-30): statuses and reactions,
+// enemy sides and drowning, and the Ascent/Descent pulse slots. The tricks themselves are checked in qa/routine.cjs.
 //   node qa/statuses.cjs [--gate]   (--gate also plays the bot for step 7's and step 10's automated checks)
 const assert = require('assert'), path = require('path');
 const { load } = require('./load.cjs'), { flyer } = require('./bot.cjs');
@@ -45,10 +45,10 @@ test('a frozen enemy holds still and deals no contact damage', () => {
   H.ME(r, r.medium, { x: 0, y: 0 }, 1 / 120); r.hurt = 0; H.ME(r, r.medium, { x: 0, y: 0 }, 1 / 120);
   assert.deepEqual(e.pos, { x: .5, y: 0 }); assert.equal(r.hp, hp);
 });
-test('Shatter: a payoff on a frozen enemy breaks it in a 4 m blast; the frozen one takes double', () => {
-  const r = run({ apex: 'star' }), a = foe(r, 3, 0), b = foe(r, 6, 0), far = foe(r, 12, 0); S.freeze(a);
-  r.hand.apex = true; R.step(r, r.medium, 1 / 120);
-  assert.equal(r.hand.reactions.shatter, 1); assert.ok(lost(b) > 0); assert.equal(lost(far), 0); assert.ok(lost(a) > 2.5 * 30);
+test('Shatter: any gun hit on a frozen enemy breaks it in a 4 m blast; the frozen one takes double', () => {
+  const r = run(), a = foe(r, 3, 0), b = foe(r, 6, 0), far = foe(r, 12, 0); S.freeze(a);
+  hit(r, a, 10, 'harpoon');
+  assert.equal(r.hand.reactions.shatter, 1); assert.ok(lost(b) > 0); assert.equal(lost(far), 0); assert.ok(lost(a) > 2 * 30);
 });
 
 // step 8
@@ -75,50 +75,25 @@ test('drowning: a soaked enemy driven into the water drowns, and the kill says s
   S.afterStep(r, r.medium, 1 / 120);
   assert.ok(e.hp <= 0); const k = r.hand.kills.at(-1); assert.equal(k.surface, 'water'); assert.equal(r.hand.reactions.drown, 1);
 });
-test('impacts: a knocked enemy into another hits both; into a frozen block shatters it', () => {
-  const r = run(), a = foe(r, 0, 0), b = foe(r, 1.5, 0); a.knockT = .5; a.velocity = { x: 20, y: 0 };
-  S.afterStep(r, r.medium, 1 / 120); assert.ok(lost(a) > 0 && lost(b) > 0); assert.equal(r.hand.reactions.impact, 1);
-  const c = foe(r, 20, 0), f = foe(r, 21.5, 0); S.freeze(f); c.knockT = .5; c.velocity = { x: 20, y: 0 };
-  S.afterStep(r, r.medium, 1 / 120); assert.equal(r.hand.reactions.frozenImpact, 1); assert.equal(r.hand.reactions.shatter, 1);
+test('no impacts: a pushed enemy into another or a frozen block deals no damage', () => {
+  const r = run(), a = foe(r, 0, 0), b = foe(r, 1.5, 0), f = foe(r, 3, 0); S.freeze(f); a.knockT = .5; a.velocity = { x: 20, y: 0 };
+  S.afterStep(r, r.medium, 1 / 120); assert.equal(lost(a) + lost(b) + lost(f), 0);
 });
 test('kills carry the side they came from', () => {
   const r = run(), e = foe(r, 0, -5, 1); hit(r, e, 10, 'harpoon'); assert.equal(r.hand.kills.at(-1).side, 'above', 'the dolphin was above it');
 });
 
-// step 9: the clutch tricks
-test('Closing net drags enemies from 16 m in toward you over 0.8 s, then connects; a hit cancels it', () => {
-  const r = run({ breach: 'net' }), e = foe(r, 15, 0), far = foe(r, 30, 0);
-  r.medium.vy = -1; R.fire(r, r.medium, 'breach');
-  for (let i = 0; i < 100; i++) R.step(r, r.medium, 1 / 120);
-  assert.ok(Math.hypot(e.pos.x, e.pos.y) < 4, 'dragged in: ' + e.pos.x.toFixed(1)); assert.equal(far.pos.x, 30);
-  const q = run({ breach: 'net' }); foe(q, 15, 0); R.fire(q, q.medium, 'breach'); R.step(q, q.medium, 1 / 120); q.hp = 100; q.hurt = 0; D.hit(q, 5);
-  assert.ok(q.hand.tricks[0].cancelled);
-});
-test('Bounty marks the toughest enemy near you; killing it this flight pays 10 pearls a level', () => {
-  const r = run({ apex: 'bounty' }), weak = foe(r, 3, 0, 50), tough = foe(r, 6, 0, 500); r.hand.apex = true; R.step(r, r.medium, 1 / 120);
-  assert.equal(tough.bounty, r.hand.n); assert.equal(weak.bounty, undefined);
-  const xp = r.xp; hit(r, tough, 1e9, 'harpoon'); R.entry(r); D.bank(r);
-  assert.equal(r.hand.bountyPearls, 10); assert.ok(r.xp - xp >= 10); assert.ok(r.hand.tricks.find(t => t.id === 'bounty').connected);
-  const q = run({ apex: 'bounty' }); foe(q, 3, 0, 500); q.hand.apex = true; R.step(q, q.medium, 1 / 120); R.entry(q);
-  assert.ok(!q.hand.tricks.find(t => t.id === 'bounty').connected, 'not killed: missed');
-});
-test('Standoff hits harder the more enemies wait at the landing point', () => {
-  const one = run({ entry: 'standoff' }), a = foe(one, 3, 0); R.entry(one);
-  const five = run({ entry: 'standoff' }), list = [0, 1, 2, 3, 4].map(i => foe(five, 3 + i, 0)); R.entry(five);
-  assert.equal(Math.round(lost(a)), Math.round(30 * 1.15)); assert.equal(Math.round(lost(list[0])), Math.round(30 * 1.75));
-});
-
 // step 10: stretch slots
 test('Ascent pulses every 0.6 s while climbing at a third of the power; it connects once, adding its level once', () => {
-  const r = run({ ascent: 'star' }), e = foe(r, 3, 0); r.medium.vy = 30;
-  for (let i = 0; i < 1.4 * 120; i++) R.step(r, r.medium, 1 / 120);
-  const t = r.hand.tricks.find(x => x.slot === 'ascent'); assert.equal(t.pulses, 2, 'at 0.3 s and 0.9 s'); assert.equal(Math.round(lost(e)), Math.round(2 * 10));
+  const r = run({ ascent: 'bow' }), e = foe(r, 4, 6.2); r.medium.vy = 30;  // ahead on a climb to the up-right
+  for (let i = 0; i < 1.4 * 120; i++) { e.velocity = { x: 0, y: 0 }; R.step(r, r.medium, 1 / 120) }
+  const t = r.hand.tricks.find(x => x.slot === 'ascent'); assert.equal(t.pulses, 2, 'at 0.3 s and 0.9 s');
   r.hand.apex = true; r.medium.vy = -1; R.step(r, r.medium, 1 / 120); assert.ok(t.settled && t.connected);
   R.entry(r); assert.equal(r.hand.mult, 2);
-  return { pulses: t.pulses, damage: lost(e) };
+  return { pulses: t.pulses };
 });
 test('Descent pulses only after the apex, while falling', () => {
-  const r = run({ descent: 'star' }); foe(r, 3, 0); r.medium.vy = 20;
+  const r = run({ descent: 'bow' }); foe(r, 6, 1); r.medium.vy = 20;
   for (let i = 0; i < 60; i++) R.step(r, r.medium, 1 / 120); assert.ok(!(r.hand.tricks || []).some(t => t.slot === 'descent'));
   r.hand.apex = true; r.medium.vy = -10; for (let i = 0; i < 120; i++) R.step(r, r.medium, 1 / 120);
   assert.equal(r.hand.tricks.find(t => t.slot === 'descent').pulses, 2);
@@ -147,8 +122,9 @@ if (process.argv.includes('--gate')) {
     const g = play({ descent: 'spout' }, ['arc', 'depth', 'arc', 'depth']);
     assert.ok(g.reactions / g.flights > 0); return { perFlight: +(g.reactions / g.flights).toFixed(2), flights: g.flights };
   });
-  test('gate (step 10): kills per phase follow the routine (Star pose in Ascent vs in Descent)', () => {
-    const up = play({ ascent: 'star' }), down = play({ descent: 'star' });
+  // a gravity well ahead, pulsing through one stretch, gathers enemies in front of the guns for that part of the flight
+  test('gate (step 10): kills per phase follow the routine (Gravity anchor in Ascent vs in Descent)', () => {
+    const up = play({ ascent: 'anchor' }), down = play({ descent: 'anchor' });
     assert.ok(up.share.ascent > down.share.ascent + 3 && down.share.descent > up.share.descent + 3);
     return { ascent: up.share, descent: down.share };
   });

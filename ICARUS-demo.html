@@ -4369,7 +4369,7 @@ var DEMO = (() => {
     depth: {type:'Blast',cad:'Heavy',coef:1.5,damage:[24,36,52,80],cd:[64,56,48,40],range:18,crit:.03,cx:1.5,kb:9,blast:8.5,side:'Max HP',sideScale:.15,description:'A lobbed charge aimed to intercept its target. Max HP also adds damage.'}
   };
   // Hand-cap levers (structure doc 5.4): kept open and tunable, to be balanced in play. The tuning panel edits these live.
-  const TUNE_DEFAULT={bro:1,shake:1,flash:1,space:1,edge:.2,danger:1,lead:.5,mines:0,carve:1,ccw:0,sky:12,verbs:0,hop:6,dive:2,dashes:2,hold:1,wetspawn:1,rules:1,payK:3,streakCap:5,well:60,sides:1};  // sides: step 8 (armoured enemies, drowning, impacts)  // well: Gravity anchor's pull, m/s²  // rules, payK, streakCap: step 4 (style score)  // space: step 1 (space.js); edge: share of its spawns from the screen edge; danger, lead, mines: step 2 (danger.js)
+  const TUNE_DEFAULT={bro:1,shake:1,flash:1,space:1,edge:.2,danger:1,lead:.5,mines:0,carve:1,ccw:0,sky:12,verbs:0,hop:6,dive:2,dashes:2,hold:1,wetspawn:1,rules:1,payK:3,streakCap:5,well:60,sides:1};  // sides: step 8 (armoured enemies)  // well: Gravity anchor's pull, m/s²  // rules, payK, streakCap: step 4 (style score)  // space: step 1 (space.js); edge: share of its spawns from the screen edge; danger, lead, mines: step 2 (danger.js)
   const tune={...TUNE_DEFAULT};
   try{Object.assign(tune,JSON.parse(localStorage.getItem('icarus.scoreshow.tune')||'{}'))}catch(e){}
   const saveTune=()=>{try{localStorage.setItem('icarus.scoreshow.tune',JSON.stringify(tune))}catch(e){}};
@@ -4876,14 +4876,14 @@ function DemoBind(){for(const b of hr.querySelectorAll('[data-demo]'))b.onclick=
   if(a==='starter'){En=i;ql();return}if(a==='startTrick'){DemoStartTrick=i;ql();return}if(a==='begin'){Zd(En);return}if(a==='tune'){document.getElementById('tune')?DemoPanel(false):DemoTune(true);return}if(a==='help'){const el=document.getElementById('demo-how');if(el)el.hidden=!el.hidden;return}if(a==='home'){ql();return}
   if(a==='next'){if(DEMO.command(S,a,i)){ke=0;as=Br(S);sf()}else Xl();return}DEMO.command(S,a,i);Xl();if(a==='level'){(hr.querySelector('[data-demo=level]:not(:disabled)')||hr.querySelector('[data-demo=buy]:not(:disabled)'))?.focus({preventScroll:true})}else if(S.demo.pack){const choice=hr.querySelector('[data-demo=packPick]:not(:disabled)');choice?.focus({preventScroll:true});choice?.scrollIntoView?.({block:'nearest'})}
 }}
-ql=function(){ft='title';St=null;ur.reset();hr.innerHTML=`${_w()}<section class="title-content demo-title"><div class="eyebrow">CHIPS × MULT · SCORE FEEL TEST</div><h1>ICARUS<span>BUILD YOUR ASCENT</span></h1><p class="intro">Carve your launch.<br>Build the flight you want.</p><p class="title-description">${DEMO.tune.rules?'Automatic weapons turn kills into chips.<br>Pick your first trick: it fires at Breach, Apex or Entry and builds mult.<br>Stay clean to grow your streak. Land to bank pearls.':'Automatic weapons turn kills into chips.<br>Your tricks are the reels: they build mult.<br>Get hit and the trick in progress bails. Land to bank.'}</p><div class="demo-starters">${['sonic','harpoon','rocket'].map(id=>DemoButton('starter',id,`<b>${Owc[id].name}</b><span>${DEMO.weapons[id].type} · ${DEMO.weapons[id].description}</span>`,false,id===En?'selected':'')).join('')}</div>${DEMO.tune.rules?(()=>{if(!DemoTrickTitle){DemoTrickTitle=[...Routine.IDS].sort(()=>Math.random()-.5).slice(0,3);DemoStartTrick=DemoTrickTitle[0]}return `<div class="demo-starters demo-tricks">${DemoTrickTitle.map(id=>{const T=Routine.TRICKS[id];return DemoButton('startTrick',id,`<b>${T.glyph} ${T.name}</b><span title="${T.text}">${T.kind==='setup'?'Setup':'Payoff'} · ${Routine.SLOT_NAMES[T.slot]}</span>`,false,id===DemoStartTrick?'selected':'')}).join('')}</div>`})():''}<div class="launch-row">${DemoButton('begin','','BEGIN RUN ↗',false,'demo-primary')}${DemoButton('help','','HOW TO PLAY')}${DemoButton('tune','','SETTINGS')}</div><div id="demo-how" hidden><p><b>Launch:</b> hold ${Controls.carve()?'Space':'W or up'} to carve upward. Release to ride out.${Controls.carve()?'':' Space boosts.'} Water is safe and pauses the air clock.</p><p><b>Fight:</b> W A S D / arrows steer within your launch path. Weapons fire automatically. ${DEMO.tune.rules?'Each kill is a chip. Land in water to bank kills × your clean streak (up to ×5, back to ×1 when you take a hit) as pearls. Survive 20 waves; 0 HP ends the run.':"Kills give chips, plus bonus chips for multi-kills, apex kills and crits. Land in water to bank chips × mult. Meet every wave's quota for 20 waves; missing one ends the run."}</p><p><b>Tricks:</b> each jump draws tricks (3 to start; buy more) that play automatically, like reels. A hit bails the trick in progress: it pays nothing. At 0 HP the jump busts: you fall, bank nothing and come back at half HP.</p><p><b>Build:</b> kills drop XP orbs; steer through them to level up. Each level gives a free stat pick before the shop. Then buy weapons and gear for chips and survival, charms that rewrite the scoring, and Routine upgrades for your tricks. Charms resolve left to right at the bank.</p></div></section><footer class="title-footer"><div><b>${Object.keys(DEMO.weapons).length}</b><span>WEAPONS · SIX SLOTS</span></div><div><b>5</b><span>TRICKS · DRAWS 3→7</span></div><div><b>${Object.keys(FiveScore.charms).length}</b><span>CHARMS</span></div><div><b>${FiveCombat.catalogue.length}</b><span>COMBAT ITEMS</span></div></footer>`;Kl();DemoBind()};
+ql=function(){ft='title';St=null;ur.reset();hr.innerHTML=`${_w()}<section class="title-content demo-title"><div class="eyebrow">CHIPS × MULT · SCORE FEEL TEST</div><h1>ICARUS<span>BUILD YOUR ASCENT</span></h1><p class="intro">Carve your launch.<br>Build the flight you want.</p><p class="title-description">${DEMO.tune.rules?'Automatic weapons turn kills into chips.<br>Pick your first trick: it fires at Breach, Apex or Entry and builds mult.<br>Stay clean to grow your streak. Land to bank pearls.':'Automatic weapons turn kills into chips.<br>Your tricks are the reels: they build mult.<br>Get hit and the trick in progress bails. Land to bank.'}</p><div class="demo-starters">${['sonic','harpoon','rocket'].map(id=>DemoButton('starter',id,`<b>${Owc[id].name}</b><span>${DEMO.weapons[id].type} · ${DEMO.weapons[id].description}</span>`,false,id===En?'selected':'')).join('')}</div>${DEMO.tune.rules?(()=>{if(!DemoTrickTitle){DemoTrickTitle=[...Routine.IDS].sort(()=>Math.random()-.5).slice(0,3);DemoStartTrick=DemoTrickTitle[0]}return `<div class="demo-starters demo-tricks">${DemoTrickTitle.map(id=>{const T=Routine.TRICKS[id];return DemoButton('startTrick',id,`<b>${T.glyph} ${T.name}</b><span title="${T.text}">${T.kind==='water'?'Water':'Effect'} · ${Routine.SLOT_NAMES[T.slot]}</span>`,false,id===DemoStartTrick?'selected':'')}).join('')}</div>`})():''}<div class="launch-row">${DemoButton('begin','','BEGIN RUN ↗',false,'demo-primary')}${DemoButton('help','','HOW TO PLAY')}${DemoButton('tune','','SETTINGS')}</div><div id="demo-how" hidden><p><b>Launch:</b> hold ${Controls.carve()?'Space':'W or up'} to carve upward. Release to ride out.${Controls.carve()?'':' Space boosts.'} Water is safe and pauses the air clock.</p><p><b>Fight:</b> W A S D / arrows steer within your launch path. Weapons fire automatically. ${DEMO.tune.rules?'Each kill is a chip. Land in water to bank kills × your clean streak (up to ×5, back to ×1 when you take a hit) as pearls. Survive 20 waves; 0 HP ends the run.':"Kills give chips, plus bonus chips for multi-kills, apex kills and crits. Land in water to bank chips × mult. Meet every wave's quota for 20 waves; missing one ends the run."}</p><p><b>Tricks:</b> each jump draws tricks (3 to start; buy more) that play automatically, like reels. A hit bails the trick in progress: it pays nothing. At 0 HP the jump busts: you fall, bank nothing and come back at half HP.</p><p><b>Build:</b> kills drop XP orbs; steer through them to level up. Each level gives a free stat pick before the shop. Then buy weapons and gear for chips and survival, charms that rewrite the scoring, and Routine upgrades for your tricks. Charms resolve left to right at the bank.</p></div></section><footer class="title-footer"><div><b>${Object.keys(DEMO.weapons).length}</b><span>WEAPONS · SIX SLOTS</span></div><div><b>5</b><span>TRICKS · DRAWS 3→7</span></div><div><b>${Object.keys(FiveScore.charms).length}</b><span>CHARMS</span></div><div><b>${FiveCombat.catalogue.length}</b><span>COMBAT ITEMS</span></div></footer>`;Kl();DemoBind()};
 jl=function(){const won=S.mode==='won';Ir(`<section class="scrim"><div class="summary-panel"><div class="eyebrow">${won?'TWENTY WAVES CLEARED':S.endReason==='hp'?'OUT OF HP':'QUOTA MISSED'}</div><h2>${won?'An extraordinary ascent.':'Every flight counts.'}</h2><p>${DEMO.tune.rules?`Wave ${S.wave} · ${S.kills} kills · ${S.earned||0} pearls earned · best streak ×${Math.max(0,...S.demo.history.map(h=>h.streak||0))}.`:`Wave ${S.wave} · ${S.wscore} / ${S.quota} banked · ${S.kills} kills.`}</p><p>${won?'Your build carried the run.':'Bigger banks come from more chips, more mult or fewer Bails: weapons, charms, Routine upgrades and gear.'}</p><div class="demo-summary-hands">${S.demo.history.slice(-5).map(h=>`<div>${h.busted?'BUST':`${h.chips} × ${DEMO.fmt(h.mult)}`} = <b>${h.score}</b><small>${h.cards.join(' · ')}${h.bails?.length?` · ${h.bails.length} Bail${h.bails.length>1?'s':''}`:''}</small></div>`).join('')}</div>${DemoButton('home','','BACK TO START',false,'demo-primary')}</div></section>`);DemoBind()};
 ls=function(){if(ft!=='game'||S.mode!=='playing')return;ft='pause';It.clear();Gr=false;je={x:0,y:0};ke=0;Ir(`<section class="scrim"><div class="modal pause-modal"><div class="eyebrow">TAKE A BREATH</div><h2>Your flight can wait.</h2><p>Hold ${Controls.carve()?'Space':'W / up'} underwater to carve. Release to launch${Controls.carve()?'':'; space boosts'}. In air, W A S D / arrows steer within the launch path.</p><p>Every drawn trick lands unless a hit bails it. At 0 HP the jump busts and banks nothing. Charms resolve at the bank. A flight with no kills keeps the same tricks.</p><p>Wave ${S.wave} · ${DEMO.tune.rules?`streak ×${S.demo.streak||0} · ${S.xp} pearls`:`${S.wscore} / ${S.quota} banked`} · ${S.budget.toFixed(1)}s air left.</p><div class="modal-actions">${kt('resume','RESUME FLIGHT ↗','primary')}${kt('end','END RUN')}${DemoButton('tune','','SETTINGS')}</div></div></section>`);DemoBind()};
 Owstarter=function(){return ''};
 
 /* Settings: one panel in tabs (T, the backquote key, or SCORE TUNING). Score holds the hand-cap levers (structure doc 5.4,
    kept open to balance in play); the other tabs hold the v3 carve's movement sliders, grouped by what they change. */
-const DemoTuneDefs=[['shake','Screen shake',0,2,.1],['flash','Enemy hit flash',0,1,.1],['space','Marked spawns ahead and flocking (step 1)',0,1,1,'check'],['edge','Step 1: share of spawns from the screen edge',0,1,.05],['danger','Leading shots and mines on the arc (step 2)',0,1,1,'check'],['lead','Step 2: how far shots lead you',0,1,.05],['mines','Step 2: mines per flight',0,4,1],['carve','Space carves (no boost)',0,1,1,'check'],['ccw','Carving always anticlockwise',0,1,1,'check'],['sky','Water camera: metres above the dolphin (0 = old camera)',0,20,.1],['rules','Style score rules (step 4): no quota, reels or charms; 0 HP ends the run',0,1,1,'check'],['payK','Step 4: pearls per flight = k × √score',0,10,.5],['streakCap','Step 4: clean streak cap',1,10,1],['well','Gravity anchor pull (m/s²)',0,150,5],['sides','Armoured enemies, drowning and impacts (step 8)',0,1,1,'check'],['hold','Enemies above the water stay ahead of you in view while you swim',0,1,1,'check'],['wetspawn','Enemies keep spawning while you swim',0,1,1,'check'],['verbs','Experimental: stomp, dive (S) and dash (Space) in the air (parked; to become tricks)',0,1,1,'check'],['hop','Step 3: stomp lift (m/s)',0,15,.5],['dive','Step 3: dive gravity (x)',1,4,.1],['dashes','Step 3: dash charges',0,4,1]];
+const DemoTuneDefs=[['shake','Screen shake',0,2,.1],['flash','Enemy hit flash',0,1,.1],['space','Marked spawns ahead and flocking (step 1)',0,1,1,'check'],['edge','Step 1: share of spawns from the screen edge',0,1,.05],['danger','Leading shots and mines on the arc (step 2)',0,1,1,'check'],['lead','Step 2: how far shots lead you',0,1,.05],['mines','Step 2: mines per flight',0,4,1],['carve','Space carves (no boost)',0,1,1,'check'],['ccw','Carving always anticlockwise',0,1,1,'check'],['sky','Water camera: metres above the dolphin (0 = old camera)',0,20,.1],['rules','Style score rules (step 4): no quota, reels or charms; 0 HP ends the run',0,1,1,'check'],['payK','Step 4: pearls per flight = k × √score',0,10,.5],['streakCap','Step 4: clean streak cap',1,10,1],['well','Gravity anchor pull (m/s²)',0,150,5],['sides','Armoured enemies (step 8)',0,1,1,'check'],['hold','Enemies above the water stay ahead of you in view while you swim',0,1,1,'check'],['wetspawn','Enemies keep spawning while you swim',0,1,1,'check'],['verbs','Experimental: stomp, dive (S) and dash (Space) in the air (parked; to become tricks)',0,1,1,'check'],['hop','Step 3: stomp lift (m/s)',0,15,.5],['dive','Step 3: dive gravity (x)',1,4,.1],['dashes','Step 3: dash charges',0,4,1]];
 const DemoTabs=[
   ['Score',null,'Each jump draws 3 tricks; buy more in the Routine row. A hit bails the trick in progress; 0 HP busts the jump.'],
   ['Launch',['Forward only','Rocket boost','Carve','Wave schedule'],'The carve and the launch. Launch speed rises5 per wave.'],
@@ -5503,15 +5503,14 @@ var Verbs = (() => {
 // - Chill (from Depth charge): three stacks within 3 s freeze the enemy solid for 2 s. A frozen enemy stops, deals no
 //   contact damage and is a block other enemies bounce off.
 // - Reactions: Conduct (Shock on a soaked enemy runs through every soaked enemy, 50% each); Flash-freeze (chill on a
-//   soaked enemy freezes it at once); Shatter (a payoff, ram, mine, stomp or impact on a frozen enemy breaks it in a
-//   4 m blast, the frozen one taking double).
+//   soaked enemy freezes it at once); Shatter (any gun hit, or a water trick, on a frozen enemy breaks it in a 4 m
+//   blast, the frozen one taking double).
 // Step 8, sides and hard surfaces:
 // - From wave 3 some enemies have an armoured body (DEMO.tune.sides): a Shielder is exposed only from behind, a Turtle
 //   only from below, a Spiker only from above (and touching a Spiker other than from above hurts double). Hits from an
 //   armoured side do 20%. Area effects (shock, mines, splashes, blasts, drowning) ignore sides.
-// - Drowning: a soaked or knocked enemy driven down into the water takes a drowning hit (4× a payoff: heavy).
-// - Impacts: a knocked enemy (pushed by Corkscrew or Closing net) moving faster than 14 m/s into another enemy or a frozen
-//   block hits both for half a payoff; a frozen block hit this way shatters.
+// - Drowning: a soaked or knocked enemy driven down into the water takes a drowning hit (4× the water base: heavy).
+// - No impacts: pushed enemies do not damage each other (designer, 2026-10-30: in the air only the guns do damage).
 // - Kills carry the side they came from and the surface involved (h.kills[].side, .surface); reactions are counted per
 //   flight (h.reactions). Only with the step 4 rules on, like the routine.
 var Status = (() => {
@@ -5521,11 +5520,11 @@ var Status = (() => {
     chillN: 3, chillT: 3, frozenT: 2,      // stacks to freeze; s a stack lasts; s frozen
     shatterR: 4, shatterShare: .6,         // m; share of a payoff dealt to the others
     armour: .2,                            // damage share through an armoured side
-    drown: 4, impact: .5, impactSpeed: 14, // × a payoff
+    drown: 4,                              // × the water base
     sideFrom: 3, sideOdds: { shielder: .1, turtle: .08, spiker: .07 }
   });
-  const AREA = new Set(['shock', 'conduct', 'shatter', 'impact', 'drown', 'mines', 'spout', 'standoff']);
-  const SHATTERS = new Set(['star', 'spout', 'mines', 'bounty', 'standoff', 'ram', 'stomp', 'impact']);
+  const AREA = new Set(['shock', 'conduct', 'shatter', 'drown', 'spout', 'undertow']);
+  const shatters = w => w in DEMO.weapons || ['shock', 'conduct', 'stomp', 'ram'].includes(w) || (typeof Routine !== 'undefined' && Routine.TRICKS[w]?.kind === 'water');
   const on = r => !!(DEMO.tune.rules && r?.demo);
   const st = e => e.st || (e.st = { soaked: 0, shock: 0, chill: 0, chillT: 0, frozen: 0 });
   const payoff = r => typeof Routine !== 'undefined' ? Routine.P.base * (r.stats.damage || 1) * (1 + Routine.P.perWave * (r.wave - 1)) : 30;
@@ -5557,14 +5556,16 @@ var Status = (() => {
     const w = ctx?.weapon, s = st(e);
     if (ctx?.killed) {
       const k = r.hand?.kills?.at(-1);
-      if (k && !k.side) { k.side = AREA.has(w) ? 'area' : side(r, e); k.surface = w === 'drown' ? 'water' : w === 'impact' ? (ctx.surface || 'enemy') : null; k.armour = e.armour || null; k.weapon = w }
-      if (typeof Routine !== 'undefined') Routine.bountyKill(r, e);
+      if (k && !k.side) { k.side = AREA.has(w) ? 'area' : side(r, e); k.surface = w === 'drown' ? 'water' : null; k.armour = e.armour || null; k.weapon = w; k.placed = !!(e.affected && e.affected.n === r.hand?.n) }
+      if (typeof Routine !== 'undefined') Routine.killed(r, e, w);
     }
-    if (s.frozen > 0 && SHATTERS.has(w) && !e.shattered) shatter(r, e);
+    if (s.frozen > 0 && shatters(w) && !e.shattered) shatter(r, e);
     if (ctx?.killed || e.hp <= 0) return;
     if (w === 'arc') shock(r, e, ctx.amount || 0);
-    if (w === 'depth') { if (s.soaked > 0 && !(s.frozen > 0)) { freeze(e); react(r, 'flashFreeze') } else if (!(s.frozen > 0)) { s.chill++; s.chillT = P.chillT; if (s.chill >= P.chillN) freeze(e) } }
+    if (w === 'depth') chill(r, e);
   }
+  // a chill stack (Depth charge, Frost wake): three freeze; on a soaked enemy one freezes at once (Flash-freeze)
+  function chill(r, e) { const s = st(e); if (s.frozen > 0) return; if (s.soaked > 0) { freeze(e); react(r, 'flashFreeze') } else { s.chill++; s.chillT = P.chillT; if (s.chill >= P.chillN) freeze(e) } }
   // Shock: through the cluster; Conduct: through every soaked enemy
   function shock(r, e, amount) {
     const s = st(e), seen = new Set([e.id]); s.shock = 1;
@@ -5586,7 +5587,7 @@ var Status = (() => {
     const o = r.medium.origin; (r.trickFx || (r.trickFx = [])).push({ kind: 'burst', x: o.x + e.pos.x, y: o.y + e.pos.y, R: P.shatterR, t: .35, life: .35 });
   }
 
-  // around v3's enemy step: frozen blocks sit it out; then sinking, timers, impacts and drowning
+  // around v3's enemy step: frozen blocks sit it out; then sinking, timers and drowning
   function beforeStep(r, m) {
     r.frozenOut = r.enemies.filter(e => e.st?.frozen > 0); if (r.frozenOut.length) r.enemies = r.enemies.filter(e => !(e.st?.frozen > 0));
     // touching a Spiker other than from above hurts double (DEMO.hit reads r.spikeMul during this step)
@@ -5604,21 +5605,12 @@ var Status = (() => {
       if (s.chillT > 0 && (s.chillT -= dt) <= 0) s.chill = 0;
       if (s.frozen > 0) { s.frozen -= dt; e.velocity = { x: 0, y: 0 }; if (e.frozenAt) e.pos = ye(e.frozenAt.x, e.frozenAt.y) }
     }
-    if (!DEMO.tune.sides) return;
     const D = payoff(r);
     for (const e of [...r.enemies]) {
       if (dead.has(e) || e.hp <= 0) continue;
       // drowning: a soaked or knocked enemy driven down into the water
       const y = m.origin.y + e.pos.y;
       if ((e.st?.soaked > 0 || e.knockT > 0) && y < e.radius + .4 && e.velocity.y + m.vy < -3 && !(e.st?.frozen > 0)) { react(r, 'drown'); hurt(r, e, D * P.drown, 'drown'); if (e.hp <= 0) dead.add(e); continue }
-      // impacts: a knocked enemy into another enemy or a frozen block
-      if (!(e.knockT > 0) || Math.hypot(e.velocity.x, e.velocity.y) < P.impactSpeed) continue;
-      const o = r.enemies.find(o => o !== e && o.hp > 0 && !dead.has(o) && Math.hypot(o.pos.x - e.pos.x, o.pos.y - e.pos.y) < (o.radius || 1) + (e.radius || 1));
-      if (!o) continue;
-      const frozen = o.st?.frozen > 0, ctx = w => ({ primary: false, weapon: 'impact', base: D * P.impact, surface: frozen ? 'frozen' : 'enemy' });
-      e.knockT = 0; react(r, frozen ? 'frozenImpact' : 'impact');
-      DEMO.damage(r, e, D * P.impact, 'impact', 0, 0, 0, false, ctx()); DEMO.damage(r, o, D * P.impact, 'impact', 0, 0, 0, false, ctx());
-      if (e.hp > 0) { const u = { x: e.pos.x - o.pos.x, y: e.pos.y - o.pos.y }, n = Math.hypot(u.x, u.y) || 1; e.velocity = { x: u.x / n * 8, y: u.y / n * 8 } }
     }
   }
 
@@ -5644,7 +5636,7 @@ var Status = (() => {
       if (e.armour === 'shielder') { const v = e.velocity, n = Math.hypot(v.x, v.y) || 1, a = Math.atan2(-v.y / n, v.x / n); G.arc(X, Y, rr + 4, a - .9, a + .9).stroke({ color: yt.white, width: 4, alpha: .85 }) }
     }
   }
-  return { P, on, st, soak, freeze, side, before, after, shock, shatter, beforeStep, afterStep, arm, draw };
+  return { P, on, st, soak, freeze, chill, side, before, after, shock, shatter, beforeStep, afterStep, arm, draw };
 })();
 {const b0=FiveCombat.beforeDamage;FiveCombat.beforeDamage=function(r,e,a,ctx){return Status.before(r,e,b0.call(FiveCombat,r,e,a,ctx),ctx)}}
 {const a0=FiveCombat.afterDamage;FiveCombat.afterDamage=function(r,e,ctx){a0.call(FiveCombat,r,e,ctx);Status.after(r,e,ctx)}}
@@ -5653,47 +5645,49 @@ var Status = (() => {
 {const sp0=Ospw;Ospw=function(r,t,...a){const n=r.enemies.length;sp0(r,t,...a);if(Status.on(r))for(const e of r.enemies.slice(n))Status.arm(r,e)}}
 {const draw0=Otdraw;Otdraw=function(R,r,m,title){draw0(R,r,m,title);if(!title&&m?.kind==='air'&&Status.on(r))Status.draw(R,r,m)}}
 
-// Steps 5, 6, 9 and 10 of the build-and-playtest plan (ICARUS_DESIGN.md §4.2-4.6, §4.16, §4.20): the routine.
-// Designer's answers, 2026-10-27 to 10-30: mult = 1 + the levels of the tricks that connect + 1 per linked payoff;
-// payoffs hit like a weapon, setups deal nothing; the run starts with one trick picked from three; the shop always has
-// one trick place, from 25 pearls.
+// The routine (ICARUS_DESIGN.md §4.2-4.6, §4.16, §4.20, steps 5, 6, 9 and 10). Redesigned 2026-10-30 with the
+// designer: in the air the guns do the damage, and tricks are effects that place enemies for them. The only tricks that
+// damage are the water tricks, which drown or splash enemies at the surface.
 // - Five slots: Breach (the first air step), Ascent (pulses while climbing), Apex (the top of the arc), Descent (pulses
 //   while falling) and Entry (water contact, before the splashdown banks). Ascent and Descent re-fire their trick every
-//   0.6 s at a third of its power (step 10, designer 2026-10-30); a stretch trick connects once, if any pulse hit.
-//   Any trick goes in any slot; one copy each; a bought copy of an owned trick levels it.
-// - Setups move enemies and mark them with the flight (e.setupBy). A payoff connects if it hits at least one enemy, and
-//   is linked if any enemy it hits was moved by a setup this flight. A setup connects if it moves at least one enemy.
-//   A hit cancels a trick still in progress (Gravity anchor, Closing net); stretch pulses already fired stand.
-// - Gravity anchor is a gravity well (designer, 2026-10-30): enemies within 20 m keep chasing the dolphin but are
-//   accelerated toward the well, which sits in the arena's frame and rides with the camera.
-// - Minefield (step 6, the world layer): three mines fixed in the world on the predicted arc sweep back through the
-//   arena into whatever follows.
-// - Step 9's clutch moments are tricks, not scripted events (designer, 2026-10-30): Closing net (a ring closes in and
-//   drags enemies toward you), Bounty (marks the toughest enemy near you; killing it this flight pays pearls) and
-//   Standoff (a landing shockwave that hits harder the more enemies wait there).
+//   0.6 s at a third of its power; a stretch trick connects once, if any pulse affected an enemy.
+// - Everything in the air rides the arena, so "where you are going" is a direction from the dolphin (ahead along the
+//   arc, behind, above, below). Effects place enemies there, away from the dolphin, never onto it. Only world objects
+//   (Snare buoys) and the water use the predicted arc.
+// - Scoring: mult = 1 + the levels of the tricks that affected at least one enemy + 1 for each trick that linked. An air
+//   trick links when a gun (or a water trick) kills an enemy it affected this flight; a water trick links when it kills
+//   an enemy an air trick affected.
 // - Only with the step 4 rules (DEMO.tune.rules); S4's reels stay as they were with them off.
 var Routine = (() => {
   const P = Object.freeze({
-    corkR: 8, corkPush: 26,                 // m, m/s outward
-    anchorR: 20, anchorT: 1.5,             // m, s; the pull's strength is DEMO.tune.well (m/s², 60)
-    starR: 7,                               // m (+1 per extra level)
+    anchorAhead: 10, anchorR: 20, anchorT: 1.5, // m ahead of you, m it reaches, s; pull strength DEMO.tune.well (m/s²)
+    chumFrom: 6, chumTo: 18, chumR: 22, chumT: 1.5, chumPull: 45, // a bait line 6-18 m ahead along the arc
+    slipBack: 4, slipLen: 16, slipR: 20, slipT: 2, slipPull: 40,  // a file 4-20 m behind you
+    bubbleR: 9, bubbleT: 1,                 // m, s held still
+    bowR: 14, bowCone: .55, bowPush: 28,    // m, half-angle (rad), m/s sideways
+    breachR: 18, breachLow: 8, breachLift: 22, // m across, enemies below 8 m altitude, m/s up
+    frostT: 2, frostR: 2.5, frostEvery: .3, // s the wake lasts, m from your path, s between chill stacks
+    buoyAt: [.35, .7, 1.05], buoyTouch: 1.8, // s ahead on the predicted arc; m reach
     spoutR0: 4, spoutPerM: .2, spoutMax: 12, // m at the landing point, + 0.2 per metre of the flight's peak height
-    mineAt: [.35, .7, 1.05], mineTouch: 1.6, mineBlast: 4.5, // s ahead on the predicted arc; m to set one off; m blast
-    netR0: 14, netR1: 3, netT: .8, netReach: 16, // m the ring starts and ends at, s it takes, m it catches from
-    bountyR: 25, bountyPearls: 10,          // m it looks; pearls per level when the marked enemy dies this flight
-    standoffR: 16, standoffPer: .15,        // m around the landing point; +15% damage per enemy caught
+    ripR: 20, ripLow: 10, ripPull: 140, ripT: 1.2, // m from you, enemies below 10 m altitude, m/s² down (beats a chaser's ~80 m/s² steering), s
+    flopR: 6, flopDepth: 14, flopDrive: 36, flopT: .8, // m sideways, m below you, m/s down held for flopT s
+    undertowR: 12, undertowLow: 6,          // m around the landing point, enemies below 6 m altitude
     pulse: .6, pulsePower: 1 / 3,           // s between stretch pulses; their power
-    base: 30, perLevel: .5, perWave: .1     // payoff damage: base × (1 + .5 per extra level) × Damage % × (1 + .1 per wave)
+    base: 30, perLevel: .5, perWave: .1     // water damage: base × (1 + .5 per extra level) × Damage % × (1 + .1 per wave)
   });
   const TRICKS = Object.freeze({
-    cork:     { name: 'Corkscrew',      kind: 'setup',  slot: 'breach',  glyph: '⤨', text: 'Pushes enemies within 8 m of you away.' },
-    anchor:   { name: 'Gravity anchor', kind: 'setup',  slot: 'apex',    glyph: '◎', text: 'A gravity well for 1.5 s: enemies within 20 m keep chasing you but bend toward it.' },
-    net:      { name: 'Closing net',    kind: 'setup',  slot: 'ascent',  glyph: '◌', text: 'A ring 14 m around you closes in over 0.8 s, dragging enemies toward you.' },
-    star:     { name: 'Star pose',      kind: 'payoff', slot: 'apex',    glyph: '✦', text: 'Bursts enemies within 7 m of you.' },
-    spout:    { name: 'Spout',          kind: 'payoff', slot: 'entry',   glyph: '≋', text: 'Splashes enemies around your landing point and soaks them. Higher falls splash wider.' },
-    mines:    { name: 'Minefield',      kind: 'payoff', slot: 'breach',  glyph: '⁂', text: 'Leaves 3 mines on your arc ahead. They stay in the world and sweep through whatever chases you.' },
-    bounty:   { name: 'Bounty',         kind: 'payoff', slot: 'apex',    glyph: '¤', text: 'Marks the toughest enemy within 25 m. Kill it before you land for 10 pearls a level.' },
-    standoff: { name: 'Standoff',       kind: 'payoff', slot: 'entry',   glyph: '⊗', text: 'A shockwave around your landing point, 15% stronger for each enemy waiting there.' }
+    anchor:   { name: 'Gravity anchor', kind: 'effect', slot: 'apex',    glyph: '◎', helps: 'Blast guns',    text: 'A gravity well 10 m ahead of you for 1.5 s: enemies within 20 m bend into a cluster there.' },
+    chum:     { name: 'Chum line',      kind: 'effect', slot: 'ascent',  glyph: '⋯', helps: 'piercing guns', text: 'Bait 6-18 m ahead on your arc for 1.5 s: enemies within 22 m line up along your path.' },
+    slip:     { name: 'Slipstream',     kind: 'effect', slot: 'descent', glyph: '≫', helps: 'piercing guns', text: 'For 2 s, chasers behind you fall into single file 4-20 m back.' },
+    bubble:   { name: 'Bubble net',     kind: 'effect', slot: 'apex',    glyph: '◌', helps: 'every gun',     text: 'Holds enemies within 9 m of you still for 1 s.' },
+    bow:      { name: 'Bow wave',       kind: 'effect', slot: 'breach',  glyph: '⋀', helps: 'your streak',   text: 'Pushes enemies ahead of you aside, opening a lane.' },
+    breach:   { name: 'Breach wave',    kind: 'effect', slot: 'breach',  glyph: '⌇', helps: 'Arc (Conduct)', text: 'Lifts enemies near the surface up into your climb and soaks them.' },
+    frost:    { name: 'Frost wake',     kind: 'effect', slot: 'descent', glyph: '❄', helps: 'shatter',       text: 'For 2 s your path chills whatever follows it; three chills freeze an enemy.' },
+    buoys:    { name: 'Snare buoys',    kind: 'effect', slot: 'breach',  glyph: '⁂', helps: 'every gun',     text: 'Three buoys fixed in the world ahead on your arc freeze whatever touches them as they sweep past.' },
+    spout:    { name: 'Spout',          kind: 'water',  slot: 'entry',   glyph: '≋', helps: 'water damage',  text: 'Splashes enemies around your landing point and soaks them. Higher falls splash wider.' },
+    riptide:  { name: 'Riptide',        kind: 'water',  slot: 'descent', glyph: '⥥', helps: 'drowning',      text: 'For 1.2 s, drags enemies within 20 m and below 10 m altitude down into the water, where they drown.' },
+    flop:     { name: 'Belly flop',     kind: 'water',  slot: 'descent', glyph: '⤓', helps: 'drowning',      text: 'Drives enemies below you straight down into the water to drown.' },
+    undertow: { name: 'Undertow',       kind: 'water',  slot: 'entry',   glyph: '∪', helps: 'drowning',      text: 'As you land, pulls enemies within 12 m of the landing point under with you: they drown.' }
   });
   const IDS = Object.keys(TRICKS), SLOTS = ['breach', 'ascent', 'apex', 'descent', 'entry'];
   const SLOT_NAMES = { breach: 'Breach', ascent: 'Ascent', apex: 'Apex', descent: 'Descent', entry: 'Entry' };
@@ -5701,20 +5695,21 @@ var Routine = (() => {
   const on = r => !!(DEMO.tune.rules && r?.demo);
   function state(r) {
     const S = r.demo.routine || (r.demo.routine = { slots: {}, levels: {} });
-    for (const s of SLOTS) if (!(s in S.slots)) S.slots[s] = null;
+    for (const s of SLOTS) if (!(s in S.slots) || (S.slots[s] && !TRICKS[S.slots[s]])) S.slots[s] = null;
     return S;
   }
   const level = (r, id) => state(r).levels[id] || 0;
   const unit = (x, y) => { const n = Math.hypot(x, y) || 1; return { x: x / n, y: y / n } };
+  const dir = m => unit(m.vx, m.vy);                     // the way the arc goes now (ahead)
 
   // owning and placing
   function add(r, id) {
+    if (!TRICKS[id]) return;
     const S = state(r); S.levels[id] = (S.levels[id] || 0) + 1;
     if (SLOTS.some(s => S.slots[s] === id)) return;
     const s = !S.slots[TRICKS[id].slot] ? TRICKS[id].slot : SLOTS.find(x => !S.slots[x]);
     if (s) S.slots[s] = id;
   }
-  // put an owned trick in a slot; whatever was there takes its old place (or the bench)
   function move(r, id, slot) {
     const S = state(r);
     if (!S.levels[id] || !SLOTS.includes(slot)) return false;
@@ -5723,72 +5718,72 @@ var Routine = (() => {
     return true;
   }
   const bench = r => IDS.filter(id => level(r, id) && !SLOTS.some(s => state(r).slots[s] === id));
-  // three different tricks, drawn by the run's generator
   function draw3(r) { const a = [...IDS]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(ce(r) * (i + 1)); [a[i], a[j]] = [a[j], a[i]] } return a.slice(0, 3) }
-  // the run's first trick: the one picked on the title screen (DemoStartTrick), or the first of three drawn
   function start(r) {
     const offers = draw3(r), pick = typeof DemoStartTrick !== 'undefined' && TRICKS[DemoStartTrick] ? DemoStartTrick : offers[0];
     r.demo.trickOffers = offers; add(r, pick);
   }
   const damage = (r, id) => P.base * (1 + P.perLevel * (level(r, id) - 1)) * (r.stats.damage || 1) * (1 + P.perWave * (r.wave - 1));
   function near(r, x, y, R) { return r.enemies.filter(e => e.hp > 0 && Math.hypot(e.pos.x - x, e.pos.y - y) < R + (e.radius || 1)) }
-  const knock = e => { e.knockT = .6; e.floor = Math.min(e.floor ?? 0, 0) };   // pushed: can be driven into the water (step 8)
+  const alt = (m, e) => m.origin.y + e.pos.y;           // an enemy's height above the water
 
-  // one firing of a slot's trick at this power (1, or a stretch pulse's third). A stretch slot keeps one record across
-  // its pulses and settles when its stretch ends.
+  // an effect touched this enemy this flight: it counts toward connecting, and a later kill of it links the trick
+  function affect(r, e, rec) {
+    const h = r.hand, a = e.affected && e.affected.n === h.n ? e.affected : (e.affected = { n: h.n, recs: [] });
+    if (!a.recs.includes(rec)) { a.recs.push(rec); rec.hits++ }
+  }
+  // a kill: link every air trick that affected the enemy this flight (called by Status after a kill)
+  function killed(r, e, weapon) {
+    const h = r.hand, a = e.affected; if (!h || !a || a.n !== h.n) return;
+    const wet = TRICKS[weapon]?.kind === 'water' || weapon === 'drown';
+    if (!(weapon in DEMO.weapons) && !['shock', 'conduct', 'shatter'].includes(weapon) && !wet) return;
+    const air = a.recs.filter(x => TRICKS[x.id].kind !== 'water'), water = a.recs.filter(x => TRICKS[x.id].kind === 'water');
+    for (const rec of air) rec.linked = true;
+    // a water kill (a drowning, a splash) links the water tricks that took part, if an air trick placed the enemy first
+    if (wet && air.length) for (const rec of water) rec.linked = true;
+  }
+
+  // one firing of a slot's trick at this power (1, or a stretch pulse's third)
   function fire(r, m, slot, power = 1) {
     const h = r.hand, id = state(r).slots[slot];
     if (!STRETCH.has(slot)) (h.fired || (h.fired = {}))[slot] = true;
     if (!id) return;
-    const T = TRICKS[id], lv = level(r, id), me = m.local, stretch = STRETCH.has(slot);
+    const T = TRICKS[id], lv = level(r, id), me = m.local, stretch = STRETCH.has(slot), d = dir(m);
     h.tricks || (h.tricks = []);
     let rec = stretch ? h.tricks.find(t => t.slot === slot) : null;
     if (!rec) { rec = { slot, id, name: T.name, level: lv, hits: 0, linked: false, connected: false, stretch, pulses: 0 }; h.tricks.push(rec) }
     rec.pulses++;
-    // effects in the air ride the arena (local); a splash at the landing stays on the water (world)
-    const fx = (kind, R, life, world) => (r.trickFx || (r.trickFx = [])).push(world ? { kind, x: m.origin.x + me.x, y: m.origin.y + me.y, R, t: life, life } : { kind, lx: me.x, ly: me.y, R, t: life, life });
-    const done = () => { if (!stretch) settle(r, rec) };
-    if (id === 'cork') {
-      for (const e of near(r, me.x, me.y, P.corkR)) { const u = unit(e.pos.x - me.x, e.pos.y - me.y); e.velocity.x += u.x * P.corkPush * power; e.velocity.y += u.y * P.corkPush * power; e.setupBy = h.n; knock(e); rec.hits++ }
-      fx('ring', P.corkR, .35); return done();
+    const fx = (kind, R, life, at, world) => (r.trickFx || (r.trickFx = [])).push(world ? { kind, x: m.origin.x + at.x, y: m.origin.y + at.y, R, t: life, life } : { kind, lx: at.x, ly: at.y, R, t: life, life });
+    const hold = (kind, extra, t) => { (r.effects || (r.effects = [])).push({ kind, rec, n: h.n, t: (stretch ? P.pulse : t), power, ...extra }) };
+    switch (id) {
+      case 'anchor': { const at = { x: me.x + d.x * P.anchorAhead, y: me.y + d.y * P.anchorAhead }; hold('well', { x: at.x, y: at.y, R: P.anchorR }, P.anchorT); fx('anchor', P.anchorR, P.anchorT, at); break }
+      case 'chum': hold('chum', { d }, P.chumT); fx('line', P.chumTo, P.chumT, me); break;
+      case 'slip': hold('slip', {}, P.slipT); break;
+      case 'bubble': for (const e of near(r, me.x, me.y, P.bubbleR)) { e.heldT = Math.max(e.heldT || 0, P.bubbleT * (stretch ? 1 : 1)); e.heldAt = { ...e.pos }; affect(r, e, rec) } fx('ring', P.bubbleR, .4, me); break;
+      case 'bow': for (const e of near(r, me.x, me.y, P.bowR)) {
+        const rx = e.pos.x - me.x, ry = e.pos.y - me.y, along = rx * d.x + ry * d.y; if (along <= 0 || Math.acos(Math.min(1, along / (Math.hypot(rx, ry) || 1))) > P.bowCone) continue;
+        const side = rx * -d.y + ry * d.x >= 0 ? 1 : -1; e.velocity.x += -d.y * side * P.bowPush * power; e.velocity.y += d.x * side * P.bowPush * power; affect(r, e, rec) } fx('cone', P.bowR, .35, me); break;
+      case 'breach': for (const e of r.enemies) { if (e.hp <= 0 || alt(m, e) > P.breachLow || Math.abs(e.pos.x - me.x) > P.breachR) continue; e.velocity.y += P.breachLift * power; Status.soak(e); affect(r, e, rec) } fx('ring', P.breachR, .4, me); break;
+      case 'frost': hold('frost', { trail: [] , tick: 0 }, P.frostT); break;
+      case 'buoys': { const at = stretch ? [.5] : P.buoyAt; r.buoys = (r.buoys || []).concat(at.map(t => { const w = Danger.predict(r, m, t); return { wx: w.x, wy: w.y, n: h.n, rec } })); break }
+      case 'riptide': hold('rip', {}, P.ripT); fx('down', P.ripR, .45, me); break;
+      case 'flop': for (const e of r.enemies) { if (e.hp <= 0 || Math.abs(e.pos.x - me.x) > P.flopR || e.pos.y > me.y || e.pos.y < me.y - P.flopDepth) continue; e.driveT = P.flopT; e.knockT = P.flopT; e.floor = Math.min(e.floor ?? 0, 0); affect(r, e, rec) } fx('down', P.flopR, .35, me); break;
+      case 'spout': case 'undertow': {
+        const R = id === 'spout' ? Math.min(P.spoutMax, P.spoutR0 + P.spoutPerM * Math.max(0, r.flightBest || 0)) : P.undertowR, amount = damage(r, id) * power * (id === 'undertow' ? 3 : 1);
+        for (const e of near(r, me.x, me.y, R)) { if (id === 'undertow' && alt(m, e) > P.undertowLow) continue; if (id === 'spout') Status.soak(e); affect(r, e, rec); DEMO.damage(r, e, amount, id, 0, 0, 0, false, { primary: false, weapon: id, base: amount }) }
+        fx('splash', R, .45, me, slot === 'entry'); break;
+      }
     }
-    if (id === 'anchor') {
-      for (const e of near(r, me.x, me.y, P.anchorR)) { e.setupBy = h.n; rec.hits++ }
-      r.anchor = { x: me.x, y: me.y, t: stretch ? P.pulse : P.anchorT, power, rec, n: h.n };
-      if (!stretch) rec.pending = true; fx('anchor', P.anchorR, r.anchor.t); return;
-    }
-    if (id === 'net') {
-      r.net = { x: me.x, y: me.y, t: 0, power, rec, n: h.n };
-      if (!stretch) rec.pending = true; fx('net', P.netR0, P.netT); return;
-    }
-    if (id === 'mines') {
-      const at = stretch ? [.5] : P.mineAt;
-      r.pmines = (r.pmines || []).concat(at.map(t => { const w = Danger.predict(r, m, t); return { wx: w.x, wy: w.y, n: h.n, t, power, rec } }));
-      if (!stretch) rec.pending = true; return;
-    }
-    if (id === 'bounty') {
-      if (r.bounty?.n === h.n) return;
-      const t = near(r, me.x, me.y, P.bountyR).sort((a, b) => b.hp - a.hp)[0];
-      if (!t) return done();
-      t.bounty = h.n; r.bounty = { id: t.id, n: h.n, rec }; rec.pending = true; return;
-    }
-    // area payoffs: linked if anything they hit was moved by this flight's setups (checked before the damage kills it)
-    const R = id === 'star' ? P.starR + (lv - 1) : id === 'standoff' ? P.standoffR : Math.min(P.spoutMax, P.spoutR0 + P.spoutPerM * Math.max(0, r.flightBest || 0));
-    const hit = near(r, me.x, me.y, R), amount = damage(r, id) * power * (id === 'standoff' ? 1 + P.standoffPer * hit.length : 1);
-    if (hit.some(e => e.setupBy === h.n)) rec.linked = true;
-    for (const e of hit) { if (id === 'spout') Status.soak(e); DEMO.damage(r, e, amount, id); rec.hits++ }
-    fx(id === 'star' ? 'burst' : id === 'standoff' ? 'ring' : 'splash', R, .45, id !== 'star' && slot === 'entry');
-    done();
+    if (!stretch && !['anchor', 'chum', 'slip', 'frost', 'buoys', 'riptide'].includes(id)) settle(r, rec);
   }
-  // a trick has finished: it connects if it hit something; the scoreboard shows what it adds
+  // a trick has finished: it connects if it affected an enemy; links are added when the bank sets the mult
   function settle(r, rec) {
     if (rec.settled) return;
-    rec.settled = true; rec.pending = false; rec.connected = rec.hits > 0 && !rec.cancelled;
-    const add = rec.connected ? rec.level + (rec.linked ? 1 : 0) : 0;
-    ScoreCues.trick(r, { name: rec.name, amount: add, linked: rec.connected && rec.linked, missed: !rec.connected, cancelled: !!rec.cancelled });
+    rec.settled = true; rec.connected = rec.hits > 0 && !rec.cancelled;
+    ScoreCues.trick(r, { name: rec.name, amount: rec.connected ? rec.level : 0, linked: false, missed: !rec.connected, cancelled: !!rec.cancelled });
   }
 
-  // each air step after v3's enemy step: the moment slots, the stretch pulses, and the tricks that last
+  // each air step after v3's enemy step: the slots, the pulses and the lasting effects
   function step(r, m, dt) {
     const h = r.hand; if (!h?.open || h.busted) return;
     if (!h.fired?.breach) fire(r, m, 'breach');
@@ -5796,90 +5791,91 @@ var Routine = (() => {
     if (h.fired.breach && !h.apex && m.vy > 0 && (P2.ascent -= dt) <= 0) { P2.ascent += P.pulse; fire(r, m, 'ascent', P.pulsePower) }
     if (h.apex && !h.fired?.apex) { endStretch(r, 'ascent'); fire(r, m, 'apex') }
     if (h.apex && m.vy < 0 && (P2.descent -= dt) <= 0) { P2.descent += P.pulse; fire(r, m, 'descent', P.pulsePower) }
-    if (r.pmines?.length) mines(r, m);
-    const A = r.anchor;
-    if (A && A.n === h.n) {
-      const g = (+DEMO.tune.well || 0) * A.power;
-      for (const e of near(r, A.x, A.y, P.anchorR)) { const u = unit(A.x - e.pos.x, A.y - e.pos.y); e.velocity.x += u.x * g * dt; e.velocity.y += u.y * g * dt; e.setupBy = h.n }
-      A.t -= dt; if (A.t <= 0) { if (!A.rec.stretch) settle(r, A.rec); r.anchor = null }
-    }
-    const N = r.net;
-    if (N && N.n === h.n) {
-      N.t += dt; const k = Math.min(1, N.t / P.netT), ring = P.netR0 + (P.netR1 - P.netR0) * k * N.power;
-      for (const e of near(r, N.x, N.y, P.netReach)) {
-        const d = Math.hypot(e.pos.x - N.x, e.pos.y - N.y); if (d <= ring) continue;
-        const u = unit(e.pos.x - N.x, e.pos.y - N.y); e.pos = ye(N.x + u.x * ring, N.y + u.y * ring);
-        e.velocity.x -= u.x * 6; e.velocity.y -= u.y * 6; if (e.setupBy !== h.n) N.rec.hits++; e.setupBy = h.n; knock(e);
+    const me = m.local, d = dir(m), keep = [];
+    for (const E of r.effects || []) {
+      if (E.n !== h.n) continue;
+      if (E.kind === 'well') { const g = (+DEMO.tune.well || 0) * E.power; for (const e of near(r, E.x, E.y, E.R)) { const u = unit(E.x - e.pos.x, E.y - e.pos.y); e.velocity.x += u.x * g * dt; e.velocity.y += u.y * g * dt; affect(r, e, E.rec) } }
+      if (E.kind === 'chum') {   // toward the nearest point of a bait line ahead of the dolphin
+        for (const e of near(r, me.x, me.y, P.chumR)) { const rx = e.pos.x - me.x, ry = e.pos.y - me.y, s = Math.max(P.chumFrom, Math.min(P.chumTo, rx * d.x + ry * d.y)), u = unit(me.x + d.x * s - e.pos.x, me.y + d.y * s - e.pos.y); e.velocity.x += u.x * P.chumPull * E.power * dt; e.velocity.y += u.y * P.chumPull * E.power * dt; affect(r, e, E.rec) }
       }
-      if (k >= 1) { if (!N.rec.stretch) settle(r, N.rec); r.net = null }
+      if (E.kind === 'slip') {   // chasers behind fall onto the line straight back from the dolphin
+        for (const e of near(r, me.x, me.y, P.slipR)) { const rx = e.pos.x - me.x, ry = e.pos.y - me.y, s = rx * d.x + ry * d.y; if (s > -2) continue; const back = Math.max(P.slipBack, Math.min(P.slipBack + P.slipLen, -s)), u = unit(me.x - d.x * back - e.pos.x, me.y - d.y * back - e.pos.y); e.velocity.x += u.x * P.slipPull * E.power * dt; e.velocity.y += u.y * P.slipPull * E.power * dt; affect(r, e, E.rec) }
+      }
+      if (E.kind === 'rip') {    // a drag down toward the water for enemies low over it
+        for (const e of near(r, me.x, me.y, P.ripR)) { if (alt(m, e) > P.ripLow) continue; e.velocity.y -= P.ripPull * Math.max(E.power, .6) * dt; e.knockT = .3; e.floor = Math.min(e.floor ?? 0, 0); if (!(e.st?.soaked > 0)) Status.soak(e); affect(r, e, E.rec) }
+      }
+      if (E.kind === 'frost') {  // the trail you leave chills what crosses it
+        E.trail.push({ ...me }); if (E.trail.length > 120) E.trail.shift(); E.tick -= dt;
+        if (E.tick <= 0) { E.tick = P.frostEvery; for (const e of r.enemies) { if (e.hp <= 0 || !E.trail.some(p => Math.hypot(p.x - e.pos.x, p.y - e.pos.y) < P.frostR + (e.radius || 1))) continue; Status.chill(r, e); affect(r, e, E.rec) } }
+      }
+      E.t -= dt; if (E.t > 0) keep.push(E); else if (!E.rec.stretch) settle(r, E.rec);
     }
+    r.effects = keep;
+    for (const e of r.enemies) if (e.heldT > 0) { e.heldT -= dt; e.velocity = { x: 0, y: 0 }; if (e.heldAt) e.pos = ye(e.heldAt.x, e.heldAt.y) }
+    // Belly flop: the enemy is driven straight down, overriding its chase, until it hits the water or the drive ends
+    for (const e of r.enemies) if (e.driveT > 0) { e.driveT -= dt; e.velocity.y = Math.min(e.velocity.y, -P.flopDrive) }
+    if (r.buoys?.length) buoys(r, m);
   }
-  // a stretch slot's pulses are over: it settles (connected if any pulse hit)
   function endStretch(r, slot) { const rec = r.hand?.tricks?.find(t => t.slot === slot); if (rec && !rec.settled) settle(r, rec) }
-  // Minefield's mines: an enemy within reach sets one off; the blast hits like a payoff, once per mine
-  function mines(r, m) {
-    const o = m.origin, keep = [];
-    for (const k of r.pmines) {
-      const lx = k.wx - o.x, ly = k.wy - o.y;
-      if (!r.enemies.some(e => e.hp > 0 && Math.hypot(e.pos.x - lx, e.pos.y - ly) < P.mineTouch + (e.radius || 1))) { keep.push(k); continue }
-      const hit = near(r, lx, ly, P.mineBlast), amount = damage(r, 'mines') * (k.power || 1);
-      if (hit.some(e => e.setupBy === k.n)) k.rec.linked = true;
-      for (const e of hit) { DEMO.damage(r, e, amount, 'mines'); k.rec.hits++ }
-      (r.trickFx || (r.trickFx = [])).push({ kind: 'burst', x: k.wx, y: k.wy, R: P.mineBlast, t: .4, life: .4 });
-    }
-    r.pmines = keep;
+  // Snare buoys: fixed in the world; whatever touches one as the arena sweeps past freezes
+  function buoys(r, m) {
+    const o = m.origin;
+    for (const k of r.buoys) { const lx = k.wx - o.x, ly = k.wy - o.y; for (const e of r.enemies) { if (e.hp <= 0 || e.st?.frozen > 0 || Math.hypot(e.pos.x - lx, e.pos.y - ly) > P.buoyTouch + (e.radius || 1)) continue; Status.freeze(e); affect(r, e, k.rec) } }
   }
-  // Bounty: its marked enemy died this flight (called by Status after a kill)
-  function bountyKill(r, e) { const B = r.bounty; if (!B || e.bounty !== B.n || r.hand?.n !== B.n) return; B.rec.hits = 1; B.paid = true; settle(r, B.rec) }
-  // a hit cancels the tricks still in progress
+  // a hit cancels the effects still running this flight
   function onHit(r) {
     const n = r.hand?.n;
-    for (const k of ['anchor', 'net']) { const A = r[k]; if (A && A.n === n) { if (!A.rec.settled) { A.rec.cancelled = true; settle(r, A.rec) } r[k] = null } }
+    for (const E of r.effects || []) if (E.n === n && !E.rec.settled && !E.rec.stretch) { E.rec.cancelled = true; settle(r, E.rec) }
+    r.effects = (r.effects || []).filter(E => E.n !== n || E.rec.stretch);
   }
-  // water contact, before the splashdown banks: the Entry slot, the tricks still running settle, the mult is set
+  // water contact, before the splashdown banks: the Entry slot fires, everything settles, links count, the mult is set
   function entry(r) {
     const h = r.hand, m = r.medium; if (!h?.open || h.busted || m?.kind !== 'air') return;
     if (!h.fired?.breach) fire(r, m, 'breach');
     if (!h.fired?.apex && h.apex) fire(r, m, 'apex');
-    for (const k of ['anchor', 'net']) { const A = r[k]; if (A && A.n === h.n) { settle(r, A.rec); r[k] = null } }
-    for (const k of r.pmines || []) settle(r, k.rec); r.pmines = [];
-    if (r.bounty?.n === h.n) { const B = r.bounty; if (B.paid) { const p = P.bountyPearls * B.rec.level; r.xp += p; r.earned += p; h.bountyPearls = p } else settle(r, B.rec); r.bounty = null }
+    for (const E of r.effects || []) if (E.n === h.n) settle(r, E.rec); r.effects = [];
+    for (const k of r.buoys || []) settle(r, k.rec); r.buoys = [];
     endStretch(r, 'ascent'); endStretch(r, 'descent');
     if (!h.fired?.entry) fire(r, m, 'entry');
     for (const t of h.tricks || []) if (!t.settled) settle(r, t);
+    for (const t of h.tricks || []) if (t.connected && t.linked) ScoreCues.trick(r, { name: t.name + ' linked', amount: 1, linked: true });
     h.mult = 1 + (h.tricks || []).reduce((a, t) => a + (t.connected ? t.level + (t.linked ? 1 : 0) : 0), 0);
   }
 
-  // trick visuals on the telegraph layer: mines, a push ring, the well, the net, a burst, a splash, the bounty mark
+  // visuals on the telegraph layer: buoys, the well, the bait line, held enemies, rings and splashes
   function draw(R, r) {
     const G = R.telegraphs, keep = [], o = r.medium?.kind === 'air' ? r.medium.origin : null;
-    for (const k of r.pmines || []) {
+    for (const k of r.buoys || []) {
       const X = R.sx(k.wx), Y = R.sy(k.wy), ppm = Math.abs(R.sx(k.wx + 1) - X), s = 1.1 * ppm;
-      G.circle(X, Y, s).fill({ color: yt.cyan, alpha: .5 }).stroke({ color: yt.white, width: 2, alpha: .9 });
-      for (let j = 0; j < 4; j++) { const a = j * Math.PI / 2 + Math.PI / 4; G.moveTo(X + Math.cos(a) * s, Y + Math.sin(a) * s).lineTo(X + Math.cos(a) * s * 1.6, Y + Math.sin(a) * s * 1.6).stroke({ color: yt.white, width: 2, alpha: .8 }) }
+      G.circle(X, Y, s).fill({ color: 0xdff6ff, alpha: .55 }).stroke({ color: yt.cyan, width: 2.5, alpha: .95 });
     }
-    if (o && r.bounty) { const e = r.enemies.find(x => x.id === r.bounty.id); if (e) { const X = R.sx(o.x + e.pos.x), Y = R.sy(o.y + e.pos.y), ppm = Math.abs(R.sx(o.x + e.pos.x + 1) - X); G.circle(X, Y, (e.radius + 1.2) * ppm).stroke({ color: yt.amber, width: 3, alpha: .9 }) } }
-    if (o && r.net) { const N = r.net, X = R.sx(o.x + N.x), Y = R.sy(o.y + N.y), ppm = Math.abs(R.sx(o.x + N.x + 1) - X), k = Math.min(1, N.t / P.netT); G.circle(X, Y, (P.netR0 + (P.netR1 - P.netR0) * k * N.power) * ppm).stroke({ color: yt.cyan, width: 2.5, alpha: .8 }) }
+    if (o) for (const E of r.effects || []) {
+      const m = r.medium, d = dir(m), me = m.local, X = v => R.sx(o.x + v), Y = v => R.sy(o.y + v);
+      if (E.kind === 'chum') G.moveTo(X(me.x + d.x * P.chumFrom), Y(me.y + d.y * P.chumFrom)).lineTo(X(me.x + d.x * P.chumTo), Y(me.y + d.y * P.chumTo)).stroke({ color: yt.amber, width: 3, alpha: .7 });
+      if (E.kind === 'slip') G.moveTo(X(me.x - d.x * P.slipBack), Y(me.y - d.y * P.slipBack)).lineTo(X(me.x - d.x * (P.slipBack + P.slipLen)), Y(me.y - d.y * (P.slipBack + P.slipLen))).stroke({ color: yt.cyan, width: 2, alpha: .5 });
+      if (E.kind === 'frost') for (let i = 0; i < E.trail.length; i += 6) G.circle(X(E.trail[i].x), Y(E.trail[i].y), 3).fill({ color: yt.white, alpha: .5 });
+    }
+    if (o) for (const e of r.enemies) if (e.heldT > 0) { const ppm = Math.abs(R.sx(o.x + e.pos.x + 1) - R.sx(o.x + e.pos.x)); G.circle(R.sx(o.x + e.pos.x), R.sy(o.y + e.pos.y), (e.radius + .8) * ppm).stroke({ color: yt.cyan, width: 2, alpha: .8 }) }
     for (const f of r.trickFx || []) {
       f.t -= 1 / 60; if (f.t <= 0) continue; keep.push(f);
       if (f.lx != null && !o) continue;
       const wx = f.lx != null ? o.x + f.lx : f.x, wy = f.lx != null ? o.y + f.ly : f.y;
       const X = R.sx(wx), Y = R.sy(wy), ppm = Math.abs(R.sx(wx + 1) - X), k = 1 - f.t / f.life;
-      if (f.kind === 'ring') G.circle(X, Y, f.R * ppm * (.3 + .7 * k)).stroke({ color: yt.cyan, width: 3, alpha: .8 * (1 - k) });
-      else if (f.kind === 'burst') { G.circle(X, Y, f.R * ppm * (.4 + .6 * k)).fill({ color: yt.amber, alpha: .25 * (1 - k) }).stroke({ color: yt.amber, width: 3, alpha: .9 * (1 - k) }) }
-      else if (f.kind === 'splash') G.ellipse(X, Y, f.R * ppm * (.4 + .6 * k), f.R * ppm * .35).stroke({ color: yt.cyan, width: 3, alpha: .9 * (1 - k) });
+      if (f.kind === 'ring' || f.kind === 'cone') G.circle(X, Y, f.R * ppm * (.3 + .7 * k)).stroke({ color: yt.cyan, width: 3, alpha: .8 * (1 - k) });
+      else if (f.kind === 'down') G.moveTo(X, Y).lineTo(X, Y + f.R * ppm * (.4 + .6 * k)).stroke({ color: 0x4aa8ff, width: 4, alpha: .8 * (1 - k) });
+      else if (f.kind === 'splash') G.ellipse(X, Y, f.R * ppm * (.4 + .6 * k), f.R * ppm * .35).stroke({ color: 0x4aa8ff, width: 3, alpha: .9 * (1 - k) });
       else if (f.kind === 'anchor') { G.circle(X, Y, 6 + 4 * Math.sin(k * 30)).fill({ color: yt.white, alpha: .7 }); G.circle(X, Y, f.R * ppm * (1 - k)).stroke({ color: yt.white, width: 1.5, alpha: .35 }) }
     }
     r.trickFx = keep;
   }
 
-  return { P, TRICKS, IDS, SLOTS, SLOT_NAMES, STRETCH, on, state, level, add, move, bench, draw3, start, damage, fire, settle, step, onHit, entry, bountyKill, draw };
+  return { P, TRICKS, IDS, SLOTS, SLOT_NAMES, STRETCH, on, state, level, add, move, bench, draw3, start, damage, affect, killed, fire, settle, step, onHit, entry, draw };
 })();
 var DemoStartTrick, DemoTrickTitle;  // the title screen's pick, and the three it shows
 {const hd0=Hd;Hd=function(...a){const r=hd0(...a);if(Routine.on(r))Routine.start(r);return r}}
 {const me0=ME;ME=function(r,t,e,i){me0(r,t,e,i);if(Routine.on(r)&&t?.kind==='air'&&i>0)Routine.step(r,t,i)}}
 {const hit0=DEMO.hit;DEMO.hit=function(r,a){const hp=r.hp;hit0(r,a);if(r.hp<hp&&Routine.on(r))Routine.onHit(r)}}
-{const draw0=Otdraw;Otdraw=function(R,r,m,title){draw0(R,r,m,title);if(!title&&(r?.trickFx?.length||r?.pmines?.length||r?.net||r?.bounty))Routine.draw(R,r)}}
+{const draw0=Otdraw;Otdraw=function(R,r,m,title){draw0(R,r,m,title);if(!title&&(r?.trickFx?.length||r?.buoys?.length||r?.effects?.length||r?.enemies?.some(e=>e.heldT>0)))Routine.draw(R,r)}}
 
 // Flight log: records what happens in each flight (positions, enemies, input, kills, hits) and the shop actions
 // taken, so a real run can be exported as JSON and studied. Observation only: it reads state and never changes it.
@@ -6221,7 +6217,7 @@ var ShopUI = (() => {
   function offerInfo(r,o){let name,summary,detailText,tag,tone='chips',impact='',iconKind=o.row,iconId=o.id,owned='',rarity=0;
     if(o.row==='weapon'){const x=weaponInfo(r,o),w=DEMO.weapons[o.id];name=Owc[o.id].name;tag=`WEAPON · ${w.type} · ${w.cad} · T${o.level}`;summary=short[o.id]+(w.type==='Close'?' +2 Armour.':'');impact=x.match?`Matching copy → T${x.mergeLevel}: ${Math.round(x.damage)} → ${Math.round(x.mergeDamage)} damage.`:x.owned?`Owned: ${x.ownedTiers.map(t=>'T'+t).join(', ')}. This adds T${o.level}.`:x.inventoryDelta;owned=x.owned?`${x.owned} OWNED`:'NEW WEAPON';rarity=Math.min(3,o.level);detailText=`<p>${E(w.description)}${w.type==='Close'?' Each Close weapon also gives +2 Armour.':''}</p><div class="shop-numbers"><span><b>${Math.round(x.damage)}</b> damage</span><span><b>${x.cooldown.toFixed(2)}s</b> cooldown</span><span><b>${number(x.range)}m</b> range</span><span><b>${Math.round(x.crit*100)}%</b> crit</span></div><p>${E(x.inventoryDelta)}</p>`;}
     else if(o.row==='charm'){const c=F.charms[o.id];name=c.name;tag=`CHARM · ${c.kind.toUpperCase()}`;summary=charmSummary(r,o.id,o.face);detailText=`<p>${E(F.charmText(o.id,o.face))}</p><p>Charms resolve left to right at the bank. They change score and pearls, never weapon damage.</p>`;tone=c.kind==='+chips'?'chips':'mult';impact=charmFit(r,o.id,o.face);owned=c.rarityName.toUpperCase();rarity=c.rarity;}
-    else if(o.row==='trick'){const T=Routine.TRICKS[o.id],lv=Routine.level(r,o.id);name=T.name;tag=`TRICK · ${T.kind.toUpperCase()} · ${Routine.SLOT_NAMES[T.slot].toUpperCase()}`;summary=T.text;tone='mult';iconKind='trick';impact=lv?`Owned at level ${lv}: this copy makes it level ${lv+1}.`:`Goes in ${Routine.SLOT_NAMES[T.slot]} if that slot is free.`;owned=lv?`LEVEL ${lv} OWNED`:'';detailText=`<p>${E(T.text)}</p><p>${T.kind==='setup'?'Setups move enemies and deal no damage. A payoff that hits enemies a setup moved this flight is linked: +1 mult.':'Payoffs hit like a weapon. Hitting enemies a setup moved this flight links them: +1 mult.'}</p>`;}
+    else if(o.row==='trick'){const T=Routine.TRICKS[o.id],lv=Routine.level(r,o.id);name=T.name;tag=`TRICK · ${T.kind==='water'?'WATER':'EFFECT'} · ${Routine.SLOT_NAMES[T.slot].toUpperCase()}`;summary=T.text;tone='mult';iconKind='trick';impact=lv?`Owned at level ${lv}: this copy makes it level ${lv+1}.`:`Goes in ${Routine.SLOT_NAMES[T.slot]} if that slot is free.`;owned=lv?`LEVEL ${lv} OWNED`:'';detailText=`<p>${E(T.text)}</p><p>${T.kind==='water'?'A water trick: it damages enemies at the surface. Drowning or splashing enemies an air trick placed links it: +1 mult.':'An effect: it deals no damage. When your guns kill an enemy it placed this flight, it links: +1 mult. Helps '+T.helps+'.'}</p>`;}
     else if(o.row==='item'){const x=FiveCombat.items[o.id];name=x.name;tag='GEAR · COMBAT';summary=x.text;detailText=`<p>${E(x.text)}</p><p>${E(x.copies||'')}</p>`;impact=r.demo.itemCounts[o.id]?`Own ${r.demo.itemCounts[o.id]} · ${x.copies}`:'Changes your attacks, defence or water entry.';tone=['I08','I10'].includes(o.id)?'defence':'chips';owned=r.demo.itemCounts[o.id]?`×${r.demo.itemCounts[o.id]} OWNED`:rarityName[x.rarity].toUpperCase();rarity=x.rarity;}
     else if(o.row==='stat'){const x=DEMO.items[o.id],g=DEMO.stats[x.up].group;name=x.name;tag=g==='defence'?'GEAR · DEFENCE':'GEAR · STAT';summary=DEMO.statText(x.up,x.value)+(x.down?' · '+DEMO.statText(x.down,-x.loss):'');impact=g==='defence'?'Fewer Bails and busts.':'Permanent for this run.';detailText=`<p>${E(summary)}</p><p>Current: ${E(DEMO.statText(x.up,r.demo.stats[x.up]))}.</p>`;tone=g==='defence'?'defence':'chips';}
     else if(o.row==='routine'){const x=choiceInfo(r,o.choice);name=x.title;tag='ROUTINE';summary=x.summary;impact=x.impact;tone='mult';iconKind='choice';iconId=o.choice.kind;detailText=`<p>${E(x.detail||'')}</p><p>Average mult ${number(x.before)} → <b>${number(x.after)}</b> (before charms).</p>${x.recent?`<p class="shop-recent">${E(x.recent)}</p>`:''}`;}
@@ -6305,15 +6301,15 @@ var Loadout = (() => {
     // each row carries a one-line reminder of what the chosen thing does
     const desc = t => `<small class="lo-desc">${E(t)}</small>`;
     const weaponRows = Array.from({ length: 6 }, (_, i) => { const w = cfg.weapons[i] || [null, 1], W = DEMO.weapons[w[0]]; return `<div class="lo-row"><label>Slot ${i + 1} <select data-lo="w${i}">${opt('', '— empty —', !w[0])}${ids.map(id => opt(id, `${Owc[id]?.name || id} · ${DEMO.weapons[id].type}`, w[0] === id)).join('')}</select>${tierSel('t' + i, w[1])}</label>${desc(W ? W.description : 'Empty slot.')}</div>` }).join('');
-    const trickRows = typeof Routine === 'undefined' ? '' : Routine.SLOTS.map(s => { const id = cfg.tricks[s], X = Routine.TRICKS[id]; return `<div class="lo-row"><label>${Routine.SLOT_NAMES[s]} <select data-lo="k-${s}">${opt('', '— none —', !id)}${Routine.IDS.map(k => opt(k, Routine.TRICKS[k].name, id === k)).join('')}</select>${tierSel('l-' + s, cfg.levels[s]).replace(/>T(\d)</g, '>L$1<')}</label>${desc(X ? `${X.kind === 'setup' ? 'Setup' : 'Payoff'}: ${X.text}` : `Nothing fires at ${Routine.SLOT_NAMES[s]}.`)}</div>` }).join('');
+    const trickRows = typeof Routine === 'undefined' ? '' : Routine.SLOTS.map(s => { const id = cfg.tricks[s], X = Routine.TRICKS[id]; return `<div class="lo-row"><label>${Routine.SLOT_NAMES[s]} <select data-lo="k-${s}">${opt('', '— none —', !id)}${Routine.IDS.map(k => opt(k, Routine.TRICKS[k].name, id === k)).join('')}</select>${tierSel('l-' + s, cfg.levels[s]).replace(/>T(\d)</g, '>L$1<')}</label>${desc(X ? `${X.kind === 'water' ? 'Water' : 'Effect'} · helps ${X.helps}: ${X.text}` : `Nothing fires at ${Routine.SLOT_NAMES[s]}.`)}</div>` }).join('');
     const chk = (k, label, help) => `<div class="lo-row lo-wide"><label class="lo-check"><input type="checkbox" data-tune="${k}" ${T[k] ? 'checked' : ''}> ${E(label)}</label>${desc(help)}</div>`;
     return `<div class="lo-panel" role="dialog" aria-label="Playtest loadout"><header><b>PLAYTEST LOADOUT</b><button data-lo-close>✕</button></header>
       <label class="lo-check lo-main"><input type="checkbox" data-lo="on" ${cfg.on ? 'checked' : ''}> Use this loadout when a run begins</label>
       ${desc('Starts the next run with everything below. Untick to play a normal run.')}
       <section><h4>Weapons</h4>${desc('Up to six. They fire on their own in the air. T1–T4 is the tier; two equal copies merge into the next tier.')}${weaponRows}</section>
-      <section><h4>Tricks${T.rules ? '' : ' (needs Style score rules on)'}</h4>${desc('Breach fires as you leave the water, Apex at the top of the arc, Entry as you land. Setups move enemies; a payoff that hits them links (+1 mult). L1–L4 is the level.')}${trickRows}</section>
+      <section><h4>Tricks${T.rules ? '' : ' (needs Style score rules on)'}</h4>${desc('Breach fires as you leave the water, Ascent and Descent pulse while you climb and fall, Apex at the top, Entry as you land. Air tricks place enemies for your guns (a gun kill on them links: +1 mult); water tricks drown or splash. L1–L4 is the level.')}${trickRows}</section>
       <section><h4>Start</h4>${desc('The wave to begin on (its air clock and enemies) and the pearls in hand for the first shop.')}<label>Wave <input type="number" min="1" max="20" data-lo="wave" value="${+cfg.wave || 1}"></label><label>Pearls <input type="number" min="0" max="9999" data-lo="pearls" value="${+cfg.pearls || 0}"></label></section>
-      <section><h4>Abilities and rules</h4>${chk('verbs', 'Stomp, dive (S) and dash (Space) — experimental', 'Land on enemies to kill them and lift the arc; hold S to fall faster; Space dashes 3.5 m (2 charges). Parked: meant to become tricks.')}${chk('danger', 'Leading shots', 'Turret and elite shots aim where you are heading, so flying straight gets punished.')}${chk('rules', 'Style score rules (off = S4)', 'On: no quota, 0 HP ends the run, kills × tricks × clean streak pay pearls. Off: the old reels, charms and quota.')}${chk('sides', 'Armoured enemies, drowning, impacts', 'From wave 3 Shielders (hit from behind), Turtles (from below) and Spikers (from above) take 20% from their armoured side. Soaked or pushed enemies driven into the water drown; pushed enemies smash into each other.')}${chk('carve', 'Space carves', 'Hold Space under water to carve, release to launch (no boost). Off: W carves and Space boosts.')}<div class="lo-row lo-wide"><label>Mines per flight <input type="number" min="0" max="4" data-tune-n="mines" value="${+T.mines || 0}"></label>${desc('Hostile mines placed on your path ahead, behind a marker. One hit each.')}</div></section>
+      <section><h4>Abilities and rules</h4>${chk('verbs', 'Stomp, dive (S) and dash (Space) — experimental', 'Land on enemies to kill them and lift the arc; hold S to fall faster; Space dashes 3.5 m (2 charges). Parked: meant to become tricks.')}${chk('danger', 'Leading shots', 'Turret and elite shots aim where you are heading, so flying straight gets punished.')}${chk('rules', 'Style score rules (off = S4)', 'On: no quota, 0 HP ends the run, kills × tricks × clean streak pay pearls. Off: the old reels, charms and quota.')}${chk('sides', 'Armoured enemies', 'From wave 3 Shielders (hit from behind), Turtles (from below) and Spikers (from above) take 20% from their armoured side.')}${chk('carve', 'Space carves', 'Hold Space under water to carve, release to launch (no boost). Off: W carves and Space boosts.')}<div class="lo-row lo-wide"><label>Mines per flight <input type="number" min="0" max="4" data-tune-n="mines" value="${+T.mines || 0}"></label>${desc('Hostile mines placed on your path ahead, behind a marker. One hit each.')}</div></section>
       <footer><button data-lo-reset>RESET LOADOUT</button><button data-lo-close class="lo-done">DONE</button></footer></div>`;
   }
   function read(panel) {
