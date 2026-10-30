@@ -93,6 +93,8 @@ var Routine = (() => {
   const alt = (m, e) => m.origin.y + e.pos.y;           // an enemy's height above the water
   const dist = (e, me) => Math.hypot(e.pos.x - me.x, e.pos.y - me.y);
   // the nearest living enemy meeting a condition: the one the guns aim at
+  // the enemy a gun of this kind is actually aiming at (guns hold a target until another is clearly nearer), if any
+  function gunTarget(r, ids, ok) { for (const g of r.slots) { if (!ids.includes(g.id) || !g.tg) continue; const e = r.enemies.find(x => x.id === g.tg && x.hp > 0); if (e && ok(e)) return e } return null }
   function nearest(r, me, ok) { let best = null, bd = 1e9; for (const e of r.enemies) { if (e.hp <= 0 || !ok(e)) continue; const q = dist(e, me); if (q < bd) { bd = q; best = e } } return best }
 
   // an effect touched this enemy this flight: it counts toward connecting, and a later kill of it links the trick
@@ -166,16 +168,20 @@ var Routine = (() => {
       // The formations are built around the enemy the guns aim at: like Brotato's, ICARUS's guns fire at the nearest enemy
       // (designer, 2026-10-30), so the cluster or the line has to form on it to be worth anything to them.
       if (E.kind === 'well') {   // the well sits on the nearest enemy within 30 m; enemies within 3 m of you are left alone
-        const t = nearest(r, me, e => dist(e, me) <= 30); if (t) { E.x = t.pos.x; E.y = t.pos.y; E.on = t.id }
+        const t = gunTarget(r, GUNS.anchor, e => dist(e, me) <= 30) || nearest(r, me, e => dist(e, me) <= 30); if (t) { E.x = t.pos.x; E.y = t.pos.y; E.on = t.id }
         const g = (+DEMO.tune.well || 0) * E.power;
         for (const e of near(r, E.x, E.y, E.R)) { if (e.id === E.on || dist(e, me) < P.anchorKeep) continue; const u = unit(E.x - e.pos.x, E.y - e.pos.y); e.velocity.x += u.x * g * dt; e.velocity.y += u.y * g * dt; affect(r, e, E.rec) }
       }
       if (E.kind === 'chum') {   // onto the line from the dolphin through the nearest enemy, 4-18 m out
-        const t = nearest(r, me, e => dist(e, me) <= P.chumR), a = t ? unit(t.pos.x - me.x, t.pos.y - me.y) : d; E.axis = a;
+        // the axis stays on its target until that enemy dies, as the guns hold theirs, so the line can settle
+        // the line runs through what a piercing gun is aiming at (or, without one, the nearest enemy)
+        const t = gunTarget(r, GUNS.chum, e => dist(e, me) <= P.chumR) || nearest(r, me, e => dist(e, me) <= P.chumR);
+        const a = t ? unit(t.pos.x - me.x, t.pos.y - me.y) : d; E.axis = a;
         for (const e of near(r, me.x, me.y, P.chumR)) { const rx = e.pos.x - me.x, ry = e.pos.y - me.y, s = Math.max(P.chumFrom, Math.min(P.chumTo, rx * a.x + ry * a.y)), u = unit(me.x + a.x * s - e.pos.x, me.y + a.y * s - e.pos.y); e.velocity.x += u.x * P.chumPull * E.power * dt; e.velocity.y += u.y * P.chumPull * E.power * dt; affect(r, e, E.rec) }
       }
       if (E.kind === 'slip') {   // chasers behind file onto the line from the dolphin through the nearest one behind
-        const t = nearest(r, me, e => dist(e, me) <= P.slipR && (e.pos.x - me.x) * d.x + (e.pos.y - me.y) * d.y < -2), b = t ? unit(t.pos.x - me.x, t.pos.y - me.y) : { x: -d.x, y: -d.y }; E.axis = b;
+        const behind = e => dist(e, me) <= P.slipR && (e.pos.x - me.x) * d.x + (e.pos.y - me.y) * d.y < -2, t = gunTarget(r, GUNS.slip, behind) || nearest(r, me, behind);
+        const b = t ? unit(t.pos.x - me.x, t.pos.y - me.y) : { x: -d.x, y: -d.y }; E.axis = b;
         for (const e of near(r, me.x, me.y, P.slipR)) { const rx = e.pos.x - me.x, ry = e.pos.y - me.y, s = rx * b.x + ry * b.y; if (s < 2) continue; const back = Math.max(P.slipBack, Math.min(P.slipBack + P.slipLen, s)), u = unit(me.x + b.x * back - e.pos.x, me.y + b.y * back - e.pos.y); e.velocity.x += u.x * P.slipPull * E.power * dt; e.velocity.y += u.y * P.slipPull * E.power * dt; affect(r, e, E.rec) }
       }
       if (E.kind === 'eddy') {   // onto a ring around the dolphin, circling it
