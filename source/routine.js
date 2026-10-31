@@ -52,7 +52,7 @@ var Routine = (() => {
   const IDS = Object.keys(TRICKS), SLOTS = ['breach', 'ascent', 'apex', 'descent', 'entry'];
   const SLOT_NAMES = { breach: 'Breach', ascent: 'Ascent', apex: 'Apex', descent: 'Descent', entry: 'Entry' };
   const STRETCH = new Set(['ascent', 'descent']);
-  const on = r => !!(DEMO.tune.rules && r?.demo);
+  const on = r => !!(DEMO.tune.rules && !DEMO.tune.tricks && r?.demo);   // the four tricks (source/tricks.js) replace it
   function state(r) {
     const S = r.demo.routine || (r.demo.routine = { slots: {}, levels: {} });
     for (const s of SLOTS) if (!(s in S.slots) || (S.slots[s] && !TRICKS[S.slots[s]])) S.slots[s] = null;

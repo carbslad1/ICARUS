@@ -75,7 +75,7 @@ node qa/flightlog-metrics.cjs run.json     # metrics for any saved flight log (s
 | # | Build | State |
 |---|---|---|
 | 1 | Danger pass: playtest and tune the built danger (`source/danger.js`) | **Next** |
-| 2 | The 4 tricks + moderate boost + carry-over selection (singles only), replacing the routine in normal play; proven one at a time with the Trick Lab process | Not started |
+| 2 | The 4 tricks + moderate boost + carry-over selection (singles only), replacing the routine in normal play; proven one at a time with the Trick Lab process | **Built 2026-10-31** (`source/tricks.js`, `qa/tricks.cjs`; setting "The four tricks", on). Feel test in the Trick Lab and the switch-rate playtest pending; see `docs/TRICK_LAB.md` |
 | 3 | Splashdown payout + clean streak (adapting the built step-4 rules) | Not started |
 | 4 | Level-up drafts + drops + reworked shop (about 20 items) | Not started |
 | 5 | Two-tag weapons and the combos they unlock | Not started |

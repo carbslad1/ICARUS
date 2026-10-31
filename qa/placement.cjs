@@ -7,7 +7,7 @@
 //   node qa/placement.cjs [--stream] [--level=N] [--pierce=0] [--time=S]
 const path = require('path'), root = path.resolve(process.argv.slice(2).find(a => !a.startsWith('--')) || path.join(__dirname, '..'));
 const { load } = require(path.join(root, 'qa/load.cjs'));
-const loadWith = moves => load(path.join(root, 'ICARUS-demo.html'), new Map([['icarus.scoreshow.tune', JSON.stringify({ moves, ...(PIERCE != null && { pierce: +PIERCE }) })]]), { bake: true, modern: true });
+const loadWith = moves => load(path.join(root, 'ICARUS-demo.html'), new Map([['icarus.scoreshow.tune', JSON.stringify({ moves, tricks: 0, ...(PIERCE != null && { pierce: +PIERCE }) })]]), { bake: true, modern: true });
 const ROSTER = ['chaser', 'chaser', 'chaser', 'chaser', 'chaser', 'chaser', 'turret', 'turret', 'turret', 'drifter', 'drifter', 'drifter', 'splitter', 'splitter'];
 const CLASSES = { close: ['fin', 'sonic'], blast: ['rocket', 'flak'], pierce: ['laser', 'harpoon'] };
 // optional: --level=N gun tier (1), --pierce=0 to turn tiered pierce off, --time=S seconds of combat (2.5)

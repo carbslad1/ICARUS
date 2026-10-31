@@ -5,7 +5,8 @@
 // Measures damage dealt per second of air time (guns, plus drowning and splashes for water tricks), against the same
 // seeds without the trick, and checks the criteria in docs/TRICK_LAB.md.
 //   node qa/jumpstyle.cjs <trick> [--wave=5] [--seeds=8] [--flights=10] [--level=1] [--set=key:value,...] [--json]
-//   --set overrides the trick's live numbers (Routine.P), e.g. --set=eddyRing:5,eddySpin:8
+//   --set overrides the trick's live numbers (Tricks.P or Routine.P), e.g. --set=repulseR:14 or --set=eddyRing:5
+// The four tricks (front, back, cork, flop; source/tricks.js) run with DEMO.tune.tricks on; the routine's tricks with it off.
 const path = require('path'), assert = require('assert');
 const { load } = require('./load.cjs'), { flyer } = require('./bot.cjs');
 const arg = (k, d) => { const a = process.argv.find(x => x.startsWith('--' + k + '=')); return a ? a.slice(k.length + 3) : d };
@@ -14,10 +15,11 @@ const WAVE = +arg('wave', 5), SEEDS = +arg('seeds', 8), FLIGHTS = +arg('flights'
 const SET = Object.fromEntries((arg('set', '') || '').split(',').filter(Boolean).map(kv => { const [k, v] = kv.split(':'); return [k, +v] }));
 const STYLES = { low: 28, mid: 55, high: 78 };
 // the guns each trick is meant to feed; neutral tricks get one Shot and one Close gun
-const GUNS = { eddy: ['fin', 'sonic'], bubble: ['fin', 'sonic'], anchor: ['rocket', 'flak'], chum: ['laser', 'harpoon'], slip: ['laser', 'harpoon'] };
+const GUNS = { front: ['fin', 'sonic'], back: ['minigun', 'laser'], cork: ['arc', 'flak'], flop: ['harpoon', 'depth'], eddy: ['fin', 'sonic'], bubble: ['fin', 'sonic'], anchor: ['rocket', 'flak'], chum: ['laser', 'harpoon'], slip: ['laser', 'harpoon'] };
 const guns = GUNS[TRICK] || ['harpoon', 'fin'];
-const H = load(path.join(__dirname, '..', 'ICARUS-demo.html'), new Map([['icarus.scoreshow.tune', JSON.stringify({ moves: 1 })]]), { bake: true, modern: true }), D = H.DEMO, R = H.Routine;
-if (!R.TRICKS[TRICK]) { console.error('no trick ' + TRICK + '; tricks: ' + R.IDS.join(', ')); process.exit(2) }
+const FOUR = ['front', 'back', 'cork', 'flop'].includes(TRICK);
+const H = load(path.join(__dirname, '..', 'ICARUS-demo.html'), new Map([['icarus.scoreshow.tune', JSON.stringify({ moves: 1, tricks: FOUR ? 1 : 0 })]]), { bake: true, modern: true }), D = H.DEMO, R = FOUR ? H.Tricks : H.Routine;
+if (!R.TRICKS[TRICK]) { console.error('no trick ' + TRICK + '; tricks: front, back, cork, flop, ' + H.Routine.IDS.join(', ')); process.exit(2) }
 Object.assign(R.P, SET);
 const water = R.TRICKS[TRICK].kind === 'water';
 const counts = w => w in D.weapons || ['shock', 'conduct', 'shatter'].includes(w) || (water && (w === 'drown' || R.TRICKS[w]?.kind === 'water'));
@@ -25,7 +27,8 @@ const counts = w => w in D.weapons || ['shock', 'conduct', 'shatter'].includes(w
 function play(style, withTrick, seed) {
   const r = H.Hd(seed, guns[0]); r.wave = WAVE; D.wave(r);
   r.slots = guns.map(id => { const g = H.Owslot(id, LEVEL, ++r.demo.uid); g.paid = 0; g.cd = 0; return g }); D.sync(r);
-  r.demo.routine = { slots: withTrick ? { [R.TRICKS[TRICK].slot]: TRICK } : {}, levels: withTrick ? { [TRICK]: 1 } : {} };
+  if (FOUR) r.demo.trick = withTrick ? TRICK : null;
+  else r.demo.routine = { slots: withTrick ? { [R.TRICKS[TRICK].slot]: TRICK } : {}, levels: withTrick ? { [TRICK]: 1 } : {} };
   const fly = flyer(H, 'mid-keep', seed, { keep: 8 }), angle = STYLES[style] * Math.PI / 180;
   let air = 0, dmg = 0, kills = 0, hits = 0, flights = 0, prev = r.medium.kind, ticks = 0;
   while (flights < FLIGHTS && ticks < 120 * 60 * 6 && r.mode === 'playing') {

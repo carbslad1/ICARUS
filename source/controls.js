@@ -46,4 +46,6 @@ var Controls = (() => {
   vv>Sp&&(r.camV=se(r.camV.x/vv*Sp,r.camV.y/vv*Sp));
   r.cam=se(r.cam.x+r.camV.x*t,r.cam.y+r.camV.y*t);
   r.camLock=(r.camLock==null?0:r.camLock)+(0-(r.camLock||0))*Xe(t,.18);Ocl=r.camLock}}
+// v3's opening hint names W as the carve key; with Space carving it names Space (and W A S D choose a trick, source/tricks.js)
+{const zd0=Zd;Zd=function(...a){const o=zd0(...a);if(Controls.carve())ci='HOLD SPACE TO CARVE \xB7 LET GO TO LAUNCH'+(DEMO.tune.tricks&&DEMO.tune.rules?' \xB7 TAP W A S D FOR A TRICK':'');return o}}
 {if(typeof document!=='undefined'&&document.head){const st=document.createElement('style');st.textContent='body.space-carve .boost-meter{display:none}';document.head.appendChild(st)}}

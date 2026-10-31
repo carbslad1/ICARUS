@@ -5,7 +5,7 @@
 const assert = require('assert'), path = require('path');
 const { load } = require('./load.cjs'), { flyer } = require('./bot.cjs');
 const file = path.join(__dirname, '..', 'ICARUS-demo.html');
-const H = load(file, new Map([['icarus.scoreshow.tune', JSON.stringify({})]]), { bake: true, modern: true }), D = H.DEMO, R = H.Routine;
+const H = load(file, new Map([['icarus.scoreshow.tune', JSON.stringify({ tricks: 0 })]]), { bake: true, modern: true }), D = H.DEMO, R = H.Routine;
 const checks = [];
 function test(name, fn) { try { const detail = fn(); checks.push({ name, pass: true, detail }); console.log('PASS ' + name) } catch (e) { checks.push({ name, pass: false, error: e.stack }); console.log('FAIL ' + name + ': ' + e.message) } }
 

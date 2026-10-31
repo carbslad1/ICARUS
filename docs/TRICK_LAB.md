@@ -42,7 +42,20 @@ Measured with `node qa/jumpstyle.cjs <trick>`. The harness forces an exact launc
 
 And in the Trick Lab: the designer plays it and says it is fun, and can tell when it is working.
 
-## The pool
+## The four tricks (built 2026-10-31, `source/tricks.js`)
+
+Setting "The four tricks (step 2)" is on by default and replaces the routine in normal play. Under water, tap W, A, S or D to choose; the choice carries over. Each boosts its weapon type's damage by 30% for the flight. The Trick Lab lists them first, with sliders; `node qa/jumpstyle.cjs front|back|cork|flop` measures them; `node qa/tricks.cjs` checks them.
+
+| Key | Trick | Boosts | Ability, starting numbers (designer, 2026-10-31) | Status |
+|---|---|---|---|---|
+| D | Front flip | Melee | Charge: 1 s invulnerable from the breach, shoves enemies within 2.5 m at 30 m/s. No launch speed change | Built; feel test pending |
+| A | Backflip | Ranged | Repulse: enemies within 12 m pushed out at 40 m/s for 0.3 s | Built; feel test pending |
+| W | Corkscrew | Elemental | Time slow: from the apex, enemies, their shots and their timers at half speed for 1.5 s. Enemies only | Built; feel test pending |
+| S | Belly flop | Economy | Shockwave: pursuers within 10 m of the landing thrown out at 30 m/s; this flight's XP orbs and pearls ×1.5 | Built; feel test pending |
+
+Weapon tags (§4.6): Fin, Sonic melee; Minigun, Laser, Rocket ranged; Arc melee + elemental; Flak ranged + elemental; Harpoon ranged + economy; Depth charge elemental + economy.
+
+## The old pool (routine tricks, superseded)
 
 | Trick | Status | Home style (intended) | Pairs with |
 |---|---|---|---|
