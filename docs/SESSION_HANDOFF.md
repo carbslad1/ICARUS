@@ -1,9 +1,9 @@
-# Session handoff: 2026-10-27
+# Session handoff: updated 2026-10-31
 
 Everything needed to continue this work on another machine: where the code is, how to run it, where the plan stands, what has been decided and what is still open.
 
-- **Read alongside:** `docs/GAME_MAP.md` (what the demo does) and `ICARUS_DESIGN.md` §4 (the target design and the plan).
-- **Origin:** a cloud Claude Code session that ran 2026-10-25 to 2026-10-27, `session_01W2ejQJcAVtz9kP8Dd8fsTa`.
+- **Read alongside:** `docs/GAME_MAP.md` (what the demo does) and `ICARUS_DESIGN.md` §4 (the target design, revised 2026-10-30, and its build order in §4.17).
+- **Origin:** a cloud Claude Code session that ran 2026-10-25 to 2026-10-31, `session_01W2ejQJcAVtz9kP8Dd8fsTa`, plus the designer's local sessions (2026-10-27 to 2026-10-30), which built steps 2–10 of the previous plan and the Trick Lab.
 
 ## 1. Get the code
 
@@ -68,13 +68,26 @@ node qa/flightlog-metrics.cjs run.json     # metrics for any saved flight log (s
 - **Review files:** several suites rewrite files in `reviews/`. Restore them before committing: `git checkout -- reviews/ && git clean -fd reviews/`.
 - **Last results (2026-10-27):** every headless suite passed, `flightlog-bot` printed 7 PASS, and there were no page errors in Chromium.
 
-## 5. Where the plan stands (`ICARUS_DESIGN.md` §4.20)
+## 5. Where the plan stands
+
+**The design changed on 2026-10-30** (`ICARUS_DESIGN.md` §4 and §10; the old design is Appendix B). The new build order is §4.17. It reuses what is already built: danger, the Space carve, streak scoring, the Trick Lab and the harnesses.
+
+| # | Build | State |
+|---|---|---|
+| 1 | Danger pass: playtest and tune the built danger (`source/danger.js`) | **Next** |
+| 2 | The 4 tricks + moderate boost + carry-over selection (singles only), replacing the routine in normal play; proven one at a time with the Trick Lab process | Not started |
+| 3 | Splashdown payout + clean streak (adapting the built step-4 rules) | Not started |
+| 4 | Level-up drafts + drops + reworked shop (about 20 items) | Not started |
+| 5 | Two-tag weapons and the combos they unlock | Not started |
+| 6 | 2–3 catalysts | Not started |
+
+### Built under the previous plan (design doc Appendix B1.20), still in the code
 
 | Step | State |
 |---|---|
 | 0: decide and baseline | **Done.** The demo is the prototype codebase. `qa/flightlog-metrics.cjs` is built; the bot baseline is checked (`docs/flow-study/bot-baseline-metrics.json`); the human baseline is 1 run, 24 flights (`docs/flow-study/human-baseline-2026-10-27.json`) |
 | 1: space | **Built, then revised after playtest 1. Playtest 2 pending** (needs the designer's flight log) |
-| 2: danger | **Built locally 2026-10-27, playtest pending** (`source/danger.js`; see §4.20 row 2). Settings › Score: on/off, lead 0–1 (0.5), mines per flight 0–4 (3). Bot: `node qa/flightlog-bot.cjs out --danger [--lead=x] [--mines=n]` |
+| 2: danger | **Built locally 2026-10-27, playtest pending** (`source/danger.js`; see design doc Appendix B1.20 row 2). Settings › Score: on/off, lead 0–1 (0.5), mines per flight 0–4 (3). Bot: `node qa/flightlog-bot.cjs out --danger [--lead=x] [--mines=n]` |
 | 3: flight verbs | **Built, then parked 2026-10-27** (`source/verbs.js`, off; to become tricks) |
 | 4: rules reset | **Built locally 2026-10-27** (`demo.js` `style`, `finish`, `hit`; `qa/rules.cjs`); playtest pending |
 | 5: first routine | **Built locally 2026-10-27** (`source/routine.js`, `qa/routine.cjs`); playtest pending |
@@ -119,6 +132,27 @@ The human baseline, with step 1 off, was 0 hits in 24 flights and a median launc
 
 ## 6. Decisions made in this session
 
+- **Run structure, 2026-10-30.** This replaces the earlier entries below. It is in full in design doc §4 and summarised in `docs/GAME_MAP.md` §8.
+  - **Positional play dropped:** the fun is killing and collecting orbs while moving around.
+  - **One trick or combo per dive,** chosen only underwater by tapping W/A/S/D; the last choice carries over. Space carves.
+  - **The tricks:** Front flip = melee, Charge at breach · Backflip = ranged, Repulse at breach · Corkscrew = elemental, Time slow at apex · Belly flop = economy, Shockwave knockback at entry plus extra drops.
+  - **Tricks never deal damage,** water tricks included. Each boosts its weapon type for the flight: +30%, +18% or +12% for a single, pair or triple **[TUNE]**.
+  - **Combos:** anything except Front flip + Backflip. Pairs unlock by holding a two-tag weapon; triples come from a rare item.
+  - **Weapons:** 6 slots, merge T1–T4, 1–2 type tags, never melee + ranged. No set bonuses.
+  - **Items:**
+    - Common, Rare, Legendary, Cursed, Catalyst.
+    - Stats come only from items, stacking linearly with every number shown.
+    - Items never create attacks.
+  - **Getting things:** level-up = 1-of-3 item draft; drops = one random item; the shop sells weapons, items and catalysts.
+  - **Catalysts:** convert every copy of a weapon, at any tier, permanently.
+  - **Splashdown:** (kills + orbs) × clean streak → pearls. No freshness decay.
+  - **Characters:** one in the demo. The full version adds passives and alternative trick versions unlocked by challenges.
+  - **Run:** 20 waves, about 25 minutes, bosses at waves 10 and 20, 0 HP ends the run.
+  - **Rejected (2026-10-30):** the routine and its placement and water tricks, the positional grammar, a skill tree or map, mounting weapons on keys, practice mutations, carried orbs, engineering deployables, freshness decay, class set bonuses, Risk of Rain 2 automatic levels and hidden maths, choosing tricks mid-air.
+  - **Chosen 2026-10-31:** the designer picked this structure over the routine and Trick Lab pool built locally on 2026-10-30. That code stays until §4.17 replaces it.
+
+**Earlier decisions, superseded unless restated above** (kept for history):
+
 - **Design direction, 2026-10-26:**
   - The S4 slot-machine reels are replaced by a five-slot trick routine: breach, ascent, apex, descent, entry.
   - Style score is paid as pearls; 0 HP ends the run; there is no quota.
@@ -148,12 +182,12 @@ The human baseline, with step 1 off, was 0 hits in 24 flights and a median launc
 
 ## 7. Open questions for the designer
 
-1. Should the landing pool come back in another form, for example existing enemies gathering, never new spawns? Or should it be dropped?
-2. What is Brotato's exact weapon count, the roster target? Sources found disagree.
-3. Does the clean streak survive the shop between waves?
-4. Kill-lift or stomp-bounce?
-5. Which spawn-altering items to build.
-6. The rest of design doc §4.14: the trick list, how stretch slots fire, the payout curve, evolutions, how charms fold in, how tricks aim.
+1. Does critical chance stay, as the one random stat?
+2. What do W/A/S/D do underwater today, and how does tapping them to choose tricks fit with the Space carve?
+3. The boost numbers and the size of the trick utilities, after the danger pass.
+4. Confirm the built streak rules: cap ×5, survives the shop.
+5. How does Time slow feel? Test it early.
+6. Brotato's exact weapon count, the long-term roster target.
 
 ## 8. Noticed but not changed
 

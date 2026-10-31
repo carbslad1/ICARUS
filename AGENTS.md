@@ -7,7 +7,7 @@ understanding of the playable demo (2026-10-26): controls, measured flight timin
 S4 scoring, build layers, where the design is heading, and the designer's locked rules and corrections.
 The code beats the map; update the map when the demo changes.
 For where the work stands, the decisions taken and how to continue it, read `docs/SESSION_HANDOFF.md`.
-Before changing a trick, read `docs/TRICK_LAB.md`: the design goal, the jump-style criteria and the one-trick-at-a-time process.
+Before changing a trick, read design doc §4.4 (the four tricks) and `docs/TRICK_LAB.md` (the jump-style criteria and the one-trick-at-a-time process; its trick pool is superseded).
 
 ## Run and verify
 

@@ -1,6 +1,6 @@
 # ICARUS — tricks as reels (S4)
 
-> **Design direction changed (2026-10-26).** `ICARUS_DESIGN.md` §4 and §10 now describe the next design: a five-slot trick routine of abilities placed on the flight, style score paid as pearls, weapon evolutions through trick tags, and death at 0 HP. This build (S4) still implements the previous slot-machine design, kept as Appendix A of the design doc.
+> **Design direction changed (2026-10-30).** `ICARUS_DESIGN.md` §4 and §10 now describe the target design. Each dive, you choose a trick or combo underwater, and it boosts its weapon type for the flight. Tricks never deal damage; items only modify; levels give item drafts; catalysts evolve weapons; splashdown pays kills and orbs × clean streak. The build order is §4.17. This build still contains the earlier systems: the S4 slot machine (Appendix A) and the routine and positional design built on this branch (Appendix B).
 
 Open **ICARUS-demo.html** in a browser. This build implements the scoring and run design in `ICARUS_DESIGN.md` §4 and §10 (revised 2026-10-25).
 
@@ -25,7 +25,7 @@ Hold **W / Up** underwater to carve, then release to launch. **Space** boosts. *
 - **The landing pool** is built but off: spawns at the water line felt unfair in playtest 1.
 - **Settings › Score** switches step 1 off to compare with the old edge spawns.
 
-The code is in `source/space.js`; the design is in `ICARUS_DESIGN.md` §4.18 and §4.20.
+The code is in `source/space.js`. Its design is in `ICARUS_DESIGN.md` Appendix B (B1.18, B1.20); it stays in the demo under the 2026-10-30 design.
 
 ## Flight log
 

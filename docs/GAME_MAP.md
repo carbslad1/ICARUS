@@ -3,7 +3,7 @@
 This is the shared understanding of the dolphin game (ICARUS) as of **2026-10-26**: what the playable demo does, how a flight actually unfolds (measured, not assumed), where the design is heading, and the rules the designer has set. Read it before discussing the demo, its design or its balance.
 
 - **Snapshot:** branch `design/scoring-revision-2026-10`, demo build at commit `5bdcf36` (the S4 build plus a flight-log export).
-- **Design direction (§8, §11, §12) updated 2026-10-27** with the positional design decisions.
+- **Design direction (§8, §11, §12) updated 2026-10-31:** the 2026-10-30 run structure. One trick or combo is chosen each dive and boosts its weapon type; tricks never deal damage; items only modify; levels give item drafts; catalysts evolve weapons. The routine, placement tricks and positional design built on the branch up to 2026-10-30 are superseded but **still in the code** until design doc §4.17 replaces them.
 - **Step 1 built and revised after playtest 1, 2026-10-27** (`source/space.js`, on by default; Settings › Score has a toggle and an edge-share slider). **§3–§4 describe the demo with step 1 off**, as measured by the flow study.
   - About 80% of spawns appear behind markers inside the view, ahead on your path, at least 10 m above the water. The rest enter from the screen edge.
   - Chasers flock about 6 m apart and follow your recent track.
@@ -19,7 +19,7 @@ This is the shared understanding of the dolphin game (ICARUS) as of **2026-10-26
 |---|---|---|
 | `src/`, `tests/`, `AGENTS.md` | The TypeScript game built in phases (deterministic `sim/`, fixed 1/120 s step). `AGENTS.md` holds its invariants and phase gates. | Phase 2 (the frame) implemented; its human playtest is pending. |
 | `source/` → `ICARUS-demo.html` | The playable scoring/shop **demo**: a minified v3 engine (`source/carve-reference.html`) with the demo's scripts injected by `node source/build.cjs`. | Build S4. Everything in §2–§8 describes this demo. |
-| `ICARUS_DESIGN.md` | The design doc. §4 and §10 (revised 2026-10-26) describe the **target** design; Appendix A describes S4, which the demo implements. | Target design not built yet. |
+| `ICARUS_DESIGN.md` | The design doc. §4 and §10 (revised 2026-10-30) describe the **target** design. Appendix A describes S4; Appendix B the routine and positional design, much of which is built in the demo. | Target design not built yet. Its build order is §4.17. |
 | `qa/` | Headless and browser checks for the demo (`qa/load.cjs` runs the built HTML in a Node vm; `qa/bot.cjs` is the test bot). | All suites pass on S4 (see `README.md`). |
 
 Demo source files: `five-score.js` (scoring, charms), `five-combat.js` (combat items), `demo.js` (rules, shop, waves), `space.js` (step 1: marked spawns, flocking, landing pool), `flightlog.js` (recorder), `score-cues.js`, `scoreboard.js`, `onboarding.js`, `shop.js`, plus CSS.
@@ -70,7 +70,7 @@ One cycle is a dive followed by a flight. These are medians from 291 bot flights
 - **Pearls** are the one shop currency (shown as ◈ in places): round(3 × √score) at each splashdown, plus each wave's clear pay (24 + 4 × wave) and 10% interest on saved pearls (at most 10).
 - **The shop** has no charms and no reel routines; their places go to weapons and gear. Settings › Score › "Style score rules" off restores S4 below.
 
-- **The routine (`source/routine.js`, redesigned 2026-10-30):** in the air the guns do all the damage; tricks are effects that place enemies for them, and only water tricks damage. Five slots: Breach, Ascent (pulses every 0.6 s at a third of the power), Apex, Descent (pulses), Entry. Air effects: Gravity anchor (a well on the nearest enemy, the guns' target), Chum line (lines enemies up through the nearest enemy), Slipstream (files chasers behind through the nearest of them), Eddy (rings enemies at 4.5 m, inside Close reach), Bubble net (holds enemies around you 1 s), Bow wave (pushes enemies ahead aside), Breach wave (lifts surface enemies, soaks), Frost wake (your trail chills), Snare buoys (world-fixed points on the arc that freeze). Water tricks: Spout (landing splash), Riptide (drags low enemies into the water), Belly flop (drives enemies below you into the water), Undertow (pulls enemies at the landing under). mult = 1 + levels of tricks that affected an enemy + 1 per linked trick (a gun or water kill of an enemy it affected). The run starts with one trick picked on the title screen; the shop always has one trick place.
+- **The routine** (superseded design, still in the code; design doc Appendix B) (`source/routine.js`, redesigned 2026-10-30): in the air the guns do all the damage; tricks are effects that place enemies for them, and only water tricks damage. Five slots: Breach, Ascent (pulses every 0.6 s at a third of the power), Apex, Descent (pulses), Entry. Air effects: Gravity anchor (a well on the nearest enemy, the guns' target), Chum line (lines enemies up through the nearest enemy), Slipstream (files chasers behind through the nearest of them), Eddy (rings enemies at 4.5 m, inside Close reach), Bubble net (holds enemies around you 1 s), Bow wave (pushes enemies ahead aside), Breach wave (lifts surface enemies, soaks), Frost wake (your trail chills), Snare buoys (world-fixed points on the arc that freeze). Water tricks: Spout (landing splash), Riptide (drags low enemies into the water), Belly flop (drives enemies below you into the water), Undertow (pulls enemies at the landing under). mult = 1 + levels of tricks that affected an enemy + 1 per linked trick (a gun or water kill of an enemy it affected). The run starts with one trick picked on the title screen; the shop always has one trick place.
 - **Statuses (step 7, `source/statuses.js`):** Spout and Breach wave soak, Arc shocks (jumps within 5 m), Depth charge and Frost wake chill (3 = frozen block). Reactions: Conduct, Flash-freeze, Shatter (any gun hit on a frozen enemy).
 - **Brotato enemy movement (`source/movement.js`, base game only):** turrets keep about 23 m from you like Spitters, drifters fly to points about 11 m around you like Flies, splitters hold their own spot around you like Slashers, elites other than chargers hover like Gargoyles; chasers, swarmers and chargers still chase.
 - **Sides and drowning (step 8):** from wave 3 some enemies are Shielders, Turtles or Spikers, armoured except from behind, below or above (20% through armour). Soaked or driven enemies that reach the water drown. Pushed enemies do not damage each other.
@@ -116,29 +116,40 @@ One cycle is a dive followed by a flight. These are medians from 291 bot flights
 
 ## 8. Where the design is heading (not built)
 
-`ICARUS_DESIGN.md` §4 (revised 2026-10-27) and §10 replace the slot-machine reels with a **five-slot routine of positional setups and payoffs**:
+`ICARUS_DESIGN.md` §4 and §10 (revised 2026-10-30) are the target. In short:
 
-- **The routine:**
-  - The slots are breach, ascent, apex, descent and entry, and any trick can go in any slot.
-  - A routine holds one copy of each trick; extra copies level a trick up.
-  - All five slots are open from the start, but the run begins with one trick.
-- **Setups and payoffs:** setups move, hold or status enemies; payoffs consume them. A payoff on enemies your own setup moved is **linked** and adds style mult.
-- **The positional grammar (§4.16):** every effect is anchor + trigger + shape + verb.
-  - Anchors are body (Ahead, Behind, Above, Below, Around), path (Trajectory, Wake, Arc), landmark (breach, apex and landing points, the surface) and target.
-  - There are two layers: the arena rides the arc, while the world layer, including the surface, sweeps through it. This is still to be verified in play.
-  - Enemies have exposed sides, and there are three hard surfaces: enemies, frozen blocks and the water (drowning).
-- **Statuses replace tags:** Soaked, Shock, Burn, Freeze and Bleed, plus three reactions (Conduct, Flash-freeze, Steam). Each status changes where enemies go.
-- **Classes (§4.17):** 12 Brotato-style classes with set bonuses at 2, 4 and 6. Weapons have a delivery (Close, Shot or Blast) and one or two classes, and tricks count as one item toward set bonuses. The roster target is Brotato's weapon count; the exact number is open.
-- **Evolutions are earned by feats:** a T4 weapon plus its positional feat performed N times.
-- **Style score:** chips × mult × clean streak, paid as pearls on a diminishing curve. The **clean streak carries across flights**, and a hit resets it.
-- **0 HP ends the run;** there is no quota and no bust.
-- **Space (§4.18):**
-  - Enemies spawn on the arc, the arena fits the view, chasers flock and the landing pool is visible.
-  - Shots lead your arc; there are clutch events and new flight verbs (stomp-bounce, dive, dash).
-- **Rejected (2026-10-27):** proximity scaling (Pressure, Point-blank, Graze).
-- **The plan (§4.20):** 16 linear steps, each with a build, an automated check, a playtest question and a gate measured with the flight log. Step 0 is choosing which codebase prototypes the routine: the demo or `src/`.
+- **The hook:** the dive (a short, calm decision every 4–8 s) and the splashdown (a payout moment).
+- **Input:** underwater, tap **W/A/S/D** to choose the trick(s); the last choice carries over. Hold **Space** to carve; the Space carve is already built. In the air, WASD only moves.
+- **The four tricks (defaults).** They never deal damage, and each boosts one weapon type for the flight:
 
-**Why: the flow study (§4).** Enemies sat at the screen edges and kills were spread evenly over the flight. Hits were rare for careful play, and agency ended at release. Each part of the new design targets one of these.
+  | Key | Trick | Boosts | Moment | Ability |
+  |---|---|---|---|---|
+  | D | Front flip | Melee | Breach | Charge: boosted launch, about 1 s invulnerable |
+  | A | Backflip | Ranged | Breach | Repulse: pushes enemies away |
+  | W | Corkscrew | Elemental | Apex | Time slow: about 1.5 s |
+  | S | Belly flop | Economy | Water entry | Shockwave knockback; this flight's kills drop extra XP and pearls |
+
+- **Boost [TUNE]:** single +30%, pair +18% each, triple +12% each. A weapon with two tags gets both boosts.
+- **Combos:** any set except Front flip + Backflip, played in order: breach → apex → entry. A pair unlocks when you hold a weapon carrying both of its tags; triples come from the rare item *Triple threat*.
+- **Weapons:** 6 slots, merge T1–T4, 1–2 type tags (never melee + ranged). No set bonuses.
+- **Items:**
+  - Common, Rare, Legendary, Cursed, Catalyst.
+  - Stats come only from items and stack linearly, with every number shown.
+  - **Items never create attacks:** no torpedoes, no "chance to" effects.
+- **Getting things:** a level-up is a 1-of-3 item draft; drops (elites, crates) give one random item; the shop sells weapons, items and catalysts between waves.
+- **Catalysts:** convert every copy of a weapon into its evolved form, permanently, at any tier.
+- **Splashdown:** (kills + orbs) × clean streak → pearls. There is no freshness decay. The built step-4 rules (streak cap ×5, survives the shop) are the starting point.
+- **Characters:** one in the demo. The full version has passives and alternative trick versions unlocked by challenges.
+- **Run:** 20 waves, about 25 minutes, bosses at waves 10 and 20, 0 HP ends the run.
+- **Build order (design doc §4.17):**
+  1. playtest and tune the built danger
+  2. the four tricks, singles only, proven one at a time with the Trick Lab process
+  3. splashdown payout and clean streak
+  4. drafts, drops and the shop
+  5. two-tag weapons and combos
+  6. catalysts
+
+**Why:** the designer's playtest found that the fun is killing and collecting orbs while moving around. Positional rules fought that, and several tricks per flight looked janky. The flow study (§4) and the designer's 0 hits in 24 flights show that **danger must come first,** or the tricks' utility won't matter.
 
 ## 9. How the flow numbers were measured, and their limits
 
@@ -154,7 +165,7 @@ One cycle is a dive followed by a flight. These are medians from 291 bot flights
   - kills, hits, the bank, wave results and shop actions
 
   It only reads state. `icarusDemo.flightLog()` returns the same JSON.
-- **`node qa/flightlog-metrics.cjs logs/*.json`** prints the plan's gate metrics (design doc §4.20). `qa/flightlog-bot.cjs` checks it against the bot baseline (step 1 off), which is saved in `docs/flow-study/bot-baseline-metrics.json`. `--space` plays with step 1 on and prints its metrics instead. **Real player logs are the best next evidence;** ask the designer for them.
+- **`node qa/flightlog-metrics.cjs logs/*.json`** prints the gate metrics for the build order (design doc §4.17). `qa/flightlog-bot.cjs` checks it against the bot baseline (step 1 off), which is saved in `docs/flow-study/bot-baseline-metrics.json`. `--space` plays with step 1 on and prints its metrics instead. **Real player logs are the best next evidence;** ask the designer for them.
 - **Headless runs:** `qa/load.cjs` and `qa/bot.cjs`, with `flyer(controls, style, seed, {keep})`; the styles are low, mid and high × keep or turn.
 - **Browser:** use Playwright with `--enable-webgl --use-gl=angle --use-angle=swiftshader`. Rendering in the cloud container is software-only and slow; the 15-second render stress check fails there for that reason.
 - **Test-run side effect:** some QA scripts rewrite `reviews/*.json`. Restore those files with git instead of committing the test noise.
@@ -169,7 +180,11 @@ One cycle is a dive followed by a flight. These are medians from 291 bot flights
 - No "this jump needs X" readout.
 - Airtime gating is rejected.
 - Proximity scaling is rejected (2026-10-27).
-- The clean streak carries across flights; evolutions are earned by feats; tricks count toward class set bonuses (2026-10-27).
+- Positional rules (above, below, behind) are rejected; the fun is killing and collecting orbs while moving around (2026-10-30).
+- Tricks are chosen only underwater, never deal damage (water tricks included), and boost their weapon type (2026-10-30).
+- Items modify and never attack; no "chance to" effects (2026-10-30).
+- No freshness decay, no class set bonuses, no Brotato-style stat picks, no skill tree or map, no engineering deployables (2026-10-30).
+- The clean streak carries across flights (2026-10-27). Evolutions come from catalysts that convert at any tier (2026-10-30).
 - There is no safe coast after the clock.
 - XP orbs stay, without free Max HP. The heat cue is removed.
 
@@ -182,18 +197,18 @@ One cycle is a dive followed by a flight. These are medians from 291 bot flights
 - Novelty and fundamentals, as with Balatro and Vampire Survivors.
 - The game should appeal to a Northernlion-style audience.
 - Tricks are the Tony Hawk layer. Removing them would turn the game into a Balatro clone.
+- The audience is players of Brotato, Balatro, Ball x Pit and CloverPit: choice-driven upgrades, visible maths, short runs with an ending.
 
 **Working rules:**
 - Be rigorous: ask instead of assuming.
 - Push only to the authorised branch, and open a PR only when asked.
-- The ethical constraints in design doc §4.13 are binding.
+- The ethical constraints in design doc §4.15 are binding.
 
 ## 12. Open questions waiting for the designer
 
-1. How the designer actually plays: low hops, high launches or a mix; turning round at launch; where the dolphin sits on screen; how often and where they get hit; whether enemies feel edge-borne. A flight log would answer most of this.
-2. Which codebase prototypes the routine: the demo or `src/` (design doc §4.20, step 0).
-3. Brotato's exact weapon count, which is the roster target.
-4. Whether the clean streak survives the shop between waves.
-5. Kill-lift versus stomp-bounce.
-6. Stat questions: a projectile cap, the scope of attack speed, and how evolved weapons behave.
-7. The rest of the design doc §4.14 list.
+1. Does critical chance stay, as the one random stat?
+2. What do W/A/S/D do underwater today, and how does tapping them to choose tricks fit with the Space carve?
+3. The boost numbers and the size of the trick utilities, after the danger pass.
+4. Confirm the built streak rules: cap ×5, survives the shop.
+5. How does Time slow feel? Test it early.
+6. Brotato's exact weapon count, the long-term roster target.

@@ -1,5 +1,11 @@
 # Trick lab: design goal and how tricks are proven
 
+> **Superseded in part (2026-10-31).** Design doc §4 (2026-10-30) replaces this file's design goal and trick pool:
+> - The tricks are now **Front flip, Backflip, Corkscrew and Belly flop**, one or a combo chosen per dive, each boosting a weapon type.
+> - **Tricks never deal damage,** water tricks included.
+>
+> The jump styles, the proof criteria and the one-trick-at-a-time process below still apply. Use them to prove the four tricks in step 2 of design doc §4.17. The pool and log below record the superseded placement tricks.
+
 Written 2026-10-30 with the designer. Read this before changing a trick.
 
 ## The design goal
