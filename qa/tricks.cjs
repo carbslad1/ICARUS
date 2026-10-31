@@ -1,5 +1,5 @@
-// The four tricks (ICARUS_DESIGN.md §4.3-4.4, step 2 of §4.17; source/tricks.js): chosen under water with W A S D,
-// carried over, never dealing damage; each boosts its weapon type's damage for the flight and does one thing at its
+// The four tricks (ICARUS_DESIGN.md §4.3-4.4, step 2 of §4.17; source/tricks.js): performed by the keys held as you
+// breach (toward your travel: Front flip, away: Backflip, W Corkscrew, S Belly flop), never dealing damage; each boosts its weapon type's damage for the flight and does one thing at its
 // moment: Charge (Front flip), Repulse (Backflip), Time slow (Corkscrew), Shockwave and ×1.5 XP and pearls (Belly flop).
 //   node qa/tricks.cjs [--detail]
 const assert = require('assert'), path = require('path');
@@ -13,7 +13,7 @@ const DT = 1 / 120, still = { x: 0, y: 0, w: false, turn: 0, boost: false };
 function run(id, guns = ['harpoon']) {
   const r = H.Hd(7, 'harpoon');
   r.slots = guns.map(g => { const s = H.Owslot(g, 1, ++r.demo.uid); s.paid = 0; s.cd = 1e9; return s }); D.sync(r);
-  if (id) assert.ok(T.choose(r, id), 'chosen under water');
+  r.demo.trickForce = id || null;
   r.medium = { kind: 'air', origin: { x: 0, y: 100 }, local: { x: 0, y: 0 }, velocity: { x: 0, y: 0 }, vx: 20, vy: 0.001, elapsed: 1, heading: 1, waterScale: 1, exitFlight: false };
   r.bw = r.wave; r.bt = 0; r.bk = 0; r.bg = []; r.bq = []; r.warns = []; r.demo.bossSpawned = true; r.budget = 99; D.open(r); return r;
 }
@@ -22,15 +22,47 @@ function foe(r, x, y, kind = 'chaser') { D.spawn(r, false, 0); const e = r.enemi
 const enemyStep = (r, n = 1) => { for (let i = 0; i < n; i++) H.ME(r, r.medium, still, DT) };
 const hurt = (r, e) => e.maxHp - e.hp;
 
-test('a trick is chosen only under water, and the choice carries over to later flights', () => {
-  const r = H.Hd(3, 'harpoon');
-  assert.equal(T.chosen(r), null);
-  assert.ok(T.choose(r, 'back')); assert.equal(T.chosen(r), 'back');
-  r.medium = { ...r.medium, kind: 'air', origin: { x: 0, y: 50 }, local: { x: 0, y: 0 }, vx: 20, vy: 1, elapsed: 1 };
-  assert.equal(T.choose(r, 'front'), false, 'no choosing in the air'); assert.equal(T.chosen(r), 'back');
-  D.open(r); assert.equal(r.hand.tk.id, 'back', 'the flight takes the choice');
-  r.hand = null; D.open(r); assert.equal(r.hand.tk.id, 'back', 'carried over with no new choice');
-  return T.KEYS;
+test('the keys held as you breach make the trick: toward your travel a Front flip, away a Backflip, W Corkscrew, S Belly flop', () => {
+  const breach = (keys, vx) => {
+    const r = H.Hd(3, 'harpoon'); r.medium = { ...r.medium, kind: 'water', velocity: { x: vx, y: 5 } };
+    for (const k of keys) T.input(r, k);
+    r.medium = { kind: 'air', origin: { x: 0, y: 1 }, local: { x: 0, y: 0 }, velocity: { x: 0, y: 0 }, vx, vy: 20, elapsed: 0, heading: 1, waterScale: 1, exitFlight: false };
+    D.open(r); return r.hand.tk.id;
+  };
+  const D_ = { x: 1, y: 0 }, A_ = { x: -1, y: 0 }, W_ = { x: 0, y: 1 }, S_ = { x: 0, y: -1 }, none = { x: 0, y: 0 };
+  const out = { rightD: breach([D_], 20), rightA: breach([A_], 20), leftA: breach([A_], -20), leftD: breach([D_], -20), W: breach([W_], 20), S: breach([S_], -20), released: breach([D_, none], 20), nothing: breach([], 20) };
+  assert.deepEqual(out, { rightD: 'front', rightA: 'back', leftA: 'front', leftD: 'back', W: 'cork', S: 'flop', released: null, nothing: null });
+  // singles: of the keys held, the one pressed last; letting go of it falls back to the other
+  assert.equal(breach([W_, { x: 1, y: 1 }], 20), 'front'); assert.equal(breach([D_, { x: 1, y: 1 }], 20), 'cork'); assert.equal(breach([{ x: 1, y: 1 }, W_], 20), 'cork');
+  // no carry-over: a flight with nothing held has no trick
+  const r = H.Hd(3, 'harpoon'); T.input(r, D_); r.medium = { kind: 'air', origin: { x: 0, y: 1 }, local: { x: 0, y: 0 }, velocity: { x: 0, y: 0 }, vx: 20, vy: 20, elapsed: 0 }; D.open(r);
+  r.hand = null; r.medium = { kind: 'water', pos: { x: 0, y: -2 }, velocity: { x: 20, y: 5 } }; T.input(r, none); r.medium = { kind: 'air', origin: { x: 0, y: 1 }, local: { x: 0, y: 0 }, velocity: { x: 0, y: 0 }, vx: 20, vy: 20, elapsed: 0 }; D.open(r);
+  assert.equal(r.hand.tk.id, null, 'no trick carried over');
+  return out;
+});
+
+test('in the real game with free turning (the default), the key held through the breach performs the trick', () => {
+  const G = load(path.join(__dirname, '..', 'ICARUS-demo.html'), new Map([['icarus.scoreshow.tune', JSON.stringify({})], ['icarus.scoreshow.settings.v2', '{}']]), { bake: true, modern: true });
+  assert.equal(G.Orw.on, 0, 'forward-only swimming is off by default');
+  const fly = key => {
+    const r = G.Hd(9, 'harpoon'); G.DEMO.wave(r); let t = 0;
+    // dive, then steer the nose up (to 63° in the way it is going) with boost; press the trick key in the last metre
+    while (r.medium.kind === 'water' && t < 120 * 8) {
+      const m = r.medium, h = m.heading, up = Math.PI / 2 * (Math.sign(m.velocity.x) || 1) * 0 + (m.velocity.x >= 0 ? 1.1 : Math.PI - 1.1), down = t < 120 * .6;
+      const want = down ? (m.velocity.x >= 0 ? -1 : -Math.PI + 1) : up, d = Math.atan2(Math.sin(want - h), Math.cos(want - h));
+      const i = { turn: Math.abs(d) > .05 ? Math.sign(d) : 0, x: 0, y: 0, boost: !down };
+      i.x = -i.turn;
+      if (!down && m.pos.y > -1) Object.assign(i, key);   // pressed just before the surface
+      G.sw(r, i); t++;
+    }
+    return { kind: r.medium.kind, trick: r.hand?.tk?.id ?? null, dir: Math.sign(r.medium.vx) };
+  };
+  const toward = fly({ x: 1, turn: -1 }), away = fly({ x: -1, turn: 1 }), up = fly({ y: 1 }), none = fly({});
+  assert.equal(up.kind, 'air'); assert.equal(up.trick, 'cork', 'W held through the breach: Corkscrew');
+  assert.equal(none.trick, null, 'nothing held: no trick');
+  assert.equal(toward.kind, 'air'); assert.equal(toward.trick, toward.dir > 0 ? 'front' : 'back', 'D: front flip when travelling right');
+  assert.equal(away.trick, away.dir > 0 ? 'back' : 'front', 'A: backflip when travelling right');
+  return { toward, away, up, none };
 });
 
 test('each trick boosts only its weapon type (+30% damage); a two-tag weapon takes it if either tag matches', () => {
@@ -106,13 +138,13 @@ test('Belly flop: the shockwave throws pursuers away from the landing; XP orbs a
   return { orbFlop: orb('flop'), pearls: [pearls('back'), pearls('flop')] };
 });
 
-test('each trick plays its animation: a full flip from the breach, a corkscrew roll at the apex, a flat belly flop', () => {
+test('each trick plays its animation: flips and the corkscrew keep turning through the flight, the belly flop lands flat', () => {
   const pose = (id, set) => { const r = run(id, []); Object.assign(r.medium, set.m || {}); if (set.apex) r.hand.apex = true; const R = { rollOffset: 0, odC: 0, pathAngle: set.path ?? 0 }; T.animate(R, r); T.animate(R, r); return R };
   const flip = (id, t) => pose(id, { m: { elapsed: t } }).rollOffset;
   assert.ok(Math.abs(flip('front', H.Otk.flip / 2) + Math.PI) < 1e-9, 'front flip half way: half a turn forward');
   assert.ok(Math.abs(flip('back', H.Otk.flip / 2) - Math.PI) < 1e-9, 'backflip half way: half a turn back');
-  assert.ok(Math.abs(flip('front', 5) + 2 * Math.PI) < 1e-9, 'one full turn, then it holds');
-  assert.equal(pose('cork', { apex: true }).odC, 360, 'one roll at the apex, once'); assert.equal(pose('cork', {}).odC, 0, 'no roll before the apex');
+  assert.ok(Math.abs(flip('front', 5) + 5 / H.Otk.flip * 2 * Math.PI) < 1e-9, 'it keeps turning through the flight');
+  assert.ok(pose('cork', {}).odC >= 30, 'the corkscrew keeps rolling');
   const flat = alt => pose('flop', { m: { vy: -20, origin: { x: 0, y: alt }, local: { x: 0, y: 0 } }, path: -1 }).rollOffset;
   assert.equal(flat(40), 0, 'high up: no change'); assert.ok(Math.abs(flat(0) - 1) < 1e-9, 'at the water: flat (path −1 rad + 1 = 0)');
   return { frontHalf: flip('front', H.Otk.flip / 2), flopAt6m: +flat(6).toFixed(2) };

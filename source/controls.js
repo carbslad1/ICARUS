@@ -9,7 +9,9 @@
 //   (12 m, the default since the first playtest, puts the dolphin about a fifth of the way up a 43.2 m view; 7.2 m showed too little sky). It has no lead from your velocity in either
 //   direction, so it never swings sideways when a carve turns you round. 0 keeps v3's camera.
 var Controls = (() => {
-  const carve = () => !!DEMO.tune.carve, ccw = () => !!DEMO.tune.ccw;
+  // the Space carve belongs to forward-only swimming (Orw.on); with it off (the default since 2026-10-31) the water
+  // controls are v3's: A and D turn, W or Space boosts
+  const carve = () => !!DEMO.tune.carve && !!Orw.on, ccw = () => !!DEMO.tune.ccw;
   // the words for the carve key in hints, for the current setting
   const key = () => carve() ? 'Space' : 'W / ↑';
   // the boost meter goes and the touch button becomes the carve button while Space carves (run with the hint)
@@ -19,7 +21,7 @@ var Controls = (() => {
     const b = document.getElementById('touch-boost');
     if (b) { b.textContent = carve() ? 'CARVE' : 'BOOST'; b.setAttribute('aria-label', carve() ? 'Hold to carve' : 'Hold to boost underwater') }
   }
-  const hint = air => { sync(); return air ? 'W A S D / arrows: steer' + (DEMO.tune.verbs ? ' · hold S to dive · Space dashes' : '') : carve() ? 'Hold Space to carve · release to launch' : 'Hold W / up to carve · release to launch · space to boost' };
+  const hint = air => { sync(); return air ? 'W A S D / arrows: steer' + (DEMO.tune.verbs ? ' · hold S to dive · Space dashes' : '') : !Orw.on ? 'A / D to turn · W or Space to boost' + (DEMO.tune.tricks && DEMO.tune.rules ? ' · hold a trick key as you breach' : '') : carve() ? 'Hold Space to carve · release to launch' : 'Hold W / up to carve · release to launch · space to boost' };
   return { carve, ccw, key, hint };
 })();
 // input: with Space carving, w comes from Space, the touch button (Gr) or gamepad A, and nothing boosts
@@ -47,5 +49,5 @@ var Controls = (() => {
   r.cam=se(r.cam.x+r.camV.x*t,r.cam.y+r.camV.y*t);
   r.camLock=(r.camLock==null?0:r.camLock)+(0-(r.camLock||0))*Xe(t,.18);Ocl=r.camLock}}
 // v3's opening hint names W as the carve key; with Space carving it names Space (and W A S D choose a trick, source/tricks.js)
-{const zd0=Zd;Zd=function(...a){const o=zd0(...a);if(Controls.carve())ci='HOLD SPACE TO CARVE \xB7 LET GO TO LAUNCH'+(DEMO.tune.tricks&&DEMO.tune.rules?' \xB7 TAP W A S D FOR A TRICK':'');return o}}
+{const zd0=Zd;Zd=function(...a){const o=zd0(...a);const tk=DEMO.tune.tricks&&DEMO.tune.rules;if(Controls.carve())ci='HOLD SPACE TO CARVE \xB7 LET GO TO LAUNCH';else if(!Orw.on)ci='A / D TO TURN \xB7 W OR SPACE TO BOOST';if(tk)ci+=' \xB7 HOLD A KEY AS YOU BREACH FOR A TRICK';return o}}
 {if(typeof document!=='undefined'&&document.head){const st=document.createElement('style');st.textContent='body.space-carve .boost-meter{display:none}';document.head.appendChild(st)}}

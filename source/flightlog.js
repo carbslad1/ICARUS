@@ -30,7 +30,7 @@ var FlightLog = (() => {
   }
   function openFlight(r) {
     const m = r.medium, a = Math.atan2(m.vy, Math.abs(m.vx));
-    flight = { wave: r.wave, t0: r1(r.time), view: r1(Ovv(r).w), launch: { angle: deg(a), speed: r1(Math.hypot(m.vx, m.vy)) }, tier: r.tier ?? null,
+    flight = { wave: r.wave, t0: r1(r.time), trick: r.hand?.tk?.id ?? null, view: r1(Ovv(r).w), launch: { angle: deg(a), speed: r1(Math.hypot(m.vx, m.vy)) }, tier: r.tier ?? null,
       water: prev.waterStart != null ? r1(r.time - prev.waterStart) : null, dive, kills: [], hits: [], samples: [] };
     dive = [];
   }

@@ -26,6 +26,9 @@ exports.load = function (file, store = new Map(), opts = {}) {
   // The suites written for S4 (hands, reels, charms, the quota) run with step 4's rules off, as the game was; a caller
   // that sets the demo's tune itself (the flight-log bot, qa/rules.cjs) gets the shipped defaults for what it leaves out.
   if (!store.has('icarus.scoreshow.tune')) store.set('icarus.scoreshow.tune', JSON.stringify({ rules: 0 }));
+  // The suites and the bot fly with forward-only swimming (W carves), as the demo did until 2026-10-31; the demo's own
+  // default is now v3's free turning (A and D turn, W or Space boosts). A caller that saves its own settings keeps them.
+  if (!store.has('icarus.scoreshow.settings.v2')) store.set('icarus.scoreshow.settings.v2', JSON.stringify({ 'ro.on': 1 }));
   if (!opts.bake && !store.has('icarus.v3.forwardonly.baked')) store.set('icarus.v3.forwardonly.baked', '1');
   if (!opts.bake && !store.has('icarus.v3.spawn11.baked')) store.set('icarus.v3.spawn11.baked', '1');
   const html = fs.readFileSync(file, 'utf8');

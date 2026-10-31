@@ -4806,7 +4806,7 @@ OwK=Object.keys(DEMO.weapons);En='harpoon';Owp.dmg=Owp.cd=Owp.rng=Owp.kb=Owp.ex=
    Three keep the demo's own value because the demo replaces what they drive: leap.on 0 (no leap weapons), econ.pv 0
    (pearls come from the wave payout) and hand.kv 1 (one orb material per chip). The panel now saves under a new key,
    so values saved before these defaults (or copied from the v3 carve on first open) are set aside once. */
-const DemoSettings={"ro.on":1,"ro.max":85,"ro.rate":0.7,"ro.lmin":10,"ro.both":1,"carve.on":1,"carve.hold":0.7,"carve.lift":0.1,"carve.catch":4,"carve.nd":1,"carve.k":0.4,"carve.soft":20,"carve.bite":0.04,"carve.ease":0.06,"carve.arm":0.25,"carve.blast":1,"carve.bmin":20,"carve.spin":1,"carve.fx":2,"carve.ovmin":0.3,"ro.rk":1,"ro.rtime":0.12,"ro.srad":14,"ro.sbias":0.5,"ro.spush":30,"ro.stime":0.5,"ro.splash":1,"ro.xb":1,"wave.base":30,"wave.step":5,"wave.pin":1,"wave.boost":1,"wave.cap":0,"wave.charge":10,"swim.turn":3.6,"swim.hold":1,"swim.thrust":89.75,"air.gravity":-15,"swim.gravity":-30,"swim.drag":1.12,"swim.align":6.5,"swim.maxSpeed":72.5,"swim.seabed":-117,"swim.boostMultiplier":2.45,"swim.boostDrain":58,"swim.boostRegen":7,"pursuit.on":1,"pursuit.speed":1,"pursuit.turn":1,"pursuit.lead":1,"pursuit.wet":-1,"spawn.danger":0,"spawn.count":1.1,"spawn.spd":0.7,"spawn.small":0.5,"spawn.xp":2,"spawn.len":1,"spawn.cap":100,"spawn.off":2,"spawn.warn":1,"overtime.bar":0.85,"overtime.drop":0.1,"overtime.xp":0.1,"overtime.safe":0,"overtime.stuck":0.25,"air.speed":1.9,"air.snap":1,"air.grace":0.3,"air.climb":0,"arena.width":76,"arena.height":43.2,"frame.fit":1,"frame.width":57,"frame.keep":1,"frame.zoom":0,"frame.follow":0.28,"frame.lead":0,"frame.deep":0,"roll.window":0.5,"roll.torque":2,"roll.cap":1.3,"roll.deadzone":0.15,"roll.peak":7,"roll.align":1,"roll.ease":0.3,"roll.memory":1.2,"roll.wind":1.4,"roll.arc":0.5,"roll.swing":2.2,"view.guideStep":1.8,"view.guideDots":64,"view.guideAlpha":0.32,"sprite.on":1,"sprite.cork":1,"sprite.ctime":1.4,"sprite.swim":0.97,"sprite.turn":1,"sprite.upright":1,"sprite.utime":0.35,"ring.on":1,"ring.alpha":0.05,"ring.size":0.45,"ring.tilt":27,"ring.lean":20,"ring.gun":2,"ring.aim":0.05,"weap.on":1,"weap.dmg":1,"weap.cd":1,"weap.rng":1,"weap.spd":1,"weap.kb":1,"weap.ex":1,"weap.price":1,"weap.try":0,"weap.tryl":1,"econ.on":1,"econ.pv":0,"econ.pick":6,"econ.drift":2.5,"econ.sink":1.2,"econ.float":1.2,"econ.bag":1,"econ.lv":1,"leap.on":0,"leap.dmg":1,"leap.depth":20,"leap.climb":3,"leap.drop":15,"leap.ram":1,"leap.fmin":0.4,"hand.on":1,"hand.kv":1,"quota.q1":0.25,"quota.q20":0.6,"quota.ks":1.6,"quota.m1":1.5,"quota.m20":60,"quota.mk":0.52,"quota.pk":0.25,"hand.aft":1.5,"hand.pay":1,"boss.on":1,"boss.elite":1,"boss.fin":1,"boss.hp":1,"trick.on":1,"trick.flip":1.1,"trick.cork":0.9,"trick.spout":0.45,"trick.lvl":0.5,"trick.rep":0.15,"trick.rmin":0.4,"scale.esz":1,"scale.epic":1,"scale.dsz":1.7};
+const DemoSettings={"ro.on":0,"ro.max":85,"ro.rate":0.7,"ro.lmin":10,"ro.both":1,"carve.on":1,"carve.hold":0.7,"carve.lift":0.1,"carve.catch":4,"carve.nd":1,"carve.k":0.4,"carve.soft":20,"carve.bite":0.04,"carve.ease":0.06,"carve.arm":0.25,"carve.blast":1,"carve.bmin":20,"carve.spin":1,"carve.fx":2,"carve.ovmin":0.3,"ro.rk":1,"ro.rtime":0.12,"ro.srad":14,"ro.sbias":0.5,"ro.spush":30,"ro.stime":0.5,"ro.splash":1,"ro.xb":1,"wave.base":30,"wave.step":5,"wave.pin":1,"wave.boost":1,"wave.cap":0,"wave.charge":10,"swim.turn":3.6,"swim.hold":1,"swim.thrust":89.75,"air.gravity":-15,"swim.gravity":-30,"swim.drag":1.12,"swim.align":6.5,"swim.maxSpeed":72.5,"swim.seabed":-117,"swim.boostMultiplier":2.45,"swim.boostDrain":58,"swim.boostRegen":7,"pursuit.on":1,"pursuit.speed":1,"pursuit.turn":1,"pursuit.lead":1,"pursuit.wet":-1,"spawn.danger":0,"spawn.count":1.1,"spawn.spd":0.7,"spawn.small":0.5,"spawn.xp":2,"spawn.len":1,"spawn.cap":100,"spawn.off":2,"spawn.warn":1,"overtime.bar":0.85,"overtime.drop":0.1,"overtime.xp":0.1,"overtime.safe":0,"overtime.stuck":0.25,"air.speed":1.9,"air.snap":1,"air.grace":0.3,"air.climb":0,"arena.width":76,"arena.height":43.2,"frame.fit":1,"frame.width":57,"frame.keep":1,"frame.zoom":0,"frame.follow":0.28,"frame.lead":0,"frame.deep":0,"roll.window":0.5,"roll.torque":2,"roll.cap":1.3,"roll.deadzone":0.15,"roll.peak":7,"roll.align":1,"roll.ease":0.3,"roll.memory":1.2,"roll.wind":1.4,"roll.arc":0.5,"roll.swing":2.2,"view.guideStep":1.8,"view.guideDots":64,"view.guideAlpha":0.32,"sprite.on":1,"sprite.cork":1,"sprite.ctime":1.4,"sprite.swim":0.97,"sprite.turn":1,"sprite.upright":1,"sprite.utime":0.35,"ring.on":1,"ring.alpha":0.05,"ring.size":0.45,"ring.tilt":27,"ring.lean":20,"ring.gun":2,"ring.aim":0.05,"weap.on":1,"weap.dmg":1,"weap.cd":1,"weap.rng":1,"weap.spd":1,"weap.kb":1,"weap.ex":1,"weap.price":1,"weap.try":0,"weap.tryl":1,"econ.on":1,"econ.pv":0,"econ.pick":6,"econ.drift":2.5,"econ.sink":1.2,"econ.float":1.2,"econ.bag":1,"econ.lv":1,"leap.on":0,"leap.dmg":1,"leap.depth":20,"leap.climb":3,"leap.drop":15,"leap.ram":1,"leap.fmin":0.4,"hand.on":1,"hand.kv":1,"quota.q1":0.25,"quota.q20":0.6,"quota.ks":1.6,"quota.m1":1.5,"quota.m20":60,"quota.mk":0.52,"quota.pk":0.25,"hand.aft":1.5,"hand.pay":1,"boss.on":1,"boss.elite":1,"boss.fin":1,"boss.hp":1,"trick.on":1,"trick.flip":1.1,"trick.cork":0.9,"trick.spout":0.45,"trick.lvl":0.5,"trick.rep":0.15,"trick.rmin":0.4,"scale.esz":1,"scale.epic":1,"scale.dsz":1.7};
 Qd='icarus.scoreshow.settings.v2';
 {const gun=hi.find(r=>r.id==='ring.gun'),pv=hi.find(r=>r.id==='econ.pv');if(gun)gun.max=10;if(pv)pv.min=0;
  for(const r of hi)if(DemoSettings[r.id]!=null)r.home=DemoSettings[r.id];
@@ -5364,7 +5364,9 @@ var Danger = (() => {
 //   (12 m, the default since the first playtest, puts the dolphin about a fifth of the way up a 43.2 m view; 7.2 m showed too little sky). It has no lead from your velocity in either
 //   direction, so it never swings sideways when a carve turns you round. 0 keeps v3's camera.
 var Controls = (() => {
-  const carve = () => !!DEMO.tune.carve, ccw = () => !!DEMO.tune.ccw;
+  // the Space carve belongs to forward-only swimming (Orw.on); with it off (the default since 2026-10-31) the water
+  // controls are v3's: A and D turn, W or Space boosts
+  const carve = () => !!DEMO.tune.carve && !!Orw.on, ccw = () => !!DEMO.tune.ccw;
   // the words for the carve key in hints, for the current setting
   const key = () => carve() ? 'Space' : 'W / ↑';
   // the boost meter goes and the touch button becomes the carve button while Space carves (run with the hint)
@@ -5374,7 +5376,7 @@ var Controls = (() => {
     const b = document.getElementById('touch-boost');
     if (b) { b.textContent = carve() ? 'CARVE' : 'BOOST'; b.setAttribute('aria-label', carve() ? 'Hold to carve' : 'Hold to boost underwater') }
   }
-  const hint = air => { sync(); return air ? 'W A S D / arrows: steer' + (DEMO.tune.verbs ? ' · hold S to dive · Space dashes' : '') : carve() ? 'Hold Space to carve · release to launch' : 'Hold W / up to carve · release to launch · space to boost' };
+  const hint = air => { sync(); return air ? 'W A S D / arrows: steer' + (DEMO.tune.verbs ? ' · hold S to dive · Space dashes' : '') : !Orw.on ? 'A / D to turn · W or Space to boost' + (DEMO.tune.tricks && DEMO.tune.rules ? ' · hold a trick key as you breach' : '') : carve() ? 'Hold Space to carve · release to launch' : 'Hold W / up to carve · release to launch · space to boost' };
   return { carve, ccw, key, hint };
 })();
 // input: with Space carving, w comes from Space, the touch button (Gr) or gamepad A, and nothing boosts
@@ -5402,7 +5404,7 @@ var Controls = (() => {
   r.cam=se(r.cam.x+r.camV.x*t,r.cam.y+r.camV.y*t);
   r.camLock=(r.camLock==null?0:r.camLock)+(0-(r.camLock||0))*Xe(t,.18);Ocl=r.camLock}}
 // v3's opening hint names W as the carve key; with Space carving it names Space (and W A S D choose a trick, source/tricks.js)
-{const zd0=Zd;Zd=function(...a){const o=zd0(...a);if(Controls.carve())ci='HOLD SPACE TO CARVE \xB7 LET GO TO LAUNCH'+(DEMO.tune.tricks&&DEMO.tune.rules?' \xB7 TAP W A S D FOR A TRICK':'');return o}}
+{const zd0=Zd;Zd=function(...a){const o=zd0(...a);const tk=DEMO.tune.tricks&&DEMO.tune.rules;if(Controls.carve())ci='HOLD SPACE TO CARVE \xB7 LET GO TO LAUNCH';else if(!Orw.on)ci='A / D TO TURN \xB7 W OR SPACE TO BOOST';if(tk)ci+=' \xB7 HOLD A KEY AS YOU BREACH FOR A TRICK';return o}}
 {if(typeof document!=='undefined'&&document.head){const st=document.createElement('style');st.textContent='body.space-carve .boost-meter{display:none}';document.head.appendChild(st)}}
 
 // Step 3 of the build-and-playtest plan (ICARUS_DESIGN.md §4.18, §4.20): flight verbs. Designer's answers, 2026-10-27.
@@ -5994,8 +5996,11 @@ var DemoStartTrick, DemoTrickTitle;  // the title screen's pick, and the three i
 {const draw0=Otdraw;Otdraw=function(R,r,m,title){draw0(R,r,m,title);if(!title&&(r?.trickFx?.length||r?.buoys?.length||r?.effects?.length||r?.enemies?.some(e=>e.heldT>0)))Routine.draw(R,r)}}
 
 // The four tricks (ICARUS_DESIGN.md §4.3-4.4; step 2 of §4.17). Designer, 2026-10-30, with numbers 2026-10-31.
-// - Under water, tap W, A, S or D to choose the next flight's trick. The choice carries over: do nothing and you repeat
-//   it. Tricks are chosen only under water; keys in the air only move you. Singles only in this step (no combos).
+// - Performed, as in the crane-game build with forward-only swimming off (designer, 2026-10-31): the keys you hold as you
+//   breach are the flight's trick. The turn key toward the way you are travelling (a forward rotation) is a Front flip,
+//   the one away from it (a backward rotation) a Backflip, W a Corkscrew, S a Belly flop. Hold nothing for no trick.
+//   Singles only in this step (no combos): of the keys held, the one pressed last. Keys in the air only move you.
+// - Like the crane build, a flip turns the body over and over for the whole flight and a corkscrew keeps rolling.
 // - A trick never deals damage. It boosts its weapon type's damage for the flight (+30%; a weapon with two tags gets
 //   the boost if either tag matches) and does one thing at its moment:
 //   D Front flip (melee, breach): Charge, invulnerable for 1 s from the breach, shoving aside enemies you touch.
@@ -6019,23 +6024,31 @@ var Tricks = (() => {
   };
   const DEFAULTS = Object.freeze({ ...P });
   const TRICKS = Object.freeze({
-    front: { name: 'Front flip', key: 'd', type: 'melee', moment: 'breach', ability: 'Charge', glyph: '↻', text: 'Invulnerable for 1 s from the breach, shoving aside enemies you touch.' },
-    back: { name: 'Backflip', key: 'a', type: 'ranged', moment: 'breach', ability: 'Repulse', glyph: '↺', text: 'At the breach, enemies within 12 m are pushed away.' },
+    front: { name: 'Front flip', key: 'toward', type: 'melee', moment: 'breach', ability: 'Charge', glyph: '↻', text: 'Invulnerable for 1 s from the breach, shoving aside enemies you touch.' },
+    back: { name: 'Backflip', key: 'away', type: 'ranged', moment: 'breach', ability: 'Repulse', glyph: '↺', text: 'At the breach, enemies within 12 m are pushed away.' },
     cork: { name: 'Corkscrew', key: 'w', type: 'elemental', moment: 'apex', ability: 'Time slow', glyph: '⟳', text: 'At the apex, enemies and their shots move at half speed for 1.5 s.' },
     flop: { name: 'Belly flop', key: 's', type: 'economy', moment: 'entry', ability: 'Shockwave', glyph: '⤓', text: 'At water entry, enemies within 10 m are knocked back. XP orbs and pearls ×1.5 this flight.' }
   });
-  const IDS = Object.keys(TRICKS), KEYS = { d: 'front', a: 'back', w: 'cork', s: 'flop', arrowright: 'front', arrowleft: 'back', arrowup: 'cork', arrowdown: 'flop' };
+  const IDS = Object.keys(TRICKS);
   // weapon type tags (design doc §4.6); melee and ranged never share a weapon
   const TAGS = Object.freeze({ fin: ['melee'], sonic: ['melee'], minigun: ['ranged'], laser: ['ranged'], rocket: ['ranged'], arc: ['melee', 'elemental'], flak: ['ranged', 'elemental'], harpoon: ['ranged', 'economy'], depth: ['elemental', 'economy'] });
   const on = r => !!(DEMO.tune.tricks && DEMO.tune.rules && r?.demo);
   const unit = (x, y) => { const n = Math.hypot(x, y) || 1; return { x: x / n, y: y / n } };
 
-  // choosing: only under water; the choice carries over to every later flight until changed
-  function choose(r, id) {
-    if (!on(r) || !TRICKS[id] || r.medium?.kind === 'air') return false;
-    r.demo.trick = id; return true;
+  // the keys held under water, in the order they were pressed (called each water step with the step's input)
+  function input(r, t) {
+    const K = { right: t.x > .5, left: t.x < -.5, up: t.y > .5, down: t.y < -.5 }, q = r.tkKeys || (r.tkKeys = { order: [], prev: {} });
+    for (const k in K) { if (K[k] && !q.prev[k]) q.order = q.order.filter(x => x !== k).concat(k); if (!K[k]) q.order = q.order.filter(x => x !== k) }
+    q.prev = K;
   }
-  const chosen = r => r.demo?.trick || null;
+  // the trick the held keys make, for travel in direction dir (+1 right, -1 left): the last key pressed that is held
+  function held(r, dir) {
+    const k = r.tkKeys?.order.at(-1); if (!k) return null;
+    return k === 'up' ? 'cork' : k === 'down' ? 'flop' : (k === 'right') === (dir >= 0) ? 'front' : 'back';
+  }
+  const travel = r => { const m = r.medium; return Math.sign(m.kind === 'air' ? m.vx : m.velocity?.x) || 1 };
+  // the harness and tests can fix a flight's trick (r.demo.trickForce: an id, or null for none)
+  const chosen = r => r.demo?.trickForce !== undefined ? r.demo.trickForce : held(r, travel(r));
   const flying = r => r.hand?.tk?.id || null;           // this flight's trick, fixed at the breach
   function boostFor(r, weapon) {
     const id = flying(r); if (!id || r.lab?.off) return 1;
@@ -6088,16 +6101,16 @@ var Tricks = (() => {
     if (typeof as === 'undefined' || !as?.origin || typeof ke === 'undefined') return m.origin;
     const k = Math.max(0, Math.min(1, ke / Ar)); return { x: as.origin.x + (m.origin.x - as.origin.x) * k, y: as.origin.y + (m.origin.y - as.origin.y) * k };
   }
-  // the dolphin's tricks, through v3's own animation (as the crane-game build played them): a flip is one full turn
-  // of the body from the breach (R.rollOffset, Otk.flip s a turn); the corkscrew is one roll through the sprite's roll
-  // frames at the apex (R.odC, Otk.cork s a roll); the belly flop flattens the body over the last P.flopFlat m above
-  // the water, so it slaps down flat
+  // the dolphin's tricks, through v3's own animation as the crane-game build played them (its Otdraw): a flip turns
+  // the body over and over for the whole flight (R.rollOffset, one turn every Otk.flip s); a corkscrew keeps rolling
+  // through the sprite's roll frames (R.odC, one roll every Otk.cork s); the belly flop flattens the body over the
+  // last P.flopFlat m above the water, so it slaps down flat
   const smooth = p => p * p * (3 - 2 * p);
   function animate(R, r) {
     const m = r.medium, h = r.hand, id = h?.tk?.id; if (m?.kind !== 'air' || !id) return;
     const dir = (m.vx || 0) < 0 ? -1 : 1;
-    if (id === 'front' || id === 'back') R.rollOffset = (id === 'back' ? 1 : -1) * dir * smooth(Math.min(1, m.elapsed / Otk.flip)) * Math.PI * 2;
-    if (id === 'cork' && h.apex && !h.tk.rolled) { h.tk.rolled = true; R.odC = (R.odC || 0) + 360 }
+    if (id === 'front' || id === 'back') R.rollOffset = (id === 'back' ? 1 : -1) * dir * m.elapsed / Otk.flip * Math.PI * 2;
+    if (id === 'cork') R.odC = Math.max(R.odC || 0, 30);
     if (id === 'flop' && m.vy < 0) {
       const alt = m.origin.y + m.local.y, k = smooth(Math.max(0, Math.min(1, 1 - alt / P.flopFlat))), d = (dir > 0 ? 0 : Math.PI) - R.pathAngle;
       R.rollOffset = Math.atan2(Math.sin(d), Math.cos(d)) * k;
@@ -6112,20 +6125,22 @@ var Tricks = (() => {
     if (r.slowT > 0) for (const e of r.enemies) if (e.hp > 0) G.circle(X(e.pos.x), Y(e.pos.y), (e.radius + .6) * ppm).stroke({ color: 0xb48cff, width: 2, alpha: .75 });
   }
 
-  // the HUD: the four keys under water with the chosen one lit; the flight's trick in the air
+  // the HUD: under water, the four tricks with their keys for the way you are going now, the one you would breach
+  // with lit; in the air, the flight's trick
   function hud(r, title) {
     if (typeof document === 'undefined') return;
     let el = document.getElementById('trick-pick');
     const show = !title && on(r) && r.mode === 'playing' && (typeof ft === 'undefined' || ft === 'game');
     if (!show) { if (el) el.hidden = true; return }
     if (!el) { el = document.createElement('div'); el.id = 'trick-pick'; document.body.appendChild(el) }
-    const air = r.medium?.kind === 'air', pick = air ? flying(r) : chosen(r), sig = (air ? 'a' : 'w') + (pick || '-') + (r.lab?.off ? 'x' : '');
+    const air = r.medium?.kind === 'air', pick = air ? flying(r) : r.lab?.off ? null : chosen(r), dir = travel(r), sig = (air ? 'a' : 'w') + (pick || '-') + dir + (r.lab?.off ? 'x' : '');
+    const key = id => id === 'cork' ? 'W' : id === 'flop' ? 'S' : (id === 'front') === (dir > 0) ? 'D' : 'A';
     el.hidden = false; if (el.dataset.sig === sig) return; el.dataset.sig = sig; el.classList.toggle('in-air', air);
     if (air) { el.innerHTML = pick ? `<span class="tp-key on"><b>${TRICKS[pick].glyph} ${TRICKS[pick].name}</b><small>+${Math.round(P.boost * 100)}% ${TRICKS[pick].type}</small></span>` : ''; el.hidden = !pick; return }
-    el.innerHTML = `<small class="tp-hint">${pick ? 'Trick' : 'Tap W A S D: choose a trick'}</small>` + ['cork', 'back', 'flop', 'front'].map(id => { const T = TRICKS[id]; return `<span class="tp-key${id === pick ? ' on' : ''}"><kbd>${T.key.toUpperCase()}</kbd><b>${T.name}</b><small>${T.type} · ${T.ability}</small></span>` }).join('');
+    el.innerHTML = `<small class="tp-hint">Hold as you breach</small>` + ['cork', dir > 0 ? 'back' : 'front', 'flop', dir > 0 ? 'front' : 'back'].map(id => { const T = TRICKS[id]; return `<span class="tp-key${id === pick ? ' on' : ''}"><kbd>${key(id)}</kbd><b>${T.name}</b><small>${T.type} · ${T.ability}</small></span>` }).join('');
   }
 
-  return { P, DEFAULTS, TRICKS, IDS, KEYS, TAGS, on, choose, chosen, flying, boostFor, open, step, entry, shockwave, animate, draw, hud };
+  return { P, DEFAULTS, TRICKS, IDS, TAGS, on, input, held, chosen, flying, boostFor, open, step, entry, shockwave, animate, draw, hud };
 })();
 // the breach: DEMO.open opens the flight's hand
 {const open0=DEMO.open;DEMO.open=function(r){open0(r);if(Tricks.on(r))Tricks.open(r)}}
@@ -6144,8 +6159,8 @@ var Tricks = (() => {
 {const pq0=Pq;Pq=function(r,e){if(r?.shock&&r.medium?.kind==='water')Tricks.shockwave(r);return pq0(r,e)}}
 // Belly flop: this flight's XP orbs are worth more
 {const drop0=Oxedrop;Oxedrop=function(r,t,e){const L=r.eorbs||(r.eorbs=[]),n=L.length;drop0(r,t,e);if(Tricks.on(r)&&r.hand?.tk?.id==='flop'&&L.length>n)L.at(-1).m*=Tricks.P.flopX}}
-// choosing under water with W A S D (or the arrows)
-{if(typeof window!=='undefined')window.addEventListener('keydown',e=>{const id=Tricks.KEYS[String(e.key).toLowerCase()];if(id&&typeof S!=='undefined'&&S&&typeof ft!=='undefined'&&ft==='game')Tricks.choose(S,id)})}
+// the keys held under water, read from each water step's input (so bots and replays perform tricks the same way)
+{const il0=Il;Il=function(r,t,e,i){if(t&&Tricks.on(r)&&r.medium?.kind==='water')Tricks.input(r,t);return il0(r,t,e,i)}}
 {const draw0=Otdraw;Otdraw=function(R,r,m,title){draw0(R,r,m,title);if(!title&&Tricks.on(r)){Tricks.animate(R,r);Tricks.draw(R,r)}Tricks.hud(r,title)}}
 // the pause stops the drawing, so the HUD hides itself there (the next frame after resuming shows it again)
 {const ls0=ls;ls=function(){ls0();const el=typeof document!=='undefined'&&document.getElementById('trick-pick');if(el)el.hidden=true}}
@@ -6191,7 +6206,7 @@ var FlightLog = (() => {
   }
   function openFlight(r) {
     const m = r.medium, a = Math.atan2(m.vy, Math.abs(m.vx));
-    flight = { wave: r.wave, t0: r1(r.time), view: r1(Ovv(r).w), launch: { angle: deg(a), speed: r1(Math.hypot(m.vx, m.vy)) }, tier: r.tier ?? null,
+    flight = { wave: r.wave, t0: r1(r.time), trick: r.hand?.tk?.id ?? null, view: r1(Ovv(r).w), launch: { angle: deg(a), speed: r1(Math.hypot(m.vx, m.vy)) }, tier: r.tier ?? null,
       water: prev.waterStart != null ? r1(r.time - prev.waterStart) : null, dive, kills: [], hits: [], samples: [] };
     dive = [];
   }
@@ -6425,7 +6440,7 @@ var RunGuide=(()=>{
     if(r.demo.last&&r.demo.last!==bankSeen){bankSeen=r.demo.last;if(r.demo.last.chips>0)bankAt=r.time;}
     if(r.demo.overtime){html='<b>OVERTIME</b><span>Enemies keep coming and kills still count. Land in water to bank and end the wave.</span>'}
     else if(r.demo.last?.chips>0&&r.medium.kind==='water'&&r.time-bankAt<5){const h=r.demo.last;html=`<b>LAND & BANK</b><span><em class="guide-chips">${h.chips} chips</em> × <em class="guide-mult">${DEMO.fmt(h.mult)} mult</em> banked <em class="guide-score">${h.score} points</em>. Your wave target is ${r.quota}.</span>`}
-    else if(r.medium.kind==='water'&&landings<2){html=`<b>CARVE & RELEASE</b><span>${touch()?(Controls.carve()?'Hold the right button to carve, then release to launch.':'Hold the left control upward, then release to launch. The right button boosts.'):(Controls.carve()?'Hold Space to carve, then release to launch.':'Hold W / ↑ to carve upward, then release to launch. Space boosts.')}</span>`}
+    else if(r.medium.kind==='water'&&landings<2){html=`<b>CARVE & RELEASE</b><span>${touch()?(Controls.carve()?'Hold the right button to carve, then release to launch.':'Hold the left control upward, then release to launch. The right button boosts.'):(Controls.carve()?'Hold Space to carve, then release to launch.':!Orw.on?'A / D turn you, W or Space boosts. Hold a trick key as you breach: turn toward your travel for a Front flip, away for a Backflip, W Corkscrew, S Belly flop.':'Hold W / ↑ to carve upward, then release to launch. Space boosts.')}</span>`}
     else if(r.medium.kind==='air'&&!r.kills){html='<b>FIGHT</b><span>Weapons fire automatically. Get enemies in range to earn <em class="guide-chips">chips</em>.</span>'}
     else if(r.medium.kind==='air'&&landings<3){html='<b>BUILD THE PAYOUT</b><span>Kills feed <em class="guide-chips">chips</em>. Tricks feed <em class="guide-mult">mult</em>. A hit bails the trick in progress. Land to bank.</span>'}
     else if(landings<4){html=`<b>WAVE TARGET</b><span>${r.wscore} / ${r.quota} banked. ${r.budget.toFixed(0)} seconds of air remain.</span>`}
@@ -6689,7 +6704,7 @@ var Lab = (() => {
     if (!active || !r?.demo) return r;
     const d = r.demo;
     r.slots = cfg.guns.filter(id => DEMO.weapons[id]).map(id => { const g = Owslot(id, cfg.tier, ++d.uid); g.paid = 0; g.cd = 0; return g });
-    if (four(cfg.trick)) { d.trick = cfg.trick; d.routine = { slots: {}, levels: {} } }
+    if (four(cfg.trick)) d.routine = { slots: {}, levels: {} };   // performed: hold its key as you breach
     else d.routine = { slots: { [slotOf()]: cfg.trick }, levels: { [cfg.trick]: cfg.level } };
     if (cfg.wave !== r.wave) { r.wave = cfg.wave; DEMO.wave(r) }
     DEMO.sync(r); r.hp = r.stats.maxHp; r.lab = { flights: [], off: false };
@@ -6721,11 +6736,11 @@ var Lab = (() => {
   const opt = (v, label, sel) => `<option value="${E(v)}" ${sel ? 'selected' : ''}>${E(label)}</option>`;
   function html() {
     const T = { ...Routine.TRICKS, ...Tricks.TRICKS }, order = [...Tricks.IDS, ...Routine.FOCUS, ...Routine.IDS.filter(id => !Routine.FOCUS.includes(id))], X = T[cfg.trick] || T.front, F = four(cfg.trick);
-    const label = id => four(id) ? `${T[id].key.toUpperCase()} · ${T[id].name}` : T[id].name + ' (old routine' + (Routine.FOCUS.includes(id) ? '' : ', parked') + ')';
+    const label = id => four(id) ? `${{ toward: 'Turn toward travel', away: 'Turn away', w: 'W', s: 'S' }[T[id].key]} · ${T[id].name}` : T[id].name + ' (old routine' + (Routine.FOCUS.includes(id) ? '' : ', parked') + ')';
     const sliders = (PARAMS[cfg.trick] || []).map(([k, label, lo, hi, st]) => { const v = +get(k); return `<label class="lab-slider">${E(label)} <input type="range" min="${lo}" max="${hi}" step="${st}" value="${v}" data-param="${k}"><b>${v}</b></label>` }).join('');
     const gunSel = i => `<select data-lab="gun${i}">${opt('', '— none —', !cfg.guns[i])}${Object.keys(DEMO.weapons).map(id => opt(id, `${Owc[id]?.name || id} · ${DEMO.weapons[id].type}`, cfg.guns[i] === id)).join('')}</select>`;
     return `<div class="lo-panel lab-panel" role="dialog" aria-label="Trick lab"><header><b>TRICK LAB</b><button data-lab-close>✕</button></header>
-      <small class="lo-desc">One trick at a time. Tune it until it feels right, then check it with <code>node qa/jumpstyle.cjs ${E(cfg.trick)}${four(cfg.trick) ? " --waves=5:1,10:2 --seeds=24" : ""}</code>. In the run, B switches the trick off and on.</small>
+      <small class="lo-desc">One trick at a time. Perform it by holding its key as you breach. Tune it until it feels right, then check it with <code>node qa/jumpstyle.cjs ${E(cfg.trick)}${four(cfg.trick) ? " --waves=5:1,10:2 --seeds=24" : ""}</code>. In the run, B switches the trick off and on.</small>
       <section><h4>Trick</h4><label>Trick <select data-lab="trick">${order.map(id => opt(id, label(id), id === cfg.trick)).join('')}</select></label>
         ${F ? `<small class="lo-desc lo-wide">Boosts ${E(X.type)} weapons · ${E(X.ability)}: ${E(X.text)}</small></section>` : `<label>Slot <select data-lab="slot">${opt('', 'natural (' + Routine.SLOT_NAMES[X.slot] + ')', !cfg.slot)}${Routine.SLOTS.map(s => opt(s, Routine.SLOT_NAMES[s], cfg.slot === s)).join('')}</select></label>
         <label>Level <select data-lab="level">${[1, 2, 3, 4].map(l => opt(l, 'L' + l, cfg.level === l)).join('')}</select></label>

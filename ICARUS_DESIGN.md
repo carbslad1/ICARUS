@@ -234,14 +234,25 @@ The structure makes those two moments carry the roguelite. Everything else is de
 
 | Where | Input | Effect |
 |---|---|---|
-| Underwater | Tap **W, A, S or D** (one or several) | Choose the trick(s) for the next flight. **The last choice carries over**: do nothing and you repeat it. |
-| Underwater | Hold **Space**, release | Carve, then launch |
+**Revised 2026-10-31 (designer): tricks are performed, as in the crane-game build with forward-only swimming off.**
+
+| Where | Input | Effect |
+|---|---|---|
+| Underwater | **A / D** | Turn the dolphin (v3's free swimming) |
+| Underwater | **W or Space** | Boost |
+| At the breach | **Hold** the turn key toward your travel direction (a forward rotation) | **Front flip** |
+| At the breach | **Hold** the turn key away from it (a backward rotation) | **Backflip** |
+| At the breach | **Hold W** | **Corkscrew** |
+| At the breach | **Hold S** | **Belly flop** |
 | In the air | **WASD** | Move only. The trick runs by itself. Weapons fire on their own. |
 
-- **Tricks can only be chosen underwater.**
-- **The selected tricks show as icons during the carve.**
-- **Space-to-carve is built** (2026-10-27, `source/controls.js`). The carve turns the nose up toward the side you face.
-- **[OPEN]** What W/A/S/D do underwater today, and how tapping them to choose tricks fits with the carve.
+- **The keys held as you breach are the flight's trick.** Hold nothing for no trick. Nothing carries over.
+- **Singles only for now:** of the keys held, the one pressed last. Combos (§4.5) will be several keys held together.
+- **The animation is the crane build's:** a flip turns the body over and over for the whole flight, and a corkscrew keeps rolling. A belly flop flattens the body before the water.
+- **Under water, a bar shows the four tricks** with their keys for the way you are going, and lights the one you would breach with.
+- **To watch:** A and D steer the launch and choose the flip at once. Rising out of a dive is a backward rotation, so a Backflip comes naturally; a Front flip means tipping the nose forward just as you leave the water.
+- **Forward-only swimming and the Space carve** (2026-10-27, `source/controls.js`) remain as settings, off by default.
+- Tapping to choose with carry-over (built 2026-10-31 morning) was replaced the same day.
 
 ## 4.4 The four tricks
 

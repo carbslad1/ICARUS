@@ -61,7 +61,7 @@ And in the Trick Lab: the designer plays it and says it is fun, and can tell whe
 
 ## The four tricks (built 2026-10-31, `source/tricks.js`)
 
-Setting "The four tricks (step 2)" is on by default and replaces the routine in normal play. Under water, tap W, A, S or D to choose; the choice carries over. Each boosts its weapon type's damage by 30% for the flight. The Trick Lab lists them first, with sliders; `node qa/jumpstyle.cjs front|back|cork|flop` measures them; `node qa/tricks.cjs` checks them.
+Setting "The four tricks (step 2)" is on by default and replaces the routine in normal play. **Performed (2026-10-31): hold the key as you breach**: the turn key toward your travel direction gives Front flip, away gives Backflip, W Corkscrew, S Belly flop (design doc §4.3). The harness fixes the trick instead (`r.demo.trickForce`). Each boosts its weapon type's damage by 30% for the flight. The Trick Lab lists them first, with sliders; `node qa/jumpstyle.cjs front|back|cork|flop` measures them; `node qa/tricks.cjs` checks them.
 
 | Key | Trick | Boosts | Ability, starting numbers (designer, 2026-10-31) | Status |
 |---|---|---|---|---|

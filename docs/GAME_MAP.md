@@ -26,6 +26,8 @@ Demo source files: `five-score.js` (scoring, charms), `five-combat.js` (combat i
 
 ## 2. Controls (demo)
 
+> **Changed 2026-10-31:** the default water controls are v3's free swimming again (forward-only swimming off): A and D turn, W or Space boosts. A trick is the key held as you breach (toward your travel: Front flip; away: Backflip; W Corkscrew; S Belly flop); see design doc §4.3. The Space carve below applies only with forward-only swimming on. The QA loader pins the suites and bots to forward-only swimming.
+
 - **Underwater:** hold **Space** to carve, release to launch (since 2026-10-27; `source/controls.js`). The carve turns the nose up toward the side you face, as in v3 (an always-anticlockwise option exists in Settings › Score, off since the designer reverted it on 2026-10-27). **There is no boost.** Holding Space in the air arms the carve for the splash; held through the surface it adds the corkscrew. Settings › Score can restore W carving with Space boost, and facing-based direction.
 - **Water camera:** sits 12 m above the dolphin (setting: 0 restores v3's camera; 7.2 m showed too little sky in the first playtest), so the dolphin is about a fifth of the way up the view. It has no velocity lead in either direction. The pan from the arena centre to the dolphin at the splash is unchanged.
 - **In the air:** **W A S D / arrows** move the dolphin inside the arena. Step 3's stomp, dive (S) and dash (Space) exist in `source/verbs.js` but are **parked** (2026-10-27): off by default, under "Experimental" in Settings › Score. The designer wants them to become tricks. **Weapons fire automatically**; the player never aims or times shots.

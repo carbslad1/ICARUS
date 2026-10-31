@@ -42,7 +42,7 @@ const DT = 1 / 120;
 function play({ w: wave, tier }, style, withTrick, seed) {
   const r = H.Hd(seed, guns[0]); r.wave = wave; D.wave(r);
   r.slots = guns.map(id => { const g = H.Owslot(id, tier, ++r.demo.uid); g.paid = 0; g.cd = 0; return g }); D.sync(r);
-  if (FOUR) r.demo.trick = withTrick ? TRICK : null;
+  if (FOUR) r.demo.trickForce = withTrick ? TRICK : null;
   else r.demo.routine = { slots: withTrick ? { [R.TRICKS[TRICK].slot]: TRICK } : {}, levels: withTrick ? { [TRICK]: 1 } : {} };
   const fly = flyer(H, 'mid-keep', seed, { keep: 8 }), angle = STYLES[style] * Math.PI / 180;
   const o = { air: 0, dmg: 0, kills: 0, hits: 0, hpLost: 0, flights: 0, alive: 0, ttk: 0, ttkN: 0 }, life = new Map();
