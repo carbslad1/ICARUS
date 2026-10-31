@@ -19,7 +19,8 @@ var Tricks = (() => {
     repulseR: 12, repulseV: 40, repulseT: .3,    // m; m/s outward; s it pushes for (catches enemies recalled at the breach)
     slowT: 1.5, slow: .5,                        // s from the apex; enemies and their shots move at this share of speed
     shockR: 10, shockV: 30,                      // m around the landing point; m/s outward
-    flopX: 1.5                                   // Belly flop flight: XP orbs and splashdown pearls ×
+    flopX: 1.5,                                  // Belly flop flight: XP orbs and splashdown pearls ×
+    flopFlat: 12                                 // m above the water over which the belly flop flattens the body
   };
   const DEFAULTS = Object.freeze({ ...P });
   const TRICKS = Object.freeze({
@@ -86,10 +87,32 @@ var Tricks = (() => {
     for (const p of r.pursuers || []) if (S.ids.has(p.id)) { p.h = Math.atan2(p.y - S.y, p.x - S.x); p.v = P.shockV }
   }
 
+  // the arena origin the renderer draws this frame: between the last two steps, as the engine draws the arena
+  // (draw(S, as, ke/Ar)); drawing at the latest step's origin makes things jitter against everything else
+  function seen(m) {
+    if (typeof as === 'undefined' || !as?.origin || typeof ke === 'undefined') return m.origin;
+    const k = Math.max(0, Math.min(1, ke / Ar)); return { x: as.origin.x + (m.origin.x - as.origin.x) * k, y: as.origin.y + (m.origin.y - as.origin.y) * k };
+  }
+  // the dolphin's tricks, through v3's own animation (as the crane-game build played them): a flip is one full turn
+  // of the body from the breach (R.rollOffset, Otk.flip s a turn); the corkscrew is one roll through the sprite's roll
+  // frames at the apex (R.odC, Otk.cork s a roll); the belly flop flattens the body over the last P.flopFlat m above
+  // the water, so it slaps down flat
+  const smooth = p => p * p * (3 - 2 * p);
+  function animate(R, r) {
+    const m = r.medium, h = r.hand, id = h?.tk?.id; if (m?.kind !== 'air' || !id) return;
+    const dir = (m.vx || 0) < 0 ? -1 : 1;
+    if (id === 'front' || id === 'back') R.rollOffset = (id === 'back' ? 1 : -1) * dir * smooth(Math.min(1, m.elapsed / Otk.flip)) * Math.PI * 2;
+    if (id === 'cork' && h.apex && !h.tk.rolled) { h.tk.rolled = true; R.odC = (R.odC || 0) + 360 }
+    if (id === 'flop' && m.vy < 0) {
+      const alt = m.origin.y + m.local.y, k = smooth(Math.max(0, Math.min(1, 1 - alt / P.flopFlat))), d = (dir > 0 ? 0 : Math.PI) - R.pathAngle;
+      R.rollOffset = Math.atan2(Math.sin(d), Math.cos(d)) * k;
+    }
+  }
+
   // drawing on the telegraph layer: Charge's shell round the dolphin and Time slow's rings on the slowed enemies
   function draw(R, r) {
     const m = r.medium; if (m?.kind !== 'air') return;
-    const G = R.telegraphs, o = m.origin, X = v => R.sx(o.x + v), Y = v => R.sy(o.y + v), ppm = Math.abs(R.sx(o.x + 1) - R.sx(o.x));
+    const G = R.telegraphs, o = seen(m), X = v => R.sx(o.x + v), Y = v => R.sy(o.y + v), ppm = Math.abs(R.sx(o.x + 1) - R.sx(o.x));
     if (r.chargeT > 0) G.circle(X(m.local.x), Y(m.local.y), P.chargeR * ppm).stroke({ color: yt.amber, width: 3, alpha: .5 + .4 * Math.min(1, r.chargeT * 2) });
     if (r.slowT > 0) for (const e of r.enemies) if (e.hp > 0) G.circle(X(e.pos.x), Y(e.pos.y), (e.radius + .6) * ppm).stroke({ color: 0xb48cff, width: 2, alpha: .75 });
   }
@@ -107,7 +130,7 @@ var Tricks = (() => {
     el.innerHTML = `<small class="tp-hint">${pick ? 'Trick' : 'Tap W A S D: choose a trick'}</small>` + ['cork', 'back', 'flop', 'front'].map(id => { const T = TRICKS[id]; return `<span class="tp-key${id === pick ? ' on' : ''}"><kbd>${T.key.toUpperCase()}</kbd><b>${T.name}</b><small>${T.type} · ${T.ability}</small></span>` }).join('');
   }
 
-  return { P, DEFAULTS, TRICKS, IDS, KEYS, TAGS, on, choose, chosen, flying, boostFor, open, step, entry, shockwave, draw, hud };
+  return { P, DEFAULTS, TRICKS, IDS, KEYS, TAGS, on, choose, chosen, flying, boostFor, open, step, entry, shockwave, animate, draw, hud };
 })();
 // the breach: DEMO.open opens the flight's hand
 {const open0=DEMO.open;DEMO.open=function(r){open0(r);if(Tricks.on(r))Tricks.open(r)}}
@@ -128,11 +151,12 @@ var Tricks = (() => {
 {const drop0=Oxedrop;Oxedrop=function(r,t,e){const L=r.eorbs||(r.eorbs=[]),n=L.length;drop0(r,t,e);if(Tricks.on(r)&&r.hand?.tk?.id==='flop'&&L.length>n)L.at(-1).m*=Tricks.P.flopX}}
 // choosing under water with W A S D (or the arrows)
 {if(typeof window!=='undefined')window.addEventListener('keydown',e=>{const id=Tricks.KEYS[String(e.key).toLowerCase()];if(id&&typeof S!=='undefined'&&S&&typeof ft!=='undefined'&&ft==='game')Tricks.choose(S,id)})}
-{const draw0=Otdraw;Otdraw=function(R,r,m,title){draw0(R,r,m,title);if(!title&&Tricks.on(r))Tricks.draw(R,r);Tricks.hud(r,title)}}
+{const draw0=Otdraw;Otdraw=function(R,r,m,title){draw0(R,r,m,title);if(!title&&Tricks.on(r)){Tricks.animate(R,r);Tricks.draw(R,r)}Tricks.hud(r,title)}}
 // the pause stops the drawing, so the HUD hides itself there (the next frame after resuming shows it again)
 {const ls0=ls;ls=function(){ls0();const el=typeof document!=='undefined'&&document.getElementById('trick-pick');if(el)el.hidden=true}}
 {if(typeof document!=='undefined'&&document.head){const st=document.createElement('style');st.textContent=`
 #trick-pick{position:fixed;left:50%;bottom:132px;transform:translateX(-50%);z-index:30;display:flex;gap:8px;align-items:flex-end;pointer-events:none;font:12px/1.3 var(--mono,monospace);color:#cfe7e8}
+#trick-pick[hidden]{display:none!important}
 #trick-pick .tp-hint{position:absolute;left:50%;bottom:calc(100% + 4px);transform:translateX(-50%);white-space:nowrap;color:#89ffe0aa;letter-spacing:.08em;text-transform:uppercase;font-size:10px}
 #trick-pick .tp-key{display:grid;justify-items:center;gap:2px;min-width:92px;padding:6px 8px;background:#04131bcc;border:1px solid #89ffe033;opacity:.55}
 #trick-pick .tp-key.on{opacity:1;border-color:#ffd166;box-shadow:0 0 14px #ffd16655;color:#fff}

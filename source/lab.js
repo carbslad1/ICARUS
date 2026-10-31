@@ -86,7 +86,7 @@ var Lab = (() => {
     const sliders = (PARAMS[cfg.trick] || []).map(([k, label, lo, hi, st]) => { const v = +get(k); return `<label class="lab-slider">${E(label)} <input type="range" min="${lo}" max="${hi}" step="${st}" value="${v}" data-param="${k}"><b>${v}</b></label>` }).join('');
     const gunSel = i => `<select data-lab="gun${i}">${opt('', '— none —', !cfg.guns[i])}${Object.keys(DEMO.weapons).map(id => opt(id, `${Owc[id]?.name || id} · ${DEMO.weapons[id].type}`, cfg.guns[i] === id)).join('')}</select>`;
     return `<div class="lo-panel lab-panel" role="dialog" aria-label="Trick lab"><header><b>TRICK LAB</b><button data-lab-close>✕</button></header>
-      <small class="lo-desc">One trick at a time. Tune it until it feels right, then check it with <code>node qa/jumpstyle.cjs ${E(cfg.trick)}</code>. In the run, B switches the trick off and on.</small>
+      <small class="lo-desc">One trick at a time. Tune it until it feels right, then check it with <code>node qa/jumpstyle.cjs ${E(cfg.trick)}${four(cfg.trick) ? " --waves=5:1,10:2 --seeds=24" : ""}</code>. In the run, B switches the trick off and on.</small>
       <section><h4>Trick</h4><label>Trick <select data-lab="trick">${order.map(id => opt(id, label(id), id === cfg.trick)).join('')}</select></label>
         ${F ? `<small class="lo-desc lo-wide">Boosts ${E(X.type)} weapons · ${E(X.ability)}: ${E(X.text)}</small></section>` : `<label>Slot <select data-lab="slot">${opt('', 'natural (' + Routine.SLOT_NAMES[X.slot] + ')', !cfg.slot)}${Routine.SLOTS.map(s => opt(s, Routine.SLOT_NAMES[s], cfg.slot === s)).join('')}</select></label>
         <label>Level <select data-lab="level">${[1, 2, 3, 4].map(l => opt(l, 'L' + l, cfg.level === l)).join('')}</select></label>

@@ -106,6 +106,18 @@ test('Belly flop: the shockwave throws pursuers away from the landing; XP orbs a
   return { orbFlop: orb('flop'), pearls: [pearls('back'), pearls('flop')] };
 });
 
+test('each trick plays its animation: a full flip from the breach, a corkscrew roll at the apex, a flat belly flop', () => {
+  const pose = (id, set) => { const r = run(id, []); Object.assign(r.medium, set.m || {}); if (set.apex) r.hand.apex = true; const R = { rollOffset: 0, odC: 0, pathAngle: set.path ?? 0 }; T.animate(R, r); T.animate(R, r); return R };
+  const flip = (id, t) => pose(id, { m: { elapsed: t } }).rollOffset;
+  assert.ok(Math.abs(flip('front', H.Otk.flip / 2) + Math.PI) < 1e-9, 'front flip half way: half a turn forward');
+  assert.ok(Math.abs(flip('back', H.Otk.flip / 2) - Math.PI) < 1e-9, 'backflip half way: half a turn back');
+  assert.ok(Math.abs(flip('front', 5) + 2 * Math.PI) < 1e-9, 'one full turn, then it holds');
+  assert.equal(pose('cork', { apex: true }).odC, 360, 'one roll at the apex, once'); assert.equal(pose('cork', {}).odC, 0, 'no roll before the apex');
+  const flat = alt => pose('flop', { m: { vy: -20, origin: { x: 0, y: alt }, local: { x: 0, y: 0 } }, path: -1 }).rollOffset;
+  assert.equal(flat(40), 0, 'high up: no change'); assert.ok(Math.abs(flat(0) - 1) < 1e-9, 'at the water: flat (path −1 rad + 1 = 0)');
+  return { frontHalf: flip('front', H.Otk.flip / 2), flopAt6m: +flat(6).toFixed(2) };
+});
+
 test('the four tricks replace the routine: no routine trick, no shop trick place, no title pick', () => {
   const r = H.Hd(5, 'harpoon');
   assert.equal(H.Routine.on(r), false); assert.equal(Object.keys(r.demo.routine?.levels || {}).length, 0, 'no routine trick at the start');

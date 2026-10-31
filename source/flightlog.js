@@ -2,10 +2,15 @@
 // taken, so a real run can be exported as JSON and studied. Observation only: it reads state and never changes it.
 var FlightLog = (() => {
   const VERSION = 3, AIR_EVERY = 12, WATER_EVERY = 6, MAX_SAMPLES = 40000;
+  // Memory (2026-10-31): every enemy in every air sample grew the heap by 5-6 MB a game minute (115 MB by wave 19, and
+  // without end in a Trick Lab run that replays its wave), which crashed the page. Enemies and pursuers are now recorded
+  // on every second air sample and every fourth water sample (5 a second), at most MAX_ROWS rows in all (about 35 MB; a full run reaches it near wave
+  // 15), and not in Trick Lab runs. Samples without them are skipped by qa/flightlog-metrics.cjs.
+  const EN_EVERY = 2, MAX_ROWS = 200000;
   const r1 = v => Math.round(v * 10) / 10, deg = a => r1(a * 180 / Math.PI);
-  let log = null, run = null, flight = null, dive = [], tick = 0, samples = 0, prev = null;
+  let log = null, run = null, flight = null, dive = [], tick = 0, samples = 0, rows = 0, airN = 0, prev = null;
   function reset(r) {
-    run = r; flight = null; dive = []; tick = 0; samples = 0;
+    run = r; flight = null; dive = []; tick = 0; samples = 0; rows = 0; airN = 0;
     prev = { kind: r.medium.kind, kills: r.kills, hp: r.hp, hits: 0, wave: r.wave, history: 0 };
     log = { format: 'icarus-flightlog', version: VERSION, build: globalThis.icarusDemo?.version || 'demo', exported: null,
       starter: r.starter ?? null, seed: r.seed ?? null, units: 'metres, seconds, degrees. x,y: dolphin world position; o: arena origin; l: dolphin arena-local position; en: [kind, local x, local y, hp]; pu: pursuers [world x, world y, wet]; in: [x, y, boost, w, turn]; kills and hits record the dolphin position; view: the visible half-width in metres',
@@ -17,9 +22,10 @@ var FlightLog = (() => {
     if (m.kind === 'air') {
       s.o = [r1(m.origin.x), r1(m.origin.y)]; s.l = [r1(m.local.x), r1(m.local.y)];
       s.ph = r.hand ? DEMO.phase(r) : null;
-      if (samples < MAX_SAMPLES) s.en = r.enemies.map(e => [e.kind, r1(e.pos.x), r1(e.pos.y), Math.round(e.hp)]);
     } else s.v = [r1(m.velocity.x), r1(m.velocity.y)];
-    if (samples < MAX_SAMPLES) s.pu = (r.pursuers || []).map(q => [r1(q.x), r1(q.y), q.wet ? 1 : 0]);
+    const crowd = samples < MAX_SAMPLES && rows < MAX_ROWS && !r.lab && airN++ % (m.kind === 'air' ? EN_EVERY : 2 * EN_EVERY) === 0;
+    if (crowd && m.kind === 'air') { s.en = r.enemies.map(e => [e.kind, r1(e.pos.x), r1(e.pos.y), Math.round(e.hp)]); rows += s.en.length }
+    if (crowd) { s.pu = (r.pursuers || []).map(q => [r1(q.x), r1(q.y), q.wet ? 1 : 0]); rows += s.pu.length }
     samples++; return s;
   }
   function openFlight(r) {

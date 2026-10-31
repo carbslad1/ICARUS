@@ -647,3 +647,10 @@ const DemoFx={SHK:K/1920,CHARM:{'+chips':0x5ff2ff,'+mult':0xb98cff,'×mult':0xff
         note(f,at,.22,.07,'sine');if(e.effect==='×mult'||e.rare)note(f*2,at+.02,.3,.04,'triangle')}
       else if(e.kind==='damage'&&e.crit&&c.currentTime-(this.lastCrit||0)>.06){this.lastCrit=c.currentTime;note(1320,c.currentTime,.05,.025,'square')}}}catch(err){}}}
 
+// XP orbs jittered (designer, 2026-10-31): the renderer draws the arena at an origin interpolated between the last two
+// steps (draw(S, as, ke/Ar)), but v3's orb drawing (Owdraw) placed the orbs at the latest step's origin, so each frame
+// they sat a different fraction of a step (0.25-0.4 m at flight speed) away from everything else. Owdraw now runs with
+// the same interpolated origin.
+{const dr0=Owdraw;Owdraw=function(R,o,dt){const m=S?.medium;if(o||m?.kind!=='air'||!as?.origin)return dr0(R,o,dt);
+  const O=m.origin,k=ft==='game'&&S.mode==='playing'?Math.max(0,Math.min(1,ke/Ar)):1;
+  m.origin={x:as.origin.x+(O.x-as.origin.x)*k,y:as.origin.y+(O.y-as.origin.y)*k};try{return dr0(R,o,dt)}finally{m.origin=O}}}

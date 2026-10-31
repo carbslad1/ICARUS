@@ -5001,6 +5001,13 @@ const DemoFx={SHK:K/1920,CHARM:{'+chips':0x5ff2ff,'+mult':0xb98cff,'×mult':0xff
         note(f,at,.22,.07,'sine');if(e.effect==='×mult'||e.rare)note(f*2,at+.02,.3,.04,'triangle')}
       else if(e.kind==='damage'&&e.crit&&c.currentTime-(this.lastCrit||0)>.06){this.lastCrit=c.currentTime;note(1320,c.currentTime,.05,.025,'square')}}}catch(err){}}}
 
+// XP orbs jittered (designer, 2026-10-31): the renderer draws the arena at an origin interpolated between the last two
+// steps (draw(S, as, ke/Ar)), but v3's orb drawing (Owdraw) placed the orbs at the latest step's origin, so each frame
+// they sat a different fraction of a step (0.25-0.4 m at flight speed) away from everything else. Owdraw now runs with
+// the same interpolated origin.
+{const dr0=Owdraw;Owdraw=function(R,o,dt){const m=S?.medium;if(o||m?.kind!=='air'||!as?.origin)return dr0(R,o,dt);
+  const O=m.origin,k=ft==='game'&&S.mode==='playing'?Math.max(0,Math.min(1,ke/Ar)):1;
+  m.origin={x:as.origin.x+(O.x-as.origin.x)*k,y:as.origin.y+(O.y-as.origin.y)*k};try{return dr0(R,o,dt)}finally{m.origin=O}}}
 
 // Step 1 of the build-and-playtest plan (ICARUS_DESIGN.md §4.18, §4.20): positional space.
 // - Most spawns appear behind a marker inside the view, leaning toward the direction of travel and kept 10 m above the
@@ -6007,7 +6014,8 @@ var Tricks = (() => {
     repulseR: 12, repulseV: 40, repulseT: .3,    // m; m/s outward; s it pushes for (catches enemies recalled at the breach)
     slowT: 1.5, slow: .5,                        // s from the apex; enemies and their shots move at this share of speed
     shockR: 10, shockV: 30,                      // m around the landing point; m/s outward
-    flopX: 1.5                                   // Belly flop flight: XP orbs and splashdown pearls ×
+    flopX: 1.5,                                  // Belly flop flight: XP orbs and splashdown pearls ×
+    flopFlat: 12                                 // m above the water over which the belly flop flattens the body
   };
   const DEFAULTS = Object.freeze({ ...P });
   const TRICKS = Object.freeze({
@@ -6074,10 +6082,32 @@ var Tricks = (() => {
     for (const p of r.pursuers || []) if (S.ids.has(p.id)) { p.h = Math.atan2(p.y - S.y, p.x - S.x); p.v = P.shockV }
   }
 
+  // the arena origin the renderer draws this frame: between the last two steps, as the engine draws the arena
+  // (draw(S, as, ke/Ar)); drawing at the latest step's origin makes things jitter against everything else
+  function seen(m) {
+    if (typeof as === 'undefined' || !as?.origin || typeof ke === 'undefined') return m.origin;
+    const k = Math.max(0, Math.min(1, ke / Ar)); return { x: as.origin.x + (m.origin.x - as.origin.x) * k, y: as.origin.y + (m.origin.y - as.origin.y) * k };
+  }
+  // the dolphin's tricks, through v3's own animation (as the crane-game build played them): a flip is one full turn
+  // of the body from the breach (R.rollOffset, Otk.flip s a turn); the corkscrew is one roll through the sprite's roll
+  // frames at the apex (R.odC, Otk.cork s a roll); the belly flop flattens the body over the last P.flopFlat m above
+  // the water, so it slaps down flat
+  const smooth = p => p * p * (3 - 2 * p);
+  function animate(R, r) {
+    const m = r.medium, h = r.hand, id = h?.tk?.id; if (m?.kind !== 'air' || !id) return;
+    const dir = (m.vx || 0) < 0 ? -1 : 1;
+    if (id === 'front' || id === 'back') R.rollOffset = (id === 'back' ? 1 : -1) * dir * smooth(Math.min(1, m.elapsed / Otk.flip)) * Math.PI * 2;
+    if (id === 'cork' && h.apex && !h.tk.rolled) { h.tk.rolled = true; R.odC = (R.odC || 0) + 360 }
+    if (id === 'flop' && m.vy < 0) {
+      const alt = m.origin.y + m.local.y, k = smooth(Math.max(0, Math.min(1, 1 - alt / P.flopFlat))), d = (dir > 0 ? 0 : Math.PI) - R.pathAngle;
+      R.rollOffset = Math.atan2(Math.sin(d), Math.cos(d)) * k;
+    }
+  }
+
   // drawing on the telegraph layer: Charge's shell round the dolphin and Time slow's rings on the slowed enemies
   function draw(R, r) {
     const m = r.medium; if (m?.kind !== 'air') return;
-    const G = R.telegraphs, o = m.origin, X = v => R.sx(o.x + v), Y = v => R.sy(o.y + v), ppm = Math.abs(R.sx(o.x + 1) - R.sx(o.x));
+    const G = R.telegraphs, o = seen(m), X = v => R.sx(o.x + v), Y = v => R.sy(o.y + v), ppm = Math.abs(R.sx(o.x + 1) - R.sx(o.x));
     if (r.chargeT > 0) G.circle(X(m.local.x), Y(m.local.y), P.chargeR * ppm).stroke({ color: yt.amber, width: 3, alpha: .5 + .4 * Math.min(1, r.chargeT * 2) });
     if (r.slowT > 0) for (const e of r.enemies) if (e.hp > 0) G.circle(X(e.pos.x), Y(e.pos.y), (e.radius + .6) * ppm).stroke({ color: 0xb48cff, width: 2, alpha: .75 });
   }
@@ -6095,7 +6125,7 @@ var Tricks = (() => {
     el.innerHTML = `<small class="tp-hint">${pick ? 'Trick' : 'Tap W A S D: choose a trick'}</small>` + ['cork', 'back', 'flop', 'front'].map(id => { const T = TRICKS[id]; return `<span class="tp-key${id === pick ? ' on' : ''}"><kbd>${T.key.toUpperCase()}</kbd><b>${T.name}</b><small>${T.type} · ${T.ability}</small></span>` }).join('');
   }
 
-  return { P, DEFAULTS, TRICKS, IDS, KEYS, TAGS, on, choose, chosen, flying, boostFor, open, step, entry, shockwave, draw, hud };
+  return { P, DEFAULTS, TRICKS, IDS, KEYS, TAGS, on, choose, chosen, flying, boostFor, open, step, entry, shockwave, animate, draw, hud };
 })();
 // the breach: DEMO.open opens the flight's hand
 {const open0=DEMO.open;DEMO.open=function(r){open0(r);if(Tricks.on(r))Tricks.open(r)}}
@@ -6116,11 +6146,12 @@ var Tricks = (() => {
 {const drop0=Oxedrop;Oxedrop=function(r,t,e){const L=r.eorbs||(r.eorbs=[]),n=L.length;drop0(r,t,e);if(Tricks.on(r)&&r.hand?.tk?.id==='flop'&&L.length>n)L.at(-1).m*=Tricks.P.flopX}}
 // choosing under water with W A S D (or the arrows)
 {if(typeof window!=='undefined')window.addEventListener('keydown',e=>{const id=Tricks.KEYS[String(e.key).toLowerCase()];if(id&&typeof S!=='undefined'&&S&&typeof ft!=='undefined'&&ft==='game')Tricks.choose(S,id)})}
-{const draw0=Otdraw;Otdraw=function(R,r,m,title){draw0(R,r,m,title);if(!title&&Tricks.on(r))Tricks.draw(R,r);Tricks.hud(r,title)}}
+{const draw0=Otdraw;Otdraw=function(R,r,m,title){draw0(R,r,m,title);if(!title&&Tricks.on(r)){Tricks.animate(R,r);Tricks.draw(R,r)}Tricks.hud(r,title)}}
 // the pause stops the drawing, so the HUD hides itself there (the next frame after resuming shows it again)
 {const ls0=ls;ls=function(){ls0();const el=typeof document!=='undefined'&&document.getElementById('trick-pick');if(el)el.hidden=true}}
 {if(typeof document!=='undefined'&&document.head){const st=document.createElement('style');st.textContent=`
 #trick-pick{position:fixed;left:50%;bottom:132px;transform:translateX(-50%);z-index:30;display:flex;gap:8px;align-items:flex-end;pointer-events:none;font:12px/1.3 var(--mono,monospace);color:#cfe7e8}
+#trick-pick[hidden]{display:none!important}
 #trick-pick .tp-hint{position:absolute;left:50%;bottom:calc(100% + 4px);transform:translateX(-50%);white-space:nowrap;color:#89ffe0aa;letter-spacing:.08em;text-transform:uppercase;font-size:10px}
 #trick-pick .tp-key{display:grid;justify-items:center;gap:2px;min-width:92px;padding:6px 8px;background:#04131bcc;border:1px solid #89ffe033;opacity:.55}
 #trick-pick .tp-key.on{opacity:1;border-color:#ffd166;box-shadow:0 0 14px #ffd16655;color:#fff}
@@ -6132,10 +6163,15 @@ var Tricks = (() => {
 // taken, so a real run can be exported as JSON and studied. Observation only: it reads state and never changes it.
 var FlightLog = (() => {
   const VERSION = 3, AIR_EVERY = 12, WATER_EVERY = 6, MAX_SAMPLES = 40000;
+  // Memory (2026-10-31): every enemy in every air sample grew the heap by 5-6 MB a game minute (115 MB by wave 19, and
+  // without end in a Trick Lab run that replays its wave), which crashed the page. Enemies and pursuers are now recorded
+  // on every second air sample and every fourth water sample (5 a second), at most MAX_ROWS rows in all (about 35 MB; a full run reaches it near wave
+  // 15), and not in Trick Lab runs. Samples without them are skipped by qa/flightlog-metrics.cjs.
+  const EN_EVERY = 2, MAX_ROWS = 200000;
   const r1 = v => Math.round(v * 10) / 10, deg = a => r1(a * 180 / Math.PI);
-  let log = null, run = null, flight = null, dive = [], tick = 0, samples = 0, prev = null;
+  let log = null, run = null, flight = null, dive = [], tick = 0, samples = 0, rows = 0, airN = 0, prev = null;
   function reset(r) {
-    run = r; flight = null; dive = []; tick = 0; samples = 0;
+    run = r; flight = null; dive = []; tick = 0; samples = 0; rows = 0; airN = 0;
     prev = { kind: r.medium.kind, kills: r.kills, hp: r.hp, hits: 0, wave: r.wave, history: 0 };
     log = { format: 'icarus-flightlog', version: VERSION, build: globalThis.icarusDemo?.version || 'demo', exported: null,
       starter: r.starter ?? null, seed: r.seed ?? null, units: 'metres, seconds, degrees. x,y: dolphin world position; o: arena origin; l: dolphin arena-local position; en: [kind, local x, local y, hp]; pu: pursuers [world x, world y, wet]; in: [x, y, boost, w, turn]; kills and hits record the dolphin position; view: the visible half-width in metres',
@@ -6147,9 +6183,10 @@ var FlightLog = (() => {
     if (m.kind === 'air') {
       s.o = [r1(m.origin.x), r1(m.origin.y)]; s.l = [r1(m.local.x), r1(m.local.y)];
       s.ph = r.hand ? DEMO.phase(r) : null;
-      if (samples < MAX_SAMPLES) s.en = r.enemies.map(e => [e.kind, r1(e.pos.x), r1(e.pos.y), Math.round(e.hp)]);
     } else s.v = [r1(m.velocity.x), r1(m.velocity.y)];
-    if (samples < MAX_SAMPLES) s.pu = (r.pursuers || []).map(q => [r1(q.x), r1(q.y), q.wet ? 1 : 0]);
+    const crowd = samples < MAX_SAMPLES && rows < MAX_ROWS && !r.lab && airN++ % (m.kind === 'air' ? EN_EVERY : 2 * EN_EVERY) === 0;
+    if (crowd && m.kind === 'air') { s.en = r.enemies.map(e => [e.kind, r1(e.pos.x), r1(e.pos.y), Math.round(e.hp)]); rows += s.en.length }
+    if (crowd) { s.pu = (r.pursuers || []).map(q => [r1(q.x), r1(q.y), q.wet ? 1 : 0]); rows += s.pu.length }
     samples++; return s;
   }
   function openFlight(r) {
@@ -6688,7 +6725,7 @@ var Lab = (() => {
     const sliders = (PARAMS[cfg.trick] || []).map(([k, label, lo, hi, st]) => { const v = +get(k); return `<label class="lab-slider">${E(label)} <input type="range" min="${lo}" max="${hi}" step="${st}" value="${v}" data-param="${k}"><b>${v}</b></label>` }).join('');
     const gunSel = i => `<select data-lab="gun${i}">${opt('', '— none —', !cfg.guns[i])}${Object.keys(DEMO.weapons).map(id => opt(id, `${Owc[id]?.name || id} · ${DEMO.weapons[id].type}`, cfg.guns[i] === id)).join('')}</select>`;
     return `<div class="lo-panel lab-panel" role="dialog" aria-label="Trick lab"><header><b>TRICK LAB</b><button data-lab-close>✕</button></header>
-      <small class="lo-desc">One trick at a time. Tune it until it feels right, then check it with <code>node qa/jumpstyle.cjs ${E(cfg.trick)}</code>. In the run, B switches the trick off and on.</small>
+      <small class="lo-desc">One trick at a time. Tune it until it feels right, then check it with <code>node qa/jumpstyle.cjs ${E(cfg.trick)}${four(cfg.trick) ? " --waves=5:1,10:2 --seeds=24" : ""}</code>. In the run, B switches the trick off and on.</small>
       <section><h4>Trick</h4><label>Trick <select data-lab="trick">${order.map(id => opt(id, label(id), id === cfg.trick)).join('')}</select></label>
         ${F ? `<small class="lo-desc lo-wide">Boosts ${E(X.type)} weapons · ${E(X.ability)}: ${E(X.text)}</small></section>` : `<label>Slot <select data-lab="slot">${opt('', 'natural (' + Routine.SLOT_NAMES[X.slot] + ')', !cfg.slot)}${Routine.SLOTS.map(s => opt(s, Routine.SLOT_NAMES[s], cfg.slot === s)).join('')}</select></label>
         <label>Level <select data-lab="level">${[1, 2, 3, 4].map(l => opt(l, 'L' + l, cfg.level === l)).join('')}</select></label>

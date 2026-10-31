@@ -31,7 +31,24 @@ Measured on the launch (exit) angle above the horizontal.
 
 ## Criteria for a proven trick
 
-Measured with `node qa/jumpstyle.cjs <trick>`. The harness forces an exact launch angle for each style. The bot flies the air phase, and the dolphin cannot die. It compares gun damage per second of air time with the trick against the same runs without it. **All thresholds are [TUNE].**
+Measured with `node qa/jumpstyle.cjs <trick>`. The harness forces an exact launch angle for each style. The bot flies the air phase, and the dolphin cannot die. It compares the same seeds with and without the trick. **All thresholds are [TUNE].**
+
+### The four tricks (boost and protect), from 2026-10-31
+
+`node qa/jumpstyle.cjs <front|back|cork|flop> --waves=5:1,10:2 --seeds=24 --flights=10`
+
+- **Two waves.** At wave 5 with T1 guns, the guns kill nearly everything that reaches them, so damage can't rise. At wave 10 with T2 guns, the guns are the bottleneck (twice as many enemies in the arena), so a boost can show.
+- **Measures:** damage per air-second, kills per air-second, time to kill (an enemy's air seconds alive before it dies), enemies in the arena on average, hits per flight and HP lost per flight.
+- **Noise:** with and without the trick, runs drift apart after the first difference. Each change therefore gets a 95% band, from the per-seed differences. A change counts only when it falls outside its band (marked `*`).
+
+| Criterion | Threshold |
+|---|---|
+| Never worse | In every style and wave: hits no more than 10% (and 0.05 a flight) above no trick, and damage no more than 5% below |
+| Earns its place | Somewhere: hits at least 15% lower (**safer**), or time to kill at least 15% shorter (**faster**) |
+
+These criteria were chosen by Claude on 2026-10-31 and still need the designer's confirmation.
+
+### The routine's placement tricks (superseded)
 
 | Criterion | Threshold |
 |---|---|
@@ -79,3 +96,4 @@ Normal play offers only the shortlist (setting "Trick pool"). Parked tricks stay
 - 2026-10-30, Eddy (Fin + Sonic T1, wave 5, 16 seeds × 10 flights per style). Reach 14 m (the old default): low +19.9%, mid +5.7%, high +3.7%: just short of the home threshold. **Reach 18 m (now the default): low +43%, mid +15%, high +8%; hits per flight 0.49 → 0.52 on low hops, fewer elsewhere: proven by the numbers.** Reach 20 m: similar gains but +18% hits on low hops (fails safety). A slower spin (5 m/s) and a 5.5 m ring did not help. Noise: the same setting moved by up to 10 points between 6-seed and 16-seed runs, so use at least 16 seeds × 10 flights before deciding. **Next: the designer's feel test in the Trick Lab.**
 - 2026-10-31: the lab's Endless option and the harness held the air clock, so a wave ran past its end and enemies piled up far beyond normal play (designer: "way more enemies in the lab than the normal runs"). Both now replay the same wave when it ends, at its normal clock and spawn pattern. A screen-fixed Gravity anchor was tried and dropped, because §4.19 rejects the placement tricks.
 - 2026-10-31, the four tricks (`node qa/jumpstyle.cjs <trick> --seeds=16 --flights=10`, wave 5, two T1 guns of the trick's type). **Gun damage per air-second barely moves:** Front flip −4/0/0% (low/mid/high), Backflip +2/+4/+7%, Corkscrew −3/−1/+1%, Belly flop −1/+1/+2%. The guns already kill nearly everything that reaches them, so a +30% damage boost changes how fast enemies die, not how much damage is dealt. **What the tricks change is hits per flight:** Corkscrew −38/−39/−33%, Front flip −27/−21/−28%, Belly flop −10/−18/−16%, Backflip +41% on low hops (0.63 → 0.89) and −17/−20% on mid and high. The damage criteria above do not fit tricks that boost and protect; a new measure (hits, time-to-kill, a harder wave where the guns are the bottleneck) is needed before calling any of them proven.
+- 2026-10-31, the new measure (`--waves=5:1,10:2 --seeds=24 --flights=10`; the run was cut off when the session ended, so only two tricks finished). **Corkscrew: proven.** Wave 5: hits −37/−41/−31% (low/mid/high), damage unchanged. Wave 10: damage +19% on low hops, time to kill −20/−19% on mid and high, hits −28% (low) and −24% (high). **Belly flop: not proven** on combat (no change outside the bands); its payoff is ×1.5 XP and pearls, which needs its own measure. Front flip, Backflip and the boost-only control still to rerun.
