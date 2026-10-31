@@ -79,7 +79,7 @@ var Lab = (() => {
         <small class="lo-desc lo-wide">${E(X.kind === 'water' ? 'Water' : 'Effect')} · helps ${E(X.helps)}: ${E(X.text)}</small></section>
       <section><h4>Its numbers (live)</h4>${sliders || '<small class="lo-desc">No sliders for this trick yet.</small>'}<button data-lab-defaults class="lo-wide">DEFAULT NUMBERS</button></section>
       <section><h4>Guns and wave</h4><label>Gun 1 ${gunSel(0)}</label><label>Gun 2 ${gunSel(1)}</label><label>Tier <select data-lab="tier">${[1, 2, 3, 4].map(l => opt(l, 'T' + l, cfg.tier === l)).join('')}</select></label><label>Wave <input type="number" min="1" max="20" data-lab="wave" value="${cfg.wave}"></label></section>
-      <section><h4>Options</h4><label class="lo-check"><input type="checkbox" data-lab="immortal" ${cfg.immortal ? 'checked' : ''}> Can't die (hits still count)</label><label class="lo-check"><input type="checkbox" data-lab="endless" ${cfg.endless ? 'checked' : ''}> Endless wave (air clock held)</label><label class="lo-check"><input type="checkbox" data-lab="moves" ${cfg.moves ? 'checked' : ''}> Brotato enemy movement</label></section>
+      <section><h4>Options</h4><label class="lo-check"><input type="checkbox" data-lab="immortal" ${cfg.immortal ? 'checked' : ''}> Can't die (hits still count)</label><label class="lo-check"><input type="checkbox" data-lab="endless" ${cfg.endless ? 'checked' : ''}> Endless: replay this wave when it ends</label><label class="lo-check"><input type="checkbox" data-lab="moves" ${cfg.moves ? 'checked' : ''}> Brotato enemy movement</label></section>
       <footer><button data-lab-close>CLOSE</button><button data-lab-start class="lo-done">START LAB RUN ↗</button></footer></div>`;
   }
   function read(panel) {
@@ -106,7 +106,9 @@ var Lab = (() => {
 {const hd0=Hd;Hd=function(...a){return Lab.apply(hd0(...a))}}
 // can't die and endless wave in a lab run; B toggles the trick
 {const hit0=DEMO.hit;DEMO.hit=function(r,a){hit0(r,a);if(r?.lab&&Lab.config.immortal&&r.hp<=0){r.hp=1;if(r.mode==='dead'){r.mode='playing';r.endReason=null}}}}
-{const me0=ME;ME=function(r,t,e,i){if(r?.lab&&Lab.config.endless)r.budget=Math.max(r.budget,5);return me0(r,t,e,i)}}
+// endless: when the wave would end, the same wave starts again (its normal clock, spawn pattern and numbers), so the
+// lab sees the density of real play rather than a wave run past its end
+{const fin0=DEMO.finish;DEMO.finish=function(r){if(!(r?.lab&&Lab.config.endless))return fin0(r);DEMO.wave(r);r.hp=r.stats.maxHp;r.mode='playing'}}
 {const bank0=DEMO.bank;DEMO.bank=function(r){const h=r.hand;bank0(r);if(r?.lab&&h)Lab.flight(r)}}
 {if(typeof window!=='undefined')window.addEventListener('keydown',e=>{if(e.key==='b'||e.key==='B'){if(typeof S!=='undefined'&&S?.lab){Lab.toggle(S);e.preventDefault()}}})}
 // the title: a button next to the loadout's; leaving to the title ends the lab

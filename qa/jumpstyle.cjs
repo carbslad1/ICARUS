@@ -1,6 +1,7 @@
 // Jump-style harness (docs/TRICK_LAB.md): is a trick better in its home jump style and still viable in the others?
 // For each style the launch angle is forced (low 28°, mid 55°, high 78°); the bot flies the air phase; the dolphin
-// cannot die; the wave never ends (its clock is held), so runs with and without the trick meet the same enemy stream.
+// cannot die; when the wave ends the same wave starts again (normal clock and spawn pattern, so normal density), so
+// runs with and without the trick meet the same enemy stream.
 // Measures damage dealt per second of air time (guns, plus drowning and splashes for water tricks), against the same
 // seeds without the trick, and checks the criteria in docs/TRICK_LAB.md.
 //   node qa/jumpstyle.cjs <trick> [--wave=5] [--seeds=8] [--flights=10] [--level=1] [--set=key:value,...] [--json]
@@ -28,8 +29,9 @@ function play(style, withTrick, seed) {
   const fly = flyer(H, 'mid-keep', seed, { keep: 8 }), angle = STYLES[style] * Math.PI / 180;
   let air = 0, dmg = 0, kills = 0, hits = 0, flights = 0, prev = r.medium.kind, ticks = 0;
   while (flights < FLIGHTS && ticks < 120 * 60 * 6 && r.mode === 'playing') {
-    r.budget = 99; r.hp = r.stats.maxHp;
+    r.hp = r.stats.maxHp;
     const i = fly(r); H.sw(r, i); ticks++;
+    if (r.mode === 'shop') { r.mode = 'playing'; D.wave(r) }   // replay the wave
     const m = r.medium;
     if (m.kind === 'air' && prev !== 'air') {    // the launch: force this style's angle, keeping the speed and direction
       const v = Math.hypot(m.vx, m.vy), sx = Math.sign(m.vx) || 1; m.vx = Math.cos(angle) * v * sx; m.vy = Math.sin(angle) * v;
