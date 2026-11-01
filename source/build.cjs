@@ -21,6 +21,13 @@ const waterKill='if(U){touchKill(r,p);continue}';
 if(pursuerStart<0||pursuer.split(waterKill).length!==2)throw Error('Pursuer contact anchor drift');
 pursuer=pursuer.replace(waterKill,'if(U){K2.push(p);continue}');
 input=input.slice(0,pursuerStart)+pursuer+input.slice(pursuerEnd);
+// The flight guides draw the arc with the gravity setting (ai, Settings › Swimming › Gravity (hang time)), not a fixed 16.
+for(const [old,now] of [['Math.hypot(vx,vy-16*w));let ax=bx+vx*w,ay=vy*w-8*w*w;','Math.hypot(vx,vy+ai*w));let ax=bx+vx*w,ay=vy*w+ai/2*w*w;'],
+  ['Bv=d.vy+16*d.elapsed,Bt=Math.max(.01,Bv/8)','Bv=d.vy-ai*d.elapsed,Bt=Math.max(.01,Bv/(-ai/2))'],['Ba=Bv/16','Ba=Bv/(-ai)'],
+  ['Math.hypot(d.vx,Bv-16*w))','Math.hypot(d.vx,Bv+ai*w))'],['A=this.sy(Bv*w-8*w*w)','A=this.sy(Bv*w+ai/2*w*w)'],['w=this.sy(Bv*Ba-8*Ba*Ba)','w=this.sy(Bv*Ba+ai/2*Ba*Ba)']]) {
+  if(input.split(old).length!==2)throw Error('Guide gravity anchor drift: '+old);
+  input=input.replace(old,now);
+}
 const anchor = '})();\n/*! Bundled license information:';
 if (input.split(anchor).length !== 2) throw Error('Expected exactly one game-scope insertion point');
 let html = input.replace(anchor, ['five-score.js','five-combat.js','score-cues.js','demo.js','space.js','danger.js','controls.js','verbs.js','movement.js','statuses.js','routine.js','tricks.js','flightlog.js','scoreboard.js','onboarding.js','shop.js','loadout.js','lab.js'].map(f=>fs.readFileSync(path.join(__dirname,f),'utf8')).join('\n') + '\n' + anchor);

@@ -36,7 +36,7 @@ var Danger = (() => {
 
   // Where the dolphin will be in the world t seconds on, if the arc carries on and it keeps its place in the frame.
   function predict(r, m, t) {
-    const g = -15 * Math.max(.4, 1 - .025 * (r.demo.stats.Hang || 0));
+    const g = ai * Math.max(.4, 1 - .025 * (r.demo.stats.Hang || 0));
     return { x: m.origin.x + m.local.x + m.vx * t, y: m.origin.y + m.local.y + m.vy * t + .5 * g * t * t };
   }
 

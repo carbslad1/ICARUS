@@ -8,7 +8,7 @@ const {load}=require('./load.cjs'),{swimmer}=require('./bot.cjs');
 const H=load(require('path').join(__dirname, '..', 'ICARUS-demo.html'),new Map([['icarus.scoreshow.tune',process.argv[2]||'{}'],['icarus.scoreshow.settings.v2',JSON.stringify({'ro.on':0})]]),{bake:true,modern:true});
 const D=H.DEMO;
 for(const wave of [2,10]){let n=0,edge=0,spread=0,samples=0;
-for(let seed=1;seed<=4;seed++){H.WaterView.reset(); H.SteadyCam?.reset?.();const r=H.Hd(seed,'harpoon');r.wave=wave;D.wave(r);const bot=swimmer(H,'mid-keep',seed);
+for(let seed=1;seed<=4;seed++){H.WaterView.reset();const r=H.Hd(seed,'harpoon');r.wave=wave;D.wave(r);const bot=swimmer(H,'mid-keep',seed);
  for(let t=0,prev=r.medium.kind;t<120*30;t++){r.hp=r.stats.maxHp;r.hurt=99;H.sw(r,bot(r));const k=r.medium.kind;if(prev==='air'&&k==='water')break;prev=k}
  // swim level to the right for 6 s, about 8 m down
  for(let i=0;i<120*6;i++){const m=r.medium;if(m.kind!=='water')break;const want=m.pos.y<-8?.15:-.15,d=Math.atan2(Math.sin(want-m.heading),Math.cos(want-m.heading)),turn=Math.abs(d)>.03?Math.sign(d):0;

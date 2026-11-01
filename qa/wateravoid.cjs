@@ -14,7 +14,7 @@ const D = H.DEMO; let fail = 0;
 for (const wave of [3, 8]) {
   let wet = 0, touch = 0, near = 0, late = 0, lateLow = 0; const speed = [];
   for (let seed = 1; seed <= 4; seed++) {
-    H.WaterView.reset(); H.SteadyCam?.reset?.(); const r = H.Hd(seed, 'harpoon'); r.wave = wave; D.wave(r); const bot = swimmer(H, 'mid-keep', seed); let inWater = 0;
+    H.WaterView.reset(); const r = H.Hd(seed, 'harpoon'); r.wave = wave; D.wave(r); const bot = swimmer(H, 'mid-keep', seed); let inWater = 0;
     for (let t = 0; t < 120 * 90; t++) {
       r.hp = r.stats.maxHp; r.hurt = 99; H.sw(r, bot(r)); if (r.mode === 'shop') { r.mode = 'playing'; D.wave(r) }
       if (r.medium.kind !== 'water') { inWater = 0; continue } inWater += 1 / 120; const me = H.he(r);

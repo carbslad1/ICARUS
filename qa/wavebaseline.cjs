@@ -16,7 +16,7 @@ const kv = x => Object.fromEntries((x || '').split(',').filter(Boolean).map(y =>
 const H = load(path.join(__dirname, '..', 'ICARUS-demo.html'), new Map([['icarus.scoreshow.tune', JSON.stringify(kv(arg('tune')))], ['icarus.scoreshow.settings.v2', JSON.stringify({ 'ro.on': 0 })]]), { bake: true, modern: true });
 const D = H.DEMO, rows = {};
 for (const style of STYLES) for (let seed = 1; seed <= SEEDS; seed++) {
-  H.WaterView.reset(); H.SteadyCam?.reset?.(); const r = H.Hd(seed, 'harpoon'), bot = swimmer(H, style, seed), ids = new Set();
+  H.WaterView.reset(); const r = H.Hd(seed, 'harpoon'), bot = swimmer(H, style, seed), ids = new Set();
   let w = { wave: 1, spawned: 0, kills: 0, hits: 0, air: 0, real: 0, screen: 0, screenMax: 0, alive: 0 };
   const close = () => { const R = rows[w.wave] || (rows[w.wave] = []); R.push(w) };
   for (let t = 0; t < 120 * 60 * 12 && r.wave <= LAST; t++) {
