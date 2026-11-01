@@ -61,7 +61,7 @@ var WaterView = (() => {
   const LOOK = .6, MARGIN = 7, LET_GO = 10, SPRING = .3, SETTLE = .6, LEAVE = .35, CATCH = .35;   // s, m, m/s the held depth rises back, s, s, s
   // st: { depth (held), H and Hv (the height and its rate), top and tv (the top edge and its rate), hPrev }, null in the
   // air; leave: { H, t } easing back to the air view after a breach
-  let st = null, leave = null, ac = null;   // ac: the air camera { sx (scroll across the arena), off (breach offset), t }
+  let st = null, leave = null, ac = null, moved = null;   // moved: the camera's last step   // ac: the air camera { sx (scroll across the arena), off (breach offset), t }
   const on = () => !!(DEMO.tune.viewfit && lr.fit);
   const airH = () => Jt.height;                      // the air view's height (m)
   // the deepest the dolphin gets over the next DEMO.tune.viewlook s if it keeps turning as it is now (from the heading's
@@ -99,12 +99,15 @@ var WaterView = (() => {
   function airCam(r, dt, prev) {
     const m = r.medium, o = m.origin, keepX = Math.max(4, Jt.height * K / W / 2 - 6) * lr.keep, Cl = Math.max(0, Jt.width / 2 - Jt.height * K / W / 2);
     const lx = m.local.x, ax = Math.sign(lx) * Math.max(0, Math.abs(lx) - keepX), tx = Math.max(-Cl, Math.min(Cl, ax));
-    if (!ac) ac = { sx: tx, off: { x: prev.x - (o.x + tx), y: prev.y - o.y }, t: 0 };
+    // from where the water camera would be after this step (its last step's move added): starting where it was stood the
+    // camera still for the breach's step, half the motion for that frame at 105 m/s (a stutter at every breach)
+    const mv = moved || { x: 0, y: 0 };
+    if (!ac) ac = { sx: tx, off: { x: prev.x + mv.x - (o.x + tx), y: prev.y + mv.y - o.y }, t: 0 };
     ac.sx += (tx - ac.sx) * (1 - Math.exp(-dt / .14)); ac.t += dt;
     const p = Math.min(1, ac.t / CATCH), e = 1 - p * p * (3 - 2 * p);
     r.cam = se(o.x + ac.sx + ac.off.x * e, o.y + ac.off.y * e);
   }
-  return { on, step, air, airCam, reset() { st = null; leave = null; ac = null }, leaveWater() { ac = null }, get H() { return st?.H ?? null }, get airH() { return leave ? airH() + (leave.H - airH()) * (1 - (p => p * p * (3 - 2 * p))(Math.min(1, leave.t / LEAVE))) : null } };
+  return { on, step, air, airCam, reset() { st = null; leave = null; ac = null }, leaveWater() { ac = null }, set moved(v) { moved = v }, get H() { return st?.H ?? null }, get airH() { return leave ? airH() + (leave.H - airH()) * (1 - (p => p * p * (3 - 2 * p))(Math.min(1, leave.t / LEAVE))) : null } };
 })();
 {const fz0=Fz;Fz=function(m,l,c){if(!WaterView.on())return fz0(m,l,c);const H=m?.kind==='water'?WaterView.H:WaterView.airH;return H!=null?H/(lr.width*W/K):fz0(m,l,c)}}
 // Sizes held at 30 m/s (designer, 2026-11-01: "i want the enemies and dolphin to be the same size as they are at 30 at all
@@ -130,6 +133,8 @@ var SizeHold = { factor(ppm) { const ref = +DEMO.tune.sizeref || 1.12, z = W / J
   r.cam=se(r.cam.x+r.camV.x*t,r.cam.y+r.camV.y*t);
   if(wy!=null){r.cam=se(r.cam.x,wy);r.camV=se(r.camV.x,0)}   // the view's height and pinned top set the height
   r.camLock=(r.camLock==null?0:r.camLock)+(0-(r.camLock||0))*Xe(t,.18);Ocl=r.camLock}}
+// the camera's move each step, for the air camera to carry on from at the breach
+{const ee1=EE;EE=function(r,t){const p=r.cam?{x:r.cam.x,y:r.cam.y}:null;ee1(r,t);if(p&&r.cam)WaterView.moved={x:r.cam.x-p.x,y:r.cam.y-p.y}}}
 // v3's opening hint names W as the carve key; with Space carving it names Space (and W A S D choose a trick, source/tricks.js)
 {const zd0=Zd;Zd=function(...a){const o=zd0(...a);const tk=DEMO.tune.tricks&&DEMO.tune.rules;if(Controls.carve())ci='HOLD SPACE TO CARVE \xB7 LET GO TO LAUNCH';else if(!Orw.on)ci='A / D TO TURN \xB7 W OR SPACE TO BOOST';if(tk)ci+=' \xB7 HOLD A KEY AS YOU BREACH FOR A TRICK';return o}}
 // chevrons at the top edge over the enemies waiting above the water that are still above the view

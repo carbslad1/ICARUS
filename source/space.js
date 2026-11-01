@@ -164,7 +164,12 @@ var Space = (() => {
     const m = r.medium;
     if (m?.kind !== 'air' || !returned.length) return;
     if (DEMO.tune.hover && DEMO.tune.hold) {
-      for (const e of returned) if (Math.abs(e.pos.x) > Ovv(r).w) e.velocity = { x: -Math.sign(e.pos.x) * 18 * Osp.spd, y: 0 };
+      // they were carried with the camera, which now rides the arena: keep their wander as their speed in the arena (Jq
+      // took the arena's speed off it, so at 110 m/s they flew back across the screen, about 8 m, for 0.12 s)
+      for (const e of returned) {
+        e.velocity = { x: e.velocity.x + m.vx, y: e.velocity.y + m.vy };
+        if (Math.abs(e.pos.x) > Ovv(r).w) e.velocity = { x: -Math.sign(e.pos.x) * 18 * Osp.spd, y: 0 };
+      }
       return;
     }
     const half = Ovv(r).w, h = Jt.height / 2;
@@ -309,7 +314,9 @@ Space.hover = function (r, held, dt) {
   const clampX = x => Math.max(x0, Math.min(x1, x)), clampY = y => Math.max(3, Math.min(top, y));
   // the camera's sideways move this step carries every waiting enemy, its home and its wander point (a fresh start after
   // a flight: no carry on a stay's first step)
-  const C = r.hoverCam, dx = C && r.time - C.t < .1 ? V.x - C.x : 0; r.hoverCam = { x: V.x, t: r.time };
+  // only from the step before: "within 0.1 s" carried the camera's whole move over a flight shorter than that (skimming at
+  // 110 m/s, up to 12 m), shifting every waiting enemy at the splash (2026-11-01)
+  const C = r.hoverCam, dx = C && r.time - C.t <= dt * 1.5 ? V.x - C.x : 0; r.hoverCam = { x: V.x, t: r.time };
   // homes closer than 8 m drift apart (at most 4 m/s), so a crowd from the splash fans out across the screen
   for (let i = 0; i < held.length; i++) for (let j = i + 1; j < held.length; j++) {
     const A = held[i].home, B = held[j].home; if (!A || !B) continue;
@@ -338,13 +345,15 @@ Space.hover = function (r, held, dt) {
     }
     const tx = clampX(p.wp.x), ty = clampY(p.wp.y), a = tx - p.x, b = ty - p.y;
     // a slow wander; faster while it settles from the splash (far from home) or the edge carries it
-    const sp = out ? Math.max(12, Math.abs(clampX(p.x) - p.x) * 10) : far > 10 ? Math.min(20, 7 + far * .5) : 6 * (.75 + .5 * (p.seed * 5.3 % 1));
+    const sp = out ? 12 : far > 10 ? Math.min(20, 7 + far * .5) : 6 * (.75 + .5 * (p.seed * 5.3 % 1));
     let c = Math.atan2(b, a) - (p.h ?? 0); c = Math.atan2(Math.sin(c), Math.cos(c));
     p.h = (p.h ?? 0) + Math.max(-4 * dt, Math.min(4 * dt, c));   // turning at most 4 rad/s: curved paths
     const want = Math.min(sp, Math.hypot(a, b) * 2 + 1), v = (p.wv ?? 0) + (want - (p.wv ?? 0)) * (1 - Math.exp(-dt / (out ? .05 : .4)));   // speed eases (from rest at the splash)
     const bob = Math.sin(p.age * 1.7 + p.seed * 9) * .8;   // m/s, a slight bob
     p.x += Math.cos(p.h) * v * dt; p.y = Math.max(Math.min(2, p.y), p.y + (Math.sin(p.h) * v + bob) * dt);
-    if (out) p.x = p.x + (clampX(p.x) - p.x) * Math.min(1, 10 * dt);   // the edge keeps it on screen
+    // the edge brings it back on screen at up to 12 m/s (pulled in at 10/s, one surfacing or spawning near the edge lunged
+    // in at about 100 m/s, then slowed: a kick; 2026-11-01)
+    if (out) { const g = clampX(p.x) - p.x; p.x += Math.sign(g) * Math.min(Math.abs(g), 12 * dt) }
     p.v = p.wv = v;
   }
 };
