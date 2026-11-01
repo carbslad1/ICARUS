@@ -55,13 +55,18 @@ var Space = (() => {
   }
 
   // A point in the view ahead of the dolphin along the direction of travel, scattered sideways, not too close.
+  // In view means around the camera, not the frame's origin (2026-11-01): the arena is wider than the view and the camera
+  // scrolls across it, and under water the frame stays where the stay began while the camera follows the dolphin, so
+  // markers clamped around the origin waited at or past the screen's edge (16% of their time in a loop under water). And
+  // a marker is placed at least minHeight above the water from the start: placed lower while the view's top was still
+  // low, it popped up to minHeight on its next step (a 4 m flick).
   function ahead(r, m) {
-    const P = profile(r), V = Ovv(r), o = m.origin, me = m.local;
-    const half = V.w - P.margin, top = V.y - o.y + V.h - P.margin, low = Math.min(top, Math.max(V.y - o.y - V.h + P.margin, -o.y + P.minHeight));
+    const P = profile(r), V = Ovv(r), o = m.origin, me = m.local, cx = V.x - o.x;
+    const half = V.w - P.margin, low = Math.max(V.y - o.y - V.h + P.margin, -o.y + P.minHeight), top = Math.max(low, V.y - o.y + V.h - P.margin);
     const dir = unit(m.vx, m.vy), d = P.ahead[0] + ce(r) * (P.ahead[1] - P.ahead[0]), off = (ce(r) * 2 - 1) * P.spread;
-    let x = clamp(me.x + dir.x * d - dir.y * off, -half, half), y = clamp(me.y + dir.y * d + dir.x * off, low, top);
+    let x = clamp(me.x + dir.x * d - dir.y * off, cx - half, cx + half), y = clamp(me.y + dir.y * d + dir.x * off, low, top);
     const dx = x - me.x, dy = y - me.y, dist = Math.hypot(dx, dy);
-    if (dist < P.minDist) { const u = dist > .01 ? unit(dx, dy) : dir; x = clamp(me.x + u.x * P.minDist, -half, half); y = clamp(me.y + u.y * P.minDist, low, top) }
+    if (dist < P.minDist) { const u = dist > .01 ? unit(dx, dy) : dir; x = clamp(me.x + u.x * P.minDist, cx - half, cx + half); y = clamp(me.y + u.y * P.minDist, low, top) }
     return { x, y };
   }
 
@@ -167,7 +172,9 @@ var Space = (() => {
 
   return { PROFILE, on, profile, landing, place, ahead, edge, resolve, after, draw, recall };
 })();
-{const obq0=Obq;Obq=function(r,t,q){if(Space.on(r)&&t?.kind==='air'&&!Space.edge(r))return Space.place(r,t,q);return obq0(r,t,q)}}
+// while you swim (the stand-in frame, t.wet) every spawn is marked in view: an edge spawn's marker waited off-screen
+// and the enemy became a held pursuer at once, so it never flew in from the edge as it does in the air
+{const obq0=Obq;Obq=function(r,t,q){if(Space.on(r)&&t?.kind==='air'&&(t.wet||!Space.edge(r)))return Space.place(r,t,q);return obq0(r,t,q)}}
 {const obs0=Obs;Obs=function(r,t,i){if(!Space.on(r)||t?.kind!=='air')return obs0(r,t,i);Space.resolve(r,t,i);return Obs0(r,t,i)}}
 {const me0=ME;ME=function(r,t,e,i){me0(r,t,e,i);if(Space.on(r)&&t?.kind==='air'&&i>0)Space.after(r,t,i)}}
 {const zq0=Zq;Zq=function(r){const n=r.enemies.length;zq0(r);if(Space.on(r))Space.recall(r,r.enemies.slice(n))}}  // pursuers return at the breach
