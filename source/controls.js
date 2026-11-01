@@ -102,7 +102,21 @@ var WaterView = (() => {
     // from where the water camera would be after this step (its last step's move added): starting where it was stood the
     // camera still for the breach's step, half the motion for that frame at 105 m/s (a stutter at every breach)
     const mv = moved || { x: 0, y: 0 };
-    if (!ac) ac = { sx: tx, off: { x: prev.x + mv.x - (o.x + tx), y: prev.y + mv.y - o.y }, t: 0 };
+    if (DEMO.tune.breachspring) {
+      // the offset from the arena's framing eases out as before (smoothly, over DEMO.tune.breachT s), plus a term that
+      // starts at the camera's own speed less the arena's and fades to nothing over the same time, so the camera's speed
+      // carries through the breach as well as its place (the ease alone started from rest: the camera took the arena's
+      // climb, about 19 m/s at 30 m/s, in one frame, then swung back; designer, 2026-11-01: "the camera lurches on
+      // breach ... a little jolt, even at 30"; a spring that started at the camera's speed jolted more, 3.7 against 1.3
+      // px/frame² at the 95th percentile, from its pull on the offset)
+      const T = Math.max(.1, +DEMO.tune.breachT || .5);
+      if (!ac?.ov) ac = { sx: tx, off: { x: prev.x + mv.x - (o.x + tx), y: prev.y + mv.y - o.y }, ov: { x: mv.x / Math.max(dt, 1e-6) - m.vx, y: mv.y / Math.max(dt, 1e-6) - m.vy }, t: 0 };
+      else { ac.sx += (tx - ac.sx) * (1 - Math.exp(-dt / .14)); ac.t += dt }
+      const p = Math.min(1, ac.t / T), e = 1 - p * p * (3 - 2 * p), g = ac.t * (1 - p) * (1 - p);
+      r.cam = se(o.x + ac.sx + ac.off.x * e + ac.ov.x * g, o.y + ac.off.y * e + ac.ov.y * g);
+      return;
+    }
+    if (!ac || ac.t == null) ac = { sx: tx, off: { x: prev.x + mv.x - (o.x + tx), y: prev.y + mv.y - o.y }, t: 0 };
     ac.sx += (tx - ac.sx) * (1 - Math.exp(-dt / .14)); ac.t += dt;
     const p = Math.min(1, ac.t / CATCH), e = 1 - p * p * (3 - 2 * p);
     r.cam = se(o.x + ac.sx + ac.off.x * e, o.y + ac.off.y * e);
