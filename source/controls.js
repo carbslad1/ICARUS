@@ -171,6 +171,15 @@ var SizeHold = { factor(ppm) { const ref = +DEMO.tune.sizeref || 1.12, z = W / J
   r.cam=se(r.cam.x+r.camV.x*t,r.cam.y+r.camV.y*t);
   if(wy!=null){r.cam=se(r.cam.x,wy);r.camV=se(r.camV.x,0)}   // the view's height and pinned top set the height
   r.camLock=(r.camLock==null?0:r.camLock)+(0-(r.camLock||0))*Xe(t,.18);Ocl=r.camLock}}
+// The breach shockwave in free swimming (designer, 2026-11-02: "turn the splash knockback/rocketboost that pushed
+// enemies back on"): forward-only swimming fires a rocket blast as you leave the water and the Space carve a breach burst,
+// but free swimming fired neither. With DEMO.tune.breachblast every breach fires v3's exit blast where you leave the water,
+// leaning the way you launch: Settings › Launch › Rocket boost sets its size (shockwave size × exit blast), push and
+// spread; v3's shock code then pushes the enemies it reaches (Orshock, every step).
+{const zqb=Zq;Zq=function(r){zqb(r);const m=r.medium;
+  if(!r?.demo||!DEMO.tune.breachblast||Orw.on||Controls.carve()||m?.kind!=='air')return;
+  const R=Orw.srad*Orw.xb;if(!(R>0))return;const a=Math.atan2(m.vy,m.vx);
+  Orring(r,m.origin.x,0,R,a);r.events.push({kind:'rocketout',pos:se(m.origin.x,0),a,e:wt(Orw.sbias,0,.8),splash:Orw.splash,R,T:Math.max(.05,Orw.stime)})}}
 // the arena's outline only while the view is the arena's (zoomed out past 5% it sat inside the screen as a box)
 {const ovae0=Ovae;Ovae=function(R,d,x){if(lr.fit&&R.ppm>0&&W/Jt.height/R.ppm>1.05)return;return ovae0(R,d,x)}}
 // the camera's move each step, for the air camera to carry on from at the breach
