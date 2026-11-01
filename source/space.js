@@ -269,9 +269,10 @@ Space.pace = function (r) {
 //   turning slowly, so the dolphin still ran into it, 1.5-1.8% of the time) that is near where the dolphin will be over
 //   the next 0.3 s moves sideways off that path, and none comes closer than 2.5 m.
 // - DEMO.tune.hover: the enemies waiting above the water hover where they are in the world while you swim, instead of
-//   chasing a point ahead of you (at 29-47 m/s, median), so you can line a breach up on them. They rise to their own
-//   height (5-12 m) at most 8 m/s, and the view's edge pushes them along when it reaches them, so they stay on screen
-//   (drifting only at 8 m/s, they fell off it: 64-92% on screen against 81-99% chasing).
+//   chasing a point ahead of you (at 29-47 m/s, median), so you can line a breach up on them. Each has a home where it
+//   was at the splash, at its own height 10-18 m up (5-12 m was too close to the water, designer), and wanders about
+//   it at 3 m/s, curving to a new point within 6 m every 1-3 s, as if it had lost sight of you; it settles faster from
+//   the splash, and the view's edge pushes its home (and it) along when it reaches them, so it stays on screen.
 Space.avoidWet = function (r, dt) {
   const m = r.medium, me = m.pos, v = m.velocity, AHEAD = .3, CLEAR = 6, KEEP = 2.5;
   for (const p of r.pursuers || []) {
@@ -288,15 +289,29 @@ Space.avoidWet = function (r, dt) {
   }
 };
 Space.hover = function (r, held, dt) {
-  const V = Ovv(r), MAX = 8, M = 6;
+  const V = Ovv(r), M = 6, top = V.y + V.h - 3, x0 = V.x - V.w + M, x1 = V.x + V.w - M;
+  const clampX = x => Math.max(x0, Math.min(x1, x)), clampY = y => Math.max(3, Math.min(top, y));
   for (const p of held) {
     p.px = p.x; p.py = p.y; p.age += dt; p.lurk = false;
-    const own = 5 + (p.seed * 3.1 % 1) * 7, top = V.y + V.h - 3;
-    const tx = Math.max(V.x - V.w + M, Math.min(V.x + V.w - M, p.x)), ty = Math.max(1.5, Math.min(top, own));
-    const a = tx - p.x, b = ty - p.y, d = Math.hypot(a, b), pushed = tx !== p.x;
-    const s = pushed ? Math.max(MAX, d * 10) : Math.min(MAX, d * 2);   // the edge pushes; otherwise a slow settle
-    if (d > .01) { p.x += a / d * s * dt; p.y = Math.max(1, p.y + b / d * s * dt); p.h = Math.atan2(b, a) }
-    p.v = s;
+    // its home: where it was at the splash, at its own height (10-18 m); the view's edge pushes the home along
+    const own = 10 + (p.seed * 3.1 % 1) * 8;
+    if (!p.home) p.home = { x: p.x, y: own };
+    p.home.x = clampX(p.home.x); p.home.y = clampY(own);
+    // wandering: a new point near home every 1-3 s, or on reaching it
+    p.wt = (p.wt ?? 0) - dt;
+    if (!p.wp || p.wt <= 0 || Math.hypot(p.wp.x - p.x, p.wp.y - p.y) < 1) {
+      p.wp = { x: p.home.x + (ce(r) * 2 - 1) * 6, y: p.home.y + (ce(r) * 2 - 1) * 3 }; p.wt = 1 + ce(r) * 2;
+    }
+    const tx = clampX(p.wp.x), ty = clampY(p.wp.y), a = tx - p.x, b = ty - p.y;
+    const far = Math.hypot(p.home.x - p.x, p.home.y - p.y), out = p.x < x0 || p.x > x1;
+    // a slow wander; faster while it settles from the splash (far from home) or the edge carries it
+    const sp = out ? Math.max(8, Math.abs(clampX(p.x) - p.x) * 10) : far > 8 ? Math.min(14, 4 + far * .5) : 3;
+    let c = Math.atan2(b, a) - (p.h ?? 0); c = Math.atan2(Math.sin(c), Math.cos(c));
+    p.h = (p.h ?? 0) + Math.max(-3 * dt, Math.min(3 * dt, c));   // turning at most 3 rad/s: curved, unhurried paths
+    const v = Math.min(sp, Math.hypot(a, b) * 2 + 1);
+    p.x += Math.cos(p.h) * v * dt; p.y = Math.max(2, p.y + Math.sin(p.h) * v * dt);
+    if (out) p.x = p.x + (clampX(p.x) - p.x) * Math.min(1, 10 * dt);   // the edge keeps it on screen
+    p.v = v;
   }
 };
 {const pq3=Pq;Pq=function(r,e){

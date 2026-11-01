@@ -4369,7 +4369,7 @@ var DEMO = (() => {
     depth: {type:'Blast',cad:'Heavy',coef:1.5,damage:[24,36,52,80],cd:[64,56,48,40],range:18,crit:.03,cx:1.5,kb:9,blast:8.5,side:'Max HP',sideScale:.15,description:'A lobbed charge aimed to intercept its target. Max HP also adds damage.'}
   };
   // Hand-cap levers (structure doc 5.4): kept open and tunable, to be balanced in play. The tuning panel edits these live.
-  const TUNE_DEFAULT={bro:1,shake:1,flash:1,space:1,edge:.2,danger:1,lead:.5,mines:0,carve:1,ccw:0,sky:12,verbs:0,hop:6,dive:2,dashes:2,hold:1,wetspawn:1,rules:1,payK:3,streakCap:5,well:60,sides:1,moves:1,pierce:1,trickPool:1,tricks:1,shakeDeal:0,drone:0,pace:1,hover:1,wetavoid:1,viewfit:1,viewmax:3,airband:20,airshare:.25,holdlevel:1};  // trickPool: offer only the shortlist being proven (docs/TRICK_LAB.md)  // pierce: Laser and Harpoon pierce by tier  // sides: step 8 (armoured enemies)  // well: Gravity anchor's pull, m/s²  // rules, payK, streakCap: step 4 (style score)  // space: step 1 (space.js); edge: share of its spawns from the screen edge; danger, lead, mines: step 2 (danger.js)
+  const TUNE_DEFAULT={bro:1,shake:1,flash:1,space:1,edge:.2,danger:1,lead:.5,mines:0,carve:1,ccw:0,sky:12,verbs:0,hop:6,dive:2,dashes:2,hold:1,wetspawn:1,rules:1,payK:3,streakCap:5,well:60,sides:1,moves:1,pierce:1,trickPool:1,tricks:1,shakeDeal:0,drone:0,pace:1,hover:1,wetavoid:1,viewfit:1,viewmax:3,airband:24,airshare:.25,holdlevel:1};  // trickPool: offer only the shortlist being proven (docs/TRICK_LAB.md)  // pierce: Laser and Harpoon pierce by tier  // sides: step 8 (armoured enemies)  // well: Gravity anchor's pull, m/s²  // rules, payK, streakCap: step 4 (style score)  // space: step 1 (space.js); edge: share of its spawns from the screen edge; danger, lead, mines: step 2 (danger.js)
   const tune={...TUNE_DEFAULT};
   try{Object.assign(tune,JSON.parse(localStorage.getItem('icarus.scoreshow.tune')||'{}'))}catch(e){}
   const saveTune=()=>{try{localStorage.setItem('icarus.scoreshow.tune',JSON.stringify(tune))}catch(e){}};
@@ -5302,9 +5302,10 @@ Space.pace = function (r) {
 //   turning slowly, so the dolphin still ran into it, 1.5-1.8% of the time) that is near where the dolphin will be over
 //   the next 0.3 s moves sideways off that path, and none comes closer than 2.5 m.
 // - DEMO.tune.hover: the enemies waiting above the water hover where they are in the world while you swim, instead of
-//   chasing a point ahead of you (at 29-47 m/s, median), so you can line a breach up on them. They rise to their own
-//   height (5-12 m) at most 8 m/s, and the view's edge pushes them along when it reaches them, so they stay on screen
-//   (drifting only at 8 m/s, they fell off it: 64-92% on screen against 81-99% chasing).
+//   chasing a point ahead of you (at 29-47 m/s, median), so you can line a breach up on them. Each has a home where it
+//   was at the splash, at its own height 10-18 m up (5-12 m was too close to the water, designer), and wanders about
+//   it at 3 m/s, curving to a new point within 6 m every 1-3 s, as if it had lost sight of you; it settles faster from
+//   the splash, and the view's edge pushes its home (and it) along when it reaches them, so it stays on screen.
 Space.avoidWet = function (r, dt) {
   const m = r.medium, me = m.pos, v = m.velocity, AHEAD = .3, CLEAR = 6, KEEP = 2.5;
   for (const p of r.pursuers || []) {
@@ -5321,15 +5322,29 @@ Space.avoidWet = function (r, dt) {
   }
 };
 Space.hover = function (r, held, dt) {
-  const V = Ovv(r), MAX = 8, M = 6;
+  const V = Ovv(r), M = 6, top = V.y + V.h - 3, x0 = V.x - V.w + M, x1 = V.x + V.w - M;
+  const clampX = x => Math.max(x0, Math.min(x1, x)), clampY = y => Math.max(3, Math.min(top, y));
   for (const p of held) {
     p.px = p.x; p.py = p.y; p.age += dt; p.lurk = false;
-    const own = 5 + (p.seed * 3.1 % 1) * 7, top = V.y + V.h - 3;
-    const tx = Math.max(V.x - V.w + M, Math.min(V.x + V.w - M, p.x)), ty = Math.max(1.5, Math.min(top, own));
-    const a = tx - p.x, b = ty - p.y, d = Math.hypot(a, b), pushed = tx !== p.x;
-    const s = pushed ? Math.max(MAX, d * 10) : Math.min(MAX, d * 2);   // the edge pushes; otherwise a slow settle
-    if (d > .01) { p.x += a / d * s * dt; p.y = Math.max(1, p.y + b / d * s * dt); p.h = Math.atan2(b, a) }
-    p.v = s;
+    // its home: where it was at the splash, at its own height (10-18 m); the view's edge pushes the home along
+    const own = 10 + (p.seed * 3.1 % 1) * 8;
+    if (!p.home) p.home = { x: p.x, y: own };
+    p.home.x = clampX(p.home.x); p.home.y = clampY(own);
+    // wandering: a new point near home every 1-3 s, or on reaching it
+    p.wt = (p.wt ?? 0) - dt;
+    if (!p.wp || p.wt <= 0 || Math.hypot(p.wp.x - p.x, p.wp.y - p.y) < 1) {
+      p.wp = { x: p.home.x + (ce(r) * 2 - 1) * 6, y: p.home.y + (ce(r) * 2 - 1) * 3 }; p.wt = 1 + ce(r) * 2;
+    }
+    const tx = clampX(p.wp.x), ty = clampY(p.wp.y), a = tx - p.x, b = ty - p.y;
+    const far = Math.hypot(p.home.x - p.x, p.home.y - p.y), out = p.x < x0 || p.x > x1;
+    // a slow wander; faster while it settles from the splash (far from home) or the edge carries it
+    const sp = out ? Math.max(8, Math.abs(clampX(p.x) - p.x) * 10) : far > 8 ? Math.min(14, 4 + far * .5) : 3;
+    let c = Math.atan2(b, a) - (p.h ?? 0); c = Math.atan2(Math.sin(c), Math.cos(c));
+    p.h = (p.h ?? 0) + Math.max(-3 * dt, Math.min(3 * dt, c));   // turning at most 3 rad/s: curved, unhurried paths
+    const v = Math.min(sp, Math.hypot(a, b) * 2 + 1);
+    p.x += Math.cos(p.h) * v * dt; p.y = Math.max(2, p.y + Math.sin(p.h) * v * dt);
+    if (out) p.x = p.x + (clampX(p.x) - p.x) * Math.min(1, 10 * dt);   // the edge keeps it on screen
+    p.v = v;
   }
 };
 {const pq3=Pq;Pq=function(r,e){
@@ -5496,7 +5511,7 @@ var Controls = (() => {
 // high speed the waterline and the enemies waiting above it went off the top. Two tries that chased the dolphin (a
 // zoom-and-shift spring, then a hard limit on it) lost the air or jerked (qa/watercam.cjs). With DEMO.tune.viewfit:
 // - the top of the view is pinned above the waterline, so the air is always in view, and the camera only moves up and
-//   down as the zoom changes. The band of air is DEMO.tune.airband m (20), and at least DEMO.tune.airshare of the view
+//   down as the zoom changes. The band of air is DEMO.tune.airband m (24: enemies wait 10-18 m up), and at least DEMO.tune.airshare of the view
 //   (a quarter) so it stays a real strip when the view zooms out (designer, 2026-11-01: "widen the air band");
 // - the view's height covers the deepest point the dolphin is about to reach: where its current turn takes it over the
 //   next 0.6 s (a loop is foreseen, not chased), plus a margin. That depth is held and let go slowly (zoom in over
@@ -5527,7 +5542,7 @@ var WaterView = (() => {
     return -low;
   }
   function step(r, dt) {
-    const m = r.medium, band = DEMO.tune.airband ?? 20, share = Math.min(.6, Math.max(0, +DEMO.tune.airshare || 0)), max = (+DEMO.tune.viewmax || 3) * airH();
+    const m = r.medium, band = DEMO.tune.airband ?? 24, share = Math.min(.6, Math.max(0, +DEMO.tune.airshare || 0)), max = (+DEMO.tune.viewmax || 3) * airH();
     const hd = Math.atan2(m.velocity.y, m.velocity.x);
     if (!st) st = { depth: 0, H: airH(), Hv: 0, top: r.cam.y + airH() / 2, tv: 0, hPrev: hd };
     const w = Math.atan2(Math.sin(hd - st.hPrev), Math.cos(hd - st.hPrev)) / Math.max(dt, 1e-6); st.hPrev = hd;

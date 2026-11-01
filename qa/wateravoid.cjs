@@ -1,7 +1,7 @@
 // Enemies while you swim (designer, 2026-11-01): enemies under the water must keep out of the dolphin's way, and the
 // ones waiting above the water must hold still enough to line a breach up on (space.js avoidWet and hover).
 // Free-swimming bot, mid launches, 4 seeds × 90 s at waves 3 and 8. Passes when no enemy under the water touches the
-// dolphin and the waiting ones move at a median of 10 m/s or less (they chased at 29-47 m/s).
+// dolphin and the waiting ones move at a median of 10 m/s or less (they chased at 29-47 m/s; they wander at about 3).
 //   node qa/wateravoid.cjs [--tune=hover:0,wetavoid:0]
 const path = require('path');
 const { load } = require('./load.cjs'), { swimmer } = require('./bot.cjs');
