@@ -76,15 +76,37 @@ var WaterView = (() => {
   function step(r, dt) {
     const m = r.medium, band = DEMO.tune.airband ?? 30, share = Math.min(.6, Math.max(0, +DEMO.tune.airshare || 0)), max = (+DEMO.tune.viewmax || 3) * airH();
     const hd = Math.atan2(m.velocity.y, m.velocity.x);
-    if (!st) st = { depth: 0, H: airH(), Hv: 0, top: r.cam.y + airH() / 2, tv: 0, hPrev: hd };
+    // entering the water the top carries on at the camera's own vertical speed (from rest it stopped the camera's fall
+    // within a frame or two at the splash, a jolt of about 4.4 px/frame² at 30 m/s; designer, 2026-11-02), but only as
+    // fast as it can come down to the band without passing it, plus DEMO.tune.splashover (6 m/s): carrying a 60-100 m/s
+    // fall took the top below the water at waves 10-20 (the surface on screen 56-98% of the time). At 30 m/s the splash's
+    // jolt is 1.4 px/frame² at most with 6 (4.1 with none, 0.35 with 20, but 20 lost waiting enemies off the top: 71-79%)
+    if (!st) {
+      const top0 = r.cam.y + airH() / 2, band0 = DEMO.tune.airband ?? 30;
+      const vy = DEMO.tune.breachspring && moved && dt > 0 ? Math.max(moved.y / dt, -Math.max(0, top0 - band0) / SETTLE - (DEMO.tune.splashover ?? 6)) : 0;
+      st = { depth: 0, H: airH(), Hv: 0, top: top0, tv: Math.min(0, vy), hPrev: hd };
+    }
     const w = Math.atan2(Math.sin(hd - st.hPrev), Math.cos(hd - st.hPrev)) / Math.max(dt, 1e-6); st.hPrev = hd;
     const need = Math.max(0, -m.pos.y, ahead(m, w)) + MARGIN;
-    st.depth = Math.max(need, st.depth - LET_GO * dt);
+    // rising, the held depth comes up with the dolphin (DEMO.tune.viewrise), so after a deep dive the view is back to the
+    // air's by the breach: let go at 10 m/s, a 66-92 m dive at 100 m/s breached 2.2-2.7x zoomed out, and the view zoomed in
+    // over the first 0.35 s in the air with the arena's outline inside the screen (designer, 2026-11-02: "on the first jump
+    // of a wave i can see a zoom effect ... and a outline of a box on the edge of the screen")
+    // only heading out: rising, turning less than 1.5 rad/s (a hold-D loop turns at 3.6; its upswings pumped the zoom,
+    // 0.55-1.75/s against 0.22) and within 4 s of the surface in a straight line (the water's nose drop curves a predicted
+    // path down, so a path with the current turn missed straight climbs)
+    st.ws = (st.ws ?? w) + (w - (st.ws ?? w)) * (1 - Math.exp(-dt / .3));   // the turn rate over about 0.3 s (taps average out)
+    const out = !!DEMO.tune.viewrise && m.velocity.y > 0 && Math.abs(st.ws) < 1.5 && -m.pos.y / m.velocity.y < 4;
+    const rise = out ? 1.6 * m.velocity.y : 0;   // faster than the climb, so the gap left from the dive's bottom closes
+    st.depth = Math.max(need, st.depth - Math.max(LET_GO, rise) * dt);
     // the band: its metres, or its share of a view tall enough for band + depth, whichever is more
     const top = Math.max(band, share * st.depth / (1 - share));
     const kt = 1 / SETTLE; st.tv += ((top - st.top) * kt * kt - 2 * kt * st.tv) * dt; st.top += st.tv * dt;
     const want = Math.min(max, Math.max(airH(), st.top + st.depth)), k = 1 / SPRING;
-    st.Hv += ((want - st.H) * k * k - 2 * k * st.Hv) * dt; st.H += st.Hv * dt;
+    // with viewrise the spring also follows the target's own rate (no lag behind it: at 100 m/s a 0.3 s spring trailed by
+    // tens of metres)
+    const wv = out && st.want != null && dt > 0 ? Math.max(-150, Math.min(150, (want - st.want) / dt)) : 0; st.want = want;
+    st.Hv += ((want - st.H) * k * k + (wv - st.Hv) * 2 * k) * dt; st.H += st.Hv * dt;
     st.H = Math.min(max, Math.max(st.H, st.top - m.pos.y + 3));      // never so far behind that the dolphin leaves the view
     return Math.min(st.top - st.H / 2, m.pos.y + st.H / 2 - 3);       // deeper than the most zoom: follow the dolphin down
   }
@@ -121,7 +143,7 @@ var WaterView = (() => {
     const p = Math.min(1, ac.t / CATCH), e = 1 - p * p * (3 - 2 * p);
     r.cam = se(o.x + ac.sx + ac.off.x * e, o.y + ac.off.y * e);
   }
-  return { on, step, air, airCam, reset() { st = null; leave = null; ac = null }, leaveWater() { ac = null }, set moved(v) { moved = v }, get H() { return st?.H ?? null }, get airH() { return leave ? airH() + (leave.H - airH()) * (1 - (p => p * p * (3 - 2 * p))(Math.min(1, leave.t / LEAVE))) : null } };
+  return { on, step, air, airCam, reset() { st = null; leave = null; ac = null }, leaveWater() { ac = null }, set moved(v) { moved = v }, get moved() { return moved }, get H() { return st?.H ?? null }, get airH() { return leave ? airH() + (leave.H - airH()) * (1 - (p => p * p * (3 - 2 * p))(Math.min(1, leave.t / LEAVE))) : null } };
 })();
 {const fz0=Fz;Fz=function(m,l,c){if(!WaterView.on())return fz0(m,l,c);const H=m?.kind==='water'?WaterView.H:WaterView.airH;return H!=null?H/(lr.width*W/K):fz0(m,l,c)}}
 // Sizes held at 30 m/s (designer, 2026-11-01: "i want the enemies and dolphin to be the same size as they are at 30 at all
@@ -134,12 +156,14 @@ var SizeHold = { factor(ppm) { const ref = +DEMO.tune.sizeref || 1.12, z = W / J
 // the water camera: v3's spring, with the target this far above the dolphin and no velocity lead (or WaterView's height)
 {const ee0=EE;EE=function(r,t){
   const e=r.medium,lift=+DEMO.tune.sky||0;
-  if(e.kind==='air'&&lr.fit&&WaterView.on()){const pc={...r.cam};WaterView.air(t);ee0(r,t);WaterView.airCam(r,t,pc);return}
+  if(e.kind==='air'&&lr.fit&&WaterView.on()){const pc={...r.cam};WaterView.air(t);ee0(r,t);WaterView.airCam(r,t,pc);r.camKind='air';return}
   if(e.kind==='air')WaterView.reset();else WaterView.leaveWater();
   if(!lr.fit||e.kind==='air'||lift<=0)return ee0(r,t);
   const i=he(r),s=Fl(r),wy=WaterView.on()?WaterView.step(r,t):null,h=lr.width*W/K*Fz(e,i,r.cam)/2;
   const T=se(i.x,wy??Math.max(i.y+lift,Math.min(-.76*h,i.y+.64*h))),Tv=se(s.x,s.y);
   r.camFree=se(T.x,T.y);r.camV||(r.camV=se(0,0));
+  // at the splash the sideways spring carries on at the camera's own speed (its speed was the last swim's)
+  if(DEMO.tune.breachspring&&r.camKind==='air'&&WaterView.moved&&t>0)r.camV=se(WaterView.moved.x/t,0);r.camKind=e.kind;
   const w=1/Math.max(.05,lr.follow);
   r.camV=se(r.camV.x+((T.x-r.cam.x)*w*w+(Tv.x-r.camV.x)*2*w)*t,r.camV.y+((T.y-r.cam.y)*w*w+(Tv.y-r.camV.y)*2*w)*t);
   const Sp=Math.hypot(s.x,s.y)*1.5+6,vv=Math.hypot(r.camV.x,r.camV.y);
@@ -147,6 +171,8 @@ var SizeHold = { factor(ppm) { const ref = +DEMO.tune.sizeref || 1.12, z = W / J
   r.cam=se(r.cam.x+r.camV.x*t,r.cam.y+r.camV.y*t);
   if(wy!=null){r.cam=se(r.cam.x,wy);r.camV=se(r.camV.x,0)}   // the view's height and pinned top set the height
   r.camLock=(r.camLock==null?0:r.camLock)+(0-(r.camLock||0))*Xe(t,.18);Ocl=r.camLock}}
+// the arena's outline only while the view is the arena's (zoomed out past 5% it sat inside the screen as a box)
+{const ovae0=Ovae;Ovae=function(R,d,x){if(lr.fit&&R.ppm>0&&W/Jt.height/R.ppm>1.05)return;return ovae0(R,d,x)}}
 // the camera's move each step, for the air camera to carry on from at the breach
 {const ee1=EE;EE=function(r,t){const p=r.cam?{x:r.cam.x,y:r.cam.y}:null;ee1(r,t);if(p&&r.cam)WaterView.moved={x:r.cam.x-p.x,y:r.cam.y-p.y}}}
 // v3's opening hint names W as the carve key; with Space carving it names Space (and W A S D choose a trick, source/tricks.js)

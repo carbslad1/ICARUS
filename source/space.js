@@ -325,8 +325,10 @@ Space.hover = function (r, held, dt) {
     A.x -= u * k; B.x += u * k;
   }
   for (const p of held) {
-    if (dx) { p.x += dx; if (p.home) p.home.x += dx; if (p.wp) p.wp.x += dx }
+    // the step's start (drawn between it and the end): before the carry, so the carry is drawn smoothly too (set after it,
+    // the renderer drew the carry in jumps of a step, up to 1 m at 120 m/s, and swimming fast they jittered)
     p.px = p.x; p.py = p.y; p.age += dt; p.lurk = false;
+    if (dx) { p.x += dx; if (p.home) p.home.x += dx; if (p.wp) p.wp.x += dx }
     // its home: where it was at the splash, at its own height (10-18 m); the view's edge pushes the home along
     const own = 15 + (p.seed * 3.1 % 1) * 10;
     if (!p.home) { p.home = { x: p.x, y: own }; p.h = Math.atan2(own - p.y, 0); p.wv = 0 }   // facing its place, not its fall
