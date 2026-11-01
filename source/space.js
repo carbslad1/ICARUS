@@ -262,3 +262,48 @@ Space.pace = function (r) {
     if(r.bw===r.wave&&r.mode==='playing'&&d>0){p.real+=d;if(r.medium?.kind==='air')p.air+=d}}
   return sw2(r,input,dt)}}
 {const obs1=Obs;Obs=function(r,t,i){if(DEMO.tune.pace&&r?.demo&&i>0){const k=Math.max(.2,Math.min(1,Space.pace(r)));r.bt=(r.bt||0)-i*(1-k)}return obs1(r,t,i)}}
+// Designer, 2026-11-01: "enemies need to avoid the dolphin when they are both in the water, right now they just swim
+// into it"; and "make enemy air placement predictable when the dolphin is turning in the water ... they are very fast
+// and erratic when the dolphin is in the water planning a trajectory".
+// - DEMO.tune.wetavoid: an enemy under the water (a wet pursuer; v3 makes it flee, but as fast as the dolphin and
+//   turning slowly, so the dolphin still ran into it, 1.5-1.8% of the time) that is near where the dolphin will be over
+//   the next 0.3 s moves sideways off that path, and none comes closer than 2.5 m.
+// - DEMO.tune.hover: the enemies waiting above the water hover where they are in the world while you swim, instead of
+//   chasing a point ahead of you (at 29-47 m/s, median), so you can line a breach up on them. They rise to their own
+//   height (5-12 m) at most 8 m/s, and the view's edge pushes them along when it reaches them, so they stay on screen
+//   (drifting only at 8 m/s, they fell off it: 64-92% on screen against 81-99% chasing).
+Space.avoidWet = function (r, dt) {
+  const m = r.medium, me = m.pos, v = m.velocity, AHEAD = .3, CLEAR = 6, KEEP = 2.5;
+  for (const p of r.pursuers || []) {
+    if (!(p.wet || p.y < 0)) continue;
+    // the nearest point on the dolphin's path over the next AHEAD s
+    const ex = v.x * AHEAD, ey = v.y * AHEAD, L = ex * ex + ey * ey || 1, k = Math.max(0, Math.min(1, ((p.x - me.x) * ex + (p.y - me.y) * ey) / L));
+    const cx = me.x + ex * k, cy = me.y + ey * k, dx = p.x - cx, dy = p.y - cy, d = Math.hypot(dx, dy) || .01, R = (p.radius || 1) + CLEAR;
+    if (d < R) {   // step sideways off the path, as fast as it swims
+      const s = Math.max(10, p.v || 0) * dt, push = Math.min(R - d, s);
+      p.x += dx / d * push; p.y = Math.min(-.3, p.y + dy / d * push); p.h = Math.atan2(dy, dx);
+    }
+    const n = Math.hypot(p.x - me.x, p.y - me.y) || .01, keep = (p.radius || 1) + KEEP;
+    if (n < keep) { p.x = me.x + (p.x - me.x) / n * keep; p.y = Math.min(-.3, me.y + (p.y - me.y) / n * keep) }
+  }
+};
+Space.hover = function (r, held, dt) {
+  const V = Ovv(r), MAX = 8, M = 6;
+  for (const p of held) {
+    p.px = p.x; p.py = p.y; p.age += dt; p.lurk = false;
+    const own = 5 + (p.seed * 3.1 % 1) * 7, top = V.y + V.h - 3;
+    const tx = Math.max(V.x - V.w + M, Math.min(V.x + V.w - M, p.x)), ty = Math.max(1.5, Math.min(top, own));
+    const a = tx - p.x, b = ty - p.y, d = Math.hypot(a, b), pushed = tx !== p.x;
+    const s = pushed ? Math.max(MAX, d * 10) : Math.min(MAX, d * 2);   // the edge pushes; otherwise a slow settle
+    if (d > .01) { p.x += a / d * s * dt; p.y = Math.max(1, p.y + b / d * s * dt); p.h = Math.atan2(b, a) }
+    p.v = s;
+  }
+};
+{const pq3=Pq;Pq=function(r,e){
+  const water=r?.demo&&r.medium?.kind==='water'&&e>0;
+  if(water&&DEMO.tune.hover&&DEMO.tune.hold&&r.pursuers?.length){
+    // the held ones hover; the rest (under the water, lurking) take the steps before (v3's, then the hold's)
+    const held=r.pursuers.filter(p=>!p.wet&&!p.lurk);r.pursuers=r.pursuers.filter(p=>p.wet||p.lurk);
+    const o=pq3(r,e);r.pursuers=held.concat(r.pursuers||[]);Space.hover(r,held,e);   // the held first, so newly spawned ones stay last
+    if(DEMO.tune.wetavoid)Space.avoidWet(r,e);return o}
+  const o=pq3(r,e);if(water&&DEMO.tune.wetavoid)Space.avoidWet(r,e);return o}}
