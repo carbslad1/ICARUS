@@ -40,7 +40,7 @@ var Controls = (() => {
 // high speed the waterline and the enemies waiting above it went off the top. Two tries that chased the dolphin (a
 // zoom-and-shift spring, then a hard limit on it) lost the air or jerked (qa/watercam.cjs). With DEMO.tune.viewfit:
 // - the top of the view is pinned above the waterline, so the air is always in view, and the camera only moves up and
-//   down as the zoom changes. The band of air is DEMO.tune.airband m (24: enemies wait 10-18 m up), and at least DEMO.tune.airshare of the view
+//   down as the zoom changes. The band of air is DEMO.tune.airband m (30: enemies wait 15-25 m up), and at least DEMO.tune.airshare of the view
 //   (a quarter) so it stays a real strip when the view zooms out (designer, 2026-11-01: "widen the air band");
 // - the view's height covers the deepest point the dolphin is about to reach: where its current turn takes it over the
 //   next 0.6 s (a loop is foreseen, not chased), plus a margin. That depth is held and let go slowly (zoom in over
@@ -71,7 +71,7 @@ var WaterView = (() => {
     return -low;
   }
   function step(r, dt) {
-    const m = r.medium, band = DEMO.tune.airband ?? 24, share = Math.min(.6, Math.max(0, +DEMO.tune.airshare || 0)), max = (+DEMO.tune.viewmax || 3) * airH();
+    const m = r.medium, band = DEMO.tune.airband ?? 30, share = Math.min(.6, Math.max(0, +DEMO.tune.airshare || 0)), max = (+DEMO.tune.viewmax || 3) * airH();
     const hd = Math.atan2(m.velocity.y, m.velocity.x);
     if (!st) st = { depth: 0, H: airH(), Hv: 0, top: r.cam.y + airH() / 2, tv: 0, hPrev: hd };
     const w = Math.atan2(Math.sin(hd - st.hPrev), Math.cos(hd - st.hPrev)) / Math.max(dt, 1e-6); st.hPrev = hd;
