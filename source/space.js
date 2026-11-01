@@ -157,10 +157,16 @@ var Space = (() => {
   // run's generator. At 0.35 the bot's enemies sat 26 m from the screen centre; at 0.2, 15 m (2026-10-27, one seed).
   const edge = r => ce(r) < DEMO.tune.edge;
 
-  // At the breach, enemies returning from beyond the screen's side edges come back just inside them.
+  // At the breach, enemies returning from beyond the screen's side edges come back just inside them. Not while waiting
+  // enemies hover in view under water (DEMO.tune.hover): the water view can be wider than the arena, so that moved
+  // enemies you could see by up to 31 m in a step (rapid short hops, 2026-11-01); they keep their place and fly in.
   function recall(r, returned) {
     const m = r.medium;
     if (m?.kind !== 'air' || !returned.length) return;
+    if (DEMO.tune.hover && DEMO.tune.hold) {
+      for (const e of returned) if (Math.abs(e.pos.x) > Ovv(r).w) e.velocity = { x: -Math.sign(e.pos.x) * 18 * Osp.spd, y: 0 };
+      return;
+    }
     const half = Ovv(r).w, h = Jt.height / 2;
     for (const e of returned) {
       if (Math.abs(e.pos.x) <= half) continue;
@@ -286,15 +292,20 @@ Space.avoidWet = function (r, dt) {
     const ex = v.x * AHEAD, ey = v.y * AHEAD, L = ex * ex + ey * ey || 1, k = Math.max(0, Math.min(1, ((p.x - me.x) * ex + (p.y - me.y) * ey) / L));
     const cx = me.x + ex * k, cy = me.y + ey * k, dx = p.x - cx, dy = p.y - cy, d = Math.hypot(dx, dy) || .01, R = (p.radius || 1) + CLEAR;
     if (d < R) {   // step sideways off the path, as fast as it swims
-      const s = Math.max(10, p.v || 0) * dt, push = Math.min(R - d, s);
+      // within its own speed this step, with what it has already swum (on top of a flee at your speed it went 150 m/s)
+      const s = Math.max(10, p.v || 0) * dt, moved = p.px == null ? 0 : Math.hypot(p.x - p.px, p.y - p.py), push = Math.min(R - d, Math.max(.25 * s, s - moved));
       p.x += dx / d * push; p.y = Math.min(-.3, p.y + dy / d * push); p.h = Math.atan2(dy, dx);
     }
     const n = Math.hypot(p.x - me.x, p.y - me.y) || .01, keep = (p.radius || 1) + KEEP;
-    if (n < keep) { p.x = me.x + (p.x - me.x) / n * keep; p.y = Math.min(-.3, me.y + (p.y - me.y) / n * keep) }
+    // out to the keep distance at most at your speed + 10 m/s a step: enemies touching you at the splash were moved 2-3 m
+    // in one step (rapid short hops, 2026-11-01); you still never gain on one
+    if (n < keep) { const out = Math.min(keep - n, (Math.hypot(v.x, v.y) + 10) * dt) + n; p.x = me.x + (p.x - me.x) / n * out; p.y = Math.min(-.3, me.y + (p.y - me.y) / n * out) }
   }
 };
 Space.hover = function (r, held, dt) {
-  const V = Ovv(r), M = 6, top = V.y + V.h - 3, x0 = V.x - V.w + M, x1 = V.x + V.w - M;
+  // the margin from the view's sides: 22% of it, at least 6 m (a fixed 6 m let 15-22% sit at the edges once the water
+  // view zoomed out less, 2026-11-01)
+  const V = Ovv(r), M = Math.max(6, .22 * V.w), top = V.y + V.h - 3, x0 = V.x - V.w + M, x1 = V.x + V.w - M;
   const clampX = x => Math.max(x0, Math.min(x1, x)), clampY = y => Math.max(3, Math.min(top, y));
   // the camera's sideways move this step carries every waiting enemy, its home and its wander point (a fresh start after
   // a flight: no carry on a stay's first step)
@@ -319,9 +330,10 @@ Space.hover = function (r, held, dt) {
       p.wp = { x: p.home.x + (ce(r) * 2 - 1) * 9, y: p.home.y + (ce(r) * 2 - 1) * 4 }; p.wt = 1 + ce(r) * 2;
     }
     const far = Math.hypot(p.home.x - p.x, p.home.y - p.y), out = p.x < x0 || p.x > x1;
-    if (far > 11 || p.y < p.home.y - 5) {   // getting to its place (beyond its wander, or below it): straight there, no easing or turning limit
+    if (far > 11 || p.y < p.home.y - 5 || p.y < 2) {   // getting to its place (beyond its wander, below it, or just out of the water under 2 m): straight there, no easing or turning limit
       const s = Math.min(25, 8 + far), hx = p.home.x - p.x, hy = p.home.y - p.y, n = far || 1, step = Math.min(far, s * dt);
-      p.x += hx / n * step; p.y = Math.max(2, p.y + hy / n * step); p.h = Math.atan2(hy, hx); p.v = p.wv = s; p.wp = null;
+      // the 2 m floor stops a sink; one just out of the water rises from where it is (lifting it to 2 m popped it 2 m in a step)
+      p.x += hx / n * step; p.y = Math.max(Math.min(2, p.y), p.y + hy / n * step); p.h = Math.atan2(hy, hx); p.v = p.wv = s; p.wp = null;
       continue;
     }
     const tx = clampX(p.wp.x), ty = clampY(p.wp.y), a = tx - p.x, b = ty - p.y;
@@ -331,7 +343,7 @@ Space.hover = function (r, held, dt) {
     p.h = (p.h ?? 0) + Math.max(-4 * dt, Math.min(4 * dt, c));   // turning at most 4 rad/s: curved paths
     const want = Math.min(sp, Math.hypot(a, b) * 2 + 1), v = (p.wv ?? 0) + (want - (p.wv ?? 0)) * (1 - Math.exp(-dt / (out ? .05 : .4)));   // speed eases (from rest at the splash)
     const bob = Math.sin(p.age * 1.7 + p.seed * 9) * .8;   // m/s, a slight bob
-    p.x += Math.cos(p.h) * v * dt; p.y = Math.max(2, p.y + (Math.sin(p.h) * v + bob) * dt);
+    p.x += Math.cos(p.h) * v * dt; p.y = Math.max(Math.min(2, p.y), p.y + (Math.sin(p.h) * v + bob) * dt);
     if (out) p.x = p.x + (clampX(p.x) - p.x) * Math.min(1, 10 * dt);   // the edge keeps it on screen
     p.v = p.wv = v;
   }

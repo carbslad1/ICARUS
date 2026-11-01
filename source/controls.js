@@ -64,10 +64,13 @@ var WaterView = (() => {
   let st = null, leave = null, ac = null;   // ac: the air camera { sx (scroll across the arena), off (breach offset), t }
   const on = () => !!(DEMO.tune.viewfit && lr.fit);
   const airH = () => Jt.height;                      // the air view's height (m)
-  // the deepest the dolphin gets over the next LOOK s if it keeps turning as it is now (from the heading's change)
+  // the deepest the dolphin gets over the next DEMO.tune.viewlook s if it keeps turning as it is now (from the heading's
+  // change). 0.15 s since 2026-11-01: at 0.6 s a short hop's dive looked 45 m ahead at wave 10 (37 m deep, for a hop that
+  // turns up at 4 m), so every hop zoomed out 1.2-1.5x and back ("expanding in and out"); now 1.0x at wave 3, 1.24x at 10
   function ahead(m, w) {
     const v = Math.hypot(m.velocity.x, m.velocity.y); let x = 0, y = m.pos.y, h = Math.atan2(m.velocity.y, m.velocity.x), low = y;
-    for (let k = 0; k < 12; k++) { h += w * LOOK / 12; y += Math.sin(h) * v * LOOK / 12; low = Math.min(low, y) }
+    const L = Math.max(0, DEMO.tune.viewlook ?? LOOK);
+    for (let k = 0; k < 12; k++) { h += w * L / 12; y += Math.sin(h) * v * L / 12; low = Math.min(low, y) }
     return -low;
   }
   function step(r, dt) {
