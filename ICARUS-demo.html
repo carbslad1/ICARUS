@@ -5305,8 +5305,10 @@ Space.pace = function (r) {
 //   chasing a point ahead of you (at 29-47 m/s, median), so you can line a breach up on them. Each has a home where it
 //   was at the splash, at its own height 15-25 m up (designer: 5-12 m, then 10-18 m, were too close to the water), and
 //   wanders about it as if it had lost sight of you: about 6 m/s (designer: 3 was too slow), easing its speed up and
-//   down, turning at most 4 rad/s toward a new point within 9 m every 1-3 s, with a slight bob. It settles faster
-//   from the splash, and the view's edge pushes its home (and it) along when it reaches them, so it stays on screen.
+//   down, turning at most 4 rad/s toward a new point within 9 m every 1-3 s, with a slight bob. Away from its home
+//   (more than 11 m, beyond where it wanders, or more than 5 m below its height: from the splash, or pushed) it flies straight there at 8-25 m/s; eased from rest and turning slowly
+//   from its fall it first dipped to the water and stayed low (half under 6 m for the first second, designer:
+//   "stuck close to the water"). The view's edge pushes its home (and it) along when it reaches them.
 Space.avoidWet = function (r, dt) {
   const m = r.medium, me = m.pos, v = m.velocity, AHEAD = .3, CLEAR = 6, KEEP = 2.5;
   for (const p of r.pursuers || []) {
@@ -5329,15 +5331,20 @@ Space.hover = function (r, held, dt) {
     p.px = p.x; p.py = p.y; p.age += dt; p.lurk = false;
     // its home: where it was at the splash, at its own height (10-18 m); the view's edge pushes the home along
     const own = 15 + (p.seed * 3.1 % 1) * 10;
-    if (!p.home) p.home = { x: p.x, y: own };
+    if (!p.home) { p.home = { x: p.x, y: own }; p.h = Math.atan2(own - p.y, 0); p.wv = 0 }   // facing its place, not its fall
     p.home.x = clampX(p.home.x); p.home.y = clampY(own);
     // wandering: a new point near home every 1-3 s, or on reaching it
     p.wt = (p.wt ?? 0) - dt;
     if (!p.wp || p.wt <= 0 || Math.hypot(p.wp.x - p.x, p.wp.y - p.y) < 1) {
       p.wp = { x: p.home.x + (ce(r) * 2 - 1) * 9, y: p.home.y + (ce(r) * 2 - 1) * 4 }; p.wt = 1 + ce(r) * 2;
     }
-    const tx = clampX(p.wp.x), ty = clampY(p.wp.y), a = tx - p.x, b = ty - p.y;
     const far = Math.hypot(p.home.x - p.x, p.home.y - p.y), out = p.x < x0 || p.x > x1;
+    if (far > 11 || p.y < p.home.y - 5) {   // getting to its place (beyond its wander, or below it): straight there, no easing or turning limit
+      const s = Math.min(25, 8 + far), hx = p.home.x - p.x, hy = p.home.y - p.y, n = far || 1, step = Math.min(far, s * dt);
+      p.x += hx / n * step; p.y = Math.max(2, p.y + hy / n * step); p.h = Math.atan2(hy, hx); p.v = p.wv = s; p.wp = null;
+      continue;
+    }
+    const tx = clampX(p.wp.x), ty = clampY(p.wp.y), a = tx - p.x, b = ty - p.y;
     // a slow wander; faster while it settles from the splash (far from home) or the edge carries it
     const sp = out ? Math.max(12, Math.abs(clampX(p.x) - p.x) * 10) : far > 10 ? Math.min(20, 7 + far * .5) : 6 * (.75 + .5 * (p.seed * 5.3 % 1));
     let c = Math.atan2(b, a) - (p.h ?? 0); c = Math.atan2(Math.sin(c), Math.cos(c));
