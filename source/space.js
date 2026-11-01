@@ -239,7 +239,7 @@ Space.wetSpawn = function (r, dt) {
 Space.wetLaunch = function (r) {
   const F = r.wetFrame; r.wetFrame = null;
   if (!F || !r.warns?.length || r.medium?.kind !== 'air') return;
-  for (const w of r.warns) w.x += F.origin.x - r.medium.origin.x;
+  for (const w of r.warns) { w.x += F.origin.x - r.medium.origin.x; w.y += F.origin.y - r.medium.origin.y }   // (the arena may be lifted)
 };
 {const pq1=Pq;Pq=function(r,e){if(DEMO.tune.wetspawn&&r?.demo&&r.medium?.kind==='water'&&e>0)Space.wetSpawn(r,e);return pq1(r,e)}}
 {const zq1=Zq;Zq=function(r){zq1(r);if(r?.demo)Space.wetLaunch(r)}}
@@ -294,7 +294,7 @@ Space.avoidWet = function (r, dt) {
   }
 };
 Space.hover = function (r, held, dt) {
-  const V = Ovv(r), M = 6, top = V.y + V.h - 3, x0 = V.x - V.w + M, x1 = V.x + V.w - M;
+  const V = Ovv(r), M = Math.max(6, V.w * .22), top = V.y + V.h - 3, x0 = V.x - V.w + M, x1 = V.x + V.w - M;   // homes kept off the screen's outer fifth
   const clampX = x => Math.max(x0, Math.min(x1, x)), clampY = y => Math.max(3, Math.min(top, y));
   // the camera's sideways move this step carries every waiting enemy, its home and its wander point (a fresh start after
   // a flight: no carry on a stay's first step)
@@ -344,3 +344,17 @@ Space.hover = function (r, held, dt) {
     const o=pq3(r,e);r.pursuers=held.concat(r.pursuers||[]);Space.hover(r,held,e);   // the held first, so newly spawned ones stay last
     if(DEMO.tune.wetavoid)Space.avoidWet(r,e);return o}
   const o=pq3(r,e);if(water&&DEMO.tune.wetavoid)Space.avoidWet(r,e);return o}}
+// The breach (designer, 2026-11-01: "enemies move when we breach ... they move upward with the camera change"). The
+// arena is centred where the dolphin breaks the surface, so it reached only 21.6 m above the water while the enemies wait
+// at 15-25 m and the water view keeps a band of DEMO.tune.airband (30) m of air in view; at the breach the view jumped
+// from the water's framing to the arena's (it zoomed in by about 30% around the water line), so everything above the
+// water slid up the screen. With the water view on, the arena is lifted at the breach so its top meets that band: its
+// origin rises by airband - half the arena's height (8.4 m) and the dolphin, the enemies and the markers keep their
+// places in the world (their arena positions drop by as much); the dolphin starts near the arena's bottom and flies up
+// into it. Done before the waiting enemies join the arena (Zq), so none is pulled to its edge.
+{const zq2=Zq;Zq=function(r){const m=r.medium;
+  if(r?.demo&&m?.kind==='air'&&lr.fit&&typeof WaterView!=='undefined'&&WaterView.on()&&!m.lifted){
+    const k=Math.max(0,(+DEMO.tune.airband||0)-Jt.height/2);
+    if(k>0){m.origin=se(m.origin.x,m.origin.y+k);m.local=ye(m.local.x,m.local.y-k);for(const e of r.enemies)e.pos=ye(e.pos.x,e.pos.y-k);for(const w of r.warns||[])w.y-=k}
+    m.lifted=k}
+  return zq2(r)}}
