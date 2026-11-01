@@ -71,4 +71,20 @@ function flyer(G, styleName, seed, opts = {}) {
   };
 }
 
-module.exports = { STYLES, flyer };
+// Free swimming (v3's controls, the demo's default since 2026-10-31: A and D turn, W or Space boosts). Under water it
+// steers the heading with the turn keys (as a player taps them): down at 55° in the way it is going until its style's
+// depth, then up to its style's launch angle with boost on; in the air it plays as flyer() does.
+function swimmer(G, styleName, seed, opts = {}) {
+  const st = STYLES[styleName], air = flyer(G, styleName, seed, opts), mem = { phase: 'dive' };
+  return function (S) {
+    const m = S.medium;
+    if (m.kind !== 'water') { mem.phase = 'dive'; return air(S) }
+    const dir = Math.sign(m.velocity.x) || mem.dir || 1; mem.dir = dir;
+    if (mem.phase === 'dive' && m.pos.y < -st.depth) mem.phase = 'rise';
+    const a = mem.phase === 'dive' ? -deg(55) : deg(st.angle), want = dir > 0 ? a : Math.PI - a, d = wrap(want - m.heading);
+    const turn = Math.abs(d) > .04 ? Math.sign(d) : 0;
+    return { turn, x: -turn, y: 0, boost: mem.phase === 'rise', w: false };
+  };
+}
+
+module.exports = { STYLES, flyer, swimmer };

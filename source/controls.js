@@ -35,19 +35,75 @@ var Controls = (() => {
   const arm=Ocv.arm;Ocv.arm=0;try{return il0(r,t,e,i)}finally{Ocv.arm=arm}}}
 // facing under water: always right while anticlockwise, so the carve's pull (+1) turns the nose anticlockwise
 {const of0=Orface;Orface=function(m){return Controls.ccw()?1:of0(m)}}
-// the water camera: v3's spring, with the target this far above the dolphin and no velocity lead
+// The water view (designer, 2026-11-01): "at all speeds the air needs to be visible and the camera needs to be smooth".
+// With "Lock view to arena" the view under water was the air view (43.2 m tall), centred 12 m above the dolphin, so at
+// high speed the waterline and the enemies waiting above it went off the top. Two tries that chased the dolphin (a
+// zoom-and-shift spring, then a hard limit on it) lost the air or jerked (qa/watercam.cjs). With DEMO.tune.viewfit:
+// - the top of the view is pinned DEMO.tune.airband m above the waterline, so the air is always in view, and the camera
+//   only moves up and down as the zoom changes;
+// - the view's height covers the deepest point the dolphin is about to reach: where its current turn takes it over the
+//   next 0.6 s (a loop is foreseen, not chased), plus a margin. That depth is held and let go slowly (zoom in over
+//   about 2 s) and the height follows it on a smooth spring, so loops do not pump the zoom;
+// - at most DEMO.tune.viewmax times the air view's height; deeper than that, the camera follows the dolphin down;
+// - entering the water the view carries on from the air's: same top, same height; the bottom edge reaches down for the
+//   dive and the top eases down to the band over about 0.6 s, so the splash zooms instead of panning (a 0.4 s blend
+//   to the new framing panned up to 40 m in a dive at wave 20). Across it does as before (v3's spring);
+// - leaving the water, the view eases from the dive's height back to the air view's over 0.6 s (it snapped back in
+//   0.2 s, 4-8 zooms a second at wave 20). Visual only: the arena keeps its size.
+// Enemies still above the view get a chevron at the top edge. No cap on the water speed (designer, 2026-11-01).
+var WaterView = (() => {
+  const LOOK = .6, MARGIN = 7, LET_GO = 10, SPRING = .3, SETTLE = .6, LEAVE = .6;   // s, m, m/s the held depth rises back, s, s, s
+  let st = null, leave = null;   // leave: { H, t } easing back to the air view after a breach   // { depth (held), H and Hv (the height and its rate), top and tv (the top edge and its rate), hPrev }
+  const on = () => !!(DEMO.tune.viewfit && lr.fit);
+  const airH = () => Jt.height;                      // the air view's height (m)
+  // the deepest the dolphin gets over the next LOOK s if it keeps turning as it is now (from the heading's change)
+  function ahead(m, w) {
+    const v = Math.hypot(m.velocity.x, m.velocity.y); let x = 0, y = m.pos.y, h = Math.atan2(m.velocity.y, m.velocity.x), low = y;
+    for (let k = 0; k < 12; k++) { h += w * LOOK / 12; y += Math.sin(h) * v * LOOK / 12; low = Math.min(low, y) }
+    return -low;
+  }
+  function step(r, dt) {
+    const m = r.medium, top = +DEMO.tune.airband || 15, max = (+DEMO.tune.viewmax || 3) * airH();
+    const hd = Math.atan2(m.velocity.y, m.velocity.x);
+    if (!st) st = { depth: 0, H: airH(), Hv: 0, top: r.cam.y + airH() / 2, tv: 0, hPrev: hd };
+    const kt = 1 / SETTLE; st.tv += ((top - st.top) * kt * kt - 2 * kt * st.tv) * dt; st.top += st.tv * dt;
+    const w = Math.atan2(Math.sin(hd - st.hPrev), Math.cos(hd - st.hPrev)) / Math.max(dt, 1e-6); st.hPrev = hd;
+    const need = Math.max(0, -m.pos.y, ahead(m, w)) + MARGIN;
+    st.depth = Math.max(need, st.depth - LET_GO * dt);
+    const want = Math.min(max, Math.max(airH(), st.top + st.depth)), k = 1 / SPRING;
+    st.Hv += ((want - st.H) * k * k - 2 * k * st.Hv) * dt; st.H += st.Hv * dt;
+    st.H = Math.min(max, Math.max(st.H, st.top - m.pos.y + 3));      // never so far behind that the dolphin leaves the view
+    return Math.min(st.top - st.H / 2, m.pos.y + st.H / 2 - 3);       // deeper than the most zoom: follow the dolphin down
+  }
+  // in the air: the height eased back from the last dive's (null once it is back to the air view's)
+  function air(dt) {
+    if (st) { leave = { H: st.H, t: 0 }; st = null }
+    if (!leave) return null;
+    leave.t += dt; if (leave.t >= LEAVE || leave.H <= airH()) { leave = null; return null }
+    const p = leave.t / LEAVE, e = p * p * (3 - 2 * p); return airH() + (leave.H - airH()) * (1 - e);
+  }
+  return { on, step, air, reset() { st = null; leave = null }, get H() { return st?.H ?? null }, get airH() { return leave ? airH() + (leave.H - airH()) * (1 - (p => p * p * (3 - 2 * p))(Math.min(1, leave.t / LEAVE))) : null } };
+})();
+{const fz0=Fz;Fz=function(m,l,c){if(!WaterView.on())return fz0(m,l,c);const H=m?.kind==='water'?WaterView.H:WaterView.airH;return H!=null?H/(lr.width*W/K):fz0(m,l,c)}}
+// the water camera: v3's spring, with the target this far above the dolphin and no velocity lead (or WaterView's height)
 {const ee0=EE;EE=function(r,t){
   const e=r.medium,lift=+DEMO.tune.sky||0;
+  if(e.kind==='air')WaterView.on()?WaterView.air(t):WaterView.reset();
   if(!lr.fit||e.kind==='air'||lift<=0)return ee0(r,t);
-  const i=he(r),s=Fl(r),h=lr.width*W/K*Fz(e,i,r.cam)/2;
-  const T=se(i.x,Math.max(i.y+lift,Math.min(-.76*h,i.y+.64*h))),Tv=se(s.x,s.y);
+  const i=he(r),s=Fl(r),wy=WaterView.on()?WaterView.step(r,t):null,h=lr.width*W/K*Fz(e,i,r.cam)/2;
+  const T=se(i.x,wy??Math.max(i.y+lift,Math.min(-.76*h,i.y+.64*h))),Tv=se(s.x,s.y);
   r.camFree=se(T.x,T.y);r.camV||(r.camV=se(0,0));
   const w=1/Math.max(.05,lr.follow);
   r.camV=se(r.camV.x+((T.x-r.cam.x)*w*w+(Tv.x-r.camV.x)*2*w)*t,r.camV.y+((T.y-r.cam.y)*w*w+(Tv.y-r.camV.y)*2*w)*t);
   const Sp=Math.hypot(s.x,s.y)*1.5+6,vv=Math.hypot(r.camV.x,r.camV.y);
   vv>Sp&&(r.camV=se(r.camV.x/vv*Sp,r.camV.y/vv*Sp));
   r.cam=se(r.cam.x+r.camV.x*t,r.cam.y+r.camV.y*t);
+  if(wy!=null){r.cam=se(r.cam.x,wy);r.camV=se(r.camV.x,0)}   // the view's height and pinned top set the height
   r.camLock=(r.camLock==null?0:r.camLock)+(0-(r.camLock||0))*Xe(t,.18);Ocl=r.camLock}}
 // v3's opening hint names W as the carve key; with Space carving it names Space (and W A S D choose a trick, source/tricks.js)
 {const zd0=Zd;Zd=function(...a){const o=zd0(...a);const tk=DEMO.tune.tricks&&DEMO.tune.rules;if(Controls.carve())ci='HOLD SPACE TO CARVE \xB7 LET GO TO LAUNCH';else if(!Orw.on)ci='A / D TO TURN \xB7 W OR SPACE TO BOOST';if(tk)ci+=' \xB7 HOLD A KEY AS YOU BREACH FOR A TRICK';return o}}
+// chevrons at the top edge over the enemies waiting above the water that are still above the view
+{const d0=Otdraw;Otdraw=function(R,r,m,title){d0(R,r,m,title);if(title||m?.kind!=='water'||!WaterView.on())return;
+  const G=R.telegraphs;for(const p of r.pursuers||[]){if(p.wet||p.y<=0)continue;const X=R.sx(p.x),Y=R.sy(p.y);if(Y>8||X<12||X>K-12)continue;
+    G.poly([X,10,X-7,22,X+7,22]).fill({color:yt.hostile,alpha:.85})}}}
 {if(typeof document!=='undefined'&&document.head){const st=document.createElement('style');st.textContent='body.space-carve .boost-meter{display:none}';document.head.appendChild(st)}}
