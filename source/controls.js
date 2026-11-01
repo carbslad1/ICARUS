@@ -104,6 +104,13 @@ var WaterView = (() => {
   return { on, step, air, airCam, reset() { st = null; leave = null; ac = null }, leaveWater() { ac = null }, get H() { return st?.H ?? null }, get airH() { return leave ? airH() + (leave.H - airH()) * (1 - (p => p * p * (3 - 2 * p))(Math.min(1, leave.t / LEAVE))) : null } };
 })();
 {const fz0=Fz;Fz=function(m,l,c){if(!WaterView.on())return fz0(m,l,c);const H=m?.kind==='water'?WaterView.H:WaterView.airH;return H!=null?H/(lr.width*W/K):fz0(m,l,c)}}
+// Sizes held at 30 m/s (designer, 2026-11-01: "i want the enemies and dolphin to be the same size as they are at 30 at all
+// speeds"). Everything the renderer sizes by its zoom (the dolphin, enemies, shots, orbs, trail, bubbles, particles) stops
+// shrinking once the view is zoomed out past DEMO.tune.sizeref × the air view (1.12: the water view's median at 30 m/s;
+// its median at 125 m/s is 1.38, its most 2.7). Positions, hitboxes and the air (no zoom-out there) are unchanged.
+var SizeHold = { factor(ppm) { const ref = +DEMO.tune.sizeref || 1.12, z = W / Jt.height / ppm; return DEMO.tune.sizehold && lr.fit && z > ref ? z / ref : 1 } };
+{const d=Object.getOwnPropertyDescriptor(Ul.prototype,'zoom');Object.defineProperty(Ul.prototype,'zoom',{configurable:true,get(){const z=d.get.call(this);return this.sizeTitle?z:z*SizeHold.factor(this.ppm)}})}
+{const dr1=Ul.prototype.draw;Ul.prototype.draw=function(t,e,i,s,o=false){this.sizeTitle=o;return dr1.call(this,t,e,i,s,o)}}
 // the water camera: v3's spring, with the target this far above the dolphin and no velocity lead (or WaterView's height)
 {const ee0=EE;EE=function(r,t){
   const e=r.medium,lift=+DEMO.tune.sky||0;
