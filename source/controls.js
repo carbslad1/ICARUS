@@ -47,13 +47,10 @@ var Controls = (() => {
 //   about 2 s) and the height follows it on a smooth spring, so loops do not pump the zoom;
 // - at most DEMO.tune.viewmax times the air view's height; deeper than that, the camera follows the dolphin down;
 // - entering the water the view carries on from the air's: same top, same height; the bottom edge reaches down for the
-//   dive and the top settles to the band within about 0.25 s of the splash (at 0.6 s it was still settling at the
-//   breach, which then panned), so the splash zooms instead of jumping (a 0.4 s blend
+//   dive and the top eases down to the band over about 0.6 s, so the splash zooms instead of panning (a 0.4 s blend
 //   to the new framing panned up to 40 m in a dive at wave 20). Across it does as before (v3's spring);
 // - leaving the water, the view eases from the dive's height back to the air view's over 0.35 s (it snapped back in
-//   0.2 s, 4-8 zooms a second at wave 20). Visual only: the arena keeps its size. Rising to breach (at the surface
-//   within 0.6 s), the view lets its held depth go and returns to the air's height, and the arena is lifted to meet
-//   the band (space.js), so at the breach the two framings match;
+//   0.2 s, 4-8 zooms a second at wave 20). Visual only: the arena keeps its size;
 // - in the air the camera is set in the arena's own frame (designer, 2026-11-01: "the arena doesn't track the screen
 //   boundary at high speeds"): locked to the arena vertically and scrolling with the dolphin across it as v3 does (the
 //   arena is wider than the view), and after a breach only the offset from the water's framing eases out, over 0.35 s.
@@ -61,7 +58,7 @@ var Controls = (() => {
 //   36 m off the screen's edges for over half a second.
 // Enemies still above the view get a chevron at the top edge. No cap on the water speed (designer, 2026-11-01).
 var WaterView = (() => {
-  const LOOK = .6, MARGIN = 7, LET_GO = 10, SPRING = .3, SETTLE = .25, LEAVE = .35, CATCH = .35;   // SETTLE: was .6, still settling at the breach   // s, m, m/s the held depth rises back, s, s, s
+  const LOOK = .6, MARGIN = 7, LET_GO = 10, SPRING = .3, SETTLE = .6, LEAVE = .35, CATCH = .35;   // s, m, m/s the held depth rises back, s, s, s
   // st: { depth (held), H and Hv (the height and its rate), top and tv (the top edge and its rate), hPrev }, null in the
   // air; leave: { H, t } easing back to the air view after a breach
   let st = null, leave = null, ac = null;   // ac: the air camera { sx (scroll across the arena), off (breach offset), t }
@@ -69,9 +66,8 @@ var WaterView = (() => {
   const airH = () => Jt.height;                      // the air view's height (m)
   // the deepest the dolphin gets over the next LOOK s if it keeps turning as it is now (from the heading's change)
   function ahead(m, w) {
-    const v = Math.hypot(m.velocity.x, m.velocity.y); let x = 0, y = m.pos.y, h = Math.atan2(m.velocity.y, m.velocity.x), low = y, out = false;
-    for (let k = 0; k < 12; k++) { h += w * LOOK / 12; y += Math.sin(h) * v * LOOK / 12; low = Math.min(low, y); out ||= y >= 0 }
-    ahead.out = out;   // whether that path reaches the surface (a breach), not a loop that turns back under
+    const v = Math.hypot(m.velocity.x, m.velocity.y); let x = 0, y = m.pos.y, h = Math.atan2(m.velocity.y, m.velocity.x), low = y;
+    for (let k = 0; k < 12; k++) { h += w * LOOK / 12; y += Math.sin(h) * v * LOOK / 12; low = Math.min(low, y) }
     return -low;
   }
   function step(r, dt) {
@@ -80,18 +76,13 @@ var WaterView = (() => {
     if (!st) st = { depth: 0, H: airH(), Hv: 0, top: r.cam.y + airH() / 2, tv: 0, hPrev: hd };
     const w = Math.atan2(Math.sin(hd - st.hPrev), Math.cos(hd - st.hPrev)) / Math.max(dt, 1e-6); st.hPrev = hd;
     const need = Math.max(0, -m.pos.y, ahead(m, w)) + MARGIN;
-    // about to breach (rising, at the surface within 0.6 s): let the held depth go, so the view is back to the air's
-    // height by the breach and the arena's framing takes over without a zoom
-    const breaching = m.velocity.y > 0 && ahead.out;   // (set by ahead() above: its path reaches the surface)
-    st.depth = breaching ? need : Math.max(need, st.depth - LET_GO * dt);
+    st.depth = Math.max(need, st.depth - LET_GO * dt);
     // the band: its metres, or its share of a view tall enough for band + depth, whichever is more
     const top = Math.max(band, share * st.depth / (1 - share));
     const kt = 1 / SETTLE; st.tv += ((top - st.top) * kt * kt - 2 * kt * st.tv) * dt; st.top += st.tv * dt;
-    const want = Math.min(max, Math.max(airH(), st.top + st.depth)), k = 1 / (breaching ? SPRING / 2 : SPRING);
+    const want = Math.min(max, Math.max(airH(), st.top + st.depth)), k = 1 / SPRING;
     st.Hv += ((want - st.H) * k * k - 2 * k * st.Hv) * dt; st.H += st.Hv * dt;
     st.H = Math.min(max, Math.max(st.H, st.top - m.pos.y + 3));      // never so far behind that the dolphin leaves the view
-    // about to breach: exactly what keeps the dolphin in view, down to the air view's height as it reaches the surface
-    if (breaching) { st.H = Math.min(max, Math.max(airH(), st.top - m.pos.y + 3, st.H - 80 * dt)); st.Hv = Math.min(0, st.Hv) }
     return Math.min(st.top - st.H / 2, m.pos.y + st.H / 2 - 3);       // deeper than the most zoom: follow the dolphin down
   }
   // in the air: the height eased back from the last dive's (null once it is back to the air view's)

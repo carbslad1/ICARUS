@@ -5272,7 +5272,7 @@ Space.wetSpawn = function (r, dt) {
 Space.wetLaunch = function (r) {
   const F = r.wetFrame; r.wetFrame = null;
   if (!F || !r.warns?.length || r.medium?.kind !== 'air') return;
-  for (const w of r.warns) { w.x += F.origin.x - r.medium.origin.x; w.y += F.origin.y - r.medium.origin.y }   // (the arena may be lifted)
+  for (const w of r.warns) w.x += F.origin.x - r.medium.origin.x;
 };
 {const pq1=Pq;Pq=function(r,e){if(DEMO.tune.wetspawn&&r?.demo&&r.medium?.kind==='water'&&e>0)Space.wetSpawn(r,e);return pq1(r,e)}}
 {const zq1=Zq;Zq=function(r){zq1(r);if(r?.demo)Space.wetLaunch(r)}}
@@ -5327,7 +5327,7 @@ Space.avoidWet = function (r, dt) {
   }
 };
 Space.hover = function (r, held, dt) {
-  const V = Ovv(r), M = Math.max(6, V.w * .22), top = V.y + V.h - 3, x0 = V.x - V.w + M, x1 = V.x + V.w - M;   // homes kept off the screen's outer fifth
+  const V = Ovv(r), M = 6, top = V.y + V.h - 3, x0 = V.x - V.w + M, x1 = V.x + V.w - M;
   const clampX = x => Math.max(x0, Math.min(x1, x)), clampY = y => Math.max(3, Math.min(top, y));
   // the camera's sideways move this step carries every waiting enemy, its home and its wander point (a fresh start after
   // a flight: no carry on a stay's first step)
@@ -5377,20 +5377,6 @@ Space.hover = function (r, held, dt) {
     const o=pq3(r,e);r.pursuers=held.concat(r.pursuers||[]);Space.hover(r,held,e);   // the held first, so newly spawned ones stay last
     if(DEMO.tune.wetavoid)Space.avoidWet(r,e);return o}
   const o=pq3(r,e);if(water&&DEMO.tune.wetavoid)Space.avoidWet(r,e);return o}}
-// The breach (designer, 2026-11-01: "enemies move when we breach ... they move upward with the camera change"). The
-// arena is centred where the dolphin breaks the surface, so it reached only 21.6 m above the water while the enemies wait
-// at 15-25 m and the water view keeps a band of DEMO.tune.airband (30) m of air in view; at the breach the view jumped
-// from the water's framing to the arena's (it zoomed in by about 30% around the water line), so everything above the
-// water slid up the screen. With the water view on, the arena is lifted at the breach so its top meets that band: its
-// origin rises by airband - half the arena's height (8.4 m) and the dolphin, the enemies and the markers keep their
-// places in the world (their arena positions drop by as much); the dolphin starts near the arena's bottom and flies up
-// into it. Done before the waiting enemies join the arena (Zq), so none is pulled to its edge.
-{const zq2=Zq;Zq=function(r){const m=r.medium;
-  if(r?.demo&&m?.kind==='air'&&lr.fit&&typeof WaterView!=='undefined'&&WaterView.on()&&!m.lifted){
-    const k=Math.max(0,(+DEMO.tune.airband||0)-Jt.height/2);
-    if(k>0){m.origin=se(m.origin.x,m.origin.y+k);m.local=ye(m.local.x,m.local.y-k);for(const e of r.enemies)e.pos=ye(e.pos.x,e.pos.y-k);for(const w of r.warns||[])w.y-=k}
-    m.lifted=k}
-  return zq2(r)}}
 
 // Step 2 of the build-and-playtest plan (ICARUS_DESIGN.md §4.18, §4.20): danger.
 // - Aimed shots lead: a turret's shot (and the elite's, see below) aims part of the way from where the dolphin is to
@@ -5554,13 +5540,10 @@ var Controls = (() => {
 //   about 2 s) and the height follows it on a smooth spring, so loops do not pump the zoom;
 // - at most DEMO.tune.viewmax times the air view's height; deeper than that, the camera follows the dolphin down;
 // - entering the water the view carries on from the air's: same top, same height; the bottom edge reaches down for the
-//   dive and the top settles to the band within about 0.25 s of the splash (at 0.6 s it was still settling at the
-//   breach, which then panned), so the splash zooms instead of jumping (a 0.4 s blend
+//   dive and the top eases down to the band over about 0.6 s, so the splash zooms instead of panning (a 0.4 s blend
 //   to the new framing panned up to 40 m in a dive at wave 20). Across it does as before (v3's spring);
 // - leaving the water, the view eases from the dive's height back to the air view's over 0.35 s (it snapped back in
-//   0.2 s, 4-8 zooms a second at wave 20). Visual only: the arena keeps its size. Rising to breach (at the surface
-//   within 0.6 s), the view lets its held depth go and returns to the air's height, and the arena is lifted to meet
-//   the band (space.js), so at the breach the two framings match;
+//   0.2 s, 4-8 zooms a second at wave 20). Visual only: the arena keeps its size;
 // - in the air the camera is set in the arena's own frame (designer, 2026-11-01: "the arena doesn't track the screen
 //   boundary at high speeds"): locked to the arena vertically and scrolling with the dolphin across it as v3 does (the
 //   arena is wider than the view), and after a breach only the offset from the water's framing eases out, over 0.35 s.
@@ -5568,7 +5551,7 @@ var Controls = (() => {
 //   36 m off the screen's edges for over half a second.
 // Enemies still above the view get a chevron at the top edge. No cap on the water speed (designer, 2026-11-01).
 var WaterView = (() => {
-  const LOOK = .6, MARGIN = 7, LET_GO = 10, SPRING = .3, SETTLE = .25, LEAVE = .35, CATCH = .35;   // SETTLE: was .6, still settling at the breach   // s, m, m/s the held depth rises back, s, s, s
+  const LOOK = .6, MARGIN = 7, LET_GO = 10, SPRING = .3, SETTLE = .6, LEAVE = .35, CATCH = .35;   // s, m, m/s the held depth rises back, s, s, s
   // st: { depth (held), H and Hv (the height and its rate), top and tv (the top edge and its rate), hPrev }, null in the
   // air; leave: { H, t } easing back to the air view after a breach
   let st = null, leave = null, ac = null;   // ac: the air camera { sx (scroll across the arena), off (breach offset), t }
@@ -5576,9 +5559,8 @@ var WaterView = (() => {
   const airH = () => Jt.height;                      // the air view's height (m)
   // the deepest the dolphin gets over the next LOOK s if it keeps turning as it is now (from the heading's change)
   function ahead(m, w) {
-    const v = Math.hypot(m.velocity.x, m.velocity.y); let x = 0, y = m.pos.y, h = Math.atan2(m.velocity.y, m.velocity.x), low = y, out = false;
-    for (let k = 0; k < 12; k++) { h += w * LOOK / 12; y += Math.sin(h) * v * LOOK / 12; low = Math.min(low, y); out ||= y >= 0 }
-    ahead.out = out;   // whether that path reaches the surface (a breach), not a loop that turns back under
+    const v = Math.hypot(m.velocity.x, m.velocity.y); let x = 0, y = m.pos.y, h = Math.atan2(m.velocity.y, m.velocity.x), low = y;
+    for (let k = 0; k < 12; k++) { h += w * LOOK / 12; y += Math.sin(h) * v * LOOK / 12; low = Math.min(low, y) }
     return -low;
   }
   function step(r, dt) {
@@ -5587,18 +5569,13 @@ var WaterView = (() => {
     if (!st) st = { depth: 0, H: airH(), Hv: 0, top: r.cam.y + airH() / 2, tv: 0, hPrev: hd };
     const w = Math.atan2(Math.sin(hd - st.hPrev), Math.cos(hd - st.hPrev)) / Math.max(dt, 1e-6); st.hPrev = hd;
     const need = Math.max(0, -m.pos.y, ahead(m, w)) + MARGIN;
-    // about to breach (rising, at the surface within 0.6 s): let the held depth go, so the view is back to the air's
-    // height by the breach and the arena's framing takes over without a zoom
-    const breaching = m.velocity.y > 0 && ahead.out;   // (set by ahead() above: its path reaches the surface)
-    st.depth = breaching ? need : Math.max(need, st.depth - LET_GO * dt);
+    st.depth = Math.max(need, st.depth - LET_GO * dt);
     // the band: its metres, or its share of a view tall enough for band + depth, whichever is more
     const top = Math.max(band, share * st.depth / (1 - share));
     const kt = 1 / SETTLE; st.tv += ((top - st.top) * kt * kt - 2 * kt * st.tv) * dt; st.top += st.tv * dt;
-    const want = Math.min(max, Math.max(airH(), st.top + st.depth)), k = 1 / (breaching ? SPRING / 2 : SPRING);
+    const want = Math.min(max, Math.max(airH(), st.top + st.depth)), k = 1 / SPRING;
     st.Hv += ((want - st.H) * k * k - 2 * k * st.Hv) * dt; st.H += st.Hv * dt;
     st.H = Math.min(max, Math.max(st.H, st.top - m.pos.y + 3));      // never so far behind that the dolphin leaves the view
-    // about to breach: exactly what keeps the dolphin in view, down to the air view's height as it reaches the surface
-    if (breaching) { st.H = Math.min(max, Math.max(airH(), st.top - m.pos.y + 3, st.H - 80 * dt)); st.Hv = Math.min(0, st.Hv) }
     return Math.min(st.top - st.H / 2, m.pos.y + st.H / 2 - 3);       // deeper than the most zoom: follow the dolphin down
   }
   // in the air: the height eased back from the last dive's (null once it is back to the air view's)
