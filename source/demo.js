@@ -657,6 +657,10 @@ const DemoFx={SHK:K/1920,CHARM:{'+chips':0x5ff2ff,'+mult':0xb98cff,'×mult':0xff
 // steps (draw(S, as, ke/Ar)), but v3's orb drawing (Owdraw) placed the orbs at the latest step's origin, so each frame
 // they sat a different fraction of a step (0.25-0.4 m at flight speed) away from everything else. Owdraw now runs with
 // the same interpolated origin.
+// The arena origin as the renderer draws it this frame: between the last two steps (draw(S, as, ke/Ar)). Anything drawn
+// in the arena from the latest step's origin instead shakes against the rest by up to a step's travel (1 m at 125 m/s);
+// the demo's overlays (status and armour markers, spawn markers, trick rings) use this.
+function demoSeen(m){if(m?.kind!=='air'||typeof as==='undefined'||!as?.origin)return m?.origin;const k=Math.max(0,Math.min(1,ke/Ar));return{x:as.origin.x+(m.origin.x-as.origin.x)*k,y:as.origin.y+(m.origin.y-as.origin.y)*k}}
 {const dr0=Owdraw;Owdraw=function(R,o,dt){const m=S?.medium;if(o||m?.kind!=='air'||!as?.origin)return dr0(R,o,dt);
   const O=m.origin,k=ft==='game'&&S.mode==='playing'?Math.max(0,Math.min(1,ke/Ar)):1;
   m.origin={x:as.origin.x+(O.x-as.origin.x)*k,y:as.origin.y+(O.y-as.origin.y)*k};try{return dr0(R,o,dt)}finally{m.origin=O}}}

@@ -125,7 +125,7 @@ var Status = (() => {
 
   // markers: statuses as rings, armour as the side it covers
   function draw(R, r, m) {
-    const G = R.telegraphs, o = m.origin;
+    const G = R.telegraphs, o = demoSeen(m);
     for (const e of r.enemies) {
       const s = e.st; if (!s && !e.armour) continue;
       const X = R.sx(o.x + e.pos.x), Y = R.sy(o.y + e.pos.y), ppm = Math.abs(R.sx(o.x + e.pos.x + 1) - X), rr = (e.radius + .5) * ppm;

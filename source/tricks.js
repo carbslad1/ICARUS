@@ -101,10 +101,7 @@ var Tricks = (() => {
 
   // the arena origin the renderer draws this frame: between the last two steps, as the engine draws the arena
   // (draw(S, as, ke/Ar)); drawing at the latest step's origin makes things jitter against everything else
-  function seen(m) {
-    if (typeof as === 'undefined' || !as?.origin || typeof ke === 'undefined') return m.origin;
-    const k = Math.max(0, Math.min(1, ke / Ar)); return { x: as.origin.x + (m.origin.x - as.origin.x) * k, y: as.origin.y + (m.origin.y - as.origin.y) * k };
-  }
+  const seen = m => demoSeen(m);
   // the dolphin's tricks, through v3's own animation as the crane-game build played them (its Otdraw): a flip turns
   // the body over and over for the whole flight (R.rollOffset, one turn every Otk.flip s), the way its key turns the
   // dolphin under water (Front flip clockwise, Backflip anticlockwise); a corkscrew keeps rolling

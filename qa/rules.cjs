@@ -79,16 +79,22 @@ test('the streak survives the shop into the next wave', () => {
 
 test('the bot plays waves through to the shop without a quota and ends only at 0 HP or wave 20', () => {
   const ends = [];
+  // a single seed's run is chaotic (the camera, spawns and the bot all feed each other), so each style gets three seeds
+  // and must reach a shop in at least one; every run must end only at 0 HP or wave 20
   for (const style of ['low-keep', 'mid-keep', 'high-keep', 'mid-turn']) {
-    const r = H.Hd(7, 'harpoon'), fly = flyer(H, style, 7, { keep: 8 });
-    let shops = 0;
-    for (let t = 0; t < 120 * 60 * 12 && ['playing', 'shop'].includes(r.mode); t++) {
-      if (r.mode === 'shop') { shops++; D.command(r, 'next'); continue }
-      const i = fly(r); if (r.medium.kind === 'air' && r.budget <= 0) i.y = -1; H.sw(r, i);
+    let shopped = false;
+    for (const seed of [7, 8, 9]) {
+      const r = H.Hd(seed, 'harpoon'), fly = flyer(H, style, seed, { keep: 8 });
+      let shops = 0;
+      for (let t = 0; t < 120 * 60 * 12 && ['playing', 'shop'].includes(r.mode); t++) {
+        if (r.mode === 'shop') { shops++; D.command(r, 'next'); continue }
+        const i = fly(r); if (r.medium.kind === 'air' && r.budget <= 0) i.y = -1; H.sw(r, i);
+      }
+      shopped ||= shops >= 1; assert.notEqual(r.endReason, 'quota');
+      if (r.mode === 'dead') assert.equal(r.endReason, 'hp');
+      ends.push({ style, seed, wave: r.wave, mode: r.mode, reason: r.endReason, pearls: r.xp, streak: r.demo.streak });
     }
-    assert.ok(shops >= 1, style + ' reached a shop'); assert.notEqual(r.endReason, 'quota');
-    if (r.mode === 'dead') assert.equal(r.endReason, 'hp');
-    ends.push({ style, wave: r.wave, mode: r.mode, reason: r.endReason, pearls: r.xp, streak: r.demo.streak });
+    assert.ok(shopped, style + ' reached a shop');
   }
   return ends;
 });

@@ -133,7 +133,7 @@ var Space = (() => {
 
   // Markers and the landing point, drawn on the renderer's telegraph layer each frame (after it is cleared).
   function draw(R, r, m) {
-    const G = R.telegraphs, o = m.origin, P = profile(r), pulse = .5 + .5 * Math.sin(R.time * 14);
+    const G = R.telegraphs, o = demoSeen(m), P = profile(r), pulse = .5 + .5 * Math.sin(R.time * 14);
     for (const w of r.warns || []) {
       const wx = o.x + w.x, wy = o.y + Math.max(w.y, -o.y + w.c + 4), X = R.sx(wx), Y = R.sy(wy), ppm = Math.abs(R.sx(wx + 1) - X);
       const k = 1 - clamp(w.t / (w.t0 || P.telegraph), 0, 1), s = (1.05 + .55 * (1 - k)) * ppm;

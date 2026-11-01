@@ -49,14 +49,19 @@ var Controls = (() => {
 // - entering the water the view carries on from the air's: same top, same height; the bottom edge reaches down for the
 //   dive and the top eases down to the band over about 0.6 s, so the splash zooms instead of panning (a 0.4 s blend
 //   to the new framing panned up to 40 m in a dive at wave 20). Across it does as before (v3's spring);
-// - leaving the water, the view eases from the dive's height back to the air view's over 0.6 s (it snapped back in
-//   0.2 s, 4-8 zooms a second at wave 20). Visual only: the arena keeps its size.
+// - leaving the water, the view eases from the dive's height back to the air view's over 0.35 s (it snapped back in
+//   0.2 s, 4-8 zooms a second at wave 20). Visual only: the arena keeps its size;
+// - in the air the camera is set in the arena's own frame (designer, 2026-11-01: "the arena doesn't track the screen
+//   boundary at high speeds"): locked to the arena vertically and scrolling with the dolphin across it as v3 does (the
+//   arena is wider than the view), and after a breach only the offset from the water's framing eases out, over 0.35 s.
+//   v3 faded a lock in over a camera that trailed the arena by its speed x 0.14 s, so at 125 m/s the arena sat up to
+//   36 m off the screen's edges for over half a second.
 // Enemies still above the view get a chevron at the top edge. No cap on the water speed (designer, 2026-11-01).
 var WaterView = (() => {
-  const LOOK = .6, MARGIN = 7, LET_GO = 10, SPRING = .3, SETTLE = .6, LEAVE = .6;   // s, m, m/s the held depth rises back, s, s, s
+  const LOOK = .6, MARGIN = 7, LET_GO = 10, SPRING = .3, SETTLE = .6, LEAVE = .35, CATCH = .35;   // s, m, m/s the held depth rises back, s, s, s
   // st: { depth (held), H and Hv (the height and its rate), top and tv (the top edge and its rate), hPrev }, null in the
   // air; leave: { H, t } easing back to the air view after a breach
-  let st = null, leave = null;
+  let st = null, leave = null, ac = null;   // ac: the air camera { sx (scroll across the arena), off (breach offset), t }
   const on = () => !!(DEMO.tune.viewfit && lr.fit);
   const airH = () => Jt.height;                      // the air view's height (m)
   // the deepest the dolphin gets over the next LOOK s if it keeps turning as it is now (from the heading's change)
@@ -87,13 +92,23 @@ var WaterView = (() => {
     leave.t += dt; if (leave.t >= LEAVE || leave.H <= airH()) { leave = null; return null }
     const p = leave.t / LEAVE, e = p * p * (3 - 2 * p); return airH() + (leave.H - airH()) * (1 - e);
   }
-  return { on, step, air, reset() { st = null; leave = null }, get H() { return st?.H ?? null }, get airH() { return leave ? airH() + (leave.H - airH()) * (1 - (p => p * p * (3 - 2 * p))(Math.min(1, leave.t / LEAVE))) : null } };
+  // the air camera, in the arena's frame; prev: the camera before this step
+  function airCam(r, dt, prev) {
+    const m = r.medium, o = m.origin, keepX = Math.max(4, Jt.height * K / W / 2 - 6) * lr.keep, Cl = Math.max(0, Jt.width / 2 - Jt.height * K / W / 2);
+    const lx = m.local.x, ax = Math.sign(lx) * Math.max(0, Math.abs(lx) - keepX), tx = Math.max(-Cl, Math.min(Cl, ax));
+    if (!ac) ac = { sx: tx, off: { x: prev.x - (o.x + tx), y: prev.y - o.y }, t: 0 };
+    ac.sx += (tx - ac.sx) * (1 - Math.exp(-dt / .14)); ac.t += dt;
+    const p = Math.min(1, ac.t / CATCH), e = 1 - p * p * (3 - 2 * p);
+    r.cam = se(o.x + ac.sx + ac.off.x * e, o.y + ac.off.y * e);
+  }
+  return { on, step, air, airCam, reset() { st = null; leave = null; ac = null }, leaveWater() { ac = null }, get H() { return st?.H ?? null }, get airH() { return leave ? airH() + (leave.H - airH()) * (1 - (p => p * p * (3 - 2 * p))(Math.min(1, leave.t / LEAVE))) : null } };
 })();
 {const fz0=Fz;Fz=function(m,l,c){if(!WaterView.on())return fz0(m,l,c);const H=m?.kind==='water'?WaterView.H:WaterView.airH;return H!=null?H/(lr.width*W/K):fz0(m,l,c)}}
 // the water camera: v3's spring, with the target this far above the dolphin and no velocity lead (or WaterView's height)
 {const ee0=EE;EE=function(r,t){
   const e=r.medium,lift=+DEMO.tune.sky||0;
-  if(e.kind==='air')WaterView.on()?WaterView.air(t):WaterView.reset();
+  if(e.kind==='air'&&lr.fit&&WaterView.on()){const pc={...r.cam};WaterView.air(t);ee0(r,t);WaterView.airCam(r,t,pc);return}
+  if(e.kind==='air')WaterView.reset();else WaterView.leaveWater();
   if(!lr.fit||e.kind==='air'||lift<=0)return ee0(r,t);
   const i=he(r),s=Fl(r),wy=WaterView.on()?WaterView.step(r,t):null,h=lr.width*W/K*Fz(e,i,r.cam)/2;
   const T=se(i.x,wy??Math.max(i.y+lift,Math.min(-.76*h,i.y+.64*h))),Tv=se(s.x,s.y);

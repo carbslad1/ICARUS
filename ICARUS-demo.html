@@ -5011,6 +5011,10 @@ const DemoFx={SHK:K/1920,CHARM:{'+chips':0x5ff2ff,'+mult':0xb98cff,'×mult':0xff
 // steps (draw(S, as, ke/Ar)), but v3's orb drawing (Owdraw) placed the orbs at the latest step's origin, so each frame
 // they sat a different fraction of a step (0.25-0.4 m at flight speed) away from everything else. Owdraw now runs with
 // the same interpolated origin.
+// The arena origin as the renderer draws it this frame: between the last two steps (draw(S, as, ke/Ar)). Anything drawn
+// in the arena from the latest step's origin instead shakes against the rest by up to a step's travel (1 m at 125 m/s);
+// the demo's overlays (status and armour markers, spawn markers, trick rings) use this.
+function demoSeen(m){if(m?.kind!=='air'||typeof as==='undefined'||!as?.origin)return m?.origin;const k=Math.max(0,Math.min(1,ke/Ar));return{x:as.origin.x+(m.origin.x-as.origin.x)*k,y:as.origin.y+(m.origin.y-as.origin.y)*k}}
 {const dr0=Owdraw;Owdraw=function(R,o,dt){const m=S?.medium;if(o||m?.kind!=='air'||!as?.origin)return dr0(R,o,dt);
   const O=m.origin,k=ft==='game'&&S.mode==='playing'?Math.max(0,Math.min(1,ke/Ar)):1;
   m.origin={x:as.origin.x+(O.x-as.origin.x)*k,y:as.origin.y+(O.y-as.origin.y)*k};try{return dr0(R,o,dt)}finally{m.origin=O}}}
@@ -5150,7 +5154,7 @@ var Space = (() => {
 
   // Markers and the landing point, drawn on the renderer's telegraph layer each frame (after it is cleared).
   function draw(R, r, m) {
-    const G = R.telegraphs, o = m.origin, P = profile(r), pulse = .5 + .5 * Math.sin(R.time * 14);
+    const G = R.telegraphs, o = demoSeen(m), P = profile(r), pulse = .5 + .5 * Math.sin(R.time * 14);
     for (const w of r.warns || []) {
       const wx = o.x + w.x, wy = o.y + Math.max(w.y, -o.y + w.c + 4), X = R.sx(wx), Y = R.sy(wy), ppm = Math.abs(R.sx(wx + 1) - X);
       const k = 1 - clamp(w.t / (w.t0 || P.telegraph), 0, 1), s = (1.05 + .55 * (1 - k)) * ppm;
@@ -5419,14 +5423,19 @@ var Controls = (() => {
 // - entering the water the view carries on from the air's: same top, same height; the bottom edge reaches down for the
 //   dive and the top eases down to the band over about 0.6 s, so the splash zooms instead of panning (a 0.4 s blend
 //   to the new framing panned up to 40 m in a dive at wave 20). Across it does as before (v3's spring);
-// - leaving the water, the view eases from the dive's height back to the air view's over 0.6 s (it snapped back in
-//   0.2 s, 4-8 zooms a second at wave 20). Visual only: the arena keeps its size.
+// - leaving the water, the view eases from the dive's height back to the air view's over 0.35 s (it snapped back in
+//   0.2 s, 4-8 zooms a second at wave 20). Visual only: the arena keeps its size;
+// - in the air the camera is set in the arena's own frame (designer, 2026-11-01: "the arena doesn't track the screen
+//   boundary at high speeds"): locked to the arena vertically and scrolling with the dolphin across it as v3 does (the
+//   arena is wider than the view), and after a breach only the offset from the water's framing eases out, over 0.35 s.
+//   v3 faded a lock in over a camera that trailed the arena by its speed x 0.14 s, so at 125 m/s the arena sat up to
+//   36 m off the screen's edges for over half a second.
 // Enemies still above the view get a chevron at the top edge. No cap on the water speed (designer, 2026-11-01).
 var WaterView = (() => {
-  const LOOK = .6, MARGIN = 7, LET_GO = 10, SPRING = .3, SETTLE = .6, LEAVE = .6;   // s, m, m/s the held depth rises back, s, s, s
+  const LOOK = .6, MARGIN = 7, LET_GO = 10, SPRING = .3, SETTLE = .6, LEAVE = .35, CATCH = .35;   // s, m, m/s the held depth rises back, s, s, s
   // st: { depth (held), H and Hv (the height and its rate), top and tv (the top edge and its rate), hPrev }, null in the
   // air; leave: { H, t } easing back to the air view after a breach
-  let st = null, leave = null;
+  let st = null, leave = null, ac = null;   // ac: the air camera { sx (scroll across the arena), off (breach offset), t }
   const on = () => !!(DEMO.tune.viewfit && lr.fit);
   const airH = () => Jt.height;                      // the air view's height (m)
   // the deepest the dolphin gets over the next LOOK s if it keeps turning as it is now (from the heading's change)
@@ -5457,13 +5466,23 @@ var WaterView = (() => {
     leave.t += dt; if (leave.t >= LEAVE || leave.H <= airH()) { leave = null; return null }
     const p = leave.t / LEAVE, e = p * p * (3 - 2 * p); return airH() + (leave.H - airH()) * (1 - e);
   }
-  return { on, step, air, reset() { st = null; leave = null }, get H() { return st?.H ?? null }, get airH() { return leave ? airH() + (leave.H - airH()) * (1 - (p => p * p * (3 - 2 * p))(Math.min(1, leave.t / LEAVE))) : null } };
+  // the air camera, in the arena's frame; prev: the camera before this step
+  function airCam(r, dt, prev) {
+    const m = r.medium, o = m.origin, keepX = Math.max(4, Jt.height * K / W / 2 - 6) * lr.keep, Cl = Math.max(0, Jt.width / 2 - Jt.height * K / W / 2);
+    const lx = m.local.x, ax = Math.sign(lx) * Math.max(0, Math.abs(lx) - keepX), tx = Math.max(-Cl, Math.min(Cl, ax));
+    if (!ac) ac = { sx: tx, off: { x: prev.x - (o.x + tx), y: prev.y - o.y }, t: 0 };
+    ac.sx += (tx - ac.sx) * (1 - Math.exp(-dt / .14)); ac.t += dt;
+    const p = Math.min(1, ac.t / CATCH), e = 1 - p * p * (3 - 2 * p);
+    r.cam = se(o.x + ac.sx + ac.off.x * e, o.y + ac.off.y * e);
+  }
+  return { on, step, air, airCam, reset() { st = null; leave = null; ac = null }, leaveWater() { ac = null }, get H() { return st?.H ?? null }, get airH() { return leave ? airH() + (leave.H - airH()) * (1 - (p => p * p * (3 - 2 * p))(Math.min(1, leave.t / LEAVE))) : null } };
 })();
 {const fz0=Fz;Fz=function(m,l,c){if(!WaterView.on())return fz0(m,l,c);const H=m?.kind==='water'?WaterView.H:WaterView.airH;return H!=null?H/(lr.width*W/K):fz0(m,l,c)}}
 // the water camera: v3's spring, with the target this far above the dolphin and no velocity lead (or WaterView's height)
 {const ee0=EE;EE=function(r,t){
   const e=r.medium,lift=+DEMO.tune.sky||0;
-  if(e.kind==='air')WaterView.on()?WaterView.air(t):WaterView.reset();
+  if(e.kind==='air'&&lr.fit&&WaterView.on()){const pc={...r.cam};WaterView.air(t);ee0(r,t);WaterView.airCam(r,t,pc);return}
+  if(e.kind==='air')WaterView.reset();else WaterView.leaveWater();
   if(!lr.fit||e.kind==='air'||lift<=0)return ee0(r,t);
   const i=he(r),s=Fl(r),wy=WaterView.on()?WaterView.step(r,t):null,h=lr.width*W/K*Fz(e,i,r.cam)/2;
   const T=se(i.x,wy??Math.max(i.y+lift,Math.min(-.76*h,i.y+.64*h))),Tv=se(s.x,s.y);
@@ -5773,7 +5792,7 @@ var Status = (() => {
 
   // markers: statuses as rings, armour as the side it covers
   function draw(R, r, m) {
-    const G = R.telegraphs, o = m.origin;
+    const G = R.telegraphs, o = demoSeen(m);
     for (const e of r.enemies) {
       const s = e.st; if (!s && !e.armour) continue;
       const X = R.sx(o.x + e.pos.x), Y = R.sy(o.y + e.pos.y), ppm = Math.abs(R.sx(o.x + e.pos.x + 1) - X), rr = (e.radius + .5) * ppm;
@@ -6036,7 +6055,7 @@ var Routine = (() => {
 
   // visuals on the telegraph layer: buoys, the well, the bait line, held enemies, rings and splashes
   function draw(R, r) {
-    const G = R.telegraphs, keep = [], o = r.medium?.kind === 'air' ? r.medium.origin : null;
+    const G = R.telegraphs, keep = [], o = r.medium?.kind === 'air' ? demoSeen(r.medium) : null;
     for (const k of r.buoys || []) {
       const X = R.sx(k.wx), Y = R.sy(k.wy), ppm = Math.abs(R.sx(k.wx + 1) - X), s = 1.1 * ppm;
       G.circle(X, Y, s).fill({ color: 0xdff6ff, alpha: .55 }).stroke({ color: yt.cyan, width: 2.5, alpha: .95 });
@@ -6174,10 +6193,7 @@ var Tricks = (() => {
 
   // the arena origin the renderer draws this frame: between the last two steps, as the engine draws the arena
   // (draw(S, as, ke/Ar)); drawing at the latest step's origin makes things jitter against everything else
-  function seen(m) {
-    if (typeof as === 'undefined' || !as?.origin || typeof ke === 'undefined') return m.origin;
-    const k = Math.max(0, Math.min(1, ke / Ar)); return { x: as.origin.x + (m.origin.x - as.origin.x) * k, y: as.origin.y + (m.origin.y - as.origin.y) * k };
-  }
+  const seen = m => demoSeen(m);
   // the dolphin's tricks, through v3's own animation as the crane-game build played them (its Otdraw): a flip turns
   // the body over and over for the whole flight (R.rollOffset, one turn every Otk.flip s), the way its key turns the
   // dolphin under water (Front flip clockwise, Backflip anticlockwise); a corkscrew keeps rolling

@@ -239,7 +239,7 @@ var Routine = (() => {
 
   // visuals on the telegraph layer: buoys, the well, the bait line, held enemies, rings and splashes
   function draw(R, r) {
-    const G = R.telegraphs, keep = [], o = r.medium?.kind === 'air' ? r.medium.origin : null;
+    const G = R.telegraphs, keep = [], o = r.medium?.kind === 'air' ? demoSeen(r.medium) : null;
     for (const k of r.buoys || []) {
       const X = R.sx(k.wx), Y = R.sy(k.wy), ppm = Math.abs(R.sx(k.wx + 1) - X), s = 1.1 * ppm;
       G.circle(X, Y, s).fill({ color: 0xdff6ff, alpha: .55 }).stroke({ color: yt.cyan, width: 2.5, alpha: .95 });
