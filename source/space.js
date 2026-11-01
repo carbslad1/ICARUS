@@ -244,3 +244,21 @@ Space.wetLaunch = function (r) {
 {const pq1=Pq;Pq=function(r,e){if(DEMO.tune.wetspawn&&r?.demo&&r.medium?.kind==='water'&&e>0)Space.wetSpawn(r,e);return pq1(r,e)}}
 {const zq1=Zq;Zq=function(r){zq1(r);if(r?.demo)Space.wetLaunch(r)}}
 {const draw1=Otdraw;Otdraw=function(R,r,m,title){draw1(R,r,m,title);if(!title&&m?.kind==='water'&&r.wetFrame&&r.warns?.length&&Space.on(r))Space.draw(R,r,r.wetFrame)}}
+// The pace of a wave's spawns (designer, 2026-11-01: match Brotato's pressure "per second of play"). The schedule is
+// Brotato's zone 1 groups, timed in seconds, and with spawning while you swim it ran in the air and the water alike, but
+// the wave's clock counts only air time; a wave is about half water, so it spawned about twice Brotato's enemies
+// (docs/WAVE_BASELINE.md). With DEMO.tune.pace the schedule's clock runs at the share of this wave's play spent in the
+// air, so its groups play out once over the whole wave, swims included, and the wave's total is Brotato's (× the spawn
+// count). The share is a running one, seeded with the last wave's (0.5 before the first) worth 8 s of play. Enemies
+// queued by the schedule still come out one every 0.05 s.
+Space.pace = function (r) {
+  const p = r.spacePace || (r.spacePace = { wave: -1, air: 0, real: 0, last: .5 });
+  return (p.air + p.last * 8) / (p.real + 8);
+};
+{const sw2=sw;sw=function(r,input,dt){
+  const on=DEMO.tune.pace&&r?.demo,d=dt??Ar;   // the game loop calls sw without dt (its default is the 1/120 s step)
+  if(on){const p=r.spacePace||(r.spacePace={wave:-1,air:0,real:0,last:.5});
+    if(p.wave!==r.wave){if(p.real>4)p.last=p.air/p.real;p.wave=r.wave;p.air=0;p.real=0}
+    if(r.bw===r.wave&&r.mode==='playing'&&d>0){p.real+=d;if(r.medium?.kind==='air')p.air+=d}}
+  return sw2(r,input,dt)}}
+{const obs1=Obs;Obs=function(r,t,i){if(DEMO.tune.pace&&r?.demo&&i>0){const k=Math.max(.2,Math.min(1,Space.pace(r)));r.bt=(r.bt||0)-i*(1-k)}return obs1(r,t,i)}}
