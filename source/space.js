@@ -268,9 +268,11 @@ Space.pace = function (r) {
 // - DEMO.tune.wetavoid: an enemy under the water (a wet pursuer; v3 makes it flee, but as fast as the dolphin and
 //   turning slowly, so the dolphin still ran into it, 1.5-1.8% of the time) that is near where the dolphin will be over
 //   the next 0.3 s moves sideways off that path, and none comes closer than 2.5 m.
-// - DEMO.tune.hover: the enemies waiting above the water hover where they are in the world while you swim, instead of
+// - DEMO.tune.hover: the enemies waiting above the water keep their place on the screen while you swim, instead of
 //   chasing a point ahead of you (at 29-47 m/s, median), so you can line a breach up on them. Each has a home where it
-//   was at the splash, at its own height 15-25 m up (designer: 5-12 m, then 10-18 m, were too close to the water), and
+//   was on the screen at the splash, carried along as the camera moves (homes fixed in the world were left behind:
+//   swimming one way, 63-94% bunched at the screen's trailing edge, designer: "not the outcome I wanted"); homes
+//   closer than 8 m drift apart, so a crowd from the splash fans out, at its own height 15-25 m up (designer: 5-12 m, then 10-18 m, were too close to the water), and
 //   wanders about it as if it had lost sight of you: about 6 m/s (designer: 3 was too slow), easing its speed up and
 //   down, turning at most 4 rad/s toward a new point within 9 m every 1-3 s, with a slight bob. Away from its home
 //   (more than 11 m, beyond where it wanders, or more than 5 m below its height: from the splash, or pushed) it flies straight there at 8-25 m/s; eased from rest and turning slowly
@@ -294,7 +296,18 @@ Space.avoidWet = function (r, dt) {
 Space.hover = function (r, held, dt) {
   const V = Ovv(r), M = 6, top = V.y + V.h - 3, x0 = V.x - V.w + M, x1 = V.x + V.w - M;
   const clampX = x => Math.max(x0, Math.min(x1, x)), clampY = y => Math.max(3, Math.min(top, y));
+  // the camera's sideways move this step carries every waiting enemy, its home and its wander point (a fresh start after
+  // a flight: no carry on a stay's first step)
+  const C = r.hoverCam, dx = C && r.time - C.t < .1 ? V.x - C.x : 0; r.hoverCam = { x: V.x, t: r.time };
+  // homes closer than 8 m drift apart (at most 4 m/s), so a crowd from the splash fans out across the screen
+  for (let i = 0; i < held.length; i++) for (let j = i + 1; j < held.length; j++) {
+    const A = held[i].home, B = held[j].home; if (!A || !B) continue;
+    const ex = B.x - A.x, ey = (B.y - A.y) * .5, d = Math.hypot(ex, ey); if (d >= 8) continue;
+    const u = d > .01 ? ex / d : (i % 2 ? 1 : -1), k = Math.min(4 * dt, (8 - d) / 2);
+    A.x -= u * k; B.x += u * k;
+  }
   for (const p of held) {
+    if (dx) { p.x += dx; if (p.home) p.home.x += dx; if (p.wp) p.wp.x += dx }
     p.px = p.x; p.py = p.y; p.age += dt; p.lurk = false;
     // its home: where it was at the splash, at its own height (10-18 m); the view's edge pushes the home along
     const own = 15 + (p.seed * 3.1 % 1) * 10;
