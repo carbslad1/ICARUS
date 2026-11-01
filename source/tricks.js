@@ -1,7 +1,9 @@
 // The four tricks (ICARUS_DESIGN.md §4.3-4.4; step 2 of §4.17). Designer, 2026-10-30, with numbers 2026-10-31.
 // - Performed, as in the crane-game build with forward-only swimming off (designer, 2026-10-31): the keys you hold as you
-//   breach are the flight's trick. The turn key toward the way you are travelling (a forward rotation) is a Front flip,
-//   the one away from it (a backward rotation) a Backflip, W a Corkscrew, S a Belly flop. Hold nothing for no trick.
+//   breach are the flight's trick: D a Front flip, A a Backflip, W a Corkscrew, S a Belly flop. Hold nothing for no trick.
+//   D always turns the dolphin clockwise and A anticlockwise, and the sprite no longer half-rolls to keep its back up
+//   ("sprite.upright" off, designer 2026-11-01: the roll under water swapped what the keys seemed to do), so relative to
+//   the dolphin's own body D is always a forward rotation and A a backward one, whichever way it travels.
 //   Singles only in this step (no combos): of the keys held, the one pressed last. Keys in the air only move you.
 // - Like the crane build, a flip turns the body over and over for the whole flight and a corkscrew keeps rolling.
 // - A trick never deals damage. It boosts its weapon type's damage for the flight (+30%; a weapon with two tags gets
@@ -27,8 +29,8 @@ var Tricks = (() => {
   };
   const DEFAULTS = Object.freeze({ ...P });
   const TRICKS = Object.freeze({
-    front: { name: 'Front flip', key: 'toward', type: 'melee', moment: 'breach', ability: 'Charge', glyph: '↻', text: 'Invulnerable for 1 s from the breach, shoving aside enemies you touch.' },
-    back: { name: 'Backflip', key: 'away', type: 'ranged', moment: 'breach', ability: 'Repulse', glyph: '↺', text: 'At the breach, enemies within 12 m are pushed away.' },
+    front: { name: 'Front flip', key: 'd', type: 'melee', moment: 'breach', ability: 'Charge', glyph: '↻', text: 'Invulnerable for 1 s from the breach, shoving aside enemies you touch.' },
+    back: { name: 'Backflip', key: 'a', type: 'ranged', moment: 'breach', ability: 'Repulse', glyph: '↺', text: 'At the breach, enemies within 12 m are pushed away.' },
     cork: { name: 'Corkscrew', key: 'w', type: 'elemental', moment: 'apex', ability: 'Time slow', glyph: '⟳', text: 'At the apex, enemies and their shots move at half speed for 1.5 s.' },
     flop: { name: 'Belly flop', key: 's', type: 'economy', moment: 'entry', ability: 'Shockwave', glyph: '⤓', text: 'At water entry, enemies within 10 m are knocked back. XP orbs and pearls ×1.5 this flight.' }
   });
@@ -44,14 +46,13 @@ var Tricks = (() => {
     for (const k in K) { if (K[k] && !q.prev[k]) q.order = q.order.filter(x => x !== k).concat(k); if (!K[k]) q.order = q.order.filter(x => x !== k) }
     q.prev = K;
   }
-  // the trick the held keys make, for travel in direction dir (+1 right, -1 left): the last key pressed that is held
-  function held(r, dir) {
+  // the trick the held keys make: the last key pressed that is still held
+  function held(r) {
     const k = r.tkKeys?.order.at(-1); if (!k) return null;
-    return k === 'up' ? 'cork' : k === 'down' ? 'flop' : (k === 'right') === (dir >= 0) ? 'front' : 'back';
+    return { right: 'front', left: 'back', up: 'cork', down: 'flop' }[k];
   }
-  const travel = r => { const m = r.medium; return Math.sign(m.kind === 'air' ? m.vx : m.velocity?.x) || 1 };
   // the harness and tests can fix a flight's trick (r.demo.trickForce: an id, or null for none)
-  const chosen = r => r.demo?.trickForce !== undefined ? r.demo.trickForce : held(r, travel(r));
+  const chosen = r => r.demo?.trickForce !== undefined ? r.demo.trickForce : held(r);
   const flying = r => r.hand?.tk?.id || null;           // this flight's trick, fixed at the breach
   function boostFor(r, weapon) {
     const id = flying(r); if (!id || r.lab?.off) return 1;
@@ -105,17 +106,18 @@ var Tricks = (() => {
     const k = Math.max(0, Math.min(1, ke / Ar)); return { x: as.origin.x + (m.origin.x - as.origin.x) * k, y: as.origin.y + (m.origin.y - as.origin.y) * k };
   }
   // the dolphin's tricks, through v3's own animation as the crane-game build played them (its Otdraw): a flip turns
-  // the body over and over for the whole flight (R.rollOffset, one turn every Otk.flip s); a corkscrew keeps rolling
+  // the body over and over for the whole flight (R.rollOffset, one turn every Otk.flip s), the way its key turns the
+  // dolphin under water (Front flip clockwise, Backflip anticlockwise); a corkscrew keeps rolling
   // through the sprite's roll frames (R.odC, one roll every Otk.cork s); the belly flop flattens the body over the
   // last P.flopFlat m above the water, so it slaps down flat
   const smooth = p => p * p * (3 - 2 * p);
   function animate(R, r) {
     const m = r.medium, h = r.hand, id = h?.tk?.id; if (m?.kind !== 'air' || !id) return;
-    const dir = (m.vx || 0) < 0 ? -1 : 1;
-    if (id === 'front' || id === 'back') R.rollOffset = (id === 'back' ? 1 : -1) * dir * m.elapsed / Otk.flip * Math.PI * 2;
+    if (id === 'front' || id === 'back') R.rollOffset = (id === 'back' ? 1 : -1) * m.elapsed / Otk.flip * Math.PI * 2;
     if (id === 'cork') R.odC = Math.max(R.odC || 0, 30);
     if (id === 'flop' && m.vy < 0) {
-      const alt = m.origin.y + m.local.y, k = smooth(Math.max(0, Math.min(1, 1 - alt / P.flopFlat))), d = (dir > 0 ? 0 : Math.PI) - R.pathAngle;
+      // to the nearer level heading (the sprite no longer mirrors, so this keeps whichever side is down)
+      const alt = m.origin.y + m.local.y, k = smooth(Math.max(0, Math.min(1, 1 - alt / P.flopFlat))), d = (Math.cos(R.pathAngle) >= 0 ? 0 : Math.PI) - R.pathAngle;
       R.rollOffset = Math.atan2(Math.sin(d), Math.cos(d)) * k;
     }
   }
@@ -128,19 +130,18 @@ var Tricks = (() => {
     if (r.slowT > 0) for (const e of r.enemies) if (e.hp > 0) G.circle(X(e.pos.x), Y(e.pos.y), (e.radius + .6) * ppm).stroke({ color: 0xb48cff, width: 2, alpha: .75 });
   }
 
-  // the HUD: under water, the four tricks with their keys for the way you are going now, the one you would breach
-  // with lit; in the air, the flight's trick
+  // the HUD: under water, the four tricks with their keys, the one you would breach with lit; in the air, the flight's
+  // trick
   function hud(r, title) {
     if (typeof document === 'undefined') return;
     let el = document.getElementById('trick-pick');
     const show = !title && on(r) && r.mode === 'playing' && (typeof ft === 'undefined' || ft === 'game');
     if (!show) { if (el) el.hidden = true; return }
     if (!el) { el = document.createElement('div'); el.id = 'trick-pick'; document.body.appendChild(el) }
-    const air = r.medium?.kind === 'air', pick = air ? flying(r) : r.lab?.off ? null : chosen(r), dir = travel(r), sig = (air ? 'a' : 'w') + (pick || '-') + dir + (r.lab?.off ? 'x' : '');
-    const key = id => id === 'cork' ? 'W' : id === 'flop' ? 'S' : (id === 'front') === (dir > 0) ? 'D' : 'A';
+    const air = r.medium?.kind === 'air', pick = air ? flying(r) : r.lab?.off ? null : chosen(r), sig = (air ? 'a' : 'w') + (pick || '-') + (r.lab?.off ? 'x' : '');
     el.hidden = false; if (el.dataset.sig === sig) return; el.dataset.sig = sig; el.classList.toggle('in-air', air);
     if (air) { el.innerHTML = pick ? `<span class="tp-key on"><b>${TRICKS[pick].glyph} ${TRICKS[pick].name}</b><small>+${Math.round(P.boost * 100)}% ${TRICKS[pick].type}</small></span>` : ''; el.hidden = !pick; return }
-    el.innerHTML = `<small class="tp-hint">Hold as you breach</small>` + ['cork', dir > 0 ? 'back' : 'front', 'flop', dir > 0 ? 'front' : 'back'].map(id => { const T = TRICKS[id]; return `<span class="tp-key${id === pick ? ' on' : ''}"><kbd>${key(id)}</kbd><b>${T.name}</b><small>${T.type} · ${T.ability}</small></span>` }).join('');
+    el.innerHTML = `<small class="tp-hint">Hold as you breach</small>` + ['cork', 'back', 'flop', 'front'].map(id => { const T = TRICKS[id]; return `<span class="tp-key${id === pick ? ' on' : ''}"><kbd>${T.key.toUpperCase()}</kbd><b>${T.name}</b><small>${T.type} · ${T.ability}</small></span>` }).join('');
   }
 
   return { P, DEFAULTS, TRICKS, IDS, TAGS, on, input, held, chosen, flying, boostFor, open, step, entry, shockwave, animate, draw, hud };

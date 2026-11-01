@@ -21,7 +21,7 @@ var Controls = (() => {
     const b = document.getElementById('touch-boost');
     if (b) { b.textContent = carve() ? 'CARVE' : 'BOOST'; b.setAttribute('aria-label', carve() ? 'Hold to carve' : 'Hold to boost underwater') }
   }
-  const hint = air => { sync(); return air ? 'W A S D / arrows: steer' + (DEMO.tune.verbs ? ' · hold S to dive · Space dashes' : '') : !Orw.on ? 'A / D to turn · W or Space to boost' + (DEMO.tune.tricks && DEMO.tune.rules ? ' · hold a trick key as you breach' : '') : carve() ? 'Hold Space to carve · release to launch' : 'Hold W / up to carve · release to launch · space to boost' };
+  const hint = air => { sync(); return air ? 'W A S D / arrows: steer' + (DEMO.tune.verbs ? ' · hold S to dive · Space dashes' : '') : !Orw.on ? 'A / D to turn · W or Space to boost' + (DEMO.tune.tricks && DEMO.tune.rules ? ' · hold D, A, W or S as you breach for a trick' : '') : carve() ? 'Hold Space to carve · release to launch' : 'Hold W / up to carve · release to launch · space to boost' };
   return { carve, ccw, key, hint };
 })();
 // input: with Space carving, w comes from Space, the touch button (Gr) or gamepad A, and nothing boosts

@@ -82,7 +82,7 @@ var Lab = (() => {
   const opt = (v, label, sel) => `<option value="${E(v)}" ${sel ? 'selected' : ''}>${E(label)}</option>`;
   function html() {
     const T = { ...Routine.TRICKS, ...Tricks.TRICKS }, order = [...Tricks.IDS, ...Routine.FOCUS, ...Routine.IDS.filter(id => !Routine.FOCUS.includes(id))], X = T[cfg.trick] || T.front, F = four(cfg.trick);
-    const label = id => four(id) ? `${{ toward: 'Turn toward travel', away: 'Turn away', w: 'W', s: 'S' }[T[id].key]} · ${T[id].name}` : T[id].name + ' (old routine' + (Routine.FOCUS.includes(id) ? '' : ', parked') + ')';
+    const label = id => four(id) ? `${T[id].key.toUpperCase()} · ${T[id].name}` : T[id].name + ' (old routine' + (Routine.FOCUS.includes(id) ? '' : ', parked') + ')';
     const sliders = (PARAMS[cfg.trick] || []).map(([k, label, lo, hi, st]) => { const v = +get(k); return `<label class="lab-slider">${E(label)} <input type="range" min="${lo}" max="${hi}" step="${st}" value="${v}" data-param="${k}"><b>${v}</b></label>` }).join('');
     const gunSel = i => `<select data-lab="gun${i}">${opt('', '— none —', !cfg.guns[i])}${Object.keys(DEMO.weapons).map(id => opt(id, `${Owc[id]?.name || id} · ${DEMO.weapons[id].type}`, cfg.guns[i] === id)).join('')}</select>`;
     return `<div class="lo-panel lab-panel" role="dialog" aria-label="Trick lab"><header><b>TRICK LAB</b><button data-lab-close>✕</button></header>

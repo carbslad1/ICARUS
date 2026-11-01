@@ -1,5 +1,5 @@
 // The four tricks (ICARUS_DESIGN.md §4.3-4.4, step 2 of §4.17; source/tricks.js): performed by the keys held as you
-// breach (toward your travel: Front flip, away: Backflip, W Corkscrew, S Belly flop), never dealing damage; each boosts its weapon type's damage for the flight and does one thing at its
+// breach (D Front flip, A Backflip, W Corkscrew, S Belly flop, whichever way it travels), never dealing damage; each boosts its weapon type's damage for the flight and does one thing at its
 // moment: Charge (Front flip), Repulse (Backflip), Time slow (Corkscrew), Shockwave and ×1.5 XP and pearls (Belly flop).
 //   node qa/tricks.cjs [--detail]
 const assert = require('assert'), path = require('path');
@@ -22,7 +22,7 @@ function foe(r, x, y, kind = 'chaser') { D.spawn(r, false, 0); const e = r.enemi
 const enemyStep = (r, n = 1) => { for (let i = 0; i < n; i++) H.ME(r, r.medium, still, DT) };
 const hurt = (r, e) => e.maxHp - e.hp;
 
-test('the keys held as you breach make the trick: toward your travel a Front flip, away a Backflip, W Corkscrew, S Belly flop', () => {
+test('the keys held as you breach make the trick: D Front flip, A Backflip, W Corkscrew, S Belly flop, whichever way it travels', () => {
   const breach = (keys, vx) => {
     const r = H.Hd(3, 'harpoon'); r.medium = { ...r.medium, kind: 'water', velocity: { x: vx, y: 5 } };
     for (const k of keys) T.input(r, k);
@@ -31,7 +31,7 @@ test('the keys held as you breach make the trick: toward your travel a Front fli
   };
   const D_ = { x: 1, y: 0 }, A_ = { x: -1, y: 0 }, W_ = { x: 0, y: 1 }, S_ = { x: 0, y: -1 }, none = { x: 0, y: 0 };
   const out = { rightD: breach([D_], 20), rightA: breach([A_], 20), leftA: breach([A_], -20), leftD: breach([D_], -20), W: breach([W_], 20), S: breach([S_], -20), released: breach([D_, none], 20), nothing: breach([], 20) };
-  assert.deepEqual(out, { rightD: 'front', rightA: 'back', leftA: 'front', leftD: 'back', W: 'cork', S: 'flop', released: null, nothing: null });
+  assert.deepEqual(out, { rightD: 'front', rightA: 'back', leftA: 'back', leftD: 'front', W: 'cork', S: 'flop', released: null, nothing: null });
   // singles: of the keys held, the one pressed last; letting go of it falls back to the other
   assert.equal(breach([W_, { x: 1, y: 1 }], 20), 'front'); assert.equal(breach([D_, { x: 1, y: 1 }], 20), 'cork'); assert.equal(breach([{ x: 1, y: 1 }, W_], 20), 'cork');
   // no carry-over: a flight with nothing held has no trick
@@ -60,8 +60,11 @@ test('in the real game with free turning (the default), the key held through the
   const toward = fly({ x: 1, turn: -1 }), away = fly({ x: -1, turn: 1 }), up = fly({ y: 1 }), none = fly({});
   assert.equal(up.kind, 'air'); assert.equal(up.trick, 'cork', 'W held through the breach: Corkscrew');
   assert.equal(none.trick, null, 'nothing held: no trick');
-  assert.equal(toward.kind, 'air'); assert.equal(toward.trick, toward.dir > 0 ? 'front' : 'back', 'D: front flip when travelling right');
-  assert.equal(away.trick, away.dir > 0 ? 'back' : 'front', 'A: backflip when travelling right');
+  assert.equal(toward.kind, 'air'); assert.equal(toward.trick, 'front', 'D: Front flip'); assert.equal(away.trick, 'back', 'A: Backflip');
+  // the half-roll that kept the back up is off by default, and once in settings saved before
+  const st = new Map([['icarus.scoreshow.tune', '{}'], ['icarus.scoreshow.settings.v2', JSON.stringify({ 'ro.on': 0, 'sprite.upright': 1 })]]);
+  load(path.join(__dirname, '..', 'ICARUS-demo.html'), st, { bake: true, modern: true });
+  assert.equal(JSON.parse(st.get('icarus.scoreshow.settings.v2'))['sprite.upright'], 0, 'saved settings migrated once'); assert.equal(st.get('icarus.scoreshow.upright0'), '1');
   return { toward, away, up, none };
 });
 
@@ -140,10 +143,11 @@ test('Belly flop: the shockwave throws pursuers away from the landing; XP orbs a
 
 test('each trick plays its animation: flips and the corkscrew keep turning through the flight, the belly flop lands flat', () => {
   const pose = (id, set) => { const r = run(id, []); Object.assign(r.medium, set.m || {}); if (set.apex) r.hand.apex = true; const R = { rollOffset: 0, odC: 0, pathAngle: set.path ?? 0 }; T.animate(R, r); T.animate(R, r); return R };
-  const flip = (id, t) => pose(id, { m: { elapsed: t } }).rollOffset;
+  const flip = (id, t, vx = 20) => pose(id, { m: { elapsed: t, vx } }).rollOffset;
   assert.ok(Math.abs(flip('front', H.Otk.flip / 2) + Math.PI) < 1e-9, 'front flip half way: half a turn forward');
   assert.ok(Math.abs(flip('back', H.Otk.flip / 2) - Math.PI) < 1e-9, 'backflip half way: half a turn back');
   assert.ok(Math.abs(flip('front', 5) + 5 / H.Otk.flip * 2 * Math.PI) < 1e-9, 'it keeps turning through the flight');
+  assert.equal(flip('front', .3, -20), flip('front', .3, 20), 'a front flip turns clockwise whichever way it travels, as D turns the dolphin');
   assert.ok(pose('cork', {}).odC >= 30, 'the corkscrew keeps rolling');
   const flat = alt => pose('flop', { m: { vy: -20, origin: { x: 0, y: alt }, local: { x: 0, y: 0 } }, path: -1 }).rollOffset;
   assert.equal(flat(40), 0, 'high up: no change'); assert.ok(Math.abs(flat(0) - 1) < 1e-9, 'at the water: flat (path −1 rad + 1 = 0)');

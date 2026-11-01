@@ -238,19 +238,20 @@ The structure makes those two moments carry the roguelite. Everything else is de
 
 | Where | Input | Effect |
 |---|---|---|
-| Underwater | **A / D** | Turn the dolphin (v3's free swimming) |
+| Underwater | **D / A** | Turn the dolphin clockwise / anticlockwise (v3's free swimming); the sprite no longer half-rolls to keep its back up (2026-11-01) |
 | Underwater | **W or Space** | Boost |
-| At the breach | **Hold** the turn key toward your travel direction (a forward rotation) | **Front flip** |
-| At the breach | **Hold** the turn key away from it (a backward rotation) | **Backflip** |
+| At the breach | **Hold D** (clockwise: a forward rotation of the body) | **Front flip** |
+| At the breach | **Hold A** (anticlockwise: a backward rotation) | **Backflip** |
 | At the breach | **Hold W** | **Corkscrew** |
 | At the breach | **Hold S** | **Belly flop** |
 | In the air | **WASD** | Move only. The trick runs by itself. Weapons fire on their own. |
 
 - **The keys held as you breach are the flight's trick.** Hold nothing for no trick. Nothing carries over.
 - **Singles only for now:** of the keys held, the one pressed last. Combos (§4.5) will be several keys held together.
-- **The animation is the crane build's:** a flip turns the body over and over for the whole flight, and a corkscrew keeps rolling. A belly flop flattens the body before the water.
-- **Under water, a bar shows the four tricks** with their keys for the way you are going, and lights the one you would breach with.
-- **To watch:** A and D steer the launch and choose the flip at once. Rising out of a dive is a backward rotation, so a Backflip comes naturally; a Front flip means tipping the nose forward just as you leave the water.
+- **The animation is the crane build's:** a flip turns the body over and over for the whole flight, the way its key turns it (Front flip clockwise, Backflip anticlockwise), and a corkscrew keeps rolling. A belly flop flattens the body before the water.
+- **No half-roll** (designer, 2026-11-01): v3 rolled the sprite to keep its back up when it turned past vertical, which made the turn keys seem to swap. Without it the dolphin turns in the plane and can be upside down; D is always clockwise, A always anticlockwise.
+- **Under water, a bar shows the four tricks** with their keys, and lights the one you would breach with.
+- **To watch:** D and A steer the launch and choose the flip at once. Rising out of a dive to the right is an anticlockwise turn, so a Backflip comes naturally there.
 - **Forward-only swimming and the Space carve** (2026-10-27, `source/controls.js`) remain as settings, off by default.
 - Tapping to choose with carry-over (built 2026-10-31 morning) was replaced the same day.
 
