@@ -4369,7 +4369,7 @@ var DEMO = (() => {
     depth: {type:'Blast',cad:'Heavy',coef:1.5,damage:[24,36,52,80],cd:[64,56,48,40],range:18,crit:.03,cx:1.5,kb:9,blast:8.5,side:'Max HP',sideScale:.15,description:'A lobbed charge aimed to intercept its target. Max HP also adds damage.'}
   };
   // Hand-cap levers (structure doc 5.4): kept open and tunable, to be balanced in play. The tuning panel edits these live.
-  const TUNE_DEFAULT={bro:1,shake:1,flash:1,space:1,edge:.2,danger:1,lead:.5,mines:0,carve:1,ccw:0,sky:12,verbs:0,hop:6,dive:2,dashes:2,hold:1,wetspawn:1,rules:1,payK:3,streakCap:5,well:60,sides:1,moves:1,pierce:1,trickPool:1,tricks:1,viewfit:1,viewmax:3,airband:15};  // trickPool: offer only the shortlist being proven (docs/TRICK_LAB.md)  // pierce: Laser and Harpoon pierce by tier  // sides: step 8 (armoured enemies)  // well: Gravity anchor's pull, m/s²  // rules, payK, streakCap: step 4 (style score)  // space: step 1 (space.js); edge: share of its spawns from the screen edge; danger, lead, mines: step 2 (danger.js)
+  const TUNE_DEFAULT={bro:1,shake:1,flash:1,space:1,edge:.2,danger:1,lead:.5,mines:0,carve:1,ccw:0,sky:12,verbs:0,hop:6,dive:2,dashes:2,hold:1,wetspawn:1,rules:1,payK:3,streakCap:5,well:60,sides:1,moves:1,pierce:1,trickPool:1,tricks:1,viewfit:1,viewmax:3,airband:20,airshare:.25,dry:1};  // trickPool: offer only the shortlist being proven (docs/TRICK_LAB.md)  // pierce: Laser and Harpoon pierce by tier  // sides: step 8 (armoured enemies)  // well: Gravity anchor's pull, m/s²  // rules, payK, streakCap: step 4 (style score)  // space: step 1 (space.js); edge: share of its spawns from the screen edge; danger, lead, mines: step 2 (danger.js)
   const tune={...TUNE_DEFAULT};
   try{Object.assign(tune,JSON.parse(localStorage.getItem('icarus.scoreshow.tune')||'{}'))}catch(e){}
   const saveTune=()=>{try{localStorage.setItem('icarus.scoreshow.tune',JSON.stringify(tune))}catch(e){}};
@@ -4891,7 +4891,7 @@ Owstarter=function(){return ''};
 
 /* Settings: one panel in tabs (T, the backquote key, or SCORE TUNING). Score holds the hand-cap levers (structure doc 5.4,
    kept open to balance in play); the other tabs hold the v3 carve's movement sliders, grouped by what they change. */
-const DemoTuneDefs=[['shake','Screen shake',0,2,.1],['flash','Enemy hit flash',0,1,.1],['space','Marked spawns ahead and flocking (step 1)',0,1,1,'check'],['edge','Step 1: share of spawns from the screen edge',0,1,.05],['danger','Leading shots and mines on the arc (step 2)',0,1,1,'check'],['lead','Step 2: how far shots lead you',0,1,.05],['mines','Step 2: mines per flight',0,4,1],['carve','Space carves (no boost)',0,1,1,'check'],['ccw','Carving always anticlockwise',0,1,1,'check'],['sky','Water camera: metres above the dolphin (0 = old camera)',0,20,.1],['rules','Style score rules (step 4): no quota, reels or charms; 0 HP ends the run',0,1,1,'check'],['payK','Step 4: pearls per flight = k × √score',0,10,.5],['streakCap','Step 4: clean streak cap',1,10,1],['well','Gravity anchor pull (m/s²)',0,150,5],['sides','Armoured enemies (step 8)',0,1,1,'check'],['trickPool','Trick pool: only the shortlist being proven (Eddy, Gravity anchor, Riptide, Snare buoys)',0,1,1,'check'],['tricks','The four tricks (step 2): tap W A S D under water; each boosts its weapon type and replaces the routine',0,1,1,'check'],['viewfit','Water view: zoom out to keep the waterline and the enemies above it in view',0,1,1,'check'],['viewmax','Water view: most zoom-out (× the air view)',1,5,.1],['airband','Water view: air kept in view above the waterline (m)',0,30,1],['pierce','Pierce by tier: Laser hits 3-6 enemies, Harpoon always pierces 1 and crits 1 more per tier',0,1,1,'check'],['moves','Brotato enemy movement: turrets keep range, drifters hover, splitters hold an offset',0,1,1,'check'],['hold','Enemies above the water stay ahead of you in view while you swim',0,1,1,'check'],['wetspawn','Enemies keep spawning while you swim',0,1,1,'check'],['verbs','Experimental: stomp, dive (S) and dash (Space) in the air (parked; to become tricks)',0,1,1,'check'],['hop','Step 3: stomp lift (m/s)',0,15,.5],['dive','Step 3: dive gravity (x)',1,4,.1],['dashes','Step 3: dash charges',0,4,1]];
+const DemoTuneDefs=[['shake','Screen shake',0,2,.1],['flash','Enemy hit flash',0,1,.1],['space','Marked spawns ahead and flocking (step 1)',0,1,1,'check'],['edge','Step 1: share of spawns from the screen edge',0,1,.05],['danger','Leading shots and mines on the arc (step 2)',0,1,1,'check'],['lead','Step 2: how far shots lead you',0,1,.05],['mines','Step 2: mines per flight',0,4,1],['carve','Space carves (no boost)',0,1,1,'check'],['ccw','Carving always anticlockwise',0,1,1,'check'],['sky','Water camera: metres above the dolphin (0 = old camera)',0,20,.1],['rules','Style score rules (step 4): no quota, reels or charms; 0 HP ends the run',0,1,1,'check'],['payK','Step 4: pearls per flight = k × √score',0,10,.5],['streakCap','Step 4: clean streak cap',1,10,1],['well','Gravity anchor pull (m/s²)',0,150,5],['sides','Armoured enemies (step 8)',0,1,1,'check'],['trickPool','Trick pool: only the shortlist being proven (Eddy, Gravity anchor, Riptide, Snare buoys)',0,1,1,'check'],['tricks','The four tricks (step 2): tap W A S D under water; each boosts its weapon type and replaces the routine',0,1,1,'check'],['viewfit','Water view: zoom out to keep the waterline and the enemies above it in view',0,1,1,'check'],['viewmax','Water view: most zoom-out (× the air view)',1,5,.1],['airband','Water view: air kept in view above the waterline (m)',0,40,1],['airshare','Water view: air kept in view, as a share of the view',0,.5,.05],['dry','Enemies stay above the water while you swim (none dive with you)',0,1,1,'check'],['pierce','Pierce by tier: Laser hits 3-6 enemies, Harpoon always pierces 1 and crits 1 more per tier',0,1,1,'check'],['moves','Brotato enemy movement: turrets keep range, drifters hover, splitters hold an offset',0,1,1,'check'],['hold','Enemies above the water stay ahead of you in view while you swim',0,1,1,'check'],['wetspawn','Enemies keep spawning while you swim',0,1,1,'check'],['verbs','Experimental: stomp, dive (S) and dash (Space) in the air (parked; to become tricks)',0,1,1,'check'],['hop','Step 3: stomp lift (m/s)',0,15,.5],['dive','Step 3: dive gravity (x)',1,4,.1],['dashes','Step 3: dash charges',0,4,1]];
 const DemoTabs=[
   ['Score',null,'Each jump draws 3 tricks; buy more in the Routine row. A hit bails the trick in progress; 0 HP busts the jump.'],
   ['Launch',['Forward only','Rocket boost','Carve','Wave schedule'],'The carve and the launch. Launch speed rises5 per wave.'],
@@ -5197,6 +5197,11 @@ var Space = (() => {
 // dive brings the view's top edge down, never under 1.5 m), easing in as they arrive.
 // Touching one gives no kill (the demo has no touch kills in the water). Pursuers that went under, and lurkers, keep
 // v3's step; only the pursuers above the water when the step begins are held, so none is stepped twice.
+// Designer, 2026-11-01: "enemies should not dive down with the dolphin; it pulls them to the surface of the water".
+// With DEMO.tune.dry no pursuer goes under or lurks while you swim: every one waits above the water (those below the
+// waterline at the splash come up to their place). And with the water view on (WaterView, source/controls.js), whose
+// top always shows the band of air, they keep their own height (5-12 m) instead of being held under the view's top
+// edge, which sank them to the waterline as the dolphin dived (bot, wave 10: 79% under 3 m at 25-40 m deep).
 Space.holdAbove = function (r, held, dt) {
   const m = r.medium, d = m.pos, v = m.velocity, Cw = Ocs(r.wave), V = Ovv(r);
   for (const p of held) {
@@ -5204,7 +5209,8 @@ Space.holdAbove = function (r, held, dt) {
     const Fd = Math.abs(v.x) > Math.max(3, Cw * .12) ? Math.sign(v.x) : p.fd || Math.sign(v.x) || 1;
     p.fd = Fd;
     const w = 3.2 * p.tr, top = Math.max(Cw * 1.05 * Osp.spd, (p.kind === 'swarmer' ? 25 * Osp.small : 19 + r.wave * .13) * Osp.spd * p.sp);
-    const tx = d.x + Fd * (8 + (p.seed * 7.3 % 1) * 18), ty = Math.max(1.5, Math.min(5 + (p.seed * 3.1 % 1) * 7, V.y + V.h - 3));
+    const ceil = typeof WaterView !== 'undefined' && WaterView.on() ? Infinity : V.y + V.h - 3;
+    const tx = d.x + Fd * (8 + (p.seed * 7.3 % 1) * 18), ty = Math.max(1.5, Math.min(5 + (p.seed * 3.1 % 1) * 7, ceil));
     const a = tx - p.x, b = ty - p.y, dist = Math.hypot(a, b);
     let c = Math.atan2(b, a) - p.h; c = Math.atan2(Math.sin(c), Math.cos(c));
     p.h += Math.max(-w * dt, Math.min(w * dt, c));
@@ -5214,6 +5220,7 @@ Space.holdAbove = function (r, held, dt) {
 };
 {const pq0=Pq;Pq=function(r,e){
   if(!DEMO.tune.hold||!r?.demo||r.medium?.kind!=='water'||!(e>0)||!r.pursuers?.length)return pq0(r,e);
+  if(DEMO.tune.dry)for(const p of r.pursuers){p.wet=false;p.lurk=false}
   const dry=r.pursuers.filter(p=>!p.wet&&!p.lurk);r.pursuers=r.pursuers.filter(p=>p.wet||p.lurk);
   pq0(r,e);r.pursuers=(r.pursuers||[]).concat(dry);Space.holdAbove(r,dry,e);
   // v3's shock rings still push the held pursuers (a zero step: the rings don't grow twice, and each hits once)
@@ -5400,8 +5407,9 @@ var Controls = (() => {
 // With "Lock view to arena" the view under water was the air view (43.2 m tall), centred 12 m above the dolphin, so at
 // high speed the waterline and the enemies waiting above it went off the top. Two tries that chased the dolphin (a
 // zoom-and-shift spring, then a hard limit on it) lost the air or jerked (qa/watercam.cjs). With DEMO.tune.viewfit:
-// - the top of the view is pinned DEMO.tune.airband m above the waterline, so the air is always in view, and the camera
-//   only moves up and down as the zoom changes;
+// - the top of the view is pinned above the waterline, so the air is always in view, and the camera only moves up and
+//   down as the zoom changes. The band of air is DEMO.tune.airband m (20), and at least DEMO.tune.airshare of the view
+//   (a quarter) so it stays a real strip when the view zooms out (designer, 2026-11-01: "widen the air band");
 // - the view's height covers the deepest point the dolphin is about to reach: where its current turn takes it over the
 //   next 0.6 s (a loop is foreseen, not chased), plus a margin. That depth is held and let go slowly (zoom in over
 //   about 2 s) and the height follows it on a smooth spring, so loops do not pump the zoom;
@@ -5414,7 +5422,9 @@ var Controls = (() => {
 // Enemies still above the view get a chevron at the top edge. No cap on the water speed (designer, 2026-11-01).
 var WaterView = (() => {
   const LOOK = .6, MARGIN = 7, LET_GO = 10, SPRING = .3, SETTLE = .6, LEAVE = .6;   // s, m, m/s the held depth rises back, s, s, s
-  let st = null, leave = null;   // leave: { H, t } easing back to the air view after a breach   // { depth (held), H and Hv (the height and its rate), top and tv (the top edge and its rate), hPrev }
+  // st: { depth (held), H and Hv (the height and its rate), top and tv (the top edge and its rate), hPrev }, null in the
+  // air; leave: { H, t } easing back to the air view after a breach
+  let st = null, leave = null;
   const on = () => !!(DEMO.tune.viewfit && lr.fit);
   const airH = () => Jt.height;                      // the air view's height (m)
   // the deepest the dolphin gets over the next LOOK s if it keeps turning as it is now (from the heading's change)
@@ -5424,13 +5434,15 @@ var WaterView = (() => {
     return -low;
   }
   function step(r, dt) {
-    const m = r.medium, top = +DEMO.tune.airband || 15, max = (+DEMO.tune.viewmax || 3) * airH();
+    const m = r.medium, band = DEMO.tune.airband ?? 20, share = Math.min(.6, Math.max(0, +DEMO.tune.airshare || 0)), max = (+DEMO.tune.viewmax || 3) * airH();
     const hd = Math.atan2(m.velocity.y, m.velocity.x);
     if (!st) st = { depth: 0, H: airH(), Hv: 0, top: r.cam.y + airH() / 2, tv: 0, hPrev: hd };
-    const kt = 1 / SETTLE; st.tv += ((top - st.top) * kt * kt - 2 * kt * st.tv) * dt; st.top += st.tv * dt;
     const w = Math.atan2(Math.sin(hd - st.hPrev), Math.cos(hd - st.hPrev)) / Math.max(dt, 1e-6); st.hPrev = hd;
     const need = Math.max(0, -m.pos.y, ahead(m, w)) + MARGIN;
     st.depth = Math.max(need, st.depth - LET_GO * dt);
+    // the band: its metres, or its share of a view tall enough for band + depth, whichever is more
+    const top = Math.max(band, share * st.depth / (1 - share));
+    const kt = 1 / SETTLE; st.tv += ((top - st.top) * kt * kt - 2 * kt * st.tv) * dt; st.top += st.tv * dt;
     const want = Math.min(max, Math.max(airH(), st.top + st.depth)), k = 1 / SPRING;
     st.Hv += ((want - st.H) * k * k - 2 * k * st.Hv) * dt; st.H += st.Hv * dt;
     st.H = Math.min(max, Math.max(st.H, st.top - m.pos.y + 3));      // never so far behind that the dolphin leaves the view

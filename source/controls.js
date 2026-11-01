@@ -39,8 +39,9 @@ var Controls = (() => {
 // With "Lock view to arena" the view under water was the air view (43.2 m tall), centred 12 m above the dolphin, so at
 // high speed the waterline and the enemies waiting above it went off the top. Two tries that chased the dolphin (a
 // zoom-and-shift spring, then a hard limit on it) lost the air or jerked (qa/watercam.cjs). With DEMO.tune.viewfit:
-// - the top of the view is pinned DEMO.tune.airband m above the waterline, so the air is always in view, and the camera
-//   only moves up and down as the zoom changes;
+// - the top of the view is pinned above the waterline, so the air is always in view, and the camera only moves up and
+//   down as the zoom changes. The band of air is DEMO.tune.airband m (20), and at least DEMO.tune.airshare of the view
+//   (a quarter) so it stays a real strip when the view zooms out (designer, 2026-11-01: "widen the air band");
 // - the view's height covers the deepest point the dolphin is about to reach: where its current turn takes it over the
 //   next 0.6 s (a loop is foreseen, not chased), plus a margin. That depth is held and let go slowly (zoom in over
 //   about 2 s) and the height follows it on a smooth spring, so loops do not pump the zoom;
@@ -53,7 +54,9 @@ var Controls = (() => {
 // Enemies still above the view get a chevron at the top edge. No cap on the water speed (designer, 2026-11-01).
 var WaterView = (() => {
   const LOOK = .6, MARGIN = 7, LET_GO = 10, SPRING = .3, SETTLE = .6, LEAVE = .6;   // s, m, m/s the held depth rises back, s, s, s
-  let st = null, leave = null;   // leave: { H, t } easing back to the air view after a breach   // { depth (held), H and Hv (the height and its rate), top and tv (the top edge and its rate), hPrev }
+  // st: { depth (held), H and Hv (the height and its rate), top and tv (the top edge and its rate), hPrev }, null in the
+  // air; leave: { H, t } easing back to the air view after a breach
+  let st = null, leave = null;
   const on = () => !!(DEMO.tune.viewfit && lr.fit);
   const airH = () => Jt.height;                      // the air view's height (m)
   // the deepest the dolphin gets over the next LOOK s if it keeps turning as it is now (from the heading's change)
@@ -63,13 +66,15 @@ var WaterView = (() => {
     return -low;
   }
   function step(r, dt) {
-    const m = r.medium, top = +DEMO.tune.airband || 15, max = (+DEMO.tune.viewmax || 3) * airH();
+    const m = r.medium, band = DEMO.tune.airband ?? 20, share = Math.min(.6, Math.max(0, +DEMO.tune.airshare || 0)), max = (+DEMO.tune.viewmax || 3) * airH();
     const hd = Math.atan2(m.velocity.y, m.velocity.x);
     if (!st) st = { depth: 0, H: airH(), Hv: 0, top: r.cam.y + airH() / 2, tv: 0, hPrev: hd };
-    const kt = 1 / SETTLE; st.tv += ((top - st.top) * kt * kt - 2 * kt * st.tv) * dt; st.top += st.tv * dt;
     const w = Math.atan2(Math.sin(hd - st.hPrev), Math.cos(hd - st.hPrev)) / Math.max(dt, 1e-6); st.hPrev = hd;
     const need = Math.max(0, -m.pos.y, ahead(m, w)) + MARGIN;
     st.depth = Math.max(need, st.depth - LET_GO * dt);
+    // the band: its metres, or its share of a view tall enough for band + depth, whichever is more
+    const top = Math.max(band, share * st.depth / (1 - share));
+    const kt = 1 / SETTLE; st.tv += ((top - st.top) * kt * kt - 2 * kt * st.tv) * dt; st.top += st.tv * dt;
     const want = Math.min(max, Math.max(airH(), st.top + st.depth)), k = 1 / SPRING;
     st.Hv += ((want - st.H) * k * k - 2 * k * st.Hv) * dt; st.H += st.Hv * dt;
     st.H = Math.min(max, Math.max(st.H, st.top - m.pos.y + 3));      // never so far behind that the dolphin leaves the view
