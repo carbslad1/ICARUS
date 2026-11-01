@@ -122,6 +122,85 @@ var WaterView = (() => {
   r.camLock=(r.camLock==null?0:r.camLock)+(0-(r.camLock||0))*Xe(t,.18);Ocl=r.camLock}}
 // v3's opening hint names W as the carve key; with Space carving it names Space (and W A S D choose a trick, source/tricks.js)
 {const zd0=Zd;Zd=function(...a){const o=zd0(...a);const tk=DEMO.tune.tricks&&DEMO.tune.rules;if(Controls.carve())ci='HOLD SPACE TO CARVE \xB7 LET GO TO LAUNCH';else if(!Orw.on)ci='A / D TO TURN \xB7 W OR SPACE TO BOOST';if(tk)ci+=' \xB7 HOLD A KEY AS YOU BREACH FOR A TRICK';return o}}
+// The steady camera (designer, 2026-11-01: "make the camera not feel like it's bouncing and zooming in and out around
+// the water line during breach and entry"; DEMO.tune.steadycam). It replaces the water view and the arena lock above:
+// - one view height for the whole wave, in the air and the water: room for the band of air (DEMO.tune.airband) and a
+//   typical dive at this wave's launch speed (+ 0.35 s of it), at least the arena's height, at most 3×; it changes only
+//   with the wave, easing over about a second. No zoom at the water line;
+// - under the water the water line holds still with the band of air above it, and sideways it follows the dolphin as
+//   v3's water camera does. Only deeper than the wave's view can hold does the view grow (downward: its top stays on
+//   the band, so the air stays in view at any depth; following the dolphin down lost it, 71-80% at waves 10-20); it
+//   is back to the wave's height well before the surface, so there is no zoom at the water line;
+// - in the air it rides the arena with the arena's top at the view's top (when the view is taller than the arena, the
+//   extra shows below it, the water). At the breach the arena is placed so its top meets the band (space.js), so the
+//   camera's place does not jump, and from then on enemies and the dolphin hold still on screen while the water drops
+//   away (the waiting enemies join the arena and rise with it: a camera that held still and caught up later made them
+//   shoot up and settle back, a bounce). So that the camera does not lurch from still to the launch speed, when the
+//   dolphin's path (its current turn) reaches the surface within 0.35 s the camera starts rising with it, reaching its
+//   speed as it breaks out, and the arena is placed where the camera then is; a rise that comes to nothing settles back.
+//   Sideways the camera's offset from the arena at the breach eases out (0.6 s);
+// - coming down, in the last 0.7 s before the water (from the arena's fall), it eases out of the arena's fall into the
+//   water framing, so it arrives still and the splash moves nothing.
+var SteadyCam = (() => {
+  const on = () => !!(DEMO.tune.steadycam && lr.fit);
+  const airH = () => Jt.height, band = () => +DEMO.tune.airband || 30;
+  const smooth = p => p <= 0 ? 0 : p >= 1 ? 1 : p * p * (3 - 2 * p);
+  const softmin = (a, b, k) => (a + b - Math.sqrt((a - b) ** 2 + k * k)) / 2;
+  let st = null;   // { H (the wave's view height, eased), E (the extra height for a deep dive, eased), x, vx, ox, ov, oy, oyv, rise, ru }
+  const height = r => Math.min(3 * airH(), Math.max(airH(), band() + .35 * Dd(r.wave) + 7));
+  function step(r, dt) {
+    const m = r.medium, me = he(r);
+    // a new wave (the shop moves the dolphin) or any jump of more than two views: cut, never chase
+    if (st && (st.wave !== r.wave || Math.abs(me.x - r.cam.x) > 2 * (st.H + st.E) * K / W)) { st = null; r.camVel = null }
+    if (!st) st = { wave: r.wave, cut: 1, H: height(r), E: 0, x: me.x, vx: m.kind === 'water' ? m.velocity.x : 0, ox: null, ov: 0, kind: m.kind };
+    st.H += (height(r) - st.H) * (1 - Math.exp(-dt / 1.2));
+    // a deep dive: the extra height to keep the dolphin 6 m above the view's bottom, smoothly (a soft ramp from the depth
+    // the wave's view holds), at most 3 × the arena's height in all
+    const d0 = st.H - band() - 6, depth = m.kind === 'water' ? -me.y : 0, need = Math.min(3 * airH() - st.H, Math.max(0, (depth - d0 + Math.sqrt((depth - d0) ** 2 + 36)) / 2 - 3));
+    // slow just after a splash (no zoom at the water line), quick once the dive is under way (the air stays in view)
+    st.tw = m.kind === 'water' ? (st.kind === 'water' ? (st.tw ?? 9) + dt : 0) : 0;
+    st.E += (need - st.E) * (1 - Math.exp(-dt / (.2 + .8 * (1 - smooth(st.tw / .8)))));
+    const HH = st.H + st.E, h = HH / 2, yWater = softmin(band() - h, me.y + h - 6, 8);
+    if (m.kind === 'water') {
+      const w = 1 / Math.max(.05, lr.follow), v = m.velocity;
+      if (st.kind === 'air') { st.rise = 0; st.ru = 0; st.hPrev = null }
+      // rising to breach: when its path (the current turn) reaches the surface, and how soon
+      const hd = Math.atan2(v.y, v.x), wt = st.hPrev == null ? 0 : Math.atan2(Math.sin(hd - st.hPrev), Math.cos(hd - st.hPrev)) / Math.max(dt, 1e-6); st.hPrev = hd;
+      let tb = null; { let yy = me.y, hh = hd; const sp = Math.hypot(v.x, v.y); for (let k = 0; k < 24 && tb == null; k++) { hh += wt * .025; yy += Math.sin(hh) * sp * .025; if (yy >= 0) tb = (k + 1) * .025 } }
+      const T = .35; st.rise ??= 0; st.ru ??= 0;
+      if (v.y > 0 && tb != null && tb <= T) { const want = v.y * smooth(1 - tb / T); st.ru += (want - st.ru) * (1 - Math.exp(-dt / .04)) }
+      else { const kr = 1 / .3; st.ru += (-st.rise * kr * kr - 2 * kr * st.ru) * dt }
+      st.rise += st.ru * dt;
+      if (st.kind === 'air' && st.ox != null) { st.x = r.cam.x; st.vx = (r.camVel?.x ?? v.x) }   // carry on from the air
+      st.vx += ((me.x - st.x) * w * w + (v.x - st.vx) * 2 * w) * dt; st.x += st.vx * dt;
+      st.ox = null; st.kind = 'water'; st.cut = 0;
+      const pc = r.cam; r.cam = se(st.x, yWater + st.rise); if (dt > 0) r.camVel = se((r.cam.x - pc.x) / dt, (r.cam.y - pc.y) / dt); return;
+    }
+    // the air: the arena's top at the view's top; sideways v3's scroll across the arena plus the offset at the breach
+    const o = m.origin, keepX = Math.max(4, Jt.height * K / W / 2 - 6) * lr.keep, Cl = Math.max(0, Jt.width / 2 - Jt.height * K / W / 2);
+    const lx = m.local.x, ax = Math.sign(lx) * Math.max(0, Math.abs(lx) - keepX), tx = Math.max(-Cl, Math.min(Cl, ax));
+    // the offsets from the arena's framing at the breach, and their rates, so the camera keeps its place and speed there
+    // (the arena is placed partway through the breach's step: locking to it at once dipped the camera for a frame)
+    const ay = o.y + airH() / 2 - h;
+    if (st.ox == null && st.cut) { st.sx = tx; st.ox = st.ov = st.oy = st.oyv = 0 }
+    if (st.ox == null) { const cv = r.camVel || { x: m.vx, y: m.vy }; st.sx = tx; st.ov = cv.x - m.vx; st.oyv = cv.y - m.vy; st.ox = r.cam.x + cv.x * dt - (o.x + tx) - st.ov * dt; st.oy = r.cam.y + cv.y * dt - ay - st.oyv * dt }   // (less this step's own move of the offset)
+    st.sx += (tx - st.sx) * (1 - Math.exp(-dt / .14));
+    const k = 1 / .3;
+    st.ov += (-st.ox * k * k - 2 * k * st.ov) * dt; st.ox += st.ov * dt;
+    st.oyv += (-st.oy * k * k - 2 * k * st.oyv) * dt; st.oy += st.oyv * dt;
+    let y = ay + st.oy;
+    // coming down to the water: ease into the water framing over the last 0.7 s (from the arena's fall)
+    const fall = Math.max(0, -m.vy), alt = o.y + m.local.y, g = 15, tl = fall > 0 ? (-fall + Math.sqrt(fall * fall + 2 * g * Math.max(0, alt))) / g : 9;
+    if (fall > 1 && tl < .7) y += (yWater - y) * smooth(1 - tl / .7);
+    st.kind = 'air'; st.cut = 0;
+    const pc = r.cam; r.cam = se(o.x + st.sx + st.ox, y); if (dt > 0) r.camVel = se((r.cam.x - pc.x) / dt, (r.cam.y - pc.y) / dt);
+  }
+  // the breach: where the arena's origin goes so that, with its top at the view's top, the camera stays where it is
+  const breachOrigin = r => r.cam.y + (st ? st.H + st.E : airH()) / 2 - airH() / 2;
+  return { on, step, breachOrigin, reset() { st = null }, get H() { return st ? st.H + st.E : null } };
+})();
+{const fz1=Fz;Fz=function(m,l,c){return SteadyCam.on()&&SteadyCam.H!=null?SteadyCam.H/(lr.width*W/K):fz1(m,l,c)}}
+{const ee1=EE;EE=function(r,t){if(!SteadyCam.on()){SteadyCam.reset();return ee1(r,t)}SteadyCam.step(r,t);r.camLock=0;Ocl=0}}
 // chevrons at the top edge over the enemies waiting above the water that are still above the view
 {const d0=Otdraw;Otdraw=function(R,r,m,title){d0(R,r,m,title);if(title||m?.kind!=='water'||!WaterView.on())return;
   const G=R.telegraphs;for(const p of r.pursuers||[]){if(p.wet||p.y<=0)continue;const X=R.sx(p.x),Y=R.sy(p.y);if(Y>8||X<12||X>K-12)continue;

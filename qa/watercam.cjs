@@ -17,7 +17,7 @@ const H = load(path.join(__dirname, '..', 'ICARUS-demo.html'), new Map([['icarus
 const D = H.DEMO, q = (a, p) => { const s = [...a].sort((x, y) => x - y); return s.length ? s[Math.min(s.length - 1, Math.floor(p * s.length))] : 0 };
 const out = {};
 for (const wave of WAVES) {
-  const r = H.Hd(1, 'harpoon'); r.wave = wave; D.wave(r);
+  H.WaterView?.reset?.(); H.SteadyCam?.reset?.(); const r = H.Hd(1, 'harpoon'); r.wave = wave; D.wave(r);
   const V = H.Dd(wave), depth = arg('depth', 'auto') === 'auto' ? 12 : +arg('depth');
   r.medium = { ...r.medium, kind: 'water', pos: { x: 0, y: -depth }, heading: -.5, velocity: { x: Math.cos(-.5) * V, y: Math.sin(-.5) * V } };
   r.cam = { x: 0, y: -depth + 12 }; r.camV = { x: 0, y: 0 };

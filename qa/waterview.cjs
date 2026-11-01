@@ -15,7 +15,7 @@ const WAVES = arg('waves', '1,10,20').split(',').map(Number), SEEDS = +arg('seed
 const H = load(path.join(__dirname, '..', 'ICARUS-demo.html'), new Map([['icarus.scoreshow.tune', JSON.stringify(kv(arg('tune')))], ['icarus.scoreshow.settings.v2', JSON.stringify({ 'ro.on': 0, ...kv(arg('set')) })]]), { bake: true, modern: true });
 const D = H.DEMO, DT = 1 / 120;
 function run(wave, style, seed) {
-  const r = H.Hd(seed, 'harpoon'); r.wave = wave; D.wave(r);
+  H.WaterView?.reset?.(); H.SteadyCam?.reset?.(); const r = H.Hd(seed, 'harpoon'); r.wave = wave; D.wave(r);
   const bot = swimmer(H, style, seed);
   const o = { water: 0, surface: 0, held: 0, heldN: 0, speed: 0, depth: 0, zoom: 0, flights: 0, launch: 0, launchN: 0, pan: [], zr: [] };
   let pc = null, ph = null;

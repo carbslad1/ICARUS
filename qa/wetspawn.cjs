@@ -12,7 +12,7 @@ const H = load(path.join(__dirname, '..', 'ICARUS-demo.html'), new Map([['icarus
 const D = H.DEMO, step = (r, i) => { r.hp = r.stats.maxHp; r.hurt = 99; H.sw(r, i) };
 let fail = 0;
 for (const wave of arg('waves', '5,15').split(',').map(Number)) {
-  H.WaterView.reset(); const r = H.Hd(4, 'harpoon'); r.wave = wave; D.wave(r); const bot = swimmer(H, 'mid-keep', 4);
+  H.WaterView.reset(); H.SteadyCam?.reset?.(); const r = H.Hd(4, 'harpoon'); r.wave = wave; D.wave(r); const bot = swimmer(H, 'mid-keep', 4);
   for (let t = 0, prev = r.medium.kind; t < 120 * 30; t++) { step(r, bot(r)); const k = r.medium.kind; if (prev === 'air' && k === 'water') break; prev = k }
   for (let i = 0; i < 120 * 3 && H.he(r).y > -40; i++) { const m = r.medium, d = Math.atan2(Math.sin(-Math.PI / 2 - m.heading), Math.cos(-Math.PI / 2 - m.heading)), turn = Math.abs(d) > .05 ? Math.sign(d) : 0; step(r, { turn, x: -turn, y: 0, boost: false }) }
   const seen = new Map(); let markers = 0, moved = 0, inView = 0, samples = 0, spawned = 0, off = [];

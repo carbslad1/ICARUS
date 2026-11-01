@@ -239,7 +239,7 @@ Space.wetSpawn = function (r, dt) {
 Space.wetLaunch = function (r) {
   const F = r.wetFrame; r.wetFrame = null;
   if (!F || !r.warns?.length || r.medium?.kind !== 'air') return;
-  for (const w of r.warns) w.x += F.origin.x - r.medium.origin.x;
+  for (const w of r.warns) { w.x += F.origin.x - r.medium.origin.x; w.y += F.origin.y - r.medium.origin.y }   // (the arena may be placed higher)
 };
 {const pq1=Pq;Pq=function(r,e){if(DEMO.tune.wetspawn&&r?.demo&&r.medium?.kind==='water'&&e>0)Space.wetSpawn(r,e);return pq1(r,e)}}
 {const zq1=Zq;Zq=function(r){zq1(r);if(r?.demo)Space.wetLaunch(r)}}
@@ -294,7 +294,8 @@ Space.avoidWet = function (r, dt) {
   }
 };
 Space.hover = function (r, held, dt) {
-  const V = Ovv(r), M = 6, top = V.y + V.h - 3, x0 = V.x - V.w + M, x1 = V.x + V.w - M;
+  // the margin from the view's side: 6 m; with the steady camera (no zoom-out under water, so a narrower view) 22% of it
+  const V = Ovv(r), M = typeof SteadyCam !== 'undefined' && SteadyCam.on() ? Math.max(6, .22 * V.w) : 6, top = V.y + V.h - 3, x0 = V.x - V.w + M, x1 = V.x + V.w - M;
   const clampX = x => Math.max(x0, Math.min(x1, x)), clampY = y => Math.max(3, Math.min(top, y));
   // the camera's sideways move this step carries every waiting enemy, its home and its wander point (a fresh start after
   // a flight: no carry on a stay's first step)
@@ -344,3 +345,14 @@ Space.hover = function (r, held, dt) {
     const o=pq3(r,e);r.pursuers=held.concat(r.pursuers||[]);Space.hover(r,held,e);   // the held first, so newly spawned ones stay last
     if(DEMO.tune.wetavoid)Space.avoidWet(r,e);return o}
   const o=pq3(r,e);if(water&&DEMO.tune.wetavoid)Space.avoidWet(r,e);return o}}
+// The breach with the steady camera (controls.js SteadyCam): the arena is placed so its top is at the view's top where
+// the camera is at that moment, so the camera rides it from the breach without its place jumping. Its origin moves up by the
+// difference while the dolphin, the enemies and the markers keep their places in the world (their arena positions
+// drop as much); the dolphin starts low in the arena and flies up into it. Done before the waiting enemies join the
+// arena (Zq), so none is pulled to its edge.
+{const zq2=Zq;Zq=function(r){const m=r.medium;
+  if(r?.demo&&m?.kind==='air'&&typeof SteadyCam!=='undefined'&&SteadyCam.on()&&!m.placed){
+    const k=SteadyCam.breachOrigin(r)-m.origin.y;
+    m.origin=se(m.origin.x,m.origin.y+k);m.local=ye(m.local.x,m.local.y-k);for(const e of r.enemies)e.pos=ye(e.pos.x,e.pos.y-k);for(const w of r.warns||[])w.y-=k;
+    m.placed=k}
+  return zq2(r)}}
