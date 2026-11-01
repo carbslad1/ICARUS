@@ -180,30 +180,32 @@ var Space = (() => {
 // dive brings the view's top edge down, never under 1.5 m), easing in as they arrive.
 // Touching one gives no kill (the demo has no touch kills in the water). Pursuers that went under, and lurkers, keep
 // v3's step; only the pursuers above the water when the step begins are held, so none is stepped twice.
-// Designer, 2026-11-01: "enemies should not dive down with the dolphin; it pulls them to the surface of the water".
-// With DEMO.tune.dry no pursuer goes under or lurks while you swim: every one waits above the water (those below the
-// waterline at the splash come up to their place). And with the water view on (WaterView, source/controls.js), whose
-// top always shows the band of air, they keep their own height (5-12 m) instead of being held under the view's top
-// edge, which sank them to the waterline as the dolphin dived (bot, wave 10: 79% under 3 m at 25-40 m deep).
+// With DEMO.tune.holdlevel (designer, 2026-11-01: looping under water holding D, "the enemies also dive down at the water
+// as if they are following the dolphin's Y"): each half loop reversed the dolphin's sideways direction, so every held
+// enemy turned round for the other side and, turning slowly, swooped down to the waterline (up to 11 of 20 at once).
+// Now the side comes from the dolphin's sideways travel averaged over about 2.5 s (and a side change needs a clear drift), so looping in place keeps it, and an
+// enemy stays level while it moves: never more than 2 m below its own holding height or 3 m above it (it can still
+// climb or come down to it); at wave 15 the enemies, as fast as the dolphin, otherwise swirled up to 30 m.
 Space.holdAbove = function (r, held, dt) {
-  const m = r.medium, d = m.pos, v = m.velocity, Cw = Ocs(r.wave), V = Ovv(r);
+  const m = r.medium, d = m.pos, v = m.velocity, Cw = Ocs(r.wave), V = Ovv(r), level = !!DEMO.tune.holdlevel;
+  r.holdVx = (r.holdVx ?? v.x) + (v.x - (r.holdVx ?? v.x)) * (1 - Math.exp(-dt / 2.5));
+  const vx = level ? r.holdVx : v.x;
   for (const p of held) {
     p.px = p.x; p.py = p.y; p.age += dt; p.lurk = false;
-    const Fd = Math.abs(v.x) > Math.max(3, Cw * .12) ? Math.sign(v.x) : p.fd || Math.sign(v.x) || 1;
+    const Fd = Math.abs(vx) > (level ? Math.max(6, Cw * .25) : Math.max(3, Cw * .12)) ? Math.sign(vx) : p.fd || Math.sign(vx) || 1;
     p.fd = Fd;
     const w = 3.2 * p.tr, top = Math.max(Cw * 1.05 * Osp.spd, (p.kind === 'swarmer' ? 25 * Osp.small : 19 + r.wave * .13) * Osp.spd * p.sp);
-    const ceil = typeof WaterView !== 'undefined' && WaterView.on() ? Infinity : V.y + V.h - 3;
-    const tx = d.x + Fd * (8 + (p.seed * 7.3 % 1) * 18), ty = Math.max(1.5, Math.min(5 + (p.seed * 3.1 % 1) * 7, ceil));
+    const tx = d.x + Fd * (8 + (p.seed * 7.3 % 1) * 18), ty = Math.max(1.5, Math.min(5 + (p.seed * 3.1 % 1) * 7, V.y + V.h - 3));
     const a = tx - p.x, b = ty - p.y, dist = Math.hypot(a, b);
     let c = Math.atan2(b, a) - p.h; c = Math.atan2(Math.sin(c), Math.cos(c));
     p.h += Math.max(-w * dt, Math.min(w * dt, c));
     p.v += (Math.min(top, 2 + 2.5 * dist) - p.v) * Xe(dt, .35);
     p.x += Math.cos(p.h) * p.v * dt; p.y = Math.max(1, p.y + Math.sin(p.h) * p.v * dt);
+    if (level) p.y = Math.min(Math.max(p.y, Math.min(p.py, ty - 2)), Math.max(p.py, ty + 3));   // level while it moves
   }
 };
 {const pq0=Pq;Pq=function(r,e){
   if(!DEMO.tune.hold||!r?.demo||r.medium?.kind!=='water'||!(e>0)||!r.pursuers?.length)return pq0(r,e);
-  if(DEMO.tune.dry)for(const p of r.pursuers){p.wet=false;p.lurk=false}
   const dry=r.pursuers.filter(p=>!p.wet&&!p.lurk);r.pursuers=r.pursuers.filter(p=>p.wet||p.lurk);
   pq0(r,e);r.pursuers=(r.pursuers||[]).concat(dry);Space.holdAbove(r,dry,e);
   // v3's shock rings still push the held pursuers (a zero step: the rings don't grow twice, and each hits once)
