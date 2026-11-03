@@ -160,7 +160,12 @@ var SizeHold = { factor(ppm) { const ref = +DEMO.tune.sizeref || 1.12, z = W / J
   if(e.kind==='air')WaterView.reset();else WaterView.leaveWater();
   if(!lr.fit||e.kind==='air'||lift<=0)return ee0(r,t);
   const i=he(r),s=Fl(r),wy=WaterView.on()?WaterView.step(r,t):null,h=lr.width*W/K*Fz(e,i,r.cam)/2;
-  const T=se(i.x,wy??Math.max(i.y+lift,Math.min(-.76*h,i.y+.64*h))),Tv=se(s.x,s.y);
+  // look-ahead (DEMO.tune.lookahead s of travel, at most 22% of the half-width, eased over 1 s): the view leans the way
+  // you swim, so at speed you see more of what is ahead than behind (it held the dolphin dead centre at every speed);
+  // eased over 0.5 s it followed each change of heading in a dive (camera jolt 0.22 -> 1.0 px/frame² at the 95th percentile)
+  const LA=+DEMO.tune.lookahead||0,cap=.22*lr.width*Fz(e,i,r.cam)/2,lw=LA>0?Math.max(-cap,Math.min(cap,s.x*LA)):0;
+  r.camLead=(r.camLead??0)+(lw-(r.camLead??0))*(1-Math.exp(-t/1));
+  const T=se(i.x+r.camLead,wy??Math.max(i.y+lift,Math.min(-.76*h,i.y+.64*h))),Tv=se(s.x,s.y);
   r.camFree=se(T.x,T.y);r.camV||(r.camV=se(0,0));
   // at the splash the sideways spring carries on at the camera's own speed (its speed was the last swim's)
   if(DEMO.tune.breachspring&&r.camKind==='air'&&WaterView.moved&&t>0)r.camV=se(WaterView.moved.x/t,0);r.camKind=e.kind;
@@ -180,6 +185,14 @@ var SizeHold = { factor(ppm) { const ref = +DEMO.tune.sizeref || 1.12, z = W / J
   if(!r?.demo||!DEMO.tune.breachblast||Orw.on||Controls.carve()||m?.kind!=='air')return;
   const R=Orw.srad*Orw.xb;if(!(R>0))return;const a=Math.atan2(m.vy,m.vx);
   Orring(r,m.origin.x,0,R,a);r.events.push({kind:'rocketout',pos:se(m.origin.x,0),a,e:wt(Orw.sbias,0,.8),splash:Orw.splash,R,T:Math.max(.05,Orw.stime)})}}
+// Squash and stretch at the crossings (DEMO.tune.squash): leaving the water the dolphin stretches along its body, hitting
+// it the dolphin squashes, easing back over 0.22 s; nothing pauses or slows (the sim is untouched)
+{const od0=Odan;Odan=function(R,t,d,n,e,i,s,o,m,f){const out=od0(R,t,d,n,e,i,s,o,m,f);
+  const A=+DEMO.tune.squash||0;if(o||!(A>0)||!d)return out;
+  if(R.ssK&&R.ssK!==d.kind){R.ssT=0;R.ssB=d.kind==='air'}R.ssK=d.kind;
+  if(R.ssT!=null&&R.ssT<.22){const k=(1-R.ssT/.22)**2*A,D=R.dolphin;R.ssT+=Math.max(0,s);
+    const sx=R.ssB?1+k:1-.6*k,sy=R.ssB?1-.5*k:1+.4*k;D.scale.x*=sx;D.scale.y*=sy}
+  return out}}
 // the arena's outline only while the view is the arena's (zoomed out past 5% it sat inside the screen as a box)
 {const ovae0=Ovae;Ovae=function(R,d,x){if(lr.fit&&R.ppm>0&&W/Jt.height/R.ppm>1.05)return;return ovae0(R,d,x)}}
 // the camera's move each step, for the air camera to carry on from at the breach
