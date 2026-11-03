@@ -1,8 +1,21 @@
 # Camera rules: the breach, the entry and the view
 
-Written 2026-11-03 with the designer. These are the rules the camera, the breach and the entry must keep. They come first; features that break one are removed or changed, not traded against it. Checked by `node qa/camera-rules.cjs` (every rule, every scenario; it exits non-zero on any failure).
+Written 2026-11-03 with the designer, rewritten the same day. These are the rules the camera, the breach and the entry must keep. Checked by `node qa/camera-rules.cjs` (every rule, every scenario; it exits non-zero on any failure; `--tune=cam:0` scores v3's camera).
 
-All the camera, breach and entry code lives in one module, `source/camera.js`. Other modules read it (`Camera.*`) and do not patch the camera themselves.
+All the camera code lives in one module, `source/camera.js`. Other modules read it (`Camera.moved`, `Camera.H`) and do not patch the camera themselves.
+
+## The camera
+
+It is v3's camera (designer: the first rebuild, made for a smooth picture, "feels mushy and does not feel smooth and speedy"; measured, it left the dolphin 37-65% of the half-view off the centre after breaches and entries, where v3 keeps it within 2-6%):
+
+- One spring (v3's 0.28 s, `lr.follow`) onto a target that moves at its own speed, so a breach or a splash needs no blend or ease. In the air the target is the arena's centre (across, it scrolls once the dolphin is past the dead zone); under the water it is the dolphin.
+- The spring's time shortens above 45 m/s, so the camera trails by no more than it does at 45 (at 100 m/s it trailed 28 m and lost the sky and, in fast loops, the dolphin).
+- v3's speed cap is on the dolphin's speed (on its target's, a target held at the sky line stopped the camera from 44 m/s in a frame).
+- One change from v3: under the water the view widens with depth, just enough that the waterline and 20 m of air (setting "Water view: air kept in view", `airband`) stay on screen with the dolphin no lower than 0.64 of the half-view below the centre (v3's own limit), at most 3× the air view (`viewmax`), past which it follows the dolphin down. v3 lost the sky below about 30 m. 20 m rather than less: with 12 m the enemies waiting above the water were squeezed under the top of the view and surfaced slowly (`qa/wateravoid.cjs`).
+- Sprites (the dolphin, enemies, shots, orbs, effects) are drawn at their air size at every zoom.
+- Under the water an enemy's speed (its own swimming and its step out of your way) changes at most 1500 m/s² (`Space.WET_ACCEL`, `source/space.js`): v3 turned an enemy that dived in with you round in one step (96 m/s forward to 112 back) and shoved one beside you aside at your speed + 10 m/s at once. Above the water and in the air enemies are not capped.
+
+Removed with the first rebuild: the climb before the breach, the slowing before the splash, the blends at every crossing, the arena placed on the camera at the breach, the 500 m/s² cap on every enemy off the arena.
 
 ## The rules
 
@@ -10,13 +23,14 @@ Measured on screen as the renderer draws it (1440 × 810, 60 frames a second, tw
 
 | # | Rule | Limit |
 |---|---|---|
-| R1 | **The camera is smooth.** No frame changes the picture's scroll speed by more than the limit (the camera's screen acceleration, any frame, including breaches and entries). | 1.5 px/frame² |
-| R2 | **The camera rides the arena in the air.** From 0.15 s after a breach until the entry lead starts (falling, the camera sheds part of its fall before the splash: `Camera.leading`), the camera moves with the arena (no speeding up, no catching up). | within 2 m/s of the arena |
-| R3 | **The dolphin does not change size visibly.** Its drawn size stays within the limit of its size in the air, always. | ±3% |
-| R4 | **Enemies do not jump on screen.** No enemy's on-screen speed changes by more than the limit in a frame, unless it is being hit, knocked back, charging, has just spawned or is dodging the dolphin under the water (within 6 m of it or of where it will be in 0.3 s, as the speed limit in `source/space.js` marks it: `p.dodgeT`). Dodging, it may change speed 3× as fast as otherwise (setting "Enemies dodging you"); unlimited, a dodge at 100 m/s shot one out of the water at 99 m/s in a frame. | 4 px/frame² |
-| R5 | **No teleports.** No enemy's on-screen movement changes by more than the limit from one frame to the next, even while it is being hit, knocked back or charging. | 30 px/frame² |
-| R6 | **You can see the sky under water.** While swimming, the waterline and at least 8 m of air above it are on screen, so you can read where to breach. | 99% of water time |
-| R7 | **You can see the dolphin.** It stays at least 4% inside the screen's edges. | 100% of the time |
+| R1 | **The camera keeps up.** Within 0.6 s of a breach or an entry, the camera trails its own framing (the arena in the air, the dolphin or the sky line under the water) by at most the limit, as a share of the half-view. | 40% |
+| R2 | **No shake.** The dolphin's own speed on the screen changes by at most the limit a frame (a camera that lags, overshoots or snaps shows as the dolphin jumping about on the screen). | 3 px/frame² |
+| R3 | **The dolphin does not change size visibly.** Its drawn size stays within the limit of its size in the air. | ±3% |
+| R4 | **Enemies do not jump on screen.** No enemy's on-screen speed changes by more than the limit in a frame, whatever it is doing. | 30 px/frame² |
+| R5 | **You can see the sky under water.** While swimming, the waterline and at least 8 m of air above it are on screen. | 99% of water time |
+| R6 | **You can see the dolphin.** It stays at least 4% inside the screen's edges. | 100% of the time |
+
+The table also shows the picture's scroll change (px/frame²) for reference. It is not a rule: a camera that keeps up moves as the dolphin moves.
 
 ## The scenarios
 
@@ -34,36 +48,27 @@ Driven by a human-like pilot (`qa/pilot.cjs`): it reacts to what it saw 0.18 s a
 
 ## What the rules rule out
 
-These were tried and broke a rule, or compete with the camera above:
-
-- Zoom with speed in the air, squash and stretch (R3), look-ahead under water (R1: it drifted the camera), steady-camera framing (R2/R4), hit-stop or slow motion (the designer's standing rule).
+Zoom with speed in the air, squash and stretch (R3); hit-stop or slow motion (the designer's standing rule); a camera that trades keeping up for a smooth picture (the first rebuild: it eased into every breach and entry and left the dolphin behind).
 
 ## Results (2026-11-03, `node qa/camera-rules.cjs`, 2 seeds per plan, 30 s per run)
 
-| Scenario | m/s | R1 ≤1.5 | R2 ≤2 | R3 ≤3% | R4 ≤4 | R5 ≤30 | R6 ≥99% | R7 100% | |
+| Scenario | m/s | R1 ≤40% | R2 ≤3 | R3 ≤3% | R4 ≤30 | R5 ≥99% | R6 100% | scroll change | |
 |---|---|---|---|---|---|---|---|---|---|
-| Hops, low speed | 30 | 0.67 | 0.7 | 0% | 3.3 | 8 | 100% | 100% | PASS |
-| Hops, high speed | 100 | 3.21 | 2.4 | 0% | 9.2 | 11 | 100% | 99.9% | fail |
-| Hops, top speed | 125 | 3.79 | 2.9 | 0% | 6.6 | 12 | 99.8% | 99.4% | fail |
-| Skims | 45 | 0.91 | 0.4 | 0% | 3.0 | 6 | 100% | 100% | PASS |
-| Skims, fast | 100 | 1.79 | 1.0 | 0% | 5.5 | 13 | 100% | 100% | fail |
-| Loops | 30 | 0.53 | – | 0% | 0 | 0 | 100% | 100% | PASS |
-| Loops, fast | 75 | 1.34 | – | 0% | 0 | 0 | 100% | 100% | PASS |
-| Loops, top speed | 125 | 2.28 | – | 0% | 0 | 0 | 100% | 99.0% | fail |
-| Deep dives | 30 | 0.59 | 0.7 | 0% | 3.1 | 3 | 100% | 100% | PASS |
-| Deep dives, fast | 100 | 3.09 | 2.2 | 0% | 8.8 | 11 | 100% | 99.6% | fail |
-| Turnarounds | 45 | 0.77 | 1.1 | 0% | 3.6 | 9 | 100% | 100% | PASS |
-| Turnarounds, fast | 100 | 2.89 | 1.5 | 0% | 5.8 | 11 | 100% | 100% | fail |
-| Trick holds | 45 | 0.89 | 1.1 | 0% | 3.7 | 19 | 100% | 100% | PASS |
-| Trick holds, fast | 100 | 3.21 | 2.4 | 0% | 8.0 | 14 | 100% | 99.8% | fail |
+| Hops, low speed | 30 | 11% | 0.9 | 0% | 16 | 100% | 100% | 0.4 | PASS |
+| Hops, high speed | 100 | 17% | 3.7 | 0% | 30 | 100% | 100% | 2.7 | fail |
+| Hops, top speed | 125 | 18% | 5.1 | 0% | 28 | 100% | 100% | 3.9 | fail |
+| Skims | 45 | 12% | 1.1 | 0% | 11 | 100% | 100% | 0.5 | PASS |
+| Skims, fast | 100 | 13% | 2.5 | 0% | 22 | 100% | 100% | 1.5 | PASS |
+| Loops | 30 | 0% | 0.5 | 0% | 0 | 100% | 100% | 0.5 | PASS |
+| Loops, fast | 75 | 0% | 0.8 | 0% | 0 | 100% | 100% | 1.4 | PASS |
+| Loops, top speed | 125 | 0% | 1.3 | 0% | 0 | 100% | 100% | 2.3 | PASS |
+| Deep dives | 30 | 11% | 0.9 | 0% | 10 | 100% | 100% | 0.4 | PASS |
+| Deep dives, fast | 100 | 17% | 3.5 | 0% | 23 | 86.7% | 100% | 2.4 | fail |
+| Turnarounds | 45 | 13% | 1.2 | 0% | 16 | 100% | 100% | 0.8 | PASS |
+| Turnarounds, fast | 100 | 17% | 3.5 | 0% | 20 | 100% | 100% | 2.3 | fail |
+| Trick holds | 45 | 13% | 1.2 | 0% | 16 | 100% | 100% | 0.6 | PASS |
+| Trick holds, fast | 100 | 17% | 3.7 | 0% | 32 | 100% | 100% | 2.7 | fail |
 
-Every scenario at 30-75 m/s keeps every rule; every one at 100-125 m/s breaks some. R3 (size) and R5 (teleports) hold everywhere, and R6 (sky) everywhere but 99.8% at top speed.
+v3's camera on the same rules (`--tune=cam:0`): it keeps up the same at 30 m/s (9%) but trails by 55-64% at 100 m/s, shakes 2.8-39 px/frame², shows the sky 20-84% of the time under water, and its enemies jump 26-80.
 
-What is left, and why:
-
-- **R1 and R7 at 100+ m/s are one trade-off.** At the splash the camera must stop falling with the arena (80-100 m/s) and the view must grow as fast as the dolphin dives (a 100 m/s dive needs the view's height to grow about 100 m/s to keep 30 m of sky and the dolphin). Within R1's 1.5 px/frame² the camera cannot do both in time: shedding more of the fall before the splash ("Entry camera", 0.4) keeps the sky but loses the dolphin off the bottom for a few frames (R7 99.4-99.9%); shedding none kept the dolphin but lost the sky for over a second (R6 87.7%). Growing the view faster jolted every enemy on screen (the zoom moves them: R4 42-62).
-- **R4 at 100+ m/s:** enemies change hands at the crossings. At the splash an arena enemy below the line becomes a waiting enemy still carrying the arena's fall (60 m/s), braked at 500 m/s² (5-12 px/frame² against the camera's own change); at the breach a waiting enemy becomes an arena chaser and takes up the chaser's own steering.
-- **R2 at 100+ m/s (2.2-2.9 m/s):** the breach's blend lasts past 0.15 s at that speed.
-- **`qa/holdloop.cjs` wave 15** (100 m/s): 10% of the waiting enemies are at the waterline in the first seconds after a straight dive: the ones that came in with the arena's fall sink about 4 m under before they climb back.
-
-Tried and rejected on these numbers: a dive look-ahead for the view's height (R1, R6 and R7 all worse), growing the view without its acceleration cap near the bottom (R4/R5 at 40-95), unlimited dodges under the water (R5 66-109: a dodge shot an enemy out of the water at 99 m/s).
+Still open, at 100-125 m/s: shake 3.5-5.1 (the dolphin's own speed changes on the screen through hops and dives at that speed), two enemy jumps of 30-32 px/frame², and the sky on screen 86.7% of the time in 70 m dives at 100 m/s (the view is at its widest, 3× the air view, so the camera follows the dolphin down).
