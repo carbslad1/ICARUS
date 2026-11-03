@@ -164,10 +164,14 @@ var Space = (() => {
     const m = r.medium;
     if (m?.kind !== 'air' || !returned.length) return;
     if (DEMO.tune.hover && DEMO.tune.hold) {
-      // they were carried with the camera, which now rides the arena: keep their wander as their speed in the arena (Jq
-      // took the arena's speed off it, so at 110 m/s they flew back across the screen, about 8 m, for 0.12 s)
+      // they were carried with the camera: their speed was their wander plus the camera's. Jq took the arena's speed off
+      // the wander alone, so at 110 m/s they flew back across the screen (about 8 m in 0.12 s); keeping only the wander
+      // as their speed in the arena (2026-11-01) made them jump up the screen at the breach once the camera carried its
+      // own speed through it (2026-11-02: from about 4 to 11 px a frame at 30 m/s). With the camera's last step added
+      // they keep their speed on the screen through the breach.
+      const mv = typeof WaterView !== 'undefined' && WaterView.moved, cv = mv ? { x: mv.x / Ar, y: mv.y / Ar } : { x: m.vx, y: m.vy };
       for (const e of returned) {
-        e.velocity = { x: e.velocity.x + m.vx, y: e.velocity.y + m.vy };
+        e.velocity = { x: e.velocity.x + cv.x, y: e.velocity.y + cv.y };
         if (Math.abs(e.pos.x) > Ovv(r).w) e.velocity = { x: -Math.sign(e.pos.x) * 18 * Osp.spd, y: 0 };
       }
       return;
