@@ -195,6 +195,16 @@ var SizeHold = { factor(ppm) { const ref = +DEMO.tune.sizeref || 1.12, z = W / J
   return out}}
 // the arena's outline only while the view is the arena's (zoomed out past 5% it sat inside the screen as a box)
 {const ovae0=Ovae;Ovae=function(R,d,x){if(lr.fit&&R.ppm>0&&W/Jt.height/R.ppm>1.05)return;return ovae0(R,d,x)}}
+// Breach latch (DEMO.tune.airlatch; designer, 2026-11-03: holding D "i have to let go to stop the dolphin hitting the
+// edge of the screen"): a direction held as you leave the water is the trick's (the key held at the breach chooses it), so
+// in the air it does not move the dolphin until it is let go; a direction pressed in the air moves it at once. Each axis
+// separately: holding D through the breach, W still lifts you.
+{const swl=sw;sw=function(r,t,...a){
+  if(r?.demo&&DEMO.tune.airlatch&&t){const k=r.medium?.kind,L=r.airLatch||(r.airLatch={x:0,y:0,k});
+    if(k==='air'&&L.k==='water'){L.x=Math.sign(t.x||0);L.y=Math.sign(t.y||0)}
+    if(k!=='air'){L.x=L.y=0}else if(L.x||L.y){const x=t.x||0,y=t.y||0;if(L.x&&Math.sign(x)!==L.x)L.x=0;if(L.y&&Math.sign(y)!==L.y)L.y=0;if(L.x||L.y)t={...t,x:L.x?0:x,y:L.y?0:y}}
+    L.k=k}
+  return swl(r,t,...a)}}
 // the camera's move each step, for the air camera to carry on from at the breach
 {const ee1=EE;EE=function(r,t){const p=r.cam?{x:r.cam.x,y:r.cam.y}:null;ee1(r,t);if(p&&r.cam)WaterView.moved={x:r.cam.x-p.x,y:r.cam.y-p.y}}}
 // v3's opening hint names W as the carve key; with Space carving it names Space (and W A S D choose a trick, source/tricks.js)
