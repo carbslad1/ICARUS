@@ -321,6 +321,9 @@ Space.hover = function (r, held, dt) {
   // only from the step before: "within 0.1 s" carried the camera's whole move over a flight shorter than that (skimming at
   // 110 m/s, up to 12 m), shifting every waiting enemy at the splash (2026-11-01)
   const C = r.hoverCam, dx = C && r.time - C.t <= dt * 1.5 ? V.x - C.x : 0; r.hoverCam = { x: V.x, t: r.time };
+  // the camera's climb before a breach (WaterView's rise) carries them up too, homes included, so they keep their places
+  // on the screen as the water drops away (left behind, they slid down the screen and stopped at the breach: a 7 px kick)
+  const lift = typeof WaterView !== 'undefined' ? WaterView.rise : 0, dy = C && r.time - C.t <= dt * 1.5 ? lift - (r.hoverLift ?? lift) : 0; r.hoverLift = lift;
   // homes closer than 8 m drift apart (at most 4 m/s), so a crowd from the splash fans out across the screen
   for (let i = 0; i < held.length; i++) for (let j = i + 1; j < held.length; j++) {
     const A = held[i].home, B = held[j].home; if (!A || !B) continue;
@@ -333,10 +336,11 @@ Space.hover = function (r, held, dt) {
     // the renderer drew the carry in jumps of a step, up to 1 m at 120 m/s, and swimming fast they jittered)
     p.px = p.x; p.py = p.y; p.age += dt; p.lurk = false;
     if (dx) { p.x += dx; if (p.home) p.home.x += dx; if (p.wp) p.wp.x += dx }
+    if (dy) { p.y += dy; if (p.wp) p.wp.y += dy }
     // its home: where it was at the splash, at its own height (10-18 m); the view's edge pushes the home along
     const own = 15 + (p.seed * 3.1 % 1) * 10;
     if (!p.home) { p.home = { x: p.x, y: own }; p.h = Math.atan2(own - p.y, 0); p.wv = 0 }   // facing its place, not its fall
-    p.home.x = clampX(p.home.x); p.home.y = clampY(own);
+    p.home.x = clampX(p.home.x); p.home.y = clampY(own + lift);
     // wandering: a new point near home every 1-3 s, or on reaching it
     p.wt = (p.wt ?? 0) - dt;
     if (!p.wp || p.wt <= 0 || Math.hypot(p.wp.x - p.x, p.wp.y - p.y) < 1) {

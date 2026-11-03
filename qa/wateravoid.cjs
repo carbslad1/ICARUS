@@ -21,16 +21,16 @@ for (const wave of [3, 8]) {
     H.WaterView.reset(); const r = H.Hd(seed, 'harpoon'); r.wave = wave; D.wave(r); const bot = swimmer(H, 'mid-keep', seed); let inWater = 0; const up = new Map();   // a surfaced enemy's climb to 6 m: seconds so far
     for (let t = 0; t < 120 * 90; t++) {
       // the hover's carry this step (it moves them with the camera; their own speed is the rest)
-      const hc0 = r.hoverCam && { ...r.hoverCam };
+      const hc0 = r.hoverCam && { ...r.hoverCam }, hl0 = r.hoverLift;
       r.hp = r.stats.maxHp; r.hurt = 99; H.sw(r, bot(r)); if (r.mode === 'shop') { r.mode = 'playing'; D.wave(r) }
-      const carry = hc0 && r.hoverCam && r.hoverCam.t !== hc0.t && r.hoverCam.t - hc0.t <= 1.5 / 120 ? r.hoverCam.x - hc0.x : 0;
+      const cont = hc0 && r.hoverCam && r.hoverCam.t !== hc0.t && r.hoverCam.t - hc0.t <= 1.5 / 120, carry = cont ? r.hoverCam.x - hc0.x : 0, carryY = cont && hl0 != null ? (r.hoverLift ?? hl0) - hl0 : 0;   // and the climb before a breach
       if (r.medium.kind !== 'water') { inWater = 0; continue } inWater += 1 / 120; const me = H.he(r);
       for (const p of r.pursuers || []) {
         if (p.wet || p.y < 0) up.set(p, 0); else if (up.has(p)) { const c = up.get(p) + 1 / 120; if (p.y >= 6) { climbs.push(c); up.delete(p) } else up.set(p, c) }
         const d = Math.hypot(p.x - me.x, p.y - me.y) - (p.radius || 1);
         if (p.wet || p.y < 0) { wet++; if (d < 1.2 && inWater > .05) touch++; if (d < 5) near++; continue }
         if (inWater > 1 && !up.has(p)) { late++; if (p.y < 6) lateLow++ }
-        if (!p.home || (Math.hypot(p.home.x - p.x, p.home.y - p.y) <= 11 && p.y >= p.home.y - 5)) speed.push(Math.hypot(p.x - p.px - carry, p.y - p.py) * 120);
+        if (!p.home || (Math.hypot(p.home.x - p.x, p.home.y - p.y) <= 11 && p.y >= p.home.y - 5)) speed.push(Math.hypot(p.x - p.px - carry, p.y - p.py - carryY) * 120);
       }
     }
   }

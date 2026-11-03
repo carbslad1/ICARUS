@@ -108,7 +108,21 @@ var WaterView = (() => {
     const wv = out && st.want != null && dt > 0 ? Math.max(-150, Math.min(150, (want - st.want) / dt)) : 0; st.want = want;
     st.Hv += ((want - st.H) * k * k + (wv - st.Hv) * 2 * k) * dt; st.H += st.Hv * dt;
     st.H = Math.min(max, Math.max(st.H, st.top - m.pos.y + 3));      // never so far behind that the dolphin leaves the view
-    return Math.min(st.top - st.H / 2, m.pos.y + st.H / 2 - 3);       // deeper than the most zoom: follow the dolphin down
+    // building the climb under water (DEMO.tune.breachrise; designer, 2026-11-03: "build speed under water"): heading out,
+    // over the last DEMO.tune.breachlead s before the surface the camera starts to climb, reaching the launch's climb at the
+    // breach, so in the air it rides the arena at once (it started the flight from rest and took 0.5 s to reach the
+    // arena's climb: 16 against 46 m/s at wave 15). A rise that comes to nothing settles back over about 0.3 s.
+    st.rise ??= 0; st.ru ??= 0;
+    const TA = Math.max(.05, +DEMO.tune.breachlead || .35), ts = m.velocity.y > 0 ? -m.pos.y / m.velocity.y : 9;
+    if (DEMO.tune.breachrise && out && ts <= TA) {
+      const sp = Math.max(1, Math.hypot(m.velocity.x, m.velocity.y)), vl = m.velocity.y * $T(r.wave, sp) * (m.sp ? Dd(r.wave) / m.sp : 1);   // the launch's climb, as the breach scales it
+      // the camera's climb is the zoom's (the centre rises as the view zooms back in) plus the rise: aim the sum at it
+      const p = 1 - ts / TA; st.ru += (vl * p * p * (3 - 2 * p) - (st.bv || 0) - st.ru) * (1 - Math.exp(-dt / .04));
+    } else { const kr = 1 / .3; st.ru += (-st.rise * kr * kr - 2 * kr * st.ru) * dt }
+    st.rise += st.ru * dt;
+    const base = Math.min(st.top - st.H / 2, m.pos.y + st.H / 2 - 3);
+    st.bv = st.base != null && dt > 0 ? (base - st.base) / dt : 0; st.base = base;   // the camera's climb without the rise
+    return base + st.rise;   // deeper than the most zoom: follow the dolphin down
   }
   // in the air: the height eased back from the last dive's (null once it is back to the air view's)
   function air(dt) {
@@ -143,7 +157,7 @@ var WaterView = (() => {
     const p = Math.min(1, ac.t / CATCH), e = 1 - p * p * (3 - 2 * p);
     r.cam = se(o.x + ac.sx + ac.off.x * e, o.y + ac.off.y * e);
   }
-  return { on, step, air, airCam, reset() { st = null; leave = null; ac = null }, leaveWater() { ac = null }, set moved(v) { moved = v }, get moved() { return moved }, get H() { return st?.H ?? null }, get airH() { return leave ? airH() + (leave.H - airH()) * (1 - (p => p * p * (3 - 2 * p))(Math.min(1, leave.t / LEAVE))) : null } };
+  return { on, step, air, airCam, reset() { st = null; leave = null; ac = null }, leaveWater() { ac = null }, set moved(v) { moved = v }, get moved() { return moved }, get rise() { return st?.rise || 0 }, get H() { return st?.H ?? null }, get airH() { return leave ? airH() + (leave.H - airH()) * (1 - (p => p * p * (3 - 2 * p))(Math.min(1, leave.t / LEAVE))) : null } };
 })();
 {const fz0=Fz;Fz=function(m,l,c){if(!WaterView.on())return fz0(m,l,c);const H=m?.kind==='water'?WaterView.H:WaterView.airH;return H!=null?H/(lr.width*W/K):fz0(m,l,c)}}
 // Sizes held at 30 m/s (designer, 2026-11-01: "i want the enemies and dolphin to be the same size as they are at 30 at all
@@ -195,6 +209,14 @@ var SizeHold = { factor(ppm) { const ref = +DEMO.tune.sizeref || 1.12, z = W / J
   return out}}
 // the arena's outline only while the view is the arena's (zoomed out past 5% it sat inside the screen as a box)
 {const ovae0=Ovae;Ovae=function(R,d,x){if(lr.fit&&R.ppm>0&&W/Jt.height/R.ppm>1.05)return;return ovae0(R,d,x)}}
+// With the climb built under water (DEMO.tune.breachrise) the arena is placed at the breach where the camera already is
+// (its centre on the camera's next position, at most 18 m up or down so the dolphin stays inside it): the camera then
+// rides it at once, with no offset to ease out. The dolphin and the enemies keep their places in the world.
+{const zqr=Zq;Zq=function(r){zqr(r);const m=r.medium;
+  if(!r?.demo||!DEMO.tune.breachrise||!lr.fit||!WaterView.on()||m?.kind!=='air'||m.placed!=null)return;
+  const mv=WaterView.moved||{x:0,y:0},k=Math.max(-18,Math.min(18,r.cam.y+mv.y-m.origin.y));m.placed=k;if(!k)return;
+  m.origin=se(m.origin.x,m.origin.y+k);m.local=ye(m.local.x,m.local.y-k);
+  for(const e of r.enemies)e.pos=ye(e.pos.x,e.pos.y-k);for(const w of r.warns||[])w.y-=k}}
 // Breach latch (DEMO.tune.airlatch; designer, 2026-11-03: holding D "i have to let go to stop the dolphin hitting the
 // edge of the screen"): a direction held as you leave the water is the trick's (the key held at the breach chooses it), so
 // in the air it does not move the dolphin until it is let go; a direction pressed in the air moves it at once. Each axis
