@@ -169,7 +169,7 @@ var Space = (() => {
       // as their speed in the arena (2026-11-01) made them jump up the screen at the breach once the camera carried its
       // own speed through it (2026-11-02: from about 4 to 11 px a frame at 30 m/s). With the camera's last step added
       // they keep their speed on the screen through the breach.
-      const mv = typeof WaterView !== 'undefined' && WaterView.moved, cv = mv ? { x: mv.x / Ar, y: mv.y / Ar } : { x: m.vx, y: m.vy };
+      const mv = typeof Camera !== 'undefined' && Camera.on() && Camera.moved, cv = mv ? { x: mv.x / Ar, y: mv.y / Ar } : { x: m.vx, y: m.vy };
       for (const e of returned) {
         e.velocity = { x: e.velocity.x + cv.x, y: e.velocity.y + cv.y };
         if (Math.abs(e.pos.x) > Ovv(r).w) e.velocity = { x: -Math.sign(e.pos.x) * 18 * Osp.spd, y: 0 };
@@ -193,7 +193,7 @@ var Space = (() => {
 {const obs0=Obs;Obs=function(r,t,i){if(!Space.on(r)||t?.kind!=='air')return obs0(r,t,i);Space.resolve(r,t,i);return Obs0(r,t,i)}}
 {const me0=ME;ME=function(r,t,e,i){me0(r,t,e,i);if(Space.on(r)&&t?.kind==='air'&&i>0)Space.after(r,t,i)}}
 {const zq0=Zq;Zq=function(r){const n=r.enemies.length;zq0(r);if(Space.on(r))Space.recall(r,r.enemies.slice(n))}}  // pursuers return at the breach
-{const pz0=Pz;Pz=function(r,t,E){E.pool=null;return pz0(r,t,E)}}  // a pool enemy that becomes a pursuer stops holding
+{const pz0=Pz;Pz=function(r,t,E){E.pool=null;const o=pz0(r,t,E);const p=r.pursuers?.at(-1);if(p&&p.e===E){p.mvx=t.vx+E.velocity.x;p.mvy=t.vy+E.velocity.y}return o}}  // a pool enemy that becomes a pursuer stops holding; the speed limit (R4) starts from its real speed as it was made (its heading can be turned in the same step)
 {const draw0=Otdraw;Otdraw=function(R,r,m,title){draw0(R,r,m,title);if(!title&&m?.kind==='air'&&Space.on(r))Space.draw(R,r,m)}}
 // While the dolphin is under water, v3 flies each pursuer still above the water straight on in the direction it faced
 // at the splash, never turning toward the dolphin, so after a carve turns the dolphin round they leave the arena (bot,
@@ -321,9 +321,9 @@ Space.hover = function (r, held, dt) {
   // only from the step before: "within 0.1 s" carried the camera's whole move over a flight shorter than that (skimming at
   // 110 m/s, up to 12 m), shifting every waiting enemy at the splash (2026-11-01)
   const C = r.hoverCam, dx = C && r.time - C.t <= dt * 1.5 ? V.x - C.x : 0; r.hoverCam = { x: V.x, t: r.time };
-  // the camera's climb before a breach (WaterView's rise) carries them up too, homes included, so they keep their places
+  // the camera's climb before a breach (Camera.rise) carries them up too, homes included, so they keep their places
   // on the screen as the water drops away (left behind, they slid down the screen and stopped at the breach: a 7 px kick)
-  const lift = typeof WaterView !== 'undefined' ? WaterView.rise : 0, dy = C && r.time - C.t <= dt * 1.5 ? lift - (r.hoverLift ?? lift) : 0; r.hoverLift = lift;
+  const lift = typeof Camera !== 'undefined' ? Camera.rise : 0, dy = C && r.time - C.t <= dt * 1.5 ? lift - (r.hoverLift ?? lift) : 0; r.hoverLift = lift;
   // homes closer than 8 m drift apart (at most 4 m/s), so a crowd from the splash fans out across the screen
   for (let i = 0; i < held.length; i++) for (let j = i + 1; j < held.length; j++) {
     const A = held[i].home, B = held[j].home; if (!A || !B) continue;
@@ -375,3 +375,27 @@ Space.hover = function (r, held, dt) {
     const o=pq3(r,e);r.pursuers=held.concat(r.pursuers||[]);Space.hover(r,held,e);   // the held first, so newly spawned ones stay last
     if(DEMO.tune.wetavoid)Space.avoidWet(r,e);return o}
   const o=pq3(r,e);if(water&&DEMO.tune.wetavoid)Space.avoidWet(r,e);return o}}
+// Enemies off the arena (waiting above the water, or under it) never change speed faster than DEMO.tune.enemyaccel m/s²
+// (500, about 2.6 px/frame² at the air view's scale; docs/CAMERA_RULES.md R4): a climb from the water started at 16-25 m/s
+// in one step, an enemy diving in with you restarted with a new heading, a dodge swerved at once (11-15 px/frame² at
+// 30 m/s, up to 90 at 125). Knocked back or hit, an enemy moves as it is pushed. A new one starts at its own speed.
+{const pq4=Pq;Pq=function(r,e){
+  // (on a sliver of a step too, as the step of a splash or a breach leaves: unlimited, a new pursuer moved 0.6 m in a 2 ms
+  // sliver; but an unlimited move there, pushed or hit, does not set its speed: over a near-zero time it read as 600 m/s)
+  if(!(r?.demo&&+DEMO.tune.enemyaccel>0&&e>0&&r.pursuers?.length))return pq4(r,e);
+  for(const p of r.pursuers)if(p.mvx==null){p.mvx=Math.cos(p.h||0)*(p.v||0);p.mvy=Math.sin(p.h||0)*(p.v||0)}   // a new one: its speed as it was made
+  const me=r.medium.kind==='water'?r.medium.pos:he(r),sp=r.medium.kind==='water'?Math.hypot(r.medium.velocity.x,r.medium.velocity.y):0;
+  const before=new Map(r.pursuers.map(p=>[p,[p.x,p.y,p.e?.hp]]));const o=pq4(r,e);const A=+DEMO.tune.enemyaccel*e;
+  for(const p of r.pursuers||[]){const b=before.get(p);if(!b)continue;let vx=(p.x-b[0])/e,vy=(p.y-b[1])/e;
+    // under the water it brakes ahead of the surface (it is held 0.3 m under it) instead of stopping dead there
+    if(p.wet&&p.mvy>0){const room=Math.max(0,-.3-b[1]);p.mvy=Math.min(p.mvy,Math.sqrt(2*+DEMO.tune.enemyaccel*room))}
+    // dodging you under the water (within your next 0.3 s) it may turn DODGE times as quick (at the plain limit it touched
+    // you 0.2% of the time; unlimited, a dodge at 100 m/s shot it out of the water at 99 m/s in a frame)
+    const dm=p.wet?Math.hypot(p.x-me.x,p.y-me.y)-(p.radius||1):99,Ap=dm<6+.3*sp?A*(+DEMO.tune.enemydodge||1):A;if(Ap>A)p.dodgeT=r.time;   // (dodgeT: the rules test exempts these steps)
+    const free=p.kx||p.ky||(p.e&&p.e.hp<b[2]);if(free&&e<=Ar/4)continue;
+    if(!free){const dx=vx-p.mvx,dy=vy-p.mvy,d=Math.hypot(dx,dy);
+      if(d>Ap){vx=p.mvx+dx*Ap/d;vy=p.mvy+dy*Ap/d;let y=b[1]+vy*e;if(p.wet)y=Math.min(y,-.3);p.x=b[0]+vx*e;p.y=y;vy=(p.y-b[1])/e}
+      // (and the climb it ends with too: the step it asks for may still be faster than it can stop from by the surface)
+      if(p.wet&&vy>0){const vm=Math.sqrt(2*+DEMO.tune.enemyaccel*Math.max(0,-.3-b[1]));if(vy>vm){vy=vm;p.y=b[1]+vy*e}}}
+    if(e>Ar/4){p.mvx=vx;p.mvy=vy}}   // (a sliver's speed is not kept: the surface's 0.3 m hold over 2 ms read as 144 m/s)
+  return o}}

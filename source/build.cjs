@@ -30,7 +30,7 @@ for(const [old,now] of [['Math.hypot(vx,vy-16*w));let ax=bx+vx*w,ay=vy*w-8*w*w;'
 }
 const anchor = '})();\n/*! Bundled license information:';
 if (input.split(anchor).length !== 2) throw Error('Expected exactly one game-scope insertion point');
-let html = input.replace(anchor, ['five-score.js','five-combat.js','score-cues.js','demo.js','space.js','danger.js','controls.js','verbs.js','movement.js','statuses.js','routine.js','tricks.js','flightlog.js','scoreboard.js','onboarding.js','shop.js','loadout.js','lab.js'].map(f=>fs.readFileSync(path.join(__dirname,f),'utf8')).join('\n') + '\n' + anchor);
+let html = input.replace(anchor, ['five-score.js','five-combat.js','score-cues.js','demo.js','space.js','danger.js','controls.js','camera.js','verbs.js','movement.js','statuses.js','routine.js','tricks.js','flightlog.js','scoreboard.js','onboarding.js','shop.js','loadout.js','lab.js'].map(f=>fs.readFileSync(path.join(__dirname,f),'utf8')).join('\n') + '\n' + anchor);
 html = html.replace(/icarus\.(?!scoreshow\.)/g, 'icarus.scoreshow.');
 html = html.replace('<title>ICARUS v3 Carve</title>', '<title>ICARUS — Chips × Mult</title>');
 html = html.replace('</head>', '<style>' + fs.readFileSync(path.join(__dirname, 'demo.css'), 'utf8') + '\n' + fs.readFileSync(path.join(__dirname,'scoreboard.css'),'utf8') + '\n' + fs.readFileSync(path.join(__dirname,'onboarding.css'),'utf8') + '\n' + fs.readFileSync(path.join(__dirname,'shop.css'),'utf8') + '</style></head>');
