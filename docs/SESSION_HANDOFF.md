@@ -58,6 +58,11 @@ node qa/scoring-mechanics.cjs
 node qa/combat-integration.cjs
 node qa/score-stress.cjs
 
+# Enemy sandbox (2026-11-03): scripted dolphins, enemy spread / flicks / copying / teleports, any settings or build
+node qa/enemy-sandbox.cjs --gate           # must print PASS all gate checks
+node qa/enemy-sandbox.cjs --preset=before,current --why     # compare settings; --build=rev:<sha> compares builds
+node qa/enemy-sandbox.cjs --trace=qa/enemy-trace.json        # then serve the repo and open qa/enemy-sandbox.html
+
 # Flight-log tools
 node qa/flightlog-bot.cjs                  # step 1 off: must print 7 PASS (reproduces the flow study)
 node qa/flightlog-bot.cjs out --space      # step 1 on: prints its metrics and writes bot logs to out/
@@ -105,11 +110,14 @@ node qa/flightlog-metrics.cjs run.json     # metrics for any saved flight log (s
 
 The code is in `source/space.js`.
 
-- About 80% of spawns appear behind a 0.6 s red marker inside the view, 14–24 m ahead on your path and at least 10 m above the water. The rest (the slider) enter from the screen edge as before.
-- Chasers, swarmers and splitters flock about 6 m apart and follow the dolphin's track from 0.5 s earlier.
-- Enemies returning at the breach from beyond the screen re-enter at its edge, so turning round underwater no longer loses them.
-- The landing pool is built but **off** (`pool: false`).
-- Spawn behaviour reads a per-run profile (`r.space`) so later items can change it.
+- About 80% of spawns appear behind a 0.6 s red marker fixed on the screen, anywhere in view at least 14 m from the dolphin. The rest (the slider) enter from the screen edge as before.
+- How enemies move is `source/enemies.js` (see Enemy movement below); flocking and the breach recall are gone.
+
+### Enemy movement: the stage (2026-11-07)
+
+Enemies live on a stage: the screen rectangle, the same at every speed and zoom (`source/enemies.js`, rules in
+`docs/ENEMY_RULES.md`). After each step every enemy is carried by what the camera did; guns, tricks and drawing still read
+`e.pos` and `p.x`. Check with `node qa/enemy-sandbox.cjs --gate`; its measures are on the screen.
 
 ### Bot measurements (flight logs, 4 styles, seed 7)
 

@@ -5,3 +5,7 @@ test-results/
 playwright-report/
 .DS_Store
 *.local
+
+# enemy sandbox traces (qa/enemy-sandbox.cjs --trace)
+qa/enemy-trace*.json
+qa/compare/

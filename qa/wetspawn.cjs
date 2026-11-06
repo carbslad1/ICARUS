@@ -1,7 +1,7 @@
 // Spawns while you swim (designer, 2026-11-01: "the spawns are flicking and not being handled properly when the dolphin
 // is in the water"). Free swimming; after one flight the dolphin stays under water holding D (loops) for 12 s while the
 // wave's schedule spawns enemies behind markers above the water (space.js wetSpawn). Checks, for every marker:
-//   still     where it is drawn (demoSeen of its frame + its place) never moves while it waits
+//   still     where it is drawn on the screen never moves while it waits (markers are fixed on the stage, S7)
 //   in view   it is inside the camera's view while it waits (the share of its time)
 //   on it     the enemy appears where its marker was drawn (distance)
 //   node qa/wetspawn.cjs [--waves=5,15]
@@ -15,7 +15,7 @@ for (const wave of arg('waves', '5,15').split(',').map(Number)) {
   H.Camera.reset(); const r = H.Hd(4, 'harpoon'); r.wave = wave; D.wave(r); const bot = swimmer(H, 'mid-keep', 4);
   for (let t = 0, prev = r.medium.kind; t < 120 * 30; t++) { step(r, bot(r)); const k = r.medium.kind; if (prev === 'air' && k === 'water') break; prev = k }
   for (let i = 0; i < 120 * 3 && H.he(r).y > -40; i++) { const m = r.medium, d = Math.atan2(Math.sin(-Math.PI / 2 - m.heading), Math.cos(-Math.PI / 2 - m.heading)), turn = Math.abs(d) > .05 ? Math.sign(d) : 0; step(r, { turn, x: -turn, y: 0, boost: false }) }
-  const seen = new Map(); let markers = 0, moved = 0, inView = 0, samples = 0, spawned = 0, off = [];
+  const seen = new Map(), stage = new Map(); let markers = 0, moved = 0, inView = 0, samples = 0, spawned = 0, off = [];
   for (let i = 0; i < 120 * 12; i++) {
     const before = new Map((r.warns || []).map(w => [w, seen.get(w)]));
     const pn = (r.pursuers || []).length;
@@ -23,8 +23,8 @@ for (const wave of arg('waves', '5,15').split(',').map(Number)) {
     const F = r.wetFrame; if (!F) continue;
     const o = H.DEMO && typeof H.demoSeen === 'function' ? H.demoSeen(F) : F.origin, V = H.Ovv(r);
     for (const w of r.warns || []) {
-      const at = { x: o.x + w.x, y: o.y + Math.max(w.y, -o.y + w.c + 4) };
-      if (!seen.has(w)) { seen.set(w, at); markers++ } else if (Math.hypot(at.x - seen.get(w).x, at.y - seen.get(w).y) > .01) moved++;
+      const at = { x: o.x + w.x, y: o.y + w.y }, sc = { x: w.sx, y: w.sy };
+      if (!seen.has(w)) { seen.set(w, at); stage.set(w, sc); markers++ } else { seen.set(w, at); if (Math.hypot(sc.x - stage.get(w).x, sc.y - stage.get(w).y) > .01) moved++ }
       samples++; if (Math.abs(at.x - V.x) < V.w && Math.abs(at.y - V.y) < V.h) inView++;
     }
     // markers resolved this step: their enemies are the new pursuers

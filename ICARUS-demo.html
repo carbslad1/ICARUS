@@ -1381,7 +1381,7 @@ function Ovv(r){let m=r.medium,l=he(r),Z=Fz(m,l,r.cam),h=lr.width*W/K*Z/2;return
 /* ICARUS_SEAMS */
 function Oep(n,m,i,Al){if(n.px==null||m.kind!=="air")return{x:i.x+n.pos.x,y:i.y+n.pos.y};let cx=m.origin.x+n.pos.x,cy=m.origin.y+n.pos.y;return{x:n.px+(cx-n.px)*Al,y:n.py+(cy-n.py)*Al}}
 function SE(r,t,e,i,s){let o=Math.max(1,Math.hypot(e.x,e.y)),n=r.stats,a=t.vy<0?wt(t.origin.y/25,0,1):1,l={x:e.x/o*n.moveSpeed*li.speed,y:e.y/o*n.moveSpeed*li.speed*(e.y>0?a:1)},c={x0:-Jt.width/2+1.6,x1:Jt.width/2-1.6,y0:-Jt.height/2+1.6,y1:Jt.height/2-1.6},h=y=>wE(t,l,n.response/Math.max(.05,li.snap),y,c),u=y=>t.origin.y+t.vy*y+ai*y*y/2+h(y).pos.y,d=null;if(u(i)<=0&&t.elapsed>.02){let y=0,b=i;for(let v=0;v<40;v++){let T=(y+b)/2;u(T)>0?y=T:b=T}d=(y+b)/2}let f=t.exitFlight&&t.vy>=0&&t.vy+ai*i<=0?-t.vy/ai:null,m=Math.min(i,d??i,f??i),x=h(m);t.po=se(t.origin.x,t.origin.y),t.origin=se(t.origin.x+t.vx*m,t.origin.y+t.vy*m+ai*m*m/2),t.vy+=ai*m,t.local=x.pos,t.velocity=x.velocity;let g=Math.atan2(t.vy,t.vx);if(t.heading=gn(t.heading+Math.atan2(Math.sin(g-t.heading),Math.cos(g-t.heading))*Xe(m,.09)),t.elapsed=Rl(t.elapsed+m),r.metrics.air+=m,r.boost=Math.min(100,r.boost+ht.boostRegen*m),r.boosting=!1,t.exitFlight||(r.budget=Math.max(0,r.budget-m),r.budget<1e-8&&(r.armed||r.events.push({kind:"armed",pos:he(r)}),r.budget=0,r.armed=!0)),ME(r,t,e,m),Pq(r,m),r.mode==="playing"){if(f!==null&&f<=m+1e-9)iw(r),Obc(r,t),r.events.push({kind:"apex",pos:he(r)}),r.wave===20?(r.mode="won",r.milestones.victory=!0):(r.mode="shop",r.rerolls=0,Nd(r));else if(d!==null&&d<=m+1e-9){let y=he(r);for(let E of[...r.enemies])Qz.on?Pz(r,t,E):nw(r,t,E);iw(r),r.enemies=[],r.shots=[],r.tier===5&&r.flightKills>0&&(r.milestones.tier5=!0);let b={x:t.vx+t.velocity.x,y:Math.min(-.1,t.vy+t.velocity.y)},v=Math.atan2(b.y,b.x),P=t.elapsed<.25?1:1.34,w=Owe(r,{x:b.x/t.waterScale,y:b.y/t.waterScale});P>1&&(r.boost=Math.min(100,r.boost+45)),r.medium={kind:"water",pos:se(y.x,0),heading:t.heading,velocity:w,ent:P},r.metrics.landings++,r.events.push({kind:"splash",pos:se(y.x,0),value:P}),Il(r,e,i-m,s+1)}}}
-function ME(r,t,e,i){if(!(i<=0)){Obs(r,t,i);AE(r,t,e,i);for(let s of[...r.enemies]){s.age+=i,s.timer-=i,s.orbitHit=Math.max(0,s.orbitHit-i);let Pw=t.po||t.origin;s.px=Pw.x+s.pos.x,s.py=Pw.y+s.pos.y;let o={x:t.local.x-s.pos.x,y:t.local.y-s.pos.y},n=Math.max(.1,Math.hypot(o.x,o.y)),a=(s.kind==="swarmer"?25*Osp.small:19+r.wave*.13)*Osp.spd*FiveCombat.movementScale(r,s),Sw0=t.origin.y+s.pos.y<0;if(Sw0)s.velocity.y+=(a*.75-t.vy-s.velocity.y)*Xe(i,.3),s.velocity.x+=(o.x/n*a*.35-s.velocity.x)*Xe(i,.6);else if(s.kind==="chaser"||s.kind==="splitter"||s.kind==="swarmer"){let c=Xe(i,s.kind==="swarmer"?.16:.24);s.velocity.x+=(o.x/n*a-s.velocity.x)*c,s.velocity.y+=(o.y/n*a-s.velocity.y)*c}else s.kind==="drifter"?s.velocity.y=Math.cos(s.age*1.2+s.seed)*1.5*Osp.spd*FiveCombat.movementScale(r,s):s.kind==="turret"?(s.velocity.x*=Math.exp(-i*(Math.abs(s.pos.x)<30?6:0)),s.timer<=0&&(CE(r,s,o,17),s.timer=2.3)):s.kind==="charger"&&(s.timer<=0&&s.charge===0&&(s.charge=.65,s.aim={x:o.x/n,y:o.y/n}),s.charge>0?(s.charge-=i,s.velocity.x*=Math.exp(-i*9),s.velocity.y*=Math.exp(-i*9),s.charge<=0&&(s.charge=-.6,s.velocity={x:s.aim.x*48*Osp.spd*FiveCombat.movementScale(r,s),y:s.aim.y*48*Osp.spd*FiveCombat.movementScale(r,s)})):s.charge<0?(s.charge+=i,s.charge>=0&&(s.charge=0,s.timer=1.3)):(s.velocity.x+=(o.x/n*10*Osp.spd*FiveCombat.movementScale(r,s)-s.velocity.x)*Xe(i,.3),s.velocity.y+=(o.y/n*10*Osp.spd*FiveCombat.movementScale(r,s)-s.velocity.y)*Xe(i,.3)));if(!Qz.on&&Sw0){nw(r,t,s);continue}s.pos=ye(s.pos.x+s.velocity.x*i,s.pos.y+s.velocity.y*i);let Zw=t.origin.y+s.pos.y;Zw<0!==Sw0&&r.events.push({kind:"dive",pos:se(t.origin.x+s.pos.x,0)});Zw<ht.seabed+s.radius&&(s.pos=ye(s.pos.x,ht.seabed+s.radius-t.origin.y),s.velocity.y=Math.max(s.velocity.y,-t.vy));Zw>=0&&(Cr(s.pos,t.local)<5&&r.metrics.threats++,Cr(s.pos,t.local)<s.radius+1&&rw(r,9+Math.floor(r.wave/5))),(Math.abs(s.pos.x)>110||Math.abs(s.pos.y)>100)&&(r.enemies=r.enemies.filter(c=>c.id!==s.id))}for(let s of r.shots){let o=s.pos;if(s.pos=ye(s.pos.x+s.velocity.x*i,s.pos.y+s.velocity.y*i),s.life-=i,Mr(t.origin,s.pos).y<0){s.life=0;continue}if(s.weapon==="hostile")ew(t.local,o,s.pos)<s.radius+1&&(rw(r,s.damage),s.life=0);else for(let n of[...r.enemies])s.life<=0||s.hit.includes(n.id)||ew(n.pos,o,s.pos)<s.radius+n.radius&&(s.hit.push(n.id),aw(r,t,n,s.damage,s.weapon),Owhit(r,t,n,s),s.pierce--,s.pierce<=0&&(s.life=0))}r.shots=r.shots.filter(s=>s.life>0&&Math.abs(s.pos.x)<120&&Math.abs(s.pos.y)<100).slice(-700);for(let s of r.orbs){if(s.age+=i,Cr(s.pos,t.local)<r.stats.magnet||s.age>1.7){let n=Math.min(1,i*(6+s.age*3));s.pos=ye(s.pos.x+(t.local.x-s.pos.x)*n,s.pos.y+(t.local.y-s.pos.y)*n)}Cr(s.pos,t.local)<1.8&&(cw(r,s.value),s.value=0)}r.orbs=r.orbs.filter(s=>s.value>0),r.metrics.peakEnemies=Math.max(r.metrics.peakEnemies,r.enemies.length)}}
+function ME(r,t,e,i){if(!(i<=0)){Obs(r,t,i);AE(r,t,e,i);for(let s of[...r.enemies]){s.age+=i,s.timer-=i,s.orbitHit=Math.max(0,s.orbitHit-i);let Pw=t.po||t.origin;s.px=Pw.x+s.pos.x,s.py=Pw.y+s.pos.y;let o={x:t.local.x-s.pos.x,y:t.local.y-s.pos.y},n=Math.max(.1,Math.hypot(o.x,o.y)),a=(s.kind==="swarmer"?25*Osp.small:19+r.wave*.13)*Osp.spd,Sw0=t.origin.y+s.pos.y<0;Enemies.air(r,t,s,o,i);if(!Qz.on&&Sw0){nw(r,t,s);continue}s.pos=ye(s.pos.x+s.velocity.x*i,s.pos.y+s.velocity.y*i);let Zw=t.origin.y+s.pos.y;Zw<0!==Sw0&&r.events.push({kind:"dive",pos:se(t.origin.x+s.pos.x,0)});Zw<ht.seabed+s.radius&&(s.pos=ye(s.pos.x,ht.seabed+s.radius-t.origin.y),s.velocity.y=Math.max(s.velocity.y,-t.vy));Zw>=0&&(Cr(s.pos,t.local)<5&&r.metrics.threats++,Cr(s.pos,t.local)<s.radius+1&&rw(r,9+Math.floor(r.wave/5))),(Math.abs(s.pos.x)>110||Math.abs(s.pos.y)>100)&&(r.enemies=r.enemies.filter(c=>c.id!==s.id))}for(let s of r.shots){let o=s.pos;if(s.pos=ye(s.pos.x+s.velocity.x*i,s.pos.y+s.velocity.y*i),s.life-=i,Mr(t.origin,s.pos).y<0){s.life=0;continue}if(s.weapon==="hostile")ew(t.local,o,s.pos)<s.radius+1&&(rw(r,s.damage),s.life=0);else for(let n of[...r.enemies])s.life<=0||s.hit.includes(n.id)||ew(n.pos,o,s.pos)<s.radius+n.radius&&(s.hit.push(n.id),aw(r,t,n,s.damage,s.weapon),Owhit(r,t,n,s),s.pierce--,s.pierce<=0&&(s.life=0))}r.shots=r.shots.filter(s=>s.life>0&&Math.abs(s.pos.x)<120&&Math.abs(s.pos.y)<100).slice(-700);for(let s of r.orbs){if(s.age+=i,Cr(s.pos,t.local)<r.stats.magnet||s.age>1.7){let n=Math.min(1,i*(6+s.age*3));s.pos=ye(s.pos.x+(t.local.x-s.pos.x)*n,s.pos.y+(t.local.y-s.pos.y)*n)}Cr(s.pos,t.local)<1.8&&(cw(r,s.value),s.value=0)}r.orbs=r.orbs.filter(s=>s.value>0),r.metrics.peakEnemies=Math.max(r.metrics.peakEnemies,r.enemies.length)}}
 function Pz(r,t,E){let p=Mr(t.origin,E.pos),vx=t.vx+E.velocity.x,vy=t.vy+E.velocity.y,k=Pk[E.kind]||Pk.chaser,j=1+(E.seed*7.13%1-.5)*.16;(r.pursuers||(r.pursuers=[])).push({id:E.id,kind:E.kind,x:p.x,y:p.y,px:E.px==null?p.x:E.px,py:E.py==null?p.y:E.py,h:Math.atan2(vy,vx),v:Math.hypot(vx,vy),sp:k[0]*j,tr:k[1]/j,off:E.off||0,radius:E.radius,seed:E.seed,wet:p.y<0,age:E.age,e:E})}
 function Jq(r,p){let t=r.medium,E=p.e;E.pos=ye(p.x-t.origin.x,p.y-t.origin.y),E.velocity={x:Math.cos(p.h)*p.v-t.vx,y:Math.sin(p.h)*p.v-t.vy},E.age=p.age,E.px=p.px,E.py=p.py,E.charge=0,E.off=p.off||0,E.pin=0,E.floor=Math.min(E.floor,p.y-E.radius),r.enemies.push(E)}
 
@@ -3039,8 +3039,8 @@ function Owsetup(r,w,d){r.world=w in Owr?w:"open";r.diff=d in Owdf?d:"standard";
         Math.abs(p.kx) + Math.abs(p.ky) < 0.01 && (p.kx = p.ky = 0);
       }
   }
-  function Orpq0(r,e){if(!(r.pursuers&&r.pursuers.length))return;let m=r.medium,U=m.kind==="water",d=U?m.pos:he(r),v=U?m.velocity:{x:m.vx+m.velocity.x,y:m.vy+m.velocity.y},C=Jzt(r.wave,1e6),Cw=Ocs(r.wave),S=ht.seabed*Math.max(1,C*Z$.turn/(Vq(C)*Q$.base)),K2=[];for(let p of r.pursuers){p.px=p.x,p.py=p.y,p.age+=e,U&&(p.lurk=!1);let L=!!p.lurk,Vp=Ocs(r.wave),Ae=(p.kind==="swarmer"?25*Osp.small:19+r.wave*.13)*Osp.spd*p.sp,s=p.wet&&U?Vp*Qz.speed*Osp.spd*p.sp:Ae,w=Vq(Vp)*Qz.turn*p.tr,l=Qz.lead*Math.hypot(d.x-p.x,d.y-p.y)/Math.max(1,s),a=L?p.ex-p.x:d.x+v.x*l-p.x,b=L?-p.ld-p.y:d.y+v.y*l-p.y;L&&(s=Math.min(s,2+2*Math.hypot(a,b)));let Ad=U&&!p.wet&&!L;if(Ad){let Hx=p.fd||(Math.cos(p.h)>=0?1:-1);p.fd=Hx,w=3.2*p.tr,a=Hx;Qz.wet<0?(s=Math.max(s,Cw*1.05*Osp.spd),b=(Math.min(30,5+p.seed*3.1%1*7+s/Math.max(.4,w)*.6)-p.y)*.08):(b=-.7)}let Wq=U&&!L?Qz.wet:1;if(Wq<0&&!Ad){let Fd=Math.abs(v.x)>Math.max(3,Cw*.12)?Math.sign(v.x):p.fd||Math.sign(v.x)||1;p.fd=Fd;s=Math.max(s,Cw*1.05*Osp.spd);a=d.x+Fd*(16+p.seed*7.3%1*30)-p.x,b=Math.min(30,5+p.seed*3.1%1*7+s/Math.max(.4,w)*.6)-p.y}else!Ad&&U&&p.wet&&p.y>-2.5&&b>0&&(b=0);let c=Math.atan2(b,a)-p.h;c=Math.atan2(Math.sin(c),Math.cos(c));p.h+=wt(c,-w*e,w*e)*Math.abs(Wq),p.v+=(s-p.v)*Xe(e,.35),p.x+=Math.cos(p.h)*p.v*e,p.y+=Math.sin(p.h)*p.v*e,!p.wet&&p.y<0&&(p.wet=!0,r.events.push({kind:"dive",pos:se(p.x,0)})),Wq>=0&&(U||L)&&p.wet&&p.y>-.3&&(p.y=-.3,Math.sin(p.h)>0&&(p.h=Math.atan2(0,Math.cos(p.h)))),Wq<0&&p.wet&&p.y>=0&&(p.wet=!1,r.events.push({kind:"dive",pos:se(p.x,0)})),p.y<S+p.radius&&(p.y=S+p.radius);let n=Math.hypot(d.x-p.x,d.y-p.y);n<5&&r.metrics.threats++;if(n<p.radius+1&&!L){if(U){K2.push(p);continue}rw(r,9+Math.floor(r.wave/5))}if(!U&&p.wet&&p.y>=0){p.y=0,r.events.push({kind:"dive",pos:se(p.x,0)}),Jq(r,p);continue}if(n>(Wq<0?340:220)){r.departing.push({kind:p.kind,pos:se(p.x,p.y),velocity:{x:0,y:-6},age:0,life:1.2,seed:p.seed});continue}K2.push(p)}r.pursuers=K2}
-  function Pq(r, e) {
+  function Orpq0(r,e){Enemies.pursuers(r,e)}
+function Pq(r, e) {
     Orpq0(r, e), Orshock(r, e);
   }
 
@@ -4369,7 +4369,7 @@ var DEMO = (() => {
     depth: {type:'Blast',cad:'Heavy',coef:1.5,damage:[24,36,52,80],cd:[64,56,48,40],range:18,crit:.03,cx:1.5,kb:9,blast:8.5,side:'Max HP',sideScale:.15,description:'A lobbed charge aimed to intercept its target. Max HP also adds damage.'}
   };
   // Hand-cap levers (structure doc 5.4): kept open and tunable, to be balanced in play. The tuning panel edits these live.
-  const TUNE_DEFAULT={bro:1,shake:1,flash:1,space:1,edge:.2,danger:1,lead:.5,mines:0,carve:1,ccw:0,verbs:0,hop:6,dive:2,dashes:2,hold:1,wetspawn:1,rules:1,payK:3,streakCap:5,well:60,sides:1,moves:1,pierce:1,trickPool:1,tricks:1,shakeDeal:0,drone:0,pace:1,hover:1,wetavoid:1,viewmax:3,airband:20,breachblast:1,airlatch:1,holdlevel:1,cam:1};  // trickPool: offer only the shortlist being proven (docs/TRICK_LAB.md)  // pierce: Laser and Harpoon pierce by tier  // sides: step 8 (armoured enemies)  // well: Gravity anchor's pull, m/s²  // rules, payK, streakCap: step 4 (style score)  // space: step 1 (space.js); edge: share of its spawns from the screen edge; danger, lead, mines: step 2 (danger.js)
+  const TUNE_DEFAULT={bro:1,shake:1,flash:1,space:1,edge:.2,danger:1,lead:.5,mines:0,carve:1,ccw:0,verbs:0,hop:6,dive:2,dashes:2,wetspawn:1,rules:1,payK:3,streakCap:5,well:60,sides:1,moves:1,pierce:1,trickPool:1,tricks:1,shakeDeal:0,drone:0,pace:1,viewmax:3,airband:20,breachblast:1,airlatch:1,cam:1};  // trickPool: offer only the shortlist being proven (docs/TRICK_LAB.md)  // pierce: Laser and Harpoon pierce by tier  // sides: step 8 (armoured enemies)  // well: Gravity anchor's pull, m/s²  // rules, payK, streakCap: step 4 (style score)  // space: step 1 (space.js); edge: share of its spawns from the screen edge; danger, lead, mines: step 2 (danger.js)
   const tune={...TUNE_DEFAULT};
   try{Object.assign(tune,JSON.parse(localStorage.getItem('icarus.scoreshow.tune')||'{}'))}catch(e){}
   const saveTune=()=>{try{localStorage.setItem('icarus.scoreshow.tune',JSON.stringify(tune))}catch(e){}};
@@ -4893,7 +4893,7 @@ Owstarter=function(){return ''};
 
 /* Settings: one panel in tabs (T, the backquote key, or SCORE TUNING). Score holds the hand-cap levers (structure doc 5.4,
    kept open to balance in play); the other tabs hold the v3 carve's movement sliders, grouped by what they change. */
-const DemoTuneDefs=[['shake','Screen shake',0,2,.1],['shakeDeal','Screen shake from the hits you deal (when you are hit it always shakes)',0,1,1,'check'],['drone','Ambient drone (v3\'s constant low chord)',0,1,1,'check'],['flash','Enemy hit flash',0,1,.1],['space','Marked spawns ahead and flocking (step 1)',0,1,1,'check'],['edge','Step 1: share of spawns from the screen edge',0,1,.05],['danger','Leading shots and mines on the arc (step 2)',0,1,1,'check'],['lead','Step 2: how far shots lead you',0,1,.05],['mines','Step 2: mines per flight',0,4,1],['carve','Space carves (no boost)',0,1,1,'check'],['ccw','Carving always anticlockwise',0,1,1,'check'],['rules','Style score rules (step 4): no quota, reels or charms; 0 HP ends the run',0,1,1,'check'],['payK','Step 4: pearls per flight = k × √score',0,10,.5],['streakCap','Step 4: clean streak cap',1,10,1],['well','Gravity anchor pull (m/s²)',0,150,5],['sides','Armoured enemies (step 8)',0,1,1,'check'],['trickPool','Trick pool: only the shortlist being proven (Eddy, Gravity anchor, Riptide, Snare buoys)',0,1,1,'check'],['tricks','The four tricks (step 2): tap W A S D under water; each boosts its weapon type and replaces the routine',0,1,1,'check'],['viewmax','Water view: most zoom-out (× the air view)',1,5,.1],['cam','Camera (source/camera.js, docs/CAMERA_RULES.md); off: v3\'s camera',0,1,1,'check'],['airband','Water view: air kept in view above the waterline (m; the view widens with depth to keep it)',0,40,1],['airlatch','Breach latch: a direction held as you leave the water (your trick) does not move you in the air until you let it go',0,1,1,'check'],['breachblast','Breach shockwave: every breach knocks nearby enemies back (size and push: Settings › Launch › Rocket boost)',0,1,1,'check'],['holdlevel','Enemies waiting above the water hold their side and height while you loop',0,1,1,'check'],['hover','Enemies waiting above the water hover where they are while you swim (drift slowly to stay in view)',0,1,1,'check'],['wetavoid','Enemies under the water get out of your way',0,1,1,'check'],['pierce','Pierce by tier: Laser hits 3-6 enemies, Harpoon always pierces 1 and crits 1 more per tier',0,1,1,'check'],['moves','Brotato enemy movement: turrets keep range, drifters hover, splitters hold an offset',0,1,1,'check'],['hold','Enemies above the water stay ahead of you in view while you swim',0,1,1,'check'],['wetspawn','Enemies keep spawning while you swim',0,1,1,'check'],['pace','Spawns per wave match Brotato\'s, spread over flights and swims (the schedule runs at the air share of play)',0,1,1,'check'],['verbs','Experimental: stomp, dive (S) and dash (Space) in the air (parked; to become tricks)',0,1,1,'check'],['hop','Step 3: stomp lift (m/s)',0,15,.5],['dive','Step 3: dive gravity (x)',1,4,.1],['dashes','Step 3: dash charges',0,4,1]];
+const DemoTuneDefs=[['shake','Screen shake',0,2,.1],['shakeDeal','Screen shake from the hits you deal (when you are hit it always shakes)',0,1,1,'check'],['drone','Ambient drone (v3\'s constant low chord)',0,1,1,'check'],['flash','Enemy hit flash',0,1,.1],['space','Marked spawns ahead and flocking (step 1)',0,1,1,'check'],['edge','Step 1: share of spawns from the screen edge',0,1,.05],['danger','Leading shots and mines on the arc (step 2)',0,1,1,'check'],['lead','Step 2: how far shots lead you',0,1,.05],['mines','Step 2: mines per flight',0,4,1],['carve','Space carves (no boost)',0,1,1,'check'],['ccw','Carving always anticlockwise',0,1,1,'check'],['rules','Style score rules (step 4): no quota, reels or charms; 0 HP ends the run',0,1,1,'check'],['payK','Step 4: pearls per flight = k × √score',0,10,.5],['streakCap','Step 4: clean streak cap',1,10,1],['well','Gravity anchor pull (m/s²)',0,150,5],['sides','Armoured enemies (step 8)',0,1,1,'check'],['trickPool','Trick pool: only the shortlist being proven (Eddy, Gravity anchor, Riptide, Snare buoys)',0,1,1,'check'],['tricks','The four tricks (step 2): tap W A S D under water; each boosts its weapon type and replaces the routine',0,1,1,'check'],['viewmax','Water view: most zoom-out (× the air view)',1,5,.1],['cam','Camera (source/camera.js, docs/CAMERA_RULES.md); off: v3\'s camera',0,1,1,'check'],['airband','Water view: air kept in view above the waterline (m; the view widens with depth to keep it)',0,40,1],['airlatch','Breach latch: a direction held as you leave the water (your trick) does not move you in the air until you let it go',0,1,1,'check'],['breachblast','Breach shockwave: every breach knocks nearby enemies back (size and push: Settings › Launch › Rocket boost)',0,1,1,'check'],['pierce','Pierce by tier: Laser hits 3-6 enemies, Harpoon always pierces 1 and crits 1 more per tier',0,1,1,'check'],['moves','Brotato enemy roles (source/enemies.js): turrets keep range, drifters fly around you, splitters hold an offset; off: all chase',0,1,1,'check'],['wetspawn','Enemies keep spawning while you swim',0,1,1,'check'],['pace','Spawns per wave match Brotato\'s, spread over flights and swims (the schedule runs at the air share of play)',0,1,1,'check'],['verbs','Experimental: stomp, dive (S) and dash (Space) in the air (parked; to become tricks)',0,1,1,'check'],['hop','Step 3: stomp lift (m/s)',0,15,.5],['dive','Step 3: dive gravity (x)',1,4,.1],['dashes','Step 3: dash charges',0,4,1]];
 const DemoTabs=[
   ['Score',null,'Each jump draws 3 tricks; buy more in the Routine row. A hit bails the trick in progress; 0 HP busts the jump.'],
   ['Launch',['Forward only','Rocket boost','Carve','Wave schedule'],'The carve and the launch. Launch speed rises5 per wave.'],
@@ -5033,16 +5033,211 @@ function demoSeen(m){if(m?.kind!=='air'||m.wet||(typeof S!=='undefined'&&S&&m!==
  Dl.prototype.setMusic=function(t){sm0.call(this,t);if(!DEMO.tune.drone&&this.ambience&&this.ctx)this.ambience.gain.setTargetAtTime(0,this.ctx.currentTime,.1)};
  if(typeof ui!=='undefined'&&ui?.ambience)quiet(ui)}
 
+// Enemy movement on the stage, from docs/ENEMY_RULES.md section 3 (designer, 2026-11-07). Combat happens on the screen
+// rectangle, the same size at every speed and zoom; the dolphin's world speed never enters this file.
+// - S1: after each step every enemy is carried by what the camera did (carry), so one that does not steer stays put on
+//   the screen. Guns, tricks and drawing keep reading enemies where they always did: e.pos in the arena, p.x under the
+//   water. Those are only where the stage puts them.
+// - S2: enemies steer in stage metres at v3's speeds. Velocity (e.velocity, or p.sv for a pursuer) is stage velocity.
+// - S3: Brotato's base-game roles. S4: each stays above the water at its own height. S6: they push apart.
+// All randomness comes from the run's seeded generator (ce).
+var Enemies = (() => {
+  const PX = 34.2 / 450;                    // metres per Brotato pixel: its player's 450 px/s against the dolphin's 34.2 m/s
+  const P = Object.freeze({
+    TAU: .24,          // S2: s over which velocity eases toward the wanted one (v3's for chasers)
+    ARRIVE: 4,         // S2: m from its target at which an enemy starts to slow
+    EDGE: 3,           // S3: m its targets stay inside the stage's edge
+    SKY: [8, 20],      // S4: m over the water line of its own height, by its seed
+    SKY_X: 30,         // S4: m it moves to its own side of you at most, by its seed, once you are below its height
+    CAP: 6,            // S4: m of the stage's top its height spreads over when the water is high on the screen
+    GAP: 1,            // S6: m between two enemies' edges below which they push apart
+    PUSH: 1,           // S6: push apart at most this share of top speed, at full overlap
+    KEEP_OFF: 4,       // S6: m you count for as a neighbour under the water
+    ROLES: Object.freeze({   // S3, Brotato's distances scaled to the dolphin
+      keep: { range: 300 * PX, spread: 100 * PX },     // Spitter: keeps its range
+      around: { range: 150 * PX, spread: 50 * PX },    // Fly: random points around you
+      offset: { range: 300 * PX },                      // Slasher: its own offset from you
+      elite: { range: 300 * PX, spread: 100 * PX }     // Gargoyle: random points around you, further out
+    }),
+    CHARGE: Object.freeze({ wind: .65, dash: .6, rest: 1.3, speed: 48, approach: 10 })   // v3's charger, in its own numbers
+  });
+  const YOU = { id: -1, radius: P.KEEP_OFF };
+  const unit = (x, y) => { const n = Math.hypot(x, y); return n > 1e-9 ? { x: x / n, y: y / n, n } : { x: 0, y: 0, n: 0 } };
+  const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+  const hash = (seed, k) => { const q = Math.sin((seed || 0) * k) * 43758.5453; return q - Math.floor(q) };
+
+  // the stage now: world metres per stage metre (k), its half size, the water line and you on it. k is the drawn zoom:
+  // the renderer eases the view's zoom (.06 s out, .2 s in), and enemies held to the view it was going to would pulse.
+  const scale = r => r.stageAt?.k ?? Ovv(r).h / (Jt.height / 2);
+  function stage(r) {
+    const V = Ovv(r), k = scale(r), me = he(r);
+    return { V, k, hw: V.w / k, hh: Jt.height / 2, line: -V.y / k, me: { x: (me.x - V.x) / k, y: (me.y - V.y) / k } };
+  }
+
+  // S3: an enemy's role, fixed when first seen. With the Brotato roles off (DEMO.tune.moves 0) every enemy chases.
+  function role(r, e) {
+    if (e.mv) return e.mv.role;
+    if (e.mv === null) return 'chase';   // set by a caller (a test) that wants no role
+    let k = 'chase';
+    if (DEMO.tune.moves) {
+      if (e.boss === 'elite') k = e.kind === 'charger' ? 'charge' : 'elite';
+      else k = { turret: 'keep', drifter: 'around', splitter: 'offset', charger: 'charge' }[e.kind] || 'chase';
+    } else if (e.kind === 'charger') k = 'charge';
+    const R = P.ROLES[k];
+    e.mv = { role: k, range: R ? R.range + (R.spread ? (ce(r) * 2 - 1) * R.spread : 0) : 0 };
+    if (k === 'offset') e.mv.off = { x: (ce(r) * 2 - 1) * R.range, y: (ce(r) * 2 - 1) * R.range };
+    return k;
+  }
+
+  const own = (r, e) => (e.kind === 'swarmer' ? 25 * Osp.small : 19 + r.wave * .13) * Osp.spd * FiveCombat.movementScale(r, e);
+
+  // S4: the lowest its targets go on the stage
+  function floorOf(e, f) {
+    const lift = P.SKY[0] + hash(e.seed, 311.7) * (P.SKY[1] - P.SKY[0]);
+    return { lift, y: Math.min(f.line + lift, f.hh - P.EDGE - hash(e.seed, 74.7) * P.CAP) };
+  }
+
+  // S3, S4: where it is going, on the stage
+  function target(r, e, k, pos, f) {
+    const F = floorOf(e, f), low = F.y - f.me.y;
+    // you, or below its height the point above you, moved to its own side as you go deeper
+    const me = low > 0 ? { x: f.me.x + (hash(e.seed, 127.1) * 2 - 1) * P.SKY_X * Math.min(1, low / F.lift), y: F.y } : f.me;
+    let t;
+    if (k === 'keep') { const u = unit(pos.x - me.x, pos.y - me.y); t = { x: me.x + (u.n ? u.x : 1) * e.mv.range, y: me.y + (u.n ? u.y : 0) * e.mv.range } }
+    else if (k === 'offset') t = { x: me.x + e.mv.off.x, y: me.y + e.mv.off.y };
+    else if (k === 'around' || k === 'elite') {
+      const pt = e.mv.pt;
+      if (!pt || Math.hypot(me.x + pt.x - pos.x, me.y + pt.y - pos.y) < 1.5) {   // a new point around you on arrival
+        const a = ce(r) * Math.PI * 2, R = P.ROLES[k], d = R.range + (ce(r) * 2 - 1) * R.spread;
+        e.mv.pt = { x: Math.cos(a) * d, y: Math.sin(a) * d };
+      }
+      t = { x: me.x + e.mv.pt.x, y: me.y + e.mv.pt.y };
+    } else if (low <= 0) return { x: me.x, y: me.y };   // chasing you: right up to you, wherever you are on the stage
+    else t = { x: me.x, y: me.y };
+    return { x: clamp(t.x, -f.hw + P.EDGE, f.hw - P.EDGE), y: clamp(Math.max(t.y, F.y), -f.hh + P.EDGE, f.hh - P.EDGE) };
+  }
+
+  // S6: push apart from neighbours closer than both radii + GAP; `list` holds [enemy, x, y] on the stage
+  function apart(list, i, top) {
+    const [e, x, y] = list[i];
+    let px = 0, py = 0;
+    for (let j = 0; j < list.length; j++) {
+      if (j === i) continue;
+      const [g, gx, gy] = list[j], R = (e.radius || 1) + (g.radius || 1) + P.GAP, dx = x - gx, dy = y - gy, d = Math.hypot(dx, dy);
+      if (d >= R) continue;
+      const k = Math.min(1, (R - d) / P.GAP), u = d > 1e-6 ? { x: dx / d, y: dy / d } : { x: e.id > g.id ? 1 : -1, y: 0 };
+      px += u.x * k; py += u.y * k;
+    }
+    const n = Math.min(1, Math.hypot(px, py)) * P.PUSH * top, u = unit(px, py);
+    return { x: u.x * n, y: u.y * n };
+  }
+
+  // S2, S6: one step of velocity toward t at up to top; the nearer it is to touching, the more it makes room
+  function steer(v, pos, t, top, push, dt) {
+    const u = unit(t.x - pos.x, t.y - pos.y), s = top * Math.min(1, u.n / P.ARRIVE), q = top > 0 ? Math.min(1, Math.hypot(push.x, push.y) / top) : 0;
+    const wx = u.x * s * (1 - q) + push.x, wy = u.y * s * (1 - q) + push.y, k = 1 - Math.exp(-dt / P.TAU);
+    return { x: v.x + (wx - v.x) * k, y: v.y + (wy - v.y) * k };
+  }
+
+  // tricks that hold, drive or knock an enemy move it themselves
+  const trickHeld = e => e && (e.heldT > 0 || e.driveT > 0 || e.knockT > 0);
+
+  // In flight: one arena enemy's step, in place of v3's steering block in ME (t: the arena, s: the enemy, o: the vector
+  // to you, i: the step). ME then moves it by its velocity.
+  function air(r, t, s, o, i) {
+    const k = role(r, s);
+    if (s.kind === 'turret' && s.timer <= 0) { CE(r, s, o, 17); s.timer = 2.3 }
+    if (trickHeld(s) || s.st?.frozen > 0) return;
+    if (k === 'charge' && charge(r, s, o, i)) return;
+    const f = stage(r), at = e => ({ x: (t.origin.x + e.pos.x - f.V.x) / f.k, y: (t.origin.y + e.pos.y - f.V.y) / f.k }), pos = at(s);
+    // the arena's enemies where they stood at the start of this step (made once a step)
+    if (r.apartT !== r.time || r.apartN !== r.enemies.length) { r.apartT = r.time; r.apartN = r.enemies.length; r.apartL = r.enemies.map(e => { const q = at(e); return [e, q.x, q.y] }); r.apartI = new Map(r.apartL.map((x, j) => [x[0], j])) }
+    const top = k === 'charge' ? P.CHARGE.approach * Osp.spd * FiveCombat.movementScale(r, s) : own(r, s), j = r.apartI.get(s);
+    s.velocity = steer(s.velocity, pos, target(r, s, k === 'charge' ? 'chase' : k, pos, f), top, j == null ? { x: 0, y: 0 } : apart(r.apartL, j, top), i);
+  }
+
+  // S3 Charge, v3's: wind up (slowing to a stop), dash at its own speed toward where you were, rest, then approach.
+  // The dash is the one move that is not eased. Returns true while it winds up or dashes.
+  function charge(r, s, o, i) {
+    const C = P.CHARGE, n = Math.max(.1, Math.hypot(o.x, o.y)), W = s.velocity;
+    if (s.timer <= 0 && s.charge === 0) { s.charge = C.wind; s.aim = { x: o.x / n, y: o.y / n } }
+    if (s.charge > 0) {
+      s.charge -= i; const q = Math.exp(-i * 9); W.x *= q; W.y *= q;
+      if (s.charge <= 0) { s.charge = -C.dash; const v = C.speed * Osp.spd * FiveCombat.movementScale(r, s); s.velocity = { x: s.aim.x * v, y: s.aim.y * v } }
+      return true;
+    }
+    if (s.charge < 0) { s.charge += i; if (s.charge >= 0) { s.charge = 0; s.timer = C.rest } return true }
+    return false;
+  }
+
+  // While you swim: the pursuers' step, in place of v3's Orpq0. A pursuer is the same enemy with its position in world
+  // metres, for the code that reads it there. Lurkers (v3's) keep to their own point.
+  function pursuers(r, dt) {
+    if (!r.pursuers?.length) return;
+    const m = r.medium, swim = m.kind === 'water', f = stage(r), { V, k } = f, me = he(r), floor = Oseabed(r), keep = [];
+    const list = r.pursuers.map(p => [p, (p.x - V.x) / k, (p.y - V.y) / k]);
+    if (swim) list.push([YOU, f.me.x, f.me.y]);
+    for (let i = 0; i < r.pursuers.length; i++) {
+      const p = r.pursuers[i], e = p.e || p, pos = { x: list[i][1], y: list[i][2] };
+      p.px = p.x; p.py = p.y; p.age += dt; if (swim) p.lurk = false;
+      // tricks and spawns set p.h and p.v
+      if (!p.sv || p.h !== p.lh || p.v !== p.lv) p.sv = { x: Math.cos(p.h) * p.v, y: Math.sin(p.h) * p.v };
+      if (!trickHeld(e)) {
+        const base = own(r, e), go = role(r, e), top = p.lurk ? Math.min(base, 2 + 2 * Math.hypot(p.ex - p.x, -p.ld - p.y)) : base;
+        const T = p.lurk ? { x: (p.ex - V.x) / k, y: (-p.ld - V.y) / k } : target(r, e, go === 'charge' ? 'chase' : go, pos, f);
+        p.sv = steer(p.sv, pos, T, top, apart(list, i, top), dt);
+      }
+      p.x += p.sv.x * k * dt; p.y += p.sv.y * k * dt;
+      if (p.y < floor + p.radius) { p.y = floor + p.radius; p.sv.y = Math.max(0, p.sv.y) }
+      p.h = p.lh = Math.atan2(p.sv.y, p.sv.x); p.v = p.lv = Math.hypot(p.sv.x, p.sv.y);
+      const n = Math.hypot(me.x - p.x, me.y - p.y);
+      if (n < 5) r.metrics.threats++;
+      if (!swim && n < p.radius + 1 && !p.lurk) rw(r, 9 + Math.floor(r.wave / 5));
+      if (n > 340) { r.departing.push({ kind: p.kind, pos: se(p.x, p.y), velocity: { x: 0, y: -6 }, age: 0, life: 1.2, seed: p.seed }); continue }
+      keep.push(p);
+    }
+    r.pursuers = keep;
+  }
+
+  // S1, S5: after the camera's step, carry every enemy by what the camera did, and splash those the water line crossed.
+  // An arena enemy has moved with the arena: only the camera's move against the arena is left. On a step with a splash or
+  // a breach it moved with the old arena up to that point (r.stageCut), and carries the rest.
+  function carry(r, dt) {
+    const m = r.medium, V = Ovv(r), want = V.h / (Jt.height / 2), L = r.stageAt, air = m.kind === 'air', o = air ? m.origin : null, cut = r.stageCut;
+    const k = L ? L.k + (want - L.k) * (1 - Math.exp(-(dt || Ar) / (want > L.k ? .06 : .2))) : want;
+    r.stageAt = { x: V.x, y: V.y, k, m, kind: m.kind, o: o && { x: o.x, y: o.y } }; r.stageCut = null;
+    if (!L) return;
+    const q = k / L.k, wasAir = L.kind === 'air', dx = wasAir && cut ? cut.x - L.o.x : 0, dy = wasAir && cut ? cut.y - L.o.y : 0;
+    for (const p of r.pursuers || []) { p.x = V.x + (p.x - dx - L.x) * q; p.y = V.y + (p.y - dy - L.y) * q }
+    if (air) for (const e of r.enemies) {
+      const b = L.m === m ? L.o : cut || o, wx = b.x + e.pos.x, wy = b.y + e.pos.y;   // where it stood, by the old frame
+      e.pos = ye(V.x + (wx - L.x) * q - o.x, V.y + (wy - L.y) * q - o.y);
+    }
+    for (const p of r.pursuers || []) { const wet = p.y < 0; if (wet !== !!p.wet) { p.wet = wet; r.events.push({ kind: 'dive', pos: se(p.x, 0) }) } }
+    if (air) for (const e of r.enemies) { const wet = o.y + e.pos.y < 0; if (wet !== !!e.uw) { e.uw = wet; r.events.push({ kind: 'dive', pos: se(o.x + e.pos.x, 0) }) } }
+  }
+
+  return { P, scale, stage, role, target, steer, air, pursuers, carry };
+})();
+// v3's seabed under the water as its pursuer step had it: deeper at waves whose launch speed needs a longer dive
+function Oseabed(r) { const C = Jzt(r.wave, 1e6); return ht.seabed * Math.max(1, C * Z$.turn / (Vq(C) * Q$.base)) }
+// S1: positions pass between the arena and the pursuers as they are, and the stage velocity with them
+{const pz0=Pz;Pz=function(r,t,E){if(!t.wet)r.stageCut={x:t.origin.x,y:t.origin.y};const o=pz0(r,t,E),p=r.pursuers?.at(-1);if(p&&p.e===E){p.sv={x:E.velocity.x,y:E.velocity.y};p.h=p.lh=Math.atan2(p.sv.y,p.sv.x);p.v=p.lv=Math.hypot(p.sv.x,p.sv.y)}return o}}
+{const jq0=Jq;Jq=function(r,p){const v=p.sv;jq0(r,p);if(v&&p.e)p.e.velocity={x:v.x,y:v.y}}}
+// at the breach every enemy goes back to the arena, wherever the water line is (lurkers stay theirs)
+Zq=function(r){r.stageCut={x:r.medium.origin.x,y:r.medium.origin.y};const k=[];for(const p of r.pursuers||[])p.lurk?k.push(p):Jq(r,p);r.pursuers=k};
+{const sw0=sw;sw=function(r,input,dt){const o=sw0(r,input,dt);if(r?.demo&&r.mode==='playing')Enemies.carry(r,dt);return o}}
+
 // Step 1 of the build-and-playtest plan (ICARUS_DESIGN.md §4.18, §4.20): positional space.
 // - Most spawns appear behind a marker inside the view, leaning toward the direction of travel and kept 10 m above the
 //   water; a share set in Settings (20% by default) still comes in from the screen edge, as v3's did.
-// - Chasers, swarmers and splitters flock: they keep apart, bunch with neighbours and follow the dolphin's recent track.
-// - Enemies that come back at the breach from beyond the screen (left behind when the dolphin turned underwater)
-//   re-enter at the screen edge instead of being lost.
+// - Where markers go follows docs/ENEMY_RULES.md S7: anywhere in the view at least scatterMin from the dolphin, as
+//   Brotato spawns anywhere away from the player, and fixed on the stage (the screen) while they wait.
+// - How enemies move is source/enemies.js; this file only places them.
 // - The landing pool (late spawns holding above the predicted landing point) is built but off: the designer found
 //   spawns at the water line unfair (2026-10-27).
 // The profile lives on the run (r.space) so later items can change how spawns work. DEMO.tune.space 0 keeps v3's edge
-// spawns, straight chasing and no pool. All randomness comes from the run's seeded generator (ce).
+// spawns and no pool. All randomness comes from the run's seeded generator (ce).
 var Space = (() => {
   const PROFILE = Object.freeze({
     telegraph: .6,          // s a marker shows before its enemy appears
@@ -5056,14 +5251,10 @@ var Space = (() => {
     poolRadius: 6,          // m of scatter around the landing point
     poolHeight: 6,          // m above the water that pool enemies hold (plus up to 2)
     poolRelease: 11,        // m: closer than this, or once hurt, a pool enemy attacks
-    flockRadius: 12,        // m within which flockers count as neighbours
-    separation: 6,          // m flockers try to keep between each other (3.5 felt crowded, 2026-10-27)
-    weights: Object.freeze({ trail: .55, cohesion: .1, separation: 1.8, align: .15 }),
-    trailDelay: .5          // s behind the dolphin that flockers follow
+    scatterMin: 14          // m kept between a spawn and the dolphin (R8)
   });
-  const FLOCK = new Set(['chaser', 'swarmer', 'splitter']);
   const on = r => !!(DEMO.tune.space && r?.demo);
-  const profile = r => r.space || (r.space = { ...PROFILE, ahead: [...PROFILE.ahead], weights: { ...PROFILE.weights } });
+  const profile = r => r.space || (r.space = { ...PROFILE, ahead: [...PROFILE.ahead] });
   const unit = (x, y) => { const n = Math.hypot(x, y) || 1; return { x: x / n, y: y / n } };
   const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 
@@ -5083,10 +5274,11 @@ var Space = (() => {
     if (P.pool && L && L.t <= P.poolWindow && Math.abs(L.wx - o.x) <= V.w - P.margin) {
       pool = { wx: L.wx + (ce(r) * 2 - 1) * P.poolRadius, h: P.poolHeight + ce(r) * 2 };
       x = pool.wx - o.x; y = -o.y + pool.h;
-    } else ({ x, y } = ahead(r, m));
+    } else ({ x, y } = scattered(r, m));
     // Ospw keeps an enemy c + 4 m above the water; s sets its first velocity (-s × speed), toward the dolphin
     const c = pool ? 1.5 : 1.5 + ce(r) * 5.5, s = x >= me.x ? 1 : -1;
-    (r.warns || (r.warns = [])).push({ k: q[0], x, y, s, c, t: P.telegraph, t0: P.telegraph, pool });
+    const k = Enemies.scale(r);
+    (r.warns || (r.warns = [])).push({ k: q[0], x, y, s, c, t: P.telegraph, t0: P.telegraph, pool, sx: (o.x + x - V.x) / k, sy: (o.y + y - V.y) / k });
   }
 
   // A point in the view ahead of the dolphin along the direction of travel, scattered sideways, not too close.
@@ -5105,6 +5297,20 @@ var Space = (() => {
     return { x, y };
   }
 
+  // S7: a point anywhere in the view, at least scatterMin from the dolphin and minHeight above the water when that is in
+  // view (the farthest of 12 draws if none is far enough)
+  function scattered(r, m) {
+    const P = profile(r), V = Ovv(r), o = m.origin, me = m.local, cx = V.x - o.x, half = V.w - P.margin;
+    const top = V.y - o.y + V.h - P.margin, low = Math.min(top, Math.max(V.y - o.y - V.h + P.margin, -o.y + P.minHeight));
+    let x = me.x, y = me.y, best = -1;
+    for (let k = 0; k < 12; k++) {
+      const px = cx - half + ce(r) * 2 * half, py = low + ce(r) * (top - low), d = Math.hypot(px - me.x, py - me.y);
+      if (d > best) { best = d; x = px; y = py }
+      if (d >= P.scatterMin) break;
+    }
+    return { x, y };
+  }
+
   // Resolves markers (in place of v3's Obs wrapper, so no marker is counted down twice); pool markers follow their anchor.
   // Every marker stays minHeight above the water, which rises toward the arena on a descent while the marker waits.
   function resolve(r, m, dt) {
@@ -5114,68 +5320,23 @@ var Space = (() => {
       // a pool marker still waiting after the next breach (a quick hop) is placed ahead on the new flight instead
       if (w.pool && m.vy > 0) { w.pool = null; Object.assign(w, ahead(r, m)); w.s = w.x >= m.local.x ? 1 : -1 }
       if (w.pool) { w.x = w.pool.wx - m.origin.x; w.y = -m.origin.y + w.pool.h }
-      else w.y = Math.max(w.y, -m.origin.y + P.minHeight);
+      else if (w.sx != null) { const V = Ovv(r), k = Enemies.scale(r); w.x = V.x + w.sx * k - m.origin.x; w.y = V.y + w.sy * k - m.origin.y }   // S7
       w.t -= dt;
       if (w.t > 0) { keep.push(w); continue }
       const n = r.enemies.length;
-      Ospw(r, m, w.k, w.x, w.y, w.s, w.c);
+      Ospw(r, m, w.k, w.x, w.y, w.s, w.pool ? w.c : -1e4);   // (Ospw lifts it above c + 4 m: the marker says where)
       const e = r.enemies.length > n ? r.enemies[r.enemies.length - 1] : null;
+      if (e) e.floor = w.c;
       if (e && w.pool) { e.pool = w.pool; e.velocity = { x: -m.vx, y: -m.vy } }
     }
     r.warns = keep;
-  }
-
-  function trailPoint(r, delay) {
-    const T = r.spaceTrail;
-    if (!T?.length) return null;
-    const at = r.time - delay;
-    for (let i = T.length - 1; i >= 0; i--) if (T[i].t <= at) return T[i];
-    return T[0];
-  }
-
-  // After v3's movement (ME): pool enemies hold their anchor, and flockers steer by neighbours and the trail.
-  function after(r, m, dt) {
-    const P = profile(r), me = m.local, flock = [];
-    const T = r.spaceTrail || (r.spaceTrail = []);
-    T.push({ t: r.time, x: me.x, y: me.y });
-    while (T.length > 2 && T[1].t < r.time - P.trailDelay - .1) T.shift();
-    for (const e of r.enemies) {
-      if (e.pool) {
-        if (m.vy > 0 || e.hp < e.maxHp || Math.hypot(e.pos.x - me.x, e.pos.y - me.y) < P.poolRelease) { e.pool = null; continue }
-        const tx = e.pool.wx - m.origin.x, ty = -m.origin.y + e.pool.h + Math.sin(e.age * 2 + e.seed) * .6;
-        e.velocity = { x: (tx - e.pos.x) / dt, y: (ty - e.pos.y) / dt };
-        e.pos = ye(tx, ty);
-        continue;
-      }
-      if (FLOCK.has(e.kind) && !e.role && m.origin.y + e.pos.y >= 0) flock.push(e);
-    }
-    if (!flock.length) return;
-    const W = P.weights, trail = trailPoint(r, P.trailDelay) || me;
-    for (const e of flock) {
-      let cx = 0, cy = 0, ax = 0, ay = 0, sx = 0, sy = 0, n = 0;
-      for (const f of flock) {
-        if (f === e) continue;
-        const dx = f.pos.x - e.pos.x, dy = f.pos.y - e.pos.y, d = Math.hypot(dx, dy);
-        if (d > P.flockRadius) continue;
-        n++; cx += f.pos.x; cy += f.pos.y; ax += f.velocity.x; ay += f.velocity.y;
-        if (d < P.separation && d > 1e-3) { const k = (P.separation - d) / P.separation; sx -= dx / d * k; sy -= dy / d * k }
-      }
-      const seek = unit(me.x - e.pos.x, me.y - e.pos.y), tr = unit(trail.x - e.pos.x, trail.y - e.pos.y);
-      let dx = seek.x * (1 - W.trail) + tr.x * W.trail, dy = seek.y * (1 - W.trail) + tr.y * W.trail;
-      if (n) { const c = unit(cx / n - e.pos.x, cy / n - e.pos.y), a = unit(ax, ay); dx += c.x * W.cohesion + a.x * W.align; dy += c.y * W.cohesion + a.y * W.align }
-      dx += sx * W.separation; dy += sy * W.separation;
-      const D = unit(dx, dy), spd = (e.kind === 'swarmer' ? 25 * Osp.small : 19 + r.wave * .13) * Osp.spd * FiveCombat.movementScale(r, e);
-      // ME eases velocity toward spd·seek; adding spd·(D − seek) at the same rate makes it settle on spd·D
-      const k = Xe(dt, e.kind === 'swarmer' ? .16 : .24);
-      e.velocity.x += spd * (D.x - seek.x) * k; e.velocity.y += spd * (D.y - seek.y) * k;
-    }
   }
 
   // Markers and the landing point, drawn on the renderer's telegraph layer each frame (after it is cleared).
   function draw(R, r, m) {
     const G = R.telegraphs, o = demoSeen(m), P = profile(r), pulse = .5 + .5 * Math.sin(R.time * 14);
     for (const w of r.warns || []) {
-      const wx = o.x + w.x, wy = o.y + Math.max(w.y, -o.y + w.c + 4), X = R.sx(wx), Y = R.sy(wy), ppm = Math.abs(R.sx(wx + 1) - X);
+      const wx = o.x + w.x, wy = o.y + w.y, X = R.sx(wx), Y = R.sy(wy), ppm = Math.abs(R.sx(wx + 1) - X);
       const k = 1 - clamp(w.t / (w.t0 || P.telegraph), 0, 1), s = (1.05 + .55 * (1 - k)) * ppm;
       G.moveTo(X - s, Y - s).lineTo(X + s, Y + s).moveTo(X + s, Y - s).lineTo(X - s, Y + s).stroke({ color: yt.hostile, width: 2.5, alpha: .4 + .5 * k });
       G.circle(X, Y, s * 1.35).stroke({ color: yt.hostile, width: 1.5, alpha: .2 + .35 * pulse });
@@ -5192,87 +5353,21 @@ var Space = (() => {
   // run's generator. At 0.35 the bot's enemies sat 26 m from the screen centre; at 0.2, 15 m (2026-10-27, one seed).
   const edge = r => ce(r) < DEMO.tune.edge;
 
-  // At the breach, enemies returning from beyond the screen's side edges come back just inside them. Not while waiting
-  // enemies hover in view under water (DEMO.tune.hover): the water view can be wider than the arena, so that moved
-  // enemies you could see by up to 31 m in a step (rapid short hops, 2026-11-01); they keep their place and fly in.
-  function recall(r, returned) {
-    const m = r.medium;
-    if (m?.kind !== 'air' || !returned.length) return;
-    if (DEMO.tune.hover && DEMO.tune.hold) {
-      // they were carried with the camera: their speed was their wander plus the camera's. Jq took the arena's speed off
-      // the wander alone, so at 110 m/s they flew back across the screen (about 8 m in 0.12 s); keeping only the wander
-      // as their speed in the arena (2026-11-01) made them jump up the screen at the breach once the camera carried its
-      // own speed through it (2026-11-02: from about 4 to 11 px a frame at 30 m/s). With the camera's last step added
-      // they keep their speed on the screen through the breach.
-      const mv = typeof Camera !== 'undefined' && Camera.on() && Camera.moved, cv = mv ? { x: mv.x / Ar, y: mv.y / Ar } : { x: m.vx, y: m.vy };
-      for (const e of returned) {
-        e.velocity = { x: e.velocity.x + cv.x, y: e.velocity.y + cv.y };
-        if (Math.abs(e.pos.x) > Ovv(r).w) e.velocity = { x: -Math.sign(e.pos.x) * 18 * Osp.spd, y: 0 };
-      }
-      return;
-    }
-    const half = Ovv(r).w, h = Jt.height / 2;
-    for (const e of returned) {
-      if (Math.abs(e.pos.x) <= half) continue;
-      const side = Math.sign(e.pos.x);
-      e.pos = ye(side * (half - 1.5), clamp(e.pos.y, -m.origin.y + e.radius + 2, h - 2));
-      e.velocity = { x: -side * 18 * Osp.spd, y: 0 };
-    }
-  }
-
-  return { PROFILE, on, profile, landing, place, ahead, edge, resolve, after, draw, recall };
+  return { PROFILE, on, profile, landing, place, ahead, scattered, edge, resolve, draw };
 })();
 // while you swim (the stand-in frame, t.wet) every spawn is marked in view: an edge spawn's marker waited off-screen
 // and the enemy became a held pursuer at once, so it never flew in from the edge as it does in the air
 {const obq0=Obq;Obq=function(r,t,q){if(Space.on(r)&&t?.kind==='air'&&(t.wet||!Space.edge(r)))return Space.place(r,t,q);return obq0(r,t,q)}}
 {const obs0=Obs;Obs=function(r,t,i){if(!Space.on(r)||t?.kind!=='air')return obs0(r,t,i);Space.resolve(r,t,i);return Obs0(r,t,i)}}
-{const me0=ME;ME=function(r,t,e,i){me0(r,t,e,i);if(Space.on(r)&&t?.kind==='air'&&i>0)Space.after(r,t,i)}}
-{const zq0=Zq;Zq=function(r){const n=r.enemies.length;zq0(r);if(Space.on(r))Space.recall(r,r.enemies.slice(n))}}  // pursuers return at the breach
-{const pz0=Pz;Pz=function(r,t,E){E.pool=null;const o=pz0(r,t,E),p=r.pursuers?.at(-1);if(p&&p.e===E){p.wvx=t.vx+E.velocity.x;p.wvy=t.vy+E.velocity.y}return o}}  // a pool enemy that becomes a pursuer stops holding; it swims on at the speed it had (Space.WET_ACCEL)
+// a pool enemy that becomes a pursuer stops holding
+{const pz0=Pz;Pz=function(r,t,E){E.pool=null;return pz0(r,t,E)}}
 {const draw0=Otdraw;Otdraw=function(R,r,m,title){draw0(R,r,m,title);if(!title&&m?.kind==='air'&&Space.on(r))Space.draw(R,r,m)}}
-// While the dolphin is under water, v3 flies each pursuer still above the water straight on in the direction it faced
-// at the splash, never turning toward the dolphin, so after a carve turns the dolphin round they leave the arena (bot,
-// 2026-10-27: 23% of them off-screen, up to 98 m away). With DEMO.tune.hold they instead hold a point above the water
-// ahead of the dolphin, on the side it is moving toward and inside the view (8-26 m ahead, 5-12 m up, lower when a deep
-// dive brings the view's top edge down, never under 1.5 m), easing in as they arrive.
-// Touching one gives no kill (the demo has no touch kills in the water). Pursuers that went under, and lurkers, keep
-// v3's step; only the pursuers above the water when the step begins are held, so none is stepped twice.
-// With DEMO.tune.holdlevel (designer, 2026-11-01: looping under water holding D, "the enemies also dive down at the water
-// as if they are following the dolphin's Y"): each half loop reversed the dolphin's sideways direction, so every held
-// enemy turned round for the other side and, turning slowly, swooped down to the waterline (up to 11 of 20 at once).
-// Now the side comes from the dolphin's sideways travel averaged over about 2.5 s (and a side change needs a clear drift), so looping in place keeps it, and an
-// enemy stays level while it moves: never more than 2 m below its own holding height or 3 m above it (it can still
-// climb or come down to it); at wave 15 the enemies, as fast as the dolphin, otherwise swirled up to 30 m.
-Space.holdAbove = function (r, held, dt) {
-  const m = r.medium, d = m.pos, v = m.velocity, Cw = Ocs(r.wave), V = Ovv(r), level = !!DEMO.tune.holdlevel;
-  r.holdVx = (r.holdVx ?? v.x) + (v.x - (r.holdVx ?? v.x)) * (1 - Math.exp(-dt / 2.5));
-  const vx = level ? r.holdVx : v.x;
-  for (const p of held) {
-    p.px = p.x; p.py = p.y; p.age += dt; p.lurk = false;
-    const Fd = Math.abs(vx) > (level ? Math.max(6, Cw * .25) : Math.max(3, Cw * .12)) ? Math.sign(vx) : p.fd || Math.sign(vx) || 1;
-    p.fd = Fd;
-    const w = 3.2 * p.tr, top = Math.max(Cw * 1.05 * Osp.spd, (p.kind === 'swarmer' ? 25 * Osp.small : 19 + r.wave * .13) * Osp.spd * p.sp);
-    const tx = d.x + Fd * (8 + (p.seed * 7.3 % 1) * 18), ty = Math.max(1.5, Math.min(5 + (p.seed * 3.1 % 1) * 7, V.y + V.h - 3));
-    const a = tx - p.x, b = ty - p.y, dist = Math.hypot(a, b);
-    let c = Math.atan2(b, a) - p.h; c = Math.atan2(Math.sin(c), Math.cos(c));
-    p.h += Math.max(-w * dt, Math.min(w * dt, c));
-    p.v += (Math.min(top, 2 + 2.5 * dist) - p.v) * Xe(dt, .35);
-    p.x += Math.cos(p.h) * p.v * dt; p.y = Math.max(1, p.y + Math.sin(p.h) * p.v * dt);
-    if (level) p.y = Math.min(Math.max(p.y, Math.min(p.py, ty - 2)), Math.max(p.py, ty + 3));   // level while it moves
-  }
-};
-{const pq0=Pq;Pq=function(r,e){
-  if(!DEMO.tune.hold||!r?.demo||r.medium?.kind!=='water'||!(e>0)||!r.pursuers?.length)return pq0(r,e);
-  const dry=r.pursuers.filter(p=>!p.wet&&!p.lurk);r.pursuers=r.pursuers.filter(p=>p.wet||p.lurk);
-  pq0(r,e);r.pursuers=(r.pursuers||[]).concat(dry);Space.holdAbove(r,dry,e);
-  // v3's shock rings still push the held pursuers (a zero step: the rings don't grow twice, and each hits once)
-  if(typeof Orshock==='function'){const keep=r.pursuers;r.pursuers=keep.filter(p=>dry.includes(p));Orshock(r,0);r.pursuers=keep}}}
 // Spawning goes on while the dolphin swims (designer, 2026-10-27; DEMO.tune.wetspawn). v3's wave schedule only advances
 // in the air step, so a water stay paused it. Here it advances during water stays too, once the wave's first launch has
 // started it (the air clock still pauses), at its usual rate. There is no arena under water, so the schedule runs
 // against a still stand-in frame fixed where this stay began (r.wetFrame: origin on the water line, moving the way the
 // dolphin swims so step 1's markers lean ahead of it); each enemy appears behind its marker above the water in view
-// and at once becomes a pursuer held ahead of the dolphin (holdAbove), joining the arena at the next launch.
+// and at once becomes a pursuer (source/enemies.js moves it), joining the arena at the next launch.
 Space.wetFrame = function (r) {
   const m = r.medium;
   const F = r.wetFrame || (r.wetFrame = { kind: 'air', origin: se(m.pos.x, 0), vx: 0, vy: 0, local: ye(0, 0), velocity: { x: 0, y: 0 }, elapsed: 1, wet: true });
@@ -5312,122 +5407,6 @@ Space.pace = function (r) {
     if(r.bw===r.wave&&r.mode==='playing'&&d>0){p.real+=d;if(r.medium?.kind==='air')p.air+=d}}
   return sw2(r,input,dt)}}
 {const obs1=Obs;Obs=function(r,t,i){if(DEMO.tune.pace&&r?.demo&&i>0){const k=Math.max(.2,Math.min(1,Space.pace(r)));r.bt=(r.bt||0)-i*(1-k)}return obs1(r,t,i)}}
-// Designer, 2026-11-01: "enemies need to avoid the dolphin when they are both in the water, right now they just swim
-// into it"; and "make enemy air placement predictable when the dolphin is turning in the water ... they are very fast
-// and erratic when the dolphin is in the water planning a trajectory".
-// - DEMO.tune.wetavoid: an enemy under the water (a wet pursuer; v3 makes it flee, but as fast as the dolphin and
-//   turning slowly, so the dolphin still ran into it, 1.5-1.8% of the time) that is near where the dolphin will be over
-//   the next 0.3 s moves sideways off that path, and none comes closer than 2.5 m.
-// - DEMO.tune.hover: the enemies waiting above the water keep their place on the screen while you swim, instead of
-//   chasing a point ahead of you (at 29-47 m/s, median), so you can line a breach up on them. Each has a home where it
-//   was on the screen at the splash, carried along as the camera moves (homes fixed in the world were left behind:
-//   swimming one way, 63-94% bunched at the screen's trailing edge, designer: "not the outcome I wanted"); homes
-//   closer than 8 m drift apart, so a crowd from the splash fans out, at its own height 15-25 m up (designer: 5-12 m, then 10-18 m, were too close to the water), and
-//   wanders about it as if it had lost sight of you: about 6 m/s (designer: 3 was too slow), easing its speed up and
-//   down, turning at most 4 rad/s toward a new point within 9 m every 1-3 s, with a slight bob. Away from its home
-//   (more than 11 m, beyond where it wanders, or more than 5 m below its height: from the splash, or pushed) it flies straight there at 8-25 m/s; eased from rest and turning slowly
-//   from its fall it first dipped to the water and stayed low (half under 6 m for the first second, designer:
-//   "stuck close to the water"). The view's edge pushes its home (and it) along when it reaches them.
-Space.avoidWet = function (r, dt) {
-  const m = r.medium, me = m.pos, v = m.velocity, AHEAD = .3, CLEAR = 6, KEEP = 2.5;
-  for (const p of r.pursuers || []) {
-    if (!(p.wet || p.y < 0)) continue;
-    // the nearest point on the dolphin's path over the next AHEAD s
-    const ex = v.x * AHEAD, ey = v.y * AHEAD, L = ex * ex + ey * ey || 1, k = Math.max(0, Math.min(1, ((p.x - me.x) * ex + (p.y - me.y) * ey) / L));
-    const cx = me.x + ex * k, cy = me.y + ey * k, dx = p.x - cx, dy = p.y - cy, d = Math.hypot(dx, dy) || .01, R = (p.radius || 1) + CLEAR;
-    if (d < R) {   // step sideways off the path, as fast as it swims
-      // within its own speed this step, with what it has already swum (on top of a flee at your speed it went 150 m/s)
-      const s = Math.max(10, p.v || 0) * dt, moved = p.px == null ? 0 : Math.hypot(p.x - p.px, p.y - p.py), push = Math.min(R - d, Math.max(.25 * s, s - moved));
-      p.x += dx / d * push; p.y = Math.min(-.3, p.y + dy / d * push); p.h = Math.atan2(dy, dx);
-    }
-    const n = Math.hypot(p.x - me.x, p.y - me.y) || .01, keep = (p.radius || 1) + KEEP;
-    // out to the keep distance at most at your speed + 10 m/s a step: enemies touching you at the splash were moved 2-3 m
-    // in one step (rapid short hops, 2026-11-01); you still never gain on one
-    if (n < keep) { const out = Math.min(keep - n, (Math.hypot(v.x, v.y) + 10) * dt) + n; p.x = me.x + (p.x - me.x) / n * out; p.y = Math.min(-.3, me.y + (p.y - me.y) / n * out) }
-  }
-};
-Space.hover = function (r, held, dt) {
-  // the margin from the view's sides: 22% of it, at least 6 m (a fixed 6 m let 15-22% sit at the edges once the water
-  // view zoomed out less, 2026-11-01)
-  const V = Ovv(r), M = Math.max(6, .22 * V.w), top = V.y + V.h - 3, x0 = V.x - V.w + M, x1 = V.x + V.w - M;
-  const clampX = x => Math.max(x0, Math.min(x1, x)), clampY = y => Math.max(3, Math.min(top, y));
-  // the camera's sideways move this step carries every waiting enemy, its home and its wander point (a fresh start after
-  // a flight: no carry on a stay's first step)
-  // only from the step before: "within 0.1 s" carried the camera's whole move over a flight shorter than that (skimming at
-  // 110 m/s, up to 12 m), shifting every waiting enemy at the splash (2026-11-01)
-  const C = r.hoverCam, dx = C && r.time - C.t <= dt * 1.5 ? V.x - C.x : 0; r.hoverCam = { x: V.x, t: r.time };
-  // homes closer than 8 m drift apart (at most 4 m/s), so a crowd from the splash fans out across the screen
-  for (let i = 0; i < held.length; i++) for (let j = i + 1; j < held.length; j++) {
-    const A = held[i].home, B = held[j].home; if (!A || !B) continue;
-    const ex = B.x - A.x, ey = (B.y - A.y) * .5, d = Math.hypot(ex, ey); if (d >= 8) continue;
-    const u = d > .01 ? ex / d : (i % 2 ? 1 : -1), k = Math.min(4 * dt, (8 - d) / 2);
-    A.x -= u * k; B.x += u * k;
-  }
-  for (const p of held) {
-    // the step's start (drawn between it and the end): before the carry, so the carry is drawn smoothly too (set after it,
-    // the renderer drew the carry in jumps of a step, up to 1 m at 120 m/s, and swimming fast they jittered)
-    p.px = p.x; p.py = p.y; p.age += dt; p.lurk = false;
-    if (dx) { p.x += dx; if (p.home) p.home.x += dx; if (p.wp) p.wp.x += dx }
-    // its home: where it was at the splash, at its own height (10-18 m); the view's edge pushes the home along
-    const own = 15 + (p.seed * 3.1 % 1) * 10;
-    if (!p.home) { p.home = { x: p.x, y: own }; p.h = Math.atan2(own - p.y, 0); p.wv = 0 }   // facing its place, not its fall
-    p.home.x = clampX(p.home.x); p.home.y = clampY(own);
-    // wandering: a new point near home every 1-3 s, or on reaching it
-    p.wt = (p.wt ?? 0) - dt;
-    if (!p.wp || p.wt <= 0 || Math.hypot(p.wp.x - p.x, p.wp.y - p.y) < 1) {
-      p.wp = { x: p.home.x + (ce(r) * 2 - 1) * 9, y: p.home.y + (ce(r) * 2 - 1) * 4 }; p.wt = 1 + ce(r) * 2;
-    }
-    const far = Math.hypot(p.home.x - p.x, p.home.y - p.y), out = p.x < x0 || p.x > x1;
-    if (far > 11 || p.y < p.home.y - 5 || p.y < 2) {   // getting to its place (beyond its wander, below it, or just out of the water under 2 m): straight there, no easing or turning limit
-      const s = Math.min(25, 8 + far), hx = p.home.x - p.x, hy = p.home.y - p.y, n = far || 1, step = Math.min(far, s * dt);
-      // the 2 m floor stops a sink; one just out of the water rises from where it is (lifting it to 2 m popped it 2 m in a step)
-      p.x += hx / n * step; p.y = Math.max(Math.min(2, p.y), p.y + hy / n * step); p.h = Math.atan2(hy, hx); p.v = p.wv = s; p.wp = null;
-      continue;
-    }
-    const tx = clampX(p.wp.x), ty = clampY(p.wp.y), a = tx - p.x, b = ty - p.y;
-    // a slow wander; faster while it settles from the splash (far from home) or the edge carries it
-    const sp = out ? 12 : far > 10 ? Math.min(20, 7 + far * .5) : 6 * (.75 + .5 * (p.seed * 5.3 % 1));
-    let c = Math.atan2(b, a) - (p.h ?? 0); c = Math.atan2(Math.sin(c), Math.cos(c));
-    p.h = (p.h ?? 0) + Math.max(-4 * dt, Math.min(4 * dt, c));   // turning at most 4 rad/s: curved paths
-    const want = Math.min(sp, Math.hypot(a, b) * 2 + 1), v = (p.wv ?? 0) + (want - (p.wv ?? 0)) * (1 - Math.exp(-dt / (out ? .05 : .4)));   // speed eases (from rest at the splash)
-    const bob = Math.sin(p.age * 1.7 + p.seed * 9) * .8;   // m/s, a slight bob
-    p.x += Math.cos(p.h) * v * dt; p.y = Math.max(Math.min(2, p.y), p.y + (Math.sin(p.h) * v + bob) * dt);
-    // the edge brings it back on screen at up to 12 m/s (pulled in at 10/s, one surfacing or spawning near the edge lunged
-    // in at about 100 m/s, then slowed: a kick; 2026-11-01)
-    if (out) { const g = clampX(p.x) - p.x; p.x += Math.sign(g) * Math.min(Math.abs(g), 12 * dt) }
-    p.v = p.wv = v;
-  }
-};
-{const pq3=Pq;Pq=function(r,e){
-  const water=r?.demo&&r.medium?.kind==='water'&&e>0;
-  if(water&&DEMO.tune.hover&&DEMO.tune.hold&&r.pursuers?.length){
-    // the held ones hover; the rest (under the water, lurking) take the steps before (v3's, then the hold's)
-    const held=r.pursuers.filter(p=>!p.wet&&!p.lurk);r.pursuers=r.pursuers.filter(p=>p.wet||p.lurk);
-    const o=pq3(r,e);r.pursuers=held.concat(r.pursuers||[]);Space.hover(r,held,e);   // the held first, so newly spawned ones stay last
-    if(DEMO.tune.wetavoid)Space.avoidWet(r,e);return o}
-  const o=pq3(r,e);if(water&&DEMO.tune.wetavoid)Space.avoidWet(r,e);return o}}
-// Under the water an enemy's speed (its own swimming and its step out of your way, together) changes at most
-// Space.WET_ACCEL m/s² (camera rules R4, designer 2026-11-03: "the enemies cannot jump around on screen"). v3 turned an
-// enemy round in one step: diving in with you at 96 m/s it swam back at 112 m/s the next step, and one beside you was
-// shoved aside at your speed + 10 m/s at once (60-100 px a frame on the screen at 100 m/s). Now a full reversal takes
-// about 0.13 s. It keeps the cap for SURFACE s after it comes out of the water (v3 handed a surfacing enemy to the
-// hover at once: fleeing at 78 m/s it moved off the other way at the camera's 62 the next step). Pushed or hit, it
-// moves as it is pushed. Otherwise, above the water and in the air, nothing is capped.
-Space.WET_ACCEL = 1500; Space.SURFACE = .3;
-{const pq5=Pq;Pq=function(r,e){
-  if(!(r?.demo&&e>0&&r.pursuers?.length))return pq5(r,e);
-  const before=new Map();for(const p of r.pursuers)if(p.wet||r.time-(p.surfT??-9)<Space.SURFACE)before.set(p,[p.x,p.y,p.e?.hp,p.wet]);
-  const o=pq5(r,e),A=Space.WET_ACCEL*e;
-  for(const p of r.pursuers||[]){const b=before.get(p);if(!b)continue;
-    if(b[3]&&!p.wet)p.surfT=r.time;
-    if(!p.wet&&!(r.time-p.surfT<Space.SURFACE))continue;
-    if(p.wvx==null){p.wvx=Math.cos(p.h||0)*(p.v||0);p.wvy=Math.sin(p.h||0)*(p.v||0)}
-    let vx=(p.x-b[0])/e,vy=(p.y-b[1])/e;
-    if(!(p.kx||p.ky||(p.e&&p.e.hp<b[2]))){const dx=vx-p.wvx,dy=vy-p.wvy,d=Math.hypot(dx,dy);
-      if(d>A){vx=p.wvx+dx*A/d;vy=p.wvy+dy*A/d;p.x=b[0]+vx*e;p.y=p.wet?Math.min(-.3,b[1]+vy*e):b[1]+vy*e}}
-    // (a splash's or a breach's sliver of a step does not set it: over 2 ms the surface's hold read as hundreds of m/s)
-    if(e>Ar/4){p.wvx=vx;p.wvy=p.wet&&p.y>=-.3?Math.min(vy,0):vy}}
-  return o}}
 
 // Step 2 of the build-and-playtest plan (ICARUS_DESIGN.md §4.18, §4.20): danger.
 // - Aimed shots lead: a turret's shot (and the elite's, see below) aims part of the way from where the dolphin is to
@@ -5783,67 +5762,6 @@ var Verbs = (() => {
 {const me0=ME;ME=function(r,t,e,i){if(Verbs.on(r)&&t?.kind==='air'&&i>0)Verbs.stomp(r,t);return me0(r,t,e,i)}}
 {const se0=SE;SE=function(r,t,e,i,s){if(!Verbs.on(r)||!(i>0))return se0(r,t,e,i,s);Verbs.before(r,t,e,i);const out=se0(r,t,e,i,s);if(r.medium===t&&t.kind==='air')Verbs.after(r,t,i);return out}}
 {const draw0=Otdraw;Otdraw=function(R,r,m,title){draw0(R,r,m,title);if(!title&&m?.kind==='air'&&Verbs.on(r))Verbs.draw(R,r,m)}}
-
-// Brotato-style enemy movement (designer, 2026-10-30; base game only, not the DLC). In Brotato most enemies chase, but
-// some keep their distance, some fly to random points around the player and some hold their own offset from the player.
-// Without these every enemy crowds the dolphin, so the guns always have a crowd and the placement tricks add little
-// (qa/placement.cjs). ICARUS's existing kinds take the base-game roles, at Brotato's distances scaled by player speed
-// (Brotato's player moves 450 px/s, the dolphin 34.2 m/s in the air: 1 px ≈ 0.076 m):
-// - turret → keep range like a Spitter: 300 ± 100 px ≈ 23 ± 8 m away, backing off when you close in (it still shoots);
-// - drifter → random points around you like a Fly: 150 ± 50 px ≈ 11 ± 4 m, picking a new point on arrival;
-// - splitter → its own fixed offset like a Slasher: up to 300 px ≈ 23 m around you, kept as you move;
-// - elites (not chargers, which keep their dash) → random points around you like a Gargoyle: 23 ± 8 m.
-// Chasers, swarmers and chargers chase as before. The movement replaces v3's steering for these enemies only, at their
-// own speed, behind DEMO.tune.moves. All randomness comes from the run's seeded generator (ce).
-var Movement = (() => {
-  const PX = 34.2 / 450;                                  // metres per Brotato pixel
-  const ROLES = Object.freeze({
-    keep:   { range: 300 * PX, spread: 100 * PX },       // Spitter
-    around: { range: 150 * PX, spread: 50 * PX },        // Fly
-    offset: { range: 300 * PX },                          // Slasher
-    elite:  { range: 300 * PX, spread: 100 * PX }        // Gargoyle
-  });
-  const on = r => !!(DEMO.tune.moves && r?.demo);
-  // which role an enemy plays, fixed when first seen
-  function role(r, e) {
-    if (e.mv !== undefined) return e.mv?.role || null;
-    let k = null;
-    if (e.boss === 'elite') k = e.kind === 'charger' ? null : 'elite';
-    else if (e.role || e.boss) k = null;
-    else k = e.kind === 'turret' ? 'keep' : e.kind === 'drifter' ? 'around' : e.kind === 'splitter' ? 'offset' : null;
-    if (!k) { e.mv = null; return null }
-    const R = ROLES[k];
-    e.mv = { role: k, range: R.range + (R.spread ? (ce(r) * 2 - 1) * R.spread : 0) };
-    if (k === 'offset') e.mv.off = { x: (ce(r) * 2 - 1) * R.range, y: (ce(r) * 2 - 1) * R.range };
-    return k;
-  }
-  const speed = (r, e) => (e.kind === 'swarmer' ? 25 * Osp.small : 19 + r.wave * .13) * Osp.spd * (typeof FiveCombat !== 'undefined' ? FiveCombat.movementScale(r, e) : 1);
-  function pick(r, e, me) { const a = ce(r) * Math.PI * 2, d = e.mv.role === 'around' || e.mv.role === 'elite' ? ROLES[e.mv.role].range + (ce(r) * 2 - 1) * ROLES[e.mv.role].spread : e.mv.range; e.mv.pt = { x: me.x + Math.cos(a) * d, y: me.y + Math.sin(a) * d } }
-  // where this enemy wants to be now, in the arena
-  function target(r, e, me) {
-    const k = e.mv.role;
-    if (k === 'keep') { const dx = e.pos.x - me.x, dy = e.pos.y - me.y, n = Math.hypot(dx, dy) || 1; return { x: me.x + dx / n * e.mv.range, y: me.y + dy / n * e.mv.range } }
-    if (k === 'offset') return { x: me.x + e.mv.off.x, y: me.y + e.mv.off.y };
-    if (!e.mv.pt || Math.hypot(e.mv.pt.x - e.pos.x, e.mv.pt.y - e.pos.y) < 1.5) pick(r, e, me);
-    return e.mv.pt;
-  }
-  // around v3's enemy step: note each role enemy's velocity before it, then steer it to its own target instead
-  function before(r) { for (const e of r.enemies) if (e.hp > 0 && role(r, e)) e.mv.v0 = { x: e.velocity.x, y: e.velocity.y } }
-  function after(r, m, dt) {
-    const me = m.local, k = Xe(dt, .3);
-    for (const e of r.enemies) {
-      if (!e.mv?.v0 || e.hp <= 0) continue;
-      if (e.heldT > 0 || e.st?.frozen > 0 || e.driveT > 0 || e.knockT > 0) { e.mv.v0 = null; continue }   // tricks and statuses win
-      const T = target(r, e, me), dx = T.x - e.pos.x, dy = T.y - e.pos.y, d = Math.hypot(dx, dy), s = speed(r, e) * Math.min(1, d / 3);
-      const want = d > .05 ? { x: dx / d * s, y: dy / d * s } : { x: 0, y: 0 };
-      const v = { x: e.mv.v0.x + (want.x - e.mv.v0.x) * k, y: e.mv.v0.y + (want.y - e.mv.v0.y) * k };
-      // v3 already moved it this step with its own velocity: correct the position to the role's velocity
-      e.pos = ye(e.pos.x + (v.x - e.velocity.x) * dt, e.pos.y + (v.y - e.velocity.y) * dt); e.velocity = v; e.mv.v0 = null;
-    }
-  }
-  return { PX, ROLES, on, role, before, after };
-})();
-{const me0=ME;ME=function(r,t,e,i){const on=Movement.on(r)&&t?.kind==='air'&&i>0;if(on)Movement.before(r);me0(r,t,e,i);if(on)Movement.after(r,t,i)}}
 
 // Steps 7 and 8 of the build-and-playtest plan (ICARUS_DESIGN.md §4.5, §4.16 E, §4.20). Designer's answers, 2026-10-30.
 // Step 7, statuses (each changes where enemies go or what they become):

@@ -87,11 +87,13 @@ test('kills carry the side they came from', () => {
 test('Brotato movement: each role holds its distance; chasers still close in', () => {
   const r = run({}, 8), roles = {};
   for (const [k, x, y] of [['turret', 8, 0], ['drifter', 30, 10], ['splitter', -5, -5], ['chaser', 25, -10]]) { const e = foe(r, x, y); e.kind = k; e.timer = 1e9; roles[k] = e }
+  r.medium.origin.y = 40; r.cam = { ...r.medium.origin };   // enemies steer on the stage: the camera is on the arena, clear of the water
   for (let t = 0; t < 4 * 120; t++) { r.hurt = 99; H.ME(r, r.medium, { x: 0, y: 0 }, 1 / 120) }
   const d = k => Math.hypot(roles[k].pos.x, roles[k].pos.y), off = roles.splitter.mv.off;
   assert.ok(Math.abs(d('turret') - roles.turret.mv.range) < 1.5, `turret at ${d('turret').toFixed(1)} m, its range ${roles.turret.mv.range.toFixed(1)}`);
   assert.ok(d('drifter') > 6 && d('drifter') < 17, 'drifter hovers ' + d('drifter').toFixed(1));
-  assert.ok(Math.hypot(roles.splitter.pos.x - off.x, roles.splitter.pos.y - off.y) < 2, 'splitter on its offset');
+  const edge = 3, hx = 38 - edge, hy = 21.6 - edge, in_ = (v, h) => Math.max(-h, Math.min(h, v));   // S3: targets stay inside the stage
+  assert.ok(Math.hypot(roles.splitter.pos.x - in_(off.x, hx), roles.splitter.pos.y - in_(off.y, hy)) < 2, 'splitter on its offset');
   assert.ok(d('chaser') < 2.5, 'the chaser closed in');
   return { turret: +d('turret').toFixed(1), drifter: +d('drifter').toFixed(1), splitter: +d('splitter').toFixed(1), chaser: +d('chaser').toFixed(1) };
 });

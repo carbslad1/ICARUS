@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Enemy Sandbox</title>
+<style>
+  :root { --bg: #0b0f14; --panel: #121821; --line: #263142; --text: #d8e1ec; --dim: #7d8a9c; --sky: #0f1722; --sea: #0a2433; --flick: #ff4d5e; --sflick: #ffb23e; }
+  * { box-sizing: border-box }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 13px/1.4 ui-sans-serif, system-ui, -apple-system, sans-serif }
+  header { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--line); background: var(--panel) }
+  header b { font-size: 14px }
+  select, button, input[type=file] { background: #1a2230; color: var(--text); border: 1px solid var(--line); border-radius: 6px; padding: 4px 8px; font: inherit }
+  button { cursor: pointer }
+  label { color: var(--dim); display: inline-flex; gap: 6px; align-items: center }
+  #panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 12px; padding: 12px 16px }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; overflow: hidden }
+  .panel h2 { margin: 0; padding: 8px 10px; font-size: 13px; font-weight: 600; display: flex; justify-content: space-between; gap: 8px; border-bottom: 1px solid var(--line) }
+  .panel h2 span { color: var(--dim); font-weight: 400 }
+  canvas { display: block; width: 100%; aspect-ratio: 16 / 9; background: var(--sky) }
+  .stats { padding: 6px 10px; color: var(--dim); font-variant-numeric: tabular-nums; min-height: 2.8em }
+  #scrub { flex: 1 1 240px }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; padding: 0 16px 14px; color: var(--dim) }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; vertical-align: -1px }
+  #empty { padding: 40px 16px; color: var(--dim) }
+</style>
+</head>
+<body>
+<header>
+  <b>Enemy sandbox</b>
+  <input type="file" id="file" accept=".json">
+  <label>Scenario <select id="scen"></select></label>
+  <button id="play">Pause</button>
+  <label>Speed <select id="speed"><option>0.25</option><option>0.5</option><option selected>1</option><option>2</option></select></label>
+  <label>Trails <select id="trail"><option value="0">off</option><option value="0.5" selected>0.5 s</option><option value="1.5">1.5 s</option></select></label>
+  <input type="range" id="scrub" min="0" max="1000" value="0">
+  <span id="clock">0.0 s</span>
+</header>
+<div id="panels"><div id="empty">Run <code>node qa/enemy-sandbox.cjs --trace=qa/enemy-trace.json</code> (add <code>--preset=current,v3</code> or <code>--variant=…</code> to compare), then pick the file, or open this page with <code>?trace=enemy-trace.json</code>.</div></div>
+<div class="legend" id="legend"></div>
+<script>
+const COLORS = { chaser: '#ff7a59', swarmer: '#ffd166', splitter: '#c77dff', charger: '#ef476f', drifter: '#06d6a0', turret: '#4cc9f0' };
+let data = null, groups = [], cur = null, t = 0, playing = true, last = performance.now();
+const $ = id => document.getElementById(id);
+$('legend').innerHTML = Object.entries(COLORS).map(([k, c]) => `<span><i style="background:${c}"></i>${k}</span>`).join('') +
+  '<span><i style="background:transparent;border:2px solid var(--flick)"></i>direction flick (world)</span><span><i style="background:transparent;border:2px solid var(--sflick)"></i>flick on screen only</span><span>hollow = under the water</span>';
+
+function setData(d) {
+  data = d; groups = [];
+  const by = new Map();
+  for (const tr of d.traces) { const k = tr.scen + ' · wave ' + tr.wave; if (!by.has(k)) { by.set(k, []); groups.push(k) } by.get(k).push(tr) }
+  data.by = by;
+  $('scen').innerHTML = groups.map(g => `<option>${g}</option>`).join('');
+  pick(groups[0]);
+}
+function pick(g) {
+  cur = data.by.get(g); t = 0;
+  for (const tr of cur) { tr.t0 = tr.frames[0]?.t ?? 0; tr.t1 = tr.frames.at(-1)?.t ?? 0 }
+  $('panels').innerHTML = cur.map((tr, i) => `<div class="panel"><h2>${tr.variant}<span>${tr.scen}, wave ${tr.wave}, seed ${tr.seed}</span></h2><canvas id="c${i}" width="960" height="540"></canvas><div class="stats" id="s${i}"></div></div>`).join('');
+}
+const dur = () => cur ? Math.max(...cur.map(tr => tr.t1 - tr.t0)) : 0;
+function frameAt(tr, time) {
+  const F = tr.frames, at = tr.t0 + time; let lo = 0, hi = F.length - 1;
+  while (lo < hi) { const mid = (lo + hi + 1) >> 1; if (F[mid].t <= at) lo = mid; else hi = mid - 1 }
+  return lo;
+}
+function draw() {
+  if (!cur) return;
+  const trailS = +$('trail').value;
+  cur.forEach((tr, i) => {
+    const cv = $('c' + i), g = cv.getContext('2d'), W = cv.width, Hh = cv.height, fi = frameAt(tr, t), f = tr.frames[fi];
+    if (!f) return;
+    const [vx, vy, vw, vh] = f.V, sx = x => (x - vx + vw) / (2 * vw) * W, sy = y => (vy + vh - y) / (2 * vh) * Hh, ppm = W / (2 * vw);
+    g.fillStyle = '#0f1722'; g.fillRect(0, 0, W, Hh);
+    const wl = sy(0); if (wl < Hh) { g.fillStyle = '#0a2433'; g.fillRect(0, Math.max(0, wl), W, Hh - Math.max(0, wl)); g.strokeStyle = '#2b6b8a'; g.lineWidth = 2; g.beginPath(); g.moveTo(0, wl); g.lineTo(W, wl); g.stroke() }
+    // a 10 m grid fixed in the world, so motion against the background shows
+    g.strokeStyle = 'rgba(255,255,255,.05)'; g.lineWidth = 1; g.beginPath();
+    for (let x = Math.ceil((vx - vw) / 10) * 10; x < vx + vw; x += 10) { g.moveTo(sx(x), 0); g.lineTo(sx(x), Hh) }
+    for (let y = Math.ceil((vy - vh) / 10) * 10; y < vy + vh; y += 10) { g.moveTo(0, sy(y)); g.lineTo(W, sy(y)) }
+    g.stroke();
+    // trails: world positions over the last trailS seconds, drawn with this frame's camera
+    if (trailS > 0) {
+      const back = Math.max(0, frameAt(tr, t - trailS)), paths = new Map();
+      for (let j = back; j <= fi; j++) for (const e of tr.frames[j].e) { let p = paths.get(e[0]); if (!p) paths.set(e[0], p = []); p.push(e) }
+      for (const p of paths.values()) { if (p.length < 2) continue; g.strokeStyle = COLORS[data.kinds[p[0][1]]] + '66'; g.lineWidth = 2; g.beginPath(); p.forEach((e, k) => k ? g.lineTo(sx(e[3]), sy(e[4])) : g.moveTo(sx(e[3]), sy(e[4]))); g.stroke() }
+    }
+    const recent = new Map();
+    for (const fl of tr.flicks) if (fl.t <= f.t && fl.t > f.t - .6) recent.set(fl.id + ':' + fl.w, fl);
+    for (const e of f.e) {
+      const X = sx(e[3]), Y = sy(e[4]), c = COLORS[data.kinds[e[1]]], wet = data.states[e[2]] === 'wet', r = Math.max(3, 1.1 * ppm);
+      g.beginPath(); g.arc(X, Y, r, 0, Math.PI * 2);
+      if (wet) { g.strokeStyle = c; g.lineWidth = 2; g.stroke() } else { g.fillStyle = c; g.fill() }
+      for (const w of [1, 0]) { const fl = recent.get(e[0] + ':' + w); if (!fl) continue; const k = 1 - (f.t - fl.t) / .6; g.strokeStyle = w ? `rgba(255,77,94,${k})` : `rgba(255,178,62,${k})`; g.lineWidth = 3; g.beginPath(); g.arc(X, Y, r + 6 + (1 - k) * 10, 0, Math.PI * 2); g.stroke() }
+    }
+    // the dolphin
+    const DX = sx(f.d[0]), DY = sy(f.d[1]); g.fillStyle = '#e8f6ff'; g.beginPath(); g.ellipse(DX, DY, 1.6 * ppm, .7 * ppm, 0, 0, Math.PI * 2); g.fill();
+    g.fillStyle = 'rgba(255,255,255,.7)'; g.font = '14px system-ui'; g.fillText((f.k === 'w' ? 'swimming' : 'flying') + '  ' + (f.t - tr.t0).toFixed(1) + ' s', 10, 20);
+    const seenFlicks = tr.flicks.filter(x => x.t <= f.t), wf = seenFlicks.filter(x => x.w).length;
+    $('s' + i).textContent = `${f.e.length} enemies · world flicks so far ${wf} (at crossings ${seenFlicks.filter(x => x.w && x.ctx === 'cross').length}, while swimming ${seenFlicks.filter(x => x.w && x.ctx === 'water').length}) · screen-only ${seenFlicks.length - wf}`;
+  });
+  $('clock').textContent = t.toFixed(1) + ' / ' + dur().toFixed(1) + ' s';
+  $('scrub').value = dur() ? t / dur() * 1000 : 0;
+}
+function loop(now) {
+  const dt = Math.min(.1, (now - last) / 1000); last = now;
+  if (playing && cur) { t += dt * +$('speed').value; if (t > dur()) t = 0 }
+  draw(); requestAnimationFrame(loop);
+}
+$('file').onchange = async e => { const f = e.target.files[0]; if (f) setData(JSON.parse(await f.text())) };
+$('scen').onchange = e => pick(e.target.value);
+$('play').onclick = () => { playing = !playing; $('play').textContent = playing ? 'Pause' : 'Play' };
+$('scrub').oninput = e => { t = e.target.value / 1000 * dur() };
+addEventListener('keydown', e => { if (e.code === 'Space') { e.preventDefault(); $('play').click() } if (e.code === 'ArrowRight') t = Math.min(dur(), t + 1 / 30); if (e.code === 'ArrowLeft') t = Math.max(0, t - 1 / 30) });
+const q = new URLSearchParams(location.search).get('trace');
+if (q) fetch(q).then(r => r.json()).then(setData);
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
