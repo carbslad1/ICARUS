@@ -69,7 +69,16 @@ and it is finished well before you splash. Near the top of the screen, heights a
 **S5. The water line sweeps across the stage.** It is world geometry mapped onto the stage. As the camera dives it passes
 over the enemies, which are then in the water; they rise out by S4, and as you breach it sweeps back down past them.
 
-**S6. They push apart, and making room comes first.** Under the water you count as a neighbour 4 m wide. No flocking.
+**S6. They push apart, and making room comes first.** No flocking.
+
+**S6b. They get out of your way.** Once you are below an enemy's own height (S4), or under the water, it no longer wants
+to touch you. It works out from its stage velocity and yours how close you will pass in the next 0.5 s, and if that is
+within 4 m plus its radius it moves off that line, as fast as you are moving on the stage if it has to.
+
+**S8. Hitting the water is an event for each enemy, on its own.** When the water line reaches an enemy it plunges: for its
+own time (0.25–0.7 s, by its seed) it heads down and to its own side, clear of the line. Then it swims for the surface
+at its own speed, 2–3.5× its flying speed (by its seed), and flies out. Because each has its own time and speed, they
+come out one by one. Nothing holds it at the line: a line sweeping up past it leaves it under the water, swimming up.
 
 **S7. Spawns are fixed on the stage**, anywhere in view at least 14 m from you, at least 10 m above the water when that
 is in view, behind a marker that stays where it is on the screen.
@@ -88,9 +97,10 @@ is in view, behind a marker that stays where it is on the screen.
 | Longest on the water line | 3.3 s | 0.9 s | 2.1 s |
 | Touching you under the water (share of enemy time while you swim) | up to 0.02% | up to 0.18% | up to 0.98% |
 
-The gate still fails on touching (limit 0.05%; harmless, contact under the water does nothing), one hops reading of R
-(0.62 against 0.65) and one 2.1 s stay on the water line (limit 2 s). Not judged yet: how the stage feels, and whether
-enemies need grounding (lean, wakes), which only play can show.
+With S6b and S8 (2026-11-07): touching at most 0.29% (was 0.98%; limit 0.05%, contact under the water does nothing);
+longest on the water line 1.3 s (was 2.1 s; limit tightened to 1 s); time in the water about 1 s, varying by a third or
+more (they come out one by one). The gate still fails on touching, two water-line stays at wave 12, one flick reading
+(3.02 against 3) and R in hops and loops at wave 4 (0.60-0.64 against 0.65).
 
 ## 4. Questions for the designer (answered 2026-11-04: Q1 not left behind, Q2 keep a few metres off, Q3 turrets stay in the air; 2026-11-06: above the water too, they keep up at your speed)
 

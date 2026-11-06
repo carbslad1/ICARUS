@@ -5039,7 +5039,8 @@ function demoSeen(m){if(m?.kind!=='air'||m.wet||(typeof S!=='undefined'&&S&&m!==
 //   the screen. Guns, tricks and drawing keep reading enemies where they always did: e.pos in the arena, p.x under the
 //   water. Those are only where the stage puts them.
 // - S2: enemies steer in stage metres at v3's speeds. Velocity (e.velocity, or p.sv for a pursuer) is stage velocity.
-// - S3: Brotato's base-game roles. S4: each stays above the water at its own height. S6: they push apart.
+// - S3: Brotato's base-game roles. S4: each stays above the water at its own height. S6: they push apart, and S6b get out
+//   of your way. S8: hitting the water is each enemy's own event: it plunges, then swims for the surface.
 // All randomness comes from the run's seeded generator (ce).
 var Enemies = (() => {
   const PX = 34.2 / 450;                    // metres per Brotato pixel: its player's 450 px/s against the dolphin's 34.2 m/s
@@ -5052,7 +5053,11 @@ var Enemies = (() => {
     CAP: 6,            // S4: m of the stage's top its height spreads over when the water is high on the screen
     GAP: 1,            // S6: m between two enemies' edges below which they push apart
     PUSH: 1,           // S6: push apart at most this share of top speed, at full overlap
-    KEEP_OFF: 4,       // S6: m you count for as a neighbour under the water
+    KEEP_OFF: 4,       // S6b: m it keeps clear of your path (plus its radius)
+    AHEAD: .5,         // S6b: s ahead it looks for a close pass with you
+    SINK: [.25, .7],   // S8: s it plunges after hitting the water, by its seed
+    SIDE: 8,           // S8: m to its own side it heads while it plunges, at most
+    SWIM: [2, 3.5],    // S8: its swimming speed for the surface, × its flying speed, by its seed
     ROLES: Object.freeze({   // S3, Brotato's distances scaled to the dolphin
       keep: { range: 300 * PX, spread: 100 * PX },     // Spitter: keeps its range
       around: { range: 150 * PX, spread: 50 * PX },    // Fly: random points around you
@@ -5061,7 +5066,6 @@ var Enemies = (() => {
     }),
     CHARGE: Object.freeze({ wind: .65, dash: .6, rest: 1.3, speed: 48, approach: 10 })   // v3's charger, in its own numbers
   });
-  const YOU = { id: -1, radius: P.KEEP_OFF };
   const unit = (x, y) => { const n = Math.hypot(x, y); return n > 1e-9 ? { x: x / n, y: y / n, n } : { x: 0, y: 0, n: 0 } };
   const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
   const hash = (seed, k) => { const q = Math.sin((seed || 0) * k) * 43758.5453; return q - Math.floor(q) };
@@ -5132,6 +5136,25 @@ var Enemies = (() => {
     return { x: u.x * n, y: u.y * n };
   }
 
+  // S8: under the water it plunges, then swims for the surface (t, from S4) at its own speed
+  function inWater(r, e, pos, f, t, top) {
+    if (pos.y >= f.line) return { t, top };
+    if (r.time - (e.inT ?? -9) < P.SINK[0] + hash(e.seed, 41.3) * (P.SINK[1] - P.SINK[0]))
+      return { t: { x: pos.x + (hash(e.seed, 127.1) * 2 - 1) * P.SIDE, y: pos.y - 20 }, top };
+    return { t, top: top * (P.SWIM[0] + hash(e.seed, 97.9) * (P.SWIM[1] - P.SWIM[0])) };
+  }
+
+  // S6b: off the line of your closest pass; r.stageYou is you on the stage, with your stage velocity
+  function clearOfYou(r, e, pos, v, f, top) {
+    const Y = r.stageYou, none = { x: 0, y: 0 };
+    if (!Y || (r.medium.kind !== 'water' && floorOf(e, f).y <= f.me.y)) return none;
+    const rx = pos.x - f.me.x, ry = pos.y - f.me.y, wx = v.x - Y.vx, wy = v.y - Y.vy, w2 = wx * wx + wy * wy;
+    const t = w2 > 1e-6 ? clamp(-(rx * wx + ry * wy) / w2, 0, P.AHEAD) : 0, cx = rx + wx * t, cy = ry + wy * t, d = Math.hypot(cx, cy), R = (e.radius || 1) + P.KEEP_OFF;
+    if (d >= R) return none;
+    const u = d > 1e-6 ? { x: cx / d, y: cy / d } : { x: 0, y: -1 }, s = (R - d) / R * Math.max(top, Math.hypot(Y.vx, Y.vy) * 1.1);
+    return { x: u.x * s, y: u.y * s };
+  }
+
   // S2, S6: one step of velocity toward t at up to top; the nearer it is to touching, the more it makes room
   function steer(v, pos, t, top, push, dt) {
     const u = unit(t.x - pos.x, t.y - pos.y), s = top * Math.min(1, u.n / P.ARRIVE), q = top > 0 ? Math.min(1, Math.hypot(push.x, push.y) / top) : 0;
@@ -5152,8 +5175,9 @@ var Enemies = (() => {
     const f = stage(r), at = e => ({ x: (t.origin.x + e.pos.x - f.V.x) / f.k, y: (t.origin.y + e.pos.y - f.V.y) / f.k }), pos = at(s);
     // the arena's enemies where they stood at the start of this step (made once a step)
     if (r.apartT !== r.time || r.apartN !== r.enemies.length) { r.apartT = r.time; r.apartN = r.enemies.length; r.apartL = r.enemies.map(e => { const q = at(e); return [e, q.x, q.y] }); r.apartI = new Map(r.apartL.map((x, j) => [x[0], j])) }
-    const top = k === 'charge' ? P.CHARGE.approach * Osp.spd * FiveCombat.movementScale(r, s) : own(r, s), j = r.apartI.get(s);
-    s.velocity = steer(s.velocity, pos, target(r, s, k === 'charge' ? 'chase' : k, pos, f), top, j == null ? { x: 0, y: 0 } : apart(r.apartL, j, top), i);
+    const j = r.apartI.get(s), w = inWater(r, s, pos, f, target(r, s, k === 'charge' ? 'chase' : k, pos, f), k === 'charge' ? P.CHARGE.approach * Osp.spd * FiveCombat.movementScale(r, s) : own(r, s));
+    const push = j == null ? { x: 0, y: 0 } : apart(r.apartL, j, w.top), q = clearOfYou(r, s, pos, s.velocity, f, w.top);
+    s.velocity = steer(s.velocity, pos, w.t, w.top, { x: push.x + q.x, y: push.y + q.y }, i);
   }
 
   // S3 Charge, v3's: wind up (slowing to a stop), dash at its own speed toward where you were, rest, then approach.
@@ -5176,16 +5200,16 @@ var Enemies = (() => {
     if (!r.pursuers?.length) return;
     const m = r.medium, swim = m.kind === 'water', f = stage(r), { V, k } = f, me = he(r), floor = Oseabed(r), keep = [];
     const list = r.pursuers.map(p => [p, (p.x - V.x) / k, (p.y - V.y) / k]);
-    if (swim) list.push([YOU, f.me.x, f.me.y]);
     for (let i = 0; i < r.pursuers.length; i++) {
       const p = r.pursuers[i], e = p.e || p, pos = { x: list[i][1], y: list[i][2] };
       p.px = p.x; p.py = p.y; p.age += dt; if (swim) p.lurk = false;
       // tricks and spawns set p.h and p.v
       if (!p.sv || p.h !== p.lh || p.v !== p.lv) p.sv = { x: Math.cos(p.h) * p.v, y: Math.sin(p.h) * p.v };
       if (!trickHeld(e)) {
-        const base = own(r, e), go = role(r, e), top = p.lurk ? Math.min(base, 2 + 2 * Math.hypot(p.ex - p.x, -p.ld - p.y)) : base;
-        const T = p.lurk ? { x: (p.ex - V.x) / k, y: (-p.ld - V.y) / k } : target(r, e, go === 'charge' ? 'chase' : go, pos, f);
-        p.sv = steer(p.sv, pos, T, top, apart(list, i, top), dt);
+        const base = own(r, e), go = role(r, e);
+        const w = p.lurk ? { t: { x: (p.ex - V.x) / k, y: (-p.ld - V.y) / k }, top: Math.min(base, 2 + 2 * Math.hypot(p.ex - p.x, -p.ld - p.y)) } : inWater(r, e, pos, f, target(r, e, go === 'charge' ? 'chase' : go, pos, f), base);
+        const push = apart(list, i, w.top), q = p.lurk ? { x: 0, y: 0 } : clearOfYou(r, e, pos, p.sv, f, w.top);
+        p.sv = steer(p.sv, pos, w.t, w.top, { x: push.x + q.x, y: push.y + q.y }, dt);
       }
       p.x += p.sv.x * k * dt; p.y += p.sv.y * k * dt;
       if (p.y < floor + p.radius) { p.y = floor + p.radius; p.sv.y = Math.max(0, p.sv.y) }
@@ -5213,8 +5237,13 @@ var Enemies = (() => {
       const b = L.m === m ? L.o : cut || o, wx = b.x + e.pos.x, wy = b.y + e.pos.y;   // where it stood, by the old frame
       e.pos = ye(V.x + (wx - L.x) * q - o.x, V.y + (wy - L.y) * q - o.y);
     }
-    for (const p of r.pursuers || []) { const wet = p.y < 0; if (wet !== !!p.wet) { p.wet = wet; r.events.push({ kind: 'dive', pos: se(p.x, 0) }) } }
-    if (air) for (const e of r.enemies) { const wet = o.y + e.pos.y < 0; if (wet !== !!e.uw) { e.uw = wet; r.events.push({ kind: 'dive', pos: se(o.x + e.pos.x, 0) }) } }
+    // S5, S8: the line crossing an enemy (out and straight back in within a second is one visit)
+    const cross = (e, wet, x) => { if (wet === !!e.uw) return; e.uw = wet; if (wet) { if (r.time - (e.outT ?? -9) > 1) e.inT = r.time } else e.outT = r.time; r.events.push({ kind: 'dive', pos: se(x, 0) }) };
+    for (const p of r.pursuers || []) { p.wet = p.y < 0; cross(p.e || p, p.wet, p.x) }
+    if (air) for (const e of r.enemies) cross(e, o.y + e.pos.y < 0, o.x + e.pos.x);
+    // you on the stage, with your stage velocity (S6b)
+    const me = he(r), Y = r.stageYou, mx = (me.x - V.x) / k, my = (me.y - V.y) / k, d = dt || Ar;
+    r.stageYou = { x: mx, y: my, vx: Y ? (mx - Y.x) / d : 0, vy: Y ? (my - Y.y) / d : 0 };
   }
 
   return { P, scale, stage, role, target, steer, air, pursuers, carry };

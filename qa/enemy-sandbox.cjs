@@ -111,7 +111,7 @@ function quantile(a, p) { const s = [...a].sort((x, y) => x - y); return s.lengt
 
 function newStats() {
   return { steps: 0, enemySteps: 0, onSteps: 0, off: 0, R: [], crowd: [0, 0], cover: [], dist: [], flick: { cross: 0, water: 0, air: 0 }, sflick: { cross: 0, water: 0, air: 0 },
-    copy: { xy: 0, xx: 0, n: 0 }, rev: [0, 0], jumps: 0, sjumps: 0, overlap: 0, rapid: 0, line: new Map(), lineMax: 0, touch: [0, 0], offPh: [[0, 0], [0, 0]], kinds: {}, why: {} };
+    copy: { xy: 0, xx: 0, n: 0 }, rev: [0, 0], jumps: 0, sjumps: 0, overlap: 0, rapid: 0, line: new Map(), lineMax: 0, touch: [0, 0], visits: [], offPh: [[0, 0], [0, 0]], kinds: {}, why: {} };
 }
 
 function runOne(H, scenName, wave, seed, trace) {
@@ -171,6 +171,8 @@ function measure(H, r, st, track, cross, dolphinX, frames, flicks, step) {
     const jump = Math.hypot(e.wx - T.wx, e.wy - T.wy) > JUMP, sjump = !jump && Math.hypot(px - T.px, py - T.py) > 60;
     if (jump) st.jumps++; if (sjump && on) st.sjumps++;
     if (jump) why(st, 'jump', T, e, r, wet, Math.hypot(e.wx - T.wx, e.wy - T.wy).toFixed(1) + ' m');
+    // S8: how long each visit to the water lasts, and at what time since the splash it came out
+    if (T.wy >= 0 && e.wy < 0) T.in = t; else if (T.wy < 0 && e.wy >= 0 && T.in != null) { st.visits.push(t - T.in); T.in = null }
     if ((T.wy >= 0) !== (e.wy >= 0) || T.st !== e.st) { T.cross = t; (T.hist || (T.hist = [])).push([t, T.st]); if (T.hist.length > 6) T.hist.shift() }
     const ctx = nearCross || t - T.cross < CROSS_WIN ? 'cross' : wet ? 'water' : 'air';
     if (!jump) {
@@ -233,7 +235,7 @@ function merge(list) {
     o.R.push(...s.R); o.cover.push(...s.cover); o.dist.push(...s.dist);
     o.crowd[0] += s.crowd[0]; o.crowd[1] += s.crowd[1]; o.rev[0] += s.rev[0]; o.rev[1] += s.rev[1];
     for (const i of [0, 1]) for (const j of [0, 1]) o.offPh[i][j] += s.offPh[i][j];
-    o.lineMax = Math.max(o.lineMax, s.lineMax); o.touch[0] += s.touch[0]; o.touch[1] += s.touch[1];
+    o.visits.push(...s.visits); o.lineMax = Math.max(o.lineMax, s.lineMax); o.touch[0] += s.touch[0]; o.touch[1] += s.touch[1];
     o.copy.xy += s.copy.xy; o.copy.xx += s.copy.xx; o.copy.n += s.copy.n;
     for (const c of ['cross', 'water', 'air']) { o.flick[c] += s.flick[c]; o.sflick[c] += s.sflick[c] }
     for (const [k, v] of Object.entries(s.why)) o.why[k] = (o.why[k] || 0) + v;
@@ -253,6 +255,7 @@ function summary(s) {
     flicks: per(s.flick), screenFlicks: per(s.sflick),
     // the slope needs the dolphin to change its sideways speed: under 4 m/s per 0.25 s (rms) it is noise, so none
     copy: s.copy.n && Math.sqrt(s.copy.xx / s.copy.n) >= 4 ? +(s.copy.xy / s.copy.xx).toFixed(2) : null,
+    visitN: s.visits.length, visit: +(mean(s.visits) || 0).toFixed(2), visitSd: +Math.sqrt(mean(s.visits.map(x => (x - mean(s.visits)) ** 2)) || 0).toFixed(2),
     Rn: s.R.length, lineMax: +s.lineMax.toFixed(2), touch: +(s.touch[0] / Math.max(1, s.touch[1])).toFixed(4), reversals: s.rev[1] ? +(s.rev[0] / s.rev[1]).toFixed(2) : null, rapid: s.rev[1] ? +(s.rapid / s.rev[1] * 60).toFixed(2) : null,
     jumps: +(s.jumps / enMin).toFixed(2), screenJumps: +(s.sjumps / onMin).toFixed(2),
     why: Object.entries(s.why).sort((a, b) => b[1] - a[1]).slice(0, 8),
@@ -314,10 +317,11 @@ function main() {
 // you, kept there so their markers stay in view while the camera follows you (qa/wetspawn.cjs), and the ones gliding in
 // after you, so R stays about where it was (0.57 at wave 4; before 0.55-0.57) though overlap fell from 20% to 1-2%.
 // line: the longest any enemy stays within 1.5 m of the water line (before: up to 3.3 s; 2026-11-04 build: 1.2 s).
+// spreadOut: S8, each enemy's time in the water varies by at least this share of the mean (they do not move as one).
 // touch: share of enemy time while you swim spent touching you under the water (R7b; few enemies go under now, so a share
 // of under-water time alone read 29% from one enemy).
 // offSwim, offFly: share of enemy time off screen while you swim / fly (Q1, not left behind; HEAD 6f0c08c: up to 38% / 14%).
-const GATE = { offSwim: .25, offFly: .2, touch: .0005, line: 2, copy: .4, reversals: .45, rapid: 15, flicks: 3, jumps: 0, R: .65, Rswim: .5, Rn: 60, overlap: .2 };
+const GATE = { spreadOut: .25, offSwim: .25, offFly: .2, touch: .0005, line: 1, copy: .4, reversals: .45, rapid: 15, flicks: 3, jumps: 0, R: .65, Rswim: .5, Rn: 60, overlap: .2 };
 function gate(x) {
   // copying is a positive slope (moving with the dolphin); a negative one is independent motion, e.g. enemies easing to
   // their glide speed while the dolphin speeds up after the splash
@@ -326,6 +330,7 @@ function gate(x) {
     [x.screenFlicks.cross + x.screenFlicks.water + x.screenFlicks.air <= GATE.flicks, `screen flicks ${(x.screenFlicks.cross + x.screenFlicks.water + x.screenFlicks.air).toFixed(2)}/min > ${GATE.flicks}`],
     [x.screenJumps <= GATE.jumps, `screen jumps ${x.screenJumps}/min`], [x.lineMax <= GATE.line, `stuck on the water line for ${x.lineMax} s`],
     [x.touch <= GATE.touch, `under the water, touching you ${(x.touch * 100).toFixed(2)}% of the time`],
+    [x.visitN < 20 || x.visitSd / x.visit >= GATE.spreadOut, `come out of the water together (${x.visit} ± ${x.visitSd} s)`],
     [x.offSwim <= GATE.offSwim, `off screen while you swim ${(x.offSwim * 100).toFixed(0)}%`], [x.offFly <= GATE.offFly, `off screen while you fly ${(x.offFly * 100).toFixed(0)}%`], [!(x.R < (SCEN[x.scen].water && x.scen !== 'loops' ? GATE.Rswim : GATE.R)) || x.Rn < GATE.Rn, `R ${x.R} too low (bunched; ${x.Rn} samples)`], [x.overlap <= GATE.overlap, `overlapping ${(x.overlap * 100).toFixed(0)}%`]];
 }
 if (require.main === module) main();
