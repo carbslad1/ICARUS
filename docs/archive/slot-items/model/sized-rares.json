@@ -1,0 +1,242 @@
+{
+ "budget": {
+  "C": 7.5,
+  "U": 11,
+  "R": 15
+ },
+ "waves": [
+  5,
+  10,
+  15,
+  20
+ ],
+ "over": [
+  "discharge",
+  "battery",
+  "capacitor",
+  "mirror"
+ ],
+ "items": {
+  "tidal": {
+   "rarity": "R",
+   "budget": 15,
+   "p": 0.5,
+   "text": "Discharges add half of your last Discharge's Mult",
+   "value": 14.04,
+   "perWave": [
+    14.14,
+    14.14,
+    13.85,
+    14.03
+   ],
+   "bestPlan": [
+    "10",
+    "10",
+    "10",
+    "10"
+   ],
+   "flat10": 14.14,
+   "steep75": 10.75
+  },
+  "spendthrift": {
+   "rarity": "R",
+   "budget": 15,
+   "p": 1,
+   "text": "Cash Out also Discharges",
+   "value": 15,
+   "perWave": [
+    15,
+    15,
+    15,
+    15
+   ],
+   "bestPlan": [
+    "30",
+    "75",
+    "60",
+    "20"
+   ],
+   "flat10": 15,
+   "steep75": 15
+  },
+  "hollow": {
+   "rarity": "R",
+   "budget": 15,
+   "p": 0.5,
+   "text": "+×0.5 Mult per empty slot",
+   "value": 15,
+   "perWave": [
+    15,
+    15,
+    15,
+    15
+   ],
+   "bestPlan": [
+    "30",
+    "75",
+    "60",
+    "20"
+   ],
+   "flat10": 15,
+   "steep75": 15
+  },
+  "counterweight": {
+   "rarity": "R",
+   "budget": 15,
+   "p": 4,
+   "text": "×4 Mult if this is the only item before your Discharge",
+   "value": 15,
+   "perWave": [
+    15,
+    15,
+    15,
+    15
+   ],
+   "bestPlan": [
+    "30",
+    "75",
+    "60",
+    "20"
+   ],
+   "flat10": 15,
+   "steep75": 15
+  },
+  "echolocation": {
+   "rarity": "R",
+   "budget": 15,
+   "p": 0.02,
+   "text": "+0.02 Mult per kill made during a Discharge this run",
+   "value": 14.16,
+   "perWave": [
+    2.51,
+    8.34,
+    17.01,
+    28.81
+   ],
+   "bestPlan": [
+    "75",
+    "75",
+    "89",
+    "89"
+   ],
+   "flat10": 7.76,
+   "steep75": 8.34
+  },
+  "migration": {
+   "rarity": "R",
+   "budget": 15,
+   "p": 0.2,
+   "text": "+0.2 Mult for each wave this run you launched in 3 or more tiers",
+   "value": 17.25,
+   "perWave": [
+    6,
+    13.5,
+    21,
+    28.5
+   ],
+   "bestPlan": [
+    "15/30/50/75",
+    "20/45/75",
+    "20/45/75",
+    "20/45/75"
+   ],
+   "flat10": 0,
+   "steep75": 0
+  },
+  "springtide": {
+   "rarity": "R",
+   "budget": 15,
+   "p": 3,
+   "text": "Stored Charge ×3 at each breach",
+   "value": 15.31,
+   "perWave": [
+    15.48,
+    15.48,
+    13.93,
+    16.34
+   ],
+   "bestPlan": [
+    "20/20/20/75",
+    "20/20/20/75",
+    "20/20/20/75",
+    "20/20/20/75"
+   ],
+   "flat10": 0,
+   "steep75": 0
+  },
+  "thunderhead": {
+   "rarity": "R",
+   "budget": 15,
+   "p": 100,
+   "text": "+1 Mult per 100 Charge cut short at entry this run",
+   "value": 19.2,
+   "perWave": [
+    22.91,
+    22.99,
+    17.17,
+    13.75
+   ],
+   "bestPlan": [
+    "10",
+    "10",
+    "10",
+    "10"
+   ],
+   "flat10": 22.99,
+   "steep75": 0
+  },
+  "burst": {
+   "rarity": "U",
+   "budget": 11,
+   "p": 20,
+   "text": "Spend all Charge: +200% × Mult damage for Charge ÷ 20 seconds",
+   "value": 13.58,
+   "perWave": [
+    22.91,
+    15.49,
+    9.67,
+    6.25
+   ],
+   "bestPlan": [
+    "10",
+    "10",
+    "10",
+    "10"
+   ],
+   "flat10": 15.49,
+   "steep75": 0
+  }
+ },
+ "fixed": {
+  "keystone": {
+   "text": "The next slot activates twice",
+   "inRef": 7.5,
+   "home": "discharge+lens+prism",
+   "atHome": 30
+  },
+  "inversion": {
+   "text": "Swap your Charge and Mult",
+   "inRef": 14.02,
+   "home": "discharge+battery+capacitor",
+   "atHome": 14.88
+  },
+  "mirror": {
+   "text": "Copies the item in the slot before it",
+   "inRef": 7.5,
+   "home": "discharge+lens+prism",
+   "atHome": 30
+  },
+  "riptide": {
+   "text": "Discharges cut short at entry continue from your next breach",
+   "inRef": 22.44,
+   "home": "discharge+battery+capacitor+mirror",
+   "atHome": 22.44
+  },
+  "undertow": {
+   "text": "Charge cut short at entry carries to the next flight",
+   "inRef": 0,
+   "home": "discharge+capacitor+mirror+feedback",
+   "atHome": 33.35
+  }
+ }
+}

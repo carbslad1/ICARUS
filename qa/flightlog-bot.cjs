@@ -16,7 +16,7 @@ const SPACE = process.argv.includes('--space') ? 1 : 0;
 // --danger also plays with step 2 on (implies --space); --lead=x and --mines=n override its settings
 const DANGER = process.argv.includes('--danger') ? 1 : 0, opt = k => { const a = process.argv.find(a => a.startsWith('--' + k + '=')); return a ? +a.split('=')[1] : undefined };
 // --verbs=0 switches step 3 off for a comparison
-const TUNE = { space: SPACE || DANGER, danger: DANGER, ...(opt('verbs') != null && { verbs: opt('verbs') }), ...(opt('lead') != null && { lead: opt('lead') }), ...(opt('mines') != null && { mines: opt('mines') }) };
+const TUNE = { port: 0, space: SPACE || DANGER, danger: DANGER, ...(opt('verbs') != null && { verbs: opt('verbs') }), ...(opt('lead') != null && { lead: opt('lead') }), ...(opt('mines') != null && { mines: opt('mines') }) };
 
 const DCOUNT = [], VCOUNT = [];
 function run(style) {

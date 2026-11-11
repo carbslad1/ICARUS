@@ -135,7 +135,9 @@ One cycle is a dive followed by a flight. These are medians from 291 bot flights
 
 ## 8. Where the design is heading (not built)
 
-`ICARUS_DESIGN.md` §4 and §10 (revised 2026-10-30) are the target. In short:
+> **2026-11-08: this section is archived thinking, not the plan.** The design direction is open; see `AGENTS.md`.
+
+`docs/archive/ICARUS_DESIGN.md` §4 and §10 (revised 2026-10-30) were the target at the time. In short:
 
 - **The hook:** the dive (a short, calm decision every 4–8 s) and the splashdown (a payout moment).
 - **Input:** underwater, tap **W/A/S/D** to choose the trick(s); the last choice carries over. Hold **Space** to carve; the Space carve is already built. In the air, WASD only moves.

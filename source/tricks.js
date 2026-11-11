@@ -38,6 +38,10 @@ var Tricks = (() => {
   // weapon type tags (design doc §4.6); melee and ranged never share a weapon
   const TAGS = Object.freeze({ fin: ['melee'], sonic: ['melee'], minigun: ['ranged'], laser: ['ranged'], rocket: ['ranged'], arc: ['melee', 'elemental'], flak: ['ranged', 'elemental'], harpoon: ['ranged', 'economy'], depth: ['elemental', 'economy'] });
   const on = r => !!(DEMO.tune.tricks && DEMO.tune.rules && r?.demo);
+  // the trick ladders plan (DEMO.tune.ladders, step 1): no type damage boost, and Front flip shoves without invulnerability
+  const ladders = () => !!DEMO.tune.ladders;
+  const ability = id => ladders() && id === 'front' ? 'Shove' : TRICKS[id].ability;
+  const text = id => ladders() && id === 'front' ? 'At the breach, enemies within 2.5 m are shoved aside for 1 s. You can still be hit.' : TRICKS[id].text;
   const unit = (x, y) => { const n = Math.hypot(x, y) || 1; return { x: x / n, y: y / n } };
 
   // the keys held under water, in the order they were pressed (called each water step with the step's input)
@@ -55,7 +59,7 @@ var Tricks = (() => {
   const chosen = r => r.demo?.trickForce !== undefined ? r.demo.trickForce : held(r);
   const flying = r => r.hand?.tk?.id || null;           // this flight's trick, fixed at the breach
   function boostFor(r, weapon) {
-    const id = flying(r); if (!id || r.lab?.off) return 1;
+    const id = flying(r); if (!id || r.lab?.off || ladders()) return 1;
     return (TAGS[weapon] || []).includes(TRICKS[id].type) ? 1 + P.boost : 1;
   }
 
@@ -137,18 +141,18 @@ var Tricks = (() => {
     if (!el) { el = document.createElement('div'); el.id = 'trick-pick'; document.body.appendChild(el) }
     const air = r.medium?.kind === 'air', pick = air ? flying(r) : r.lab?.off ? null : chosen(r), sig = (air ? 'a' : 'w') + (pick || '-') + (r.lab?.off ? 'x' : '');
     el.hidden = false; if (el.dataset.sig === sig) return; el.dataset.sig = sig; el.classList.toggle('in-air', air);
-    if (air) { el.innerHTML = pick ? `<span class="tp-key on"><b>${TRICKS[pick].glyph} ${TRICKS[pick].name}</b><small>+${Math.round(P.boost * 100)}% ${TRICKS[pick].type}</small></span>` : ''; el.hidden = !pick; return }
-    el.innerHTML = `<small class="tp-hint">Hold as you breach</small>` + ['cork', 'back', 'flop', 'front'].map(id => { const T = TRICKS[id]; return `<span class="tp-key${id === pick ? ' on' : ''}"><kbd>${T.key.toUpperCase()}</kbd><b>${T.name}</b><small>${T.type} · ${T.ability}</small></span>` }).join('');
+    if (air) { el.innerHTML = pick ? `<span class="tp-key on"><b>${TRICKS[pick].glyph} ${TRICKS[pick].name}</b><small>${ladders() ? ability(pick) : '+' + Math.round(P.boost * 100) + '% ' + TRICKS[pick].type}</small></span>` : ''; el.hidden = !pick; return }
+    el.innerHTML = `<small class="tp-hint">Hold as you breach</small>` + ['cork', 'back', 'flop', 'front'].map(id => { const T = TRICKS[id]; return `<span class="tp-key${id === pick ? ' on' : ''}"><kbd>${T.key.toUpperCase()}</kbd><b>${T.name}</b><small>${ladders() ? ability(id) : T.type + ' · ' + T.ability}</small></span>` }).join('');
   }
 
-  return { P, DEFAULTS, TRICKS, IDS, TAGS, on, input, held, chosen, flying, boostFor, open, step, entry, shockwave, animate, draw, hud };
+  return { P, DEFAULTS, TRICKS, IDS, TAGS, on, ladders, ability, text, input, held, chosen, flying, boostFor, open, step, entry, shockwave, animate, draw, hud };
 })();
 // the breach: DEMO.open opens the flight's hand
 {const open0=DEMO.open;DEMO.open=function(r){open0(r);if(Tricks.on(r))Tricks.open(r)}}
 // the boost: the trick's weapon type deals more damage this flight
 {const b0=FiveCombat.beforeDamage;FiveCombat.beforeDamage=function(r,e,a,ctx){a=b0.call(FiveCombat,r,e,a,ctx);if(!Tricks.on(r))return a;const k=Tricks.boostFor(r,ctx?.weapon);if(k!==1&&r.hand?.tk)r.hand.tk.boosted+=a*(k-1);return a*k}}
-// Charge: no damage while it lasts
-{const hit0=DEMO.hit;DEMO.hit=function(r,a){if(Tricks.on(r)&&r.chargeT>0&&r.medium?.kind==='air')return;return hit0(r,a)}}
+// Charge: no damage while it lasts (ladders off only)
+{const hit0=DEMO.hit;DEMO.hit=function(r,a){if(Tricks.on(r)&&!Tricks.ladders()&&r.chargeT>0&&r.medium?.kind==='air')return;return hit0(r,a)}}  // with the ladders plan on, Front flip only shoves
 // the enemy step: Time slow runs it at a share of the time (enemies, their shots and their timers), while the spawn
 // schedule keeps the full time; then Charge, Repulse and the apex
 {const me0=ME;ME=function(r,t,e,i){

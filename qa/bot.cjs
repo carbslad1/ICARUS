@@ -18,7 +18,7 @@ function rng(seed) { let a = (seed >>> 0) || 1; return () => { a = (a + 0x6D2B79
 const KEEP = 8, DODGE = 7, SHOT = 6, DECIDE = .27, WATCH = 4, NOTICE = .75;
 
 function flyer(G, styleName, seed, opts = {}) {
-  const keep = opts.keep ?? KEEP;   // how far it holds from the nearest enemy (a Close build fights nearer)
+  const keepOf = typeof opts.keep === 'function' ? opts.keep : () => opts.keep ?? KEEP;   // how far it holds from the nearest enemy (a Close build fights nearer); a function reads it from the run each decision (the in-reach bot)
   const st = STYLES[styleName];
   if (!st) throw Error('no style ' + styleName);
   const R = rng(seed * 2654435761), mem = { phase: 'dive', next: 0, keys: { x: 0, y: 0 }, seen: new Map() };
@@ -47,6 +47,7 @@ function flyer(G, styleName, seed, opts = {}) {
     if (S.time >= mem.next) {
       mem.next = S.time + DECIDE * (.5 + R());
       const me = m.local;
+      const keep = keepOf(S);
       const E = S.enemies.map(e => ({ e, d: Math.hypot(e.pos.x - me.x, e.pos.y - me.y) - (e.radius || 0) })).sort((a, b) => a.d - b.d).slice(0, WATCH);
       let vx = 0, vy = 0;
       if (E.length) { // hold about KEEP m from the nearest

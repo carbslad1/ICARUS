@@ -1,5 +1,7 @@
 # ICARUS — tricks as reels (S4)
 
+> **2026-11-08: this file describes an old build.** Design references below are archived and are not the plan. See `AGENTS.md`.
+
 > **Design direction changed (2026-10-30).** `ICARUS_DESIGN.md` §4 and §10 now describe the target design. Each dive, you choose a trick or combo underwater, and it boosts its weapon type for the flight. Tricks never deal damage; items only modify; levels give item drafts; catalysts evolve weapons; splashdown pays kills and orbs × clean streak. The build order is §4.17. This build still contains the earlier systems: the S4 slot machine (Appendix A) and the routine and positional design built on this branch (Appendix B).
 
 Open **ICARUS-demo.html** in a browser. This build implements the scoring and run design in `ICARUS_DESIGN.md` §4 and §10 (revised 2026-10-25).

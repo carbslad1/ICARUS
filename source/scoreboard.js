@@ -114,7 +114,7 @@ var ScoreHUD = (() => {
       set('flight',`FLIGHT ${String(e.hand).padStart(2,'0')} · WAVE ${e.wave}`);
       model.chips=e.chips;model.mult=e.mult;model.score=e.score;model.waveScore=e.waveScore;model.quota=e.quota;model.banked=true;
       root.classList.add('is-banked');root.classList.remove('is-combo');set('total-label',e.busted?'BUSTED':'BANKED');set('status',e.met?'WAVE TARGET MET':'BANKED');addition('bank-add',e.busted&&!e.score?'BUST':'+'+number(e.score));
-      notice(e.pearls!=null?(e.score>0?`+${number(e.pearls)} PEARLS · STREAK ×${e.streak}`:`NO KILLS · STREAK ×${e.streak}`):e.busted?'BUST · '+(e.score?'SECOND WIND':'NOTHING BANKED'):e.score>0?(e.met?'WAVE TARGET MET':'SPLASH! SCORE BANKED'):'NO KILLS · TRICKS RETAINED','bank');pulse('score',1.6);pulse('chips',.6);pulse('mult',.8);sound('bank');
+      notice(e.pearls!=null?(DEMO.tune.port?`STREAK ×${e.streak}`:e.score>0?`+${number(e.pearls)} PEARLS · STREAK ×${e.streak}`:`NO KILLS · STREAK ×${e.streak}`):e.busted?'BUST · '+(e.score?'SECOND WIND':'NOTHING BANKED'):e.score>0?(e.met?'WAVE TARGET MET':'SPLASH! SCORE BANKED'):'NO KILLS · TRICKS RETAINED','bank');pulse('score',1.6);pulse('chips',.6);pulse('mult',.8);sound('bank');
       if(e.score>0){popup('score','+'+number(e.score),'bank');if(!reduced()&&root.animate){root._bankAnim?.cancel();root._bankAnim=root.animate([{transform:'translateX(-50%) scale(1)'},{transform:'translateX(-50%) scale(1.035)',offset:.18},{transform:'translateX(-50%) scale(.99)',offset:.5},{transform:'translateX(-50%) scale(1)'}],{duration:530,easing:'cubic-bezier(.16,1,.3,1)'});}}
       hold=now+1000;return reduced()?0:720;
     }

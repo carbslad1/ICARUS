@@ -11,7 +11,7 @@ var Lab = (() => {
   // the live numbers each trick exposes: [key in Routine.P (tk:key in Tricks.P, tune:key in DEMO.tune), label, min, max, step]
   const boost = ['tk:boost', 'Boost to its weapon type (damage share)', 0, 1, .05];
   const PARAMS = {
-    front: [['tk:chargeT', 'Invulnerable for (s)', .2, 3, .1], ['tk:chargeR', 'Shoves enemies within (m)', 1, 6, .1], ['tk:chargePush', 'Shove (m/s)', 5, 60, 1], boost],
+    front: [['tk:chargeT', 'Shove lasts (s; invulnerable too with ladders off)', .2, 3, .1], ['tk:chargeR', 'Shoves enemies within (m)', 1, 6, .1], ['tk:chargePush', 'Shove (m/s)', 5, 60, 1], boost],
     back: [['tk:repulseR', 'Repulse reach (m)', 4, 25, .5], ['tk:repulseV', 'Push (m/s)', 10, 80, 1], ['tk:repulseT', 'Pushes for (s)', .1, 1, .05], boost],
     cork: [['tk:slowT', 'Slow lasts (s)', .3, 4, .1], ['tk:slow', 'Enemy speed while slowed (share)', .1, 1, .05], boost],
     flop: [['tk:shockR', 'Shockwave reach (m)', 3, 25, .5], ['tk:shockV', 'Knockback (m/s)', 5, 60, 1], ['tk:flopX', 'XP orbs and pearls ×', 1, 3, .05], boost],
@@ -88,7 +88,7 @@ var Lab = (() => {
     return `<div class="lo-panel lab-panel" role="dialog" aria-label="Trick lab"><header><b>TRICK LAB</b><button data-lab-close>✕</button></header>
       <small class="lo-desc">One trick at a time. Perform it by holding its key as you breach. Tune it until it feels right, then check it with <code>node qa/jumpstyle.cjs ${E(cfg.trick)}${four(cfg.trick) ? " --waves=5:1,10:2 --seeds=24" : ""}</code>. In the run, B switches the trick off and on.</small>
       <section><h4>Trick</h4><label>Trick <select data-lab="trick">${order.map(id => opt(id, label(id), id === cfg.trick)).join('')}</select></label>
-        ${F ? `<small class="lo-desc lo-wide">Boosts ${E(X.type)} weapons · ${E(X.ability)}: ${E(X.text)}</small></section>` : `<label>Slot <select data-lab="slot">${opt('', 'natural (' + Routine.SLOT_NAMES[X.slot] + ')', !cfg.slot)}${Routine.SLOTS.map(s => opt(s, Routine.SLOT_NAMES[s], cfg.slot === s)).join('')}</select></label>
+        ${F ? `<small class="lo-desc lo-wide">${Tricks.ladders() ? '' : 'Boosts ' + E(X.type) + ' weapons · '}${E(Tricks.ability(cfg.trick))}: ${E(Tricks.text(cfg.trick))}</small></section>` : `<label>Slot <select data-lab="slot">${opt('', 'natural (' + Routine.SLOT_NAMES[X.slot] + ')', !cfg.slot)}${Routine.SLOTS.map(s => opt(s, Routine.SLOT_NAMES[s], cfg.slot === s)).join('')}</select></label>
         <label>Level <select data-lab="level">${[1, 2, 3, 4].map(l => opt(l, 'L' + l, cfg.level === l)).join('')}</select></label>
         <small class="lo-desc lo-wide">${E(X.kind === 'water' ? 'Water' : 'Effect')} · helps ${E(X.helps)}: ${E(X.text)}</small></section>`}
       <section><h4>Its numbers (live)</h4>${sliders || '<small class="lo-desc">No sliders for this trick yet.</small>'}<button data-lab-defaults class="lo-wide">DEFAULT NUMBERS</button></section>

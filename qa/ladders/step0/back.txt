@@ -1,0 +1,34 @@
+raw runs written to qa/ladders/step0/back.raw.json
+Backflip with spitter + pressure_cannon, hold 8 m, 16 seeds × 10 flights
+ wave 5 T1   damage/s                kills/s               time to kill             in the arena           hits/flight              HP lost/flight     (* outside the 95% band)
+  skim  10°  38→37       -2.6%±9.6  0.7→0.7    -0.3%±10.3  2.99→3.01s     +0.7%±9.5  16.2→16.2     +0.4%±2.2  0.00→0.01         +0%±0  0→0             +0%±0
+        reach spitter 55%, pressure_cannon 76%   dmg/health sent 0%→0% (0 waves)
+  low   28°  72→69       -3.5%±6.6  1.4→1.4     +1.6%±8.8  5.46→5.44s     -0.3%±8.9  23.3→24.2     +3.6%±5.4  0.44→0.45    +1.4%±39.4  17→16      -2.6%±42.3
+        reach spitter 88%, pressure_cannon 90%   dmg/health sent 0%→0% (0 waves)
+  mid   55°  76→73        *-4%±3.9  1.5→1.6     +3.3%±6.2  6.74→6.78s     +0.6%±5.7  29.8→27.6    *-7.5%±6.2  1.96→1.82    -7.3%±11.2  70→66      -6.2%±11.6
+        reach spitter 88%, pressure_cannon 90%   dmg/health sent 58%→56% (16 waves)
+  high  78°  76→75       -1.8%±2.1  1.5→1.5     -1.8%±2.9  7.07→7.07s       +0%±5.6  31.7→30.8     -2.9%±3.1  2.56→2.31    -9.8%±15.3  95→84     -12.1%±15.3
+        reach spitter 90%, pressure_cannon 92%   dmg/health sent 57%→55% (16 waves)
+ wave 10 T2   damage/s                kills/s               time to kill             in the arena           hits/flight              HP lost/flight     (* outside the 95% band)
+  skim  10°  165→156     -5.8%±8.1  0.7→0.8  *+16.7%±14.5  3.61→4.40s  *+22.1%±15.6  27.3→29.7    *+8.7%±4.6  0.19→0.28   +45.2%±59.8  17→22     +26.7%±51.8
+        reach spitter 82%, pressure_cannon 86%   dmg/health sent 0%→0% (0 waves)
+  low   28°  216→206      *-5%±3.1  1.4→2.3   *+65.9%±9.6  10.28→8.41s  *-18.3%±7.7  61.7→51.8   *-16.1%±3.9  2.67→2.42    -9.1%±16.1  189→176      -7%±18.7
+        reach spitter 93%, pressure_cannon 94%   dmg/health sent 0%→0% (0 waves)
+  mid   55°  200→205     +2.6%±3.7  1.4→1.3     -3.7%±7.2  13.55→12.70s   *-6.3%±5.9  63.0→63.1     +0.2%±1.2  5.83→5.88    +0.8%±10.9  391→399    +2.2%±11.8
+        reach spitter 94%, pressure_cannon 94%   dmg/health sent 46%→48% (16 waves)
+  high  78°  209→206    *-1.2%±1.1  1.4→1.4     -3.6%±4.3  13.98→13.71s      -2%±5.4  66.9→66.8     -0.1%±1.2  7.27→7.29     +0.3%±6.5  500→512     +2.4%±7.8
+        reach spitter 95%, pressure_cannon 95%   dmg/health sent 46%→46% (16 waves)
+ wave 15 T3   damage/s                kills/s               time to kill             in the arena           hits/flight              HP lost/flight     (* outside the 95% band)
+  skim  10°  301→288     -4.3%±7.9  1.1→1.0    -0.5%±11.9  4.20→4.51s     +7.3%±8.8  33.0→35.4    *+7.2%±4.3  0.23→0.31   +38.9%±59.4  28→40       +44.4%±63
+        reach spitter 85%, pressure_cannon 86%   dmg/health sent 0%→0% (0 waves)
+  low   28°  359→339      *-5.5%±3  1.6→1.5    *-6.7%±2.8  14.51→14.18s    -2.3%±5.2  75.2→75.4     +0.3%±0.4  5.79→4.99     *-13.7%±8  754→623     *-17.4%±9
+        reach spitter 96%, pressure_cannon 96%   dmg/health sent 59%→59% (16 waves)
+  mid   55°  363→363       +0%±2.2  1.6→1.6     +0.6%±3.5  12.69→13.02s    +2.6%±5.6  74.3→74.1     -0.1%±0.7  11.39→11.40    +0.1%±6.1  1471→1472    +0.1%±6.3
+        reach spitter 96%, pressure_cannon 96%   dmg/health sent 59%→59% (16 waves)
+  high  78°  366→361     -1.3%±1.6  1.6→1.6     -1.4%±4.3  14.71→14.63s    -0.5%±5.2  78.0→77.9       +0%±0.3  14.42→13.70     *-5%±4.3  1863→1798    -3.5%±4.5
+        reach spitter 96%, pressure_cannon 97%   dmg/health sent 56%→56% (32 waves)
+  FAIL never worse: hits ≤ +10% and damage ≥ −5% in every style and wave
+  FAIL clearly safer somewhere: hits ≤ −15%
+  PASS clearly faster somewhere: time to kill ≤ −15%
+  safer in: – · faster in: low@w10 · worse in: low@w15
+  not proven yet

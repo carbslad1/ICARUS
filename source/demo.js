@@ -13,12 +13,24 @@ var DEMO = (() => {
     flak: {type:'Blast',cad:'Rapid',coef:.7,damage:[4,6,9,13],cd:[42,38,34,30],range:18,crit:.03,cx:1.5,kb:4,blast:4,description:'Three shells spread into small explosions.'},
     rocket: {type:'Blast',cad:'Steady',coef:.9,damage:[10,16,25,38],cd:[56,48,42,36],range:18,crit:.03,cx:1.5,kb:7,blast:7,description:'A guided aim point and an impact blast. Edge hits deal less damage.'},
     depth: {type:'Blast',cad:'Heavy',coef:1.5,damage:[24,36,52,80],cd:[64,56,48,40],range:18,crit:.03,cx:1.5,kb:9,blast:8.5,side:'Max HP',sideScale:.15,description:'A lobbed charge aimed to intercept its target. Max HP also adds damage.'}
+    ,
+    // The Armory (tune.port): v3's own unused guns, joined to the demo's nine. Names, art and price tiers are ICARUS's own (Owc).
+    blaster: {port:1,type:'Shot',cad:'Steady',coef:.9,damage:[12,20,30,50],cd:[60,55,50,40],range:30,crit:[.05,.1,.15,.2],cx:2,kb:3,pierce:2,pdr:.5,classes:['Gunnery'],description:'A steady sidearm. Each shot passes through one enemy.'},
+    scatter: {port:1,type:'Shot',cad:'Steady',coef:.7,damage:[3,6,9,9],cd:[58,54,50,50],range:18,crit:.03,cx:2,kb:4,shots:[4,4,4,6],spread:.13,pierce:[2,2,2,3],pdr:.3,classes:['Gunnery','Shell'],description:'Pellets in a spread, each passing through an enemy.'},
+    tail: {port:1,type:'Shot',cad:'Steady',coef:.9,damage:[10,16,24,40],cd:[45,42,38,32],range:30,crit:[.05,.1,.15,.2],cx:2,kb:2,pierce:2,pdr:.5,pref:'behind',also:[['Reach',.5]],classes:['Gunnery','Swift'],description:'Covers your back: enemies behind you first. Reach also adds damage.'},
+    torpedo: {port:1,type:'Shot',cad:'Heavy',coef:1.5,damage:[25,38,55,85],cd:[54,50,45,38],range:30,crit:.05,cx:2,kb:6,pierce:[2,2,3,3],pdr:.3,speed:56,also:[['Armour',.5]],classes:['Hunter','Ordnance'],description:'A slow, heavy shot that runs on through enemies. Armour also adds damage.'},
+    nova: {port:1,type:'Close',cad:'Steady',coef:.9,damage:[8,11,15,22],cd:[64,60,56,48],range:10,crit:.03,cx:2,kb:4,shots:[8,8,10,12],ring:1,pierce:2,pdr:.5,speed:40,also:[['Luck',.1]],classes:['Pulse','Storm'],description:'A ring of shots whenever anything comes close. Luck also adds damage.'},
+    orbit: {port:1,via:'sonic',ring:1,type:'Close',cad:'Rapid',coef:.7,damage:[6,9,13,20],cd:[24,22,20,16],range:4.6,crit:.03,cx:2,kb:3,also:[['Regen',.5]],classes:['Edge','Feeder'],description:'A spinning ring strikes everything around you. Regen also adds damage.'},
+    bubble: {port:1,type:'Close',cad:'Steady',coef:.9,damage:[7,10,14,20],cd:[46,42,38,32],range:9,crit:.03,cx:2,kb:4,shots:[6,6,8,10],ring:1,pierce:2,pdr:.5,speed:36,also:[['Max HP',.05]],classes:['Pulse','Feeder'],description:'A ring of stinging bubbles when anything comes close. Max HP also adds damage.'}
   };
+  // Which class each of the demo's original nine belongs to.
+  for(const [id,c] of Object.entries({fin:['Edge','Swift'],sonic:['Pulse','Shell'],arc:['Storm','Pulse'],minigun:['Gunnery','Swift'],harpoon:['Gunnery','Hunter'],laser:['Storm','Hunter'],flak:['Ordnance','Swift'],rocket:['Ordnance','Gunnery'],depth:['Ordnance','Shell']}))weapons[id].classes=c;
   // Hand-cap levers (structure doc 5.4): kept open and tunable, to be balanced in play. The tuning panel edits these live.
-  const TUNE_DEFAULT={bro:1,shake:1,flash:1,space:1,edge:.2,danger:1,lead:.5,mines:0,carve:1,ccw:0,verbs:0,hop:6,dive:2,dashes:2,wetspawn:1,rules:1,payK:3,streakCap:5,well:60,sides:1,moves:1,pierce:1,trickPool:1,tricks:1,shakeDeal:0,drone:0,pace:1,viewmax:3,airband:20,breachblast:1,airlatch:1,cam:1};  // trickPool: offer only the shortlist being proven (docs/TRICK_LAB.md)  // pierce: Laser and Harpoon pierce by tier  // sides: step 8 (armoured enemies)  // well: Gravity anchor's pull, m/s²  // rules, payK, streakCap: step 4 (style score)  // space: step 1 (space.js); edge: share of its spawns from the screen edge; danger, lead, mines: step 2 (danger.js)
+  const TUNE_DEFAULT={port:1,ladders:1,bro:1,shake:1,flash:1,space:1,edge:.2,danger:1,lead:.5,mines:0,carve:1,ccw:0,verbs:0,hop:6,dive:2,dashes:2,wetspawn:1,rules:1,payK:3,streakCap:5,well:60,sides:1,moves:1,pierce:1,trickPool:1,tricks:1,shakeDeal:0,drone:0,pace:1,viewmax:3,airband:20,breachblast:1,airlatch:1,cam:1};  // trickPool: offer only the shortlist being proven (docs/TRICK_LAB.md)  // pierce: Laser and Harpoon pierce by tier  // sides: step 8 (armoured enemies)  // well: Gravity anchor's pull, m/s²  // rules, payK, streakCap: step 4 (style score)  // space: step 1 (space.js); edge: share of its spawns from the screen edge; danger, lead, mines: step 2 (danger.js)
   const tune={...TUNE_DEFAULT};
   try{Object.assign(tune,JSON.parse(localStorage.getItem('icarus.scoreshow.tune')||'{}'))}catch(e){}
   const saveTune=()=>{try{localStorage.setItem('icarus.scoreshow.tune',JSON.stringify(tune))}catch(e){}};
+  if(tune.port){for(const k of Object.keys(weapons))delete weapons[k];for(const [k,w] of Object.entries(Armory.weapons)){const c=w.cd.find(x=>x!=null);weapons[k]={...w,cad:c<25?'Rapid':c<55?'Steady':'Heavy',coef:0}}}
   // Five independent trick identities. Their identity never gates movement or weapon damage.
   const cards=Object.fromEntries(FiveScore.faces.map(id=>[id,{name:FiveScore.names[id],family:['front','back'].includes(id)?'Flip':id==='cork'?'Corkscrew':id==='star'?'Pose':'Spout',mult:1,time:1}]));
   const charms=FiveScore.charms;
@@ -48,7 +60,9 @@ var DEMO = (() => {
     Reach:{group:'combat',sizes:[1,2,3,4]},Area:{group:'combat',sizes:[.05,.10,.15,.20]},
     'Max HP':{group:'defence',sizes:[3,6,9,12]},Armour:{group:'defence',sizes:[1,2,3,4]},Regen:{group:'defence',sizes:[2,3,4,5]},
     Lift:{group:'flight',sizes:[1,2,3,4]},Hang:{group:'flight',sizes:[1,2,3,4]},Drive:{group:'flight',sizes:[1,2,3,4]},'Air steering':{group:'flight',sizes:[.03,.06,.09,.12]},
-    Pickup:{group:'economy',sizes:[1,2,3,4]},Luck:{group:'economy',sizes:[5,10,15,20]},'XP gain':{group:'economy',sizes:[.05,.10,.15,.20]}
+    Pickup:{group:'economy',sizes:[1,2,3,4]},Luck:{group:'economy',sizes:[5,10,15,20]},'XP gain':{group:'economy',sizes:[.05,.10,.15,.20]},
+    Engineering:{port:1,group:'combat',sizes:[2,3,4,5]},Knockback:{port:1,group:'hidden',sizes:[1,1,1,1]},'Explosion damage':{port:1,group:'hidden',sizes:[0,0,0,0]},'Explosion size':{port:1,group:'hidden',sizes:[0,0,0,0]},'Item price':{port:1,group:'hidden',sizes:[0,0,0,0]},Piercing:{port:1,group:'hidden',sizes:[0,0,0,0]},'Pierce damage':{port:1,group:'hidden',sizes:[0,0,0,0]},Bounce:{port:1,group:'hidden',sizes:[0,0,0,0]},'Harvest growth':{port:1,group:'hidden',sizes:[0,0,0,0]},
+    'Life steal':{port:1,group:'defence',sizes:[.01,.02,.03,.04]},Dodge:{port:1,group:'defence',sizes:[.03,.06,.09,.12]},Harvesting:{port:1,group:'economy',sizes:[5,8,10,12]}
   };
   const items = [
     {name:'Close training',up:'Close',value:3,down:'Shot',loss:1}, {name:'Sight glass',up:'Shot',value:3,down:'Armour',loss:1},
@@ -64,10 +78,75 @@ var DEMO = (() => {
   // Stats come from Gear and level-up picks (design doc §4.10). Driving fin stays out of offers, as before.
   const gearStats=items.map((x,i)=>i).filter(i=>items[i].up!=='Drive');
   const tier=(v,l)=>Array.isArray(v)?v[l-1]:v;
+  // The port (tune.port): stat sizes, class bonuses and shop rules after Brotato's. Rules and numbers only, written in our own
+  // words; docs/BROTATO_PORT.md lists every one. Class names and bonus sizes are ICARUS's own.
+  const PORT_SIZES={Close:[2,4,6,8],Shot:[1,2,3,4],Blast:[1,2,3,4],'Damage %':[.05,.08,.12,.16],'Attack speed':[.05,.10,.15,.20],Crit:[.03,.05,.07,.09],Reach:[.6,1.2,1.8,2.4],'Max HP':[3,6,9,12],Armour:[1,2,3,4],Regen:[2,3,4,5],'Air steering':[.03,.06,.09,.12],Luck:[5,10,15,20],'Life steal':[.01,.02,.03,.04],Dodge:[.03,.06,.09,.12],Harvesting:[5,8,10,12],Engineering:[2,3,4,5]};
+  const PORT_LEVEL=Object.keys(PORT_SIZES),BASE_SIZES=Object.fromEntries(Object.entries(stats).map(([k,v])=>[k,v.sizes]));
+  const applySizes=()=>{for(const k of Object.keys(stats))stats[k].sizes=(tune.port&&PORT_SIZES[k])||BASE_SIZES[k]};
+  // A class counts every weapon holding it, duplicates included; the bonus at 2 to 6 replaces the one below.
+  const CLASSES=tune.port?Armory.sets:{Edge:{Close:[1,2,3,4,6],Crit:[.01,.02,.03,.04,.05]},Pulse:{Area:[.05,.10,.15,.20,.25],Armour:[0,1,1,2,2]},Storm:{Blast:[1,2,3,4,5],'Attack speed':[.02,.04,.06,.08,.10]},Gunnery:{Reach:[.8,1.6,2.4,3.2,4],Shot:[0,1,1,2,2]},Hunter:{Crit:[.03,.06,.09,.12,.15]},Ordnance:{Blast:[1,1,2,2,3],Area:[.05,.10,.15,.20,.25]},Shell:{Armour:[1,1,2,2,3],'Max HP':[0,3,3,6,6]},Swift:{'Attack speed':[.03,.06,.09,.12,.15],'Air steering':[.02,.04,.06,.08,.10]},Feeder:{'Life steal':[.01,.02,.03,.04,.05],Regen:[0,1,1,2,2]}};
+  const classCounts=r=>{const c={};for(const g of r.slots)for(const k of weapons[g.id].classes||[])c[k]=(c[k]||0)+1;return c};
+  function classBonus(r){const d=r.demo,next={};for(const [k,n] of Object.entries(classCounts(r)))if(n>=2)for(const [st,a] of Object.entries(CLASSES[k]))next[st]=(next[st]||0)+a[Math.min(n,6)-2];
+    if(tune.port)for(const g of r.slots)for(const f of weapons[g.id].fx?.[g.lvl-1]||[])if(f.k==='stat')next[f.s]=(next[f.s]||0)+f.v;
+    for(const [st,v] of Object.entries(d.classBonus||{}))d.stats[st]-=v;for(const [st,v] of Object.entries(next))d.stats[st]+=v;d.classBonus=next}
+  // Nested chances: a roll under the legendary line is legendary, under the rare line rare, and so on.
+  // ---- The armory (tune.port): the weapon, item and class rules. docs/BROTATO_PORT.md lists them. ----
+  const ITEMS=tune.port?Object.fromEntries(Armory.items.map(x=>[x.id,x])):{},aRand=(r,a,b)=>a+ce(r)*(b-a),EXPLOSION_R=147.34/25;
+  const fxOf=(d,l)=>d.fx?.[l-1]||[],sumFx=(d,l,k)=>fxOf(d,l).filter(f=>f.k===k);
+  const PCT_STAT={'Damage %':100,'Attack speed':100,Crit:100,Dodge:100,'Life steal':100,'Air steering':100,'XP gain':100,Reach:25};
+  function aStat(r,k){const s=r.demo.stats;if(k==='Level')return r.lvl||0;if(k==='Armour')return r.stats.armour;if(k==='Max HP')return r.stats.maxHp/hpScale();return (s[k]||0)*(PCT_STAT[k]||1)}
+  const aScaled=(r,base,scale)=>Math.max(1,Math.trunc(base+(scale||[]).reduce((a,[k,p])=>a+aStat(r,k)*p,0)));
+  const aBonus=(r,v,extra=0)=>Math.max(1,Math.round(Math.max(1,v)*(1+r.demo.stats['Damage %']+extra)));
+  function aBase(r,d,l,g){const s=r.demo.stats,ex=sumFx(d,l,'explode').length?s['Explosion damage']:0,stack=sumFx(d,l,'stack').reduce((a,f)=>a+f.v*Math.max(0,r.slots.filter(q=>q.id===(g?.id)).length-1),0);return aBonus(r,aScaled(r,tier(d.damage,l)+stack,tier(d.scale,l)),ex)}
+  function aNextCd(r,d,l,g,dist){const as=r.demo.stats['Attack speed'],c0=Math.max(2,tier(d.cd,l)),cd=as<0?Math.max(2,Math.trunc(c0*(1+Math.abs(as)))):Math.max(2,Math.trunc(c0/(1+as))),ev=tier(d.every,l);let f;
+    if(ev>0&&g.shots%ev===0)f=cd*tier(d.mult,l);else{const n=Math.min(r.slots.length,6),mr=Math.min(n*cd/5,n*5);f=aRand(r,Math.max(1,cd-mr),cd+mr)}
+    let sec=f/60;if(d.kind==='melee'){let rec=tier(d.recoil,l);if(as>0)rec/=1+as;const rf=Math.max(0,dist*25/Math.min(120,Math.max(70,70*(1+as/3)))),atk=Math.max(.01,.2-as/10)+rf*.15,back=as>0?.2/(1+as*3):.2;sec+=atk/2+back+rec}return sec}
+  function aBurn(r,e,f){const d=aBonus(r,aScaled(r,f.d,f.scale));if(e.burn){e.burn.d=Math.max(e.burn.d,d);e.burn.t=Math.max(e.burn.t,f.t);e.burn.sp=Math.max(e.burn.sp,f.sp)}else e.burn={d,t:f.t,sp:f.sp,left:.5}}
+  function aSpawn(r,e,f,g){const w=f.w,m=r.medium,dmg=aBonus(r,aScaled(r,w.damage,w.scale)),others=r.enemies.filter(q=>q!==e&&q.hp>0);
+    for(let i=0;i<f.n;i++){const t=f.auto&&others.length?choose(r,others):null,a=t?Math.atan2(t.pos.y-e.pos.y,t.pos.x-e.pos.x):aRand(r,-Math.PI,Math.PI);
+      r.shots.push({id:++r.id,weapon:r.slots[0]?.id,pos:{...e.pos},velocity:{x:Math.cos(a)*w.speed,y:Math.sin(a)*w.speed},radius:.3,life:Math.min(3,w.range/w.speed),hit:[e.id],arm:{d:null,l:1,g:null,base:dmg,mul:1,cc:w.crit,cx:w.cx,kb:w.kb,fx:[],ls:0,ctx:{primary:false,weapon:'spawn'}},pierce:w.pierce,pdr:w.pdr,bounce:w.bounce,bdr:w.bdr})}}
+  function aHit(r,e,H,dx,dy){const s=r.demo.stats,crit=ce(r)<wt(H.cc+s.Crit,0,1),amt=Math.max(1,Math.round(H.base*H.mul*(crit?H.cx:1)))*OwB.hp,kb=Math.max(0,H.kb+s.Knockback)/4,ctx={...H.ctx,ls:H.ls,base:amt,crit};
+    const ex=H.fx.find(f=>f.k==='explode');let boomed=false;if(ex&&ce(r)<ex.c){boomed=true;const rad=EXPLOSION_R*Math.max(.1,ex.r*(1+s['Explosion size']));for(const q of [...r.enemies]){const dd=Math.hypot(q.pos.x-e.pos.x,q.pos.y-e.pos.y);if(dd<=rad+q.radius)aDeal(r,q,amt,H,(q.pos.x-e.pos.x)/(dd||1),(q.pos.y-e.pos.y)/(dd||1),kb,crit,ctx)}r.events.push({kind:'boom',pos:Mr(r.medium.origin,e.pos),value:rad,weapon:ctx.weapon})}
+    else aDeal(r,e,amt,H,dx,dy,kb,crit,ctx);if(!boomed)for(const f of H.fx)if(f.k==='burn'&&ce(r)<f.c)aBurn(r,e,{...f,sp:f.sp+H.fx.filter(x=>x.k==='spread').reduce((a,x)=>a+x.n,0)});for(const f of H.fx)if(f.k==='spawn')aSpawn(r,e,f,H.g);return crit}
+  function aDeal(r,e,amt,H,dx,dy,kb,crit,ctx){const was=r.enemies.includes(e);damage(r,e,amt,ctx.weapon,dx,dy,kb,crit,ctx);if(was&&e.hp<=0)aKilled(r,H,crit)}
+  function aKilled(r,H,crit){const d=r.demo;if(H.g){H.g.kills=(H.g.kills||0)+1;for(const f of H.fx)if(f.k==='perkill'&&H.g.kills%f.n===0)addStat(r,f.s,f.v)}
+    if(crit){for(const f of H.fx)if(f.k==='goldcrit'&&ce(r)<f.c){r.xp+=1;r.earned+=1}for(const x of ownedFx(r,'healcrit'))if(ce(r)<x.c)r.hp=Math.min(r.stats.maxHp,r.hp+hpScale())}}
+  const ownedFx=(r,k)=>Object.entries(r.demo.aItems||{}).flatMap(([id,n])=>Array(n).fill(0).flatMap(()=>ITEMS[id].fx.filter(f=>f.k===k)));
+  function aShoot(r,g,d,l,target,T,me,range){const s=r.demo.stats,m=r.medium,a0=Math.atan2(target.pos.y-me.y,target.pos.x-me.x),acc=tier(d.acc,l),base=aBase(r,d,l,g),slot=r.slots.indexOf(g),ctx={primary:true,attackId:++r.demo.attackSeq,weapon:g.id,slot};g.shots=(g.shots||0)+1;g.aim=a0;g.fx=0;g.tg=target.id;
+    const mk=(extra={})=>({d,l,g,base,mul:1,cc:tier(d.crit,l),cx:tier(d.cx,l),kb:tier(d.kb,l),fx:fxOf(d,l),ls:tier(d.ls,l),ctx,...extra}),dist=Math.hypot(target.pos.x-me.x,target.pos.y-me.y);
+    if(d.kind==='melee'){const a=a0+aRand(r,-1+acc,1-acc),c=Math.cos(a),sn=Math.sin(a),sweep=tier(d.atk,l)===1;for(const e of [...T]){if(e.hp<=0)continue;const dx=e.pos.x-me.x,dy=e.pos.y-me.y,u=dx*c+dy*sn,v=-dx*sn+dy*c,dd=Math.hypot(dx,dy),da=Math.abs(Math.atan2(v,u));if(sweep?dd<=range+e.radius&&da<=Math.PI/2:u>0&&u<=range+e.radius&&Math.abs(v)<=e.radius+.8)aHit(r,e,mk(),dx/(dd||1),dy/(dd||1))}
+      r.events.push({kind:sweep?'pulse':'thrust',pos:Mr(m.origin,me),to:Mr(m.origin,{x:me.x+c*range,y:me.y+sn*range}),value:range,aim:a,cone:sweep?Math.PI:.5,weapon:g.id})}
+    else{const sp=tier(d.spread,l)||0,shots=tier(d.shots,l)||1,rs=tier(d.rangeSpeed,l),spd=rs?Math.min(240,Math.max(2,tier(d.speed,l)+tier(d.speed,l)/300*s.Reach*25)):tier(d.speed,l),rot=a0+aRand(r,-1+acc,1-acc);for(let i=0;i<shots;i++){const a=aRand(r,rot-sp,rot+sp);r.shots.push({id:++r.id,weapon:g.id,pos:{...me},velocity:{x:Math.cos(a)*spd,y:Math.sin(a)*spd},radius:.3,life:Math.min(4,range/spd),hit:[],slot,arm:mk(),pierce:tier(d.pierce,l)+s.Piercing,pdr:Math.min(1,Math.max(0,tier(d.pdr,l)-s['Pierce damage'])),bounce:tier(d.canBounce,l)?tier(d.bounce,l)+s.Bounce:0,bdr:tier(d.bdr,l),pc:sumFx(d,l,'piercecrit').reduce((q,f)=>q+f.n,0),bc:sumFx(d,l,'bouncecrit').reduce((q,f)=>q+f.n,0)})}}
+    r.events.push({kind:'shot',pos:Mr(m.origin,me),weapon:g.id,slot});g.cd=aNextCd(r,d,l,g,dist)*r.stats.fireRate}
+  function aMove(r,sh,dt,live){const from={...sh.pos};sh.pos.x+=sh.velocity.x*dt;sh.pos.y+=sh.velocity.y*dt;sh.life-=dt;if(!live)return;
+    for(const e of [...r.enemies]){if(sh.life<=0||sh.hit.includes(e.id)||ew(e.pos,from,sh.pos)>sh.radius+e.radius)continue;sh.hit.push(e.id);const dx=e.pos.x-from.x,dy=e.pos.y-from.y,dd=Math.hypot(dx,dy)||1,crit=aHit(r,e,sh.arm,dx/dd,dy/dd);
+      if(crit){if(sh.bc>0){sh.bounce++;sh.bc--}if(sh.pc>0){sh.pierce++;sh.pc--}}
+      if(sh.bounce>0){sh.bounce--;const o=r.enemies.filter(q=>q.hp>0&&!sh.hit.includes(q.id)),t=o.length?choose(r,o):null,a=t?Math.atan2(t.pos.y-sh.pos.y,t.pos.x-sh.pos.x):aRand(r,-Math.PI,Math.PI),v=Math.hypot(sh.velocity.x,sh.velocity.y);sh.velocity={x:Math.cos(a)*v,y:Math.sin(a)*v};sh.life=4;sh.arm={...sh.arm,mul:sh.arm.mul*(1-sh.bdr),kb:0}}
+      else if(sh.pierce<=0)sh.life=0;else{sh.pierce--;sh.arm={...sh.arm,mul:sh.arm.mul*(1-sh.pdr)}}}}
+  function aTick(r,dt){for(const e of [...r.enemies]){const b=e.burn;if(!b||e.hp<=0)continue;b.left-=dt;if(b.left>0)continue;b.left=.5;b.t--;if(b.sp>0)for(const q of r.enemies)if(q!==e&&!q.burn&&Math.hypot(q.pos.x-e.pos.x,q.pos.y-e.pos.y)<=3){q.burn={d:b.d,t:b.t,sp:b.sp-1,left:.5};if(--b.sp<=0)break}const was=r.enemies.includes(e);damage(r,e,b.d*OwB.hp,'burn',0,0,0,false,{primary:false,weapon:'burn'});if(b.t<=0)e.burn=null}}
+  function fxText(fx){return fx.map(f=>f.k==='stat'?statText(f.s,f.v):f.k==='endwave'?statText(f.s,f.v)+' at the end of every wave':f.k==='freeroll'?f.n+' free reroll per shop':f.k==='hitprot'?'Ignores the first '+f.n+' hit each wave':f.k==='healcrit'?Math.round(f.c*100)+'% chance to heal on a critical kill':f.k==='burn'?Math.round(f.c*100)+'% chance to burn: '+f.d+' × '+f.t:f.k==='explode'?Math.round(f.c*100)+'% chance to explode':f.k==='spawn'?'Hits release '+f.n+' extra shots':f.k==='perkill'?statText(f.s,f.v)+' per '+f.n+' kills':f.k==='goldcrit'?Math.round(f.c*100)+'% chance of +1 pearl on a critical kill':f.k==='piercecrit'?'Critical hits pierce':f.k==='bouncecrit'?'Critical hits bounce':f.k==='spread'?'Burn spreads':f.k==='stack'?'+'+f.v+' damage per extra copy':'').filter(Boolean).join(' · ')}
+  function weaponText(id,l){const d=weapons[id];return (tier(d.scale,l)||[]).map(([k,p])=>Math.round(p*100)+'% '+k).join(' + ')+(fxOf(d,l).length?' · '+fxText(fxOf(d,l)):'')}
+  function armoryItem(r,uid){const d=r.demo,own=d.aItems||{},inShop=new Set(d.offers.filter(o=>o.row==='armory').map(o=>o.id)),ok=x=>(x.max<0||(own[x.id]||0)<x.max)&&!inShop.has(x.id);let t=tierRoll(r,r.wave),pool=[];for(;t>=1&&!pool.length;t--)pool=Armory.items.filter(x=>x.tier===t&&ok(x));if(!pool.length)pool=Armory.items.filter(ok);const x=choose(r,pool);return {uid,row:'armory',id:x.id,price:price(r,x.v)}}
+  function armoryBuy(r,id){const d=r.demo,x=ITEMS[id];(d.aItems??={})[id]=(d.aItems[id]||0)+1;for(const f of x.fx)if(f.k==='stat')addStat(r,f.s,f.v);sync(r)}
+  function tierRoll(r,w){const L=r.demo.stats.Luck/100,m=L>=0?1+L:1/(1-L),a=ce(r);return a<Math.min(.08,.0023*Math.max(0,w-7)*m)?4:a<Math.min(.25,.02*Math.max(0,w-3)*m)?3:a<Math.min(.6,.06*(w-1)*m)?2:1}
+  const weaponBase=(id,l)=>{const v=weapons[id].v||Owc[id].v;return v[l-1]??Math.ceil(v[l]/2)};
+  const weaponPrice=(r,id,l)=>price(r,weaponBase(id,l));
+  const sellValue=(r,g)=>tune.port?Math.floor(.25*weaponPrice(r,g.id,g.lvl)):Math.floor((g.paid||0)/2);
+  const rerollCost=(r,row='shelf')=>{const d=r.demo,free=tune.port?ownedFx(r,'freeroll').reduce((a,f)=>a+f.n,0):0,n=Math.max(0,(d.rerolls[row]||0)-free);if(tune.port&&(d.rerolls[row]||0)<free)return 0;return tune.port?Math.floor(.75*r.wave)+Math.max(1,Math.floor(.4*r.wave))*(1+n):Math.max(1,2+n-d.rerollDiscount)};
+  // Each shot waits its cooldown ÷ attack speed, never under 2 frames, plus a random share that keeps guns out of step.
+  function cooldown(r,d,l){const base=tier(d.cd,l);if(!tune.port)return base/60;const fr=r.stats.fireRate,n=r.slots.length,cd=Math.max(2,base/fr),j=Math.min(n*cd/5,n*5);return Math.max(2,cd+(2*ce(r)-1)*j)*fr/60}
+  function portWeapon(r,uid){const w=r.wave,level=tierRoll(r,w),taken=new Set(r.demo.offers.filter(o=>o.row==='weapon').map(o=>o.id+o.level)),has=k=>tier(weapons[k].damage,level)!=null&&!taken.has(k+level),ids=Object.keys(weapons).filter(has),owned=[...new Set(r.slots.map(g=>g.id))].filter(has),held=new Set(r.slots.flatMap(g=>weapons[g.id].classes||[])),early=Math.max(0,6-w)/5;let pool=ids;
+    if(owned.length&&ce(r)<.2+.05*early)pool=owned;else if(ce(r)<.35+.2*early){const near=ids.filter(k=>weapons[k].classes.some(c=>held.has(c)));if(near.length)pool=near}
+    const id=choose(r,pool.length?pool:Object.keys(weapons).filter(k=>tier(weapons[k].damage,level)!=null));return {uid,row:'weapon',id,level,price:weaponPrice(r,id,level)}}
+  function portOffer(r){const d=r.demo,free=r.slots.length<6,need=r.wave<=2?2:r.wave<=5?1:0,have=d.offers.filter(o=>o.row==='weapon'&&!o.bought).length;return offer(r,free&&(have<need||ce(r)<.35)?'weapon':'gear')}
+  function portShop(r){const d=r.demo,held=[...new Map([...d.offers,...(d.deferredOffers||[])].filter(o=>o.locked&&!o.bought&&o.row!=='voucher').map(o=>[o.uid,o])).values()];
+    d.offers=held.slice(0,4);d.deferredOffers=held.slice(4);d.pack=null;d.weaponChoice=null;d.rerolls={shelf:0,pack:0};while(d.offers.length<4)d.offers.push(portOffer(r))}
+  function portLevels(r){const pool=[...PORT_LEVEL],lv=r.lvl-r.lvup+1,picks=[];for(let i=0;i<4;i++){const id=pool.splice(Math.floor(ce(r)*pool.length),1)[0];picks.push({id,level:lv%5===0?(lv===5?2:lv<=20?3:4):tierRoll(r,lv)})}r.demo.levelChoices=picks}
+  const portGear=items.map((x,i)=>i).filter(i=>!['Drive','Lift','Hang'].includes(items[i].up));
   const choose=(r,a)=>a[Math.floor(ce(r)*a.length)];
   const shuffle=(r,a)=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(ce(r)*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
   const fmt=n=>Number.isInteger(n)?String(n):n.toFixed(1);
-  const statText=(k,v)=>(v=k==='Max HP'?v*hpScale():v,(v>=0?'+':'')+fmt(v*(k.includes('%')||['Attack speed','Crit','Area','Air steering'].includes(k)?100:1))+(k.includes('%')||['Attack speed','Crit','Area','Air steering'].includes(k)?'%':'')+' '+k);
+  const PCT=['Attack speed','Crit','Area','Air steering','Life steal','Dodge','Explosion damage','Explosion size','Item price','Pierce damage','Harvest growth','XP gain','Pickup'],statText=(k,v)=>(v=k==='Max HP'?v*hpScale():v,(v>=0?'+':'')+fmt(v*(k.includes('%')||PCT.includes(k)?100:1))+(k.includes('%')||PCT.includes(k)?'%':'')+' '+k);
   // The standard flight uses the wave's launch speed (Wave schedule sliders × rocket speed), so card requirements follow the settings.
   const launchSpeed=w=>Dd(w)*(Orw.on?Orw.rk:1);
   const standard=w=>{const v=launchSpeed(w),vy=v*Math.sin(59*Math.PI/180),air=2*vy/15;return{height:vy*vy/30,air,apex:vy/15,distance:v*Math.cos(59*Math.PI/180)*air}};
@@ -110,21 +189,22 @@ var DEMO = (() => {
   }
   function sync(r){
     const s=r.demo.stats;
-    r.stats.damage=Math.max(.05,1+s['Damage %']);r.stats.fireRate=Math.max(.1,1+s['Attack speed']);
-    r.stats.armour=s.Armour+2*r.slots.filter(g=>weapons[g.id]?.type==='Close').length;
+    if(tune.port)classBonus(r);r.stats.damage=Math.max(.05,1+s['Damage %']);const as=s['Attack speed'];r.stats.fireRate=tune.port?(as>=0?1+as:1/(1-as)):Math.max(.1,1+as);
+    r.stats.armour=s.Armour+(tune.port?0:2*r.slots.filter(g=>weapons[g.id]?.type==='Close').length);
     // Levels do not add Max HP (design doc §4.10): only the Max HP stat does.
-    r.stats.maxHp=100+s['Max HP']*hpScale();r.stats.magnet=13+s.Pickup;r.stats.xpRate=Math.max(.1,1+s['XP gain']);
+    r.stats.maxHp=100+(s['Max HP']+(tune.port?(r.lvl||0):0))*hpScale();r.stats.magnet=tune.port?13*(1+s.Pickup):13+s.Pickup;r.stats.xpRate=Math.max(.1,1+s['XP gain']);
     r.hp=Math.min(r.hp,r.stats.maxHp);
   }
   function init(r,starter){
-    r.world='open';r.diff='standard';r.demo={stats:Object.fromEntries(Object.keys(stats).map(k=>[k,0])),deck:[],draw:[],discard:[],charms:[],history:[],offers:[],rerolls:{},handBonus:0,skim:0,skipRun:0,dirs:[],charmBonus:0,uid:20,regen:0,air:0,spawn:0,lastDir:0,toast:'',last:null};
-    r.slots=[Owslot(weapons[starter]?starter:'harpoon',1,++r.demo.uid)];r.slots[0].paid=0;r.slots[0].cd=0;
+    applySizes();Oxe.pv=tune.port?1:0;r.world='open';r.diff='standard';r.demo={stats:Object.fromEntries(Object.keys(stats).map(k=>[k,0])),deck:[],draw:[],discard:[],charms:[],history:[],offers:[],rerolls:{},handBonus:0,skim:0,skipRun:0,dirs:[],charmBonus:0,uid:20,regen:0,air:0,spawn:0,lastDir:0,toast:'',last:null};
+    r.slots=[Owslot(weapons[starter]?starter:weapons.harpoon?'harpoon':Object.keys(weapons).find(k=>weapons[k].starter),1,++r.demo.uid)];r.slots[0].paid=0;r.slots[0].cd=0;
     Object.assign(r.demo,{score:FiveScore.create(),heldHand:null,itemCounts:{},itemState:FiveCombat.create(),charmPaid:{},charmFaces:{},statInventory:[],pack:null,shelfBonus:0,rerollDiscount:0,shopMultiplier:1,attackSeq:0});
-    r.hp=100;r.xp=0;r.lvl=0;r.lxp=0;r.lvup=0;r.bag=0;r.eorbs=[];r.crow=[];r.items={};r.vouchers={};r.hands=[];
+    r.hp=100;r.xp=tune.port?30:0;r.lvl=0;r.lxp=0;r.lvup=0;r.bag=0;r.eorbs=[];r.crow=[];r.items={};r.vouchers={};r.hands=[];
     wave(r);sync(r);return r;
   }
   // A wave starts diving to the right (lastDir 1), so coming round in the first dive counts as a turn-round.
   function wave(r){
+    if(tune.port&&r.demo)r.demo.hitProt=Object.entries(r.demo.aItems||{}).reduce((n,[id,c])=>n+c*ITEMS[id].fx.filter(f=>f.k==='hitprot').reduce((a,f)=>a+f.n,0),0);
     const d=r.demo;r.budget=clock(r.wave);r.quota=quota(r.wave);r.wscore=0;r.wkill=0;r.armed=false;r.hand=null;r.hands=[];r.aft=null;r.endReason=null;
     d.air=0;d.spawn=0;d.skim=0;d.skipRun=0;d.dirs=[];d.draw=[];d.discard=[];d.heldHand=null;{const relay=d.score.relay;FiveScore.resetWave(d.score);d.score.relay=relay}FiveCombat.initWave(r);d.history=[];d.bossSpawned=false;d.bossDefeated=false;d.bossRecoveries=0;d.overtime=false;d.overtimeAir=0;d.overtimeRecycles=0;d.waveTelemetry={damageTaken:0,hits:0,primaryApplied:0,secondaryApplied:0,lastHits:[]};d.lastFailure=null;d.lastDir=1;
     
@@ -149,7 +229,7 @@ var DEMO = (() => {
   // and survives the shop (designer, 2026-10-27).
   function style(r){const h=r.hand,d=r.demo;h.active=null;h.open=0;
     const kills=h.kills.length,clean=!h.hits;d.streak=clean?Math.min(Math.max(1,Math.round(tune.streakCap)),(d.streak||0)+1):1;
-    const score=kills*h.mult*d.streak,pearls=score>0?Math.round(tune.payK*Math.sqrt(score)*(h.pearlX||1)):0;  // pearlX: a Belly flop flight (source/tricks.js)
+    const score=kills*h.mult*d.streak,pearls=score>0&&!tune.port?Math.round(tune.payK*Math.sqrt(score)*(h.pearlX||1)):0;  // pearlX: a Belly flop flight (source/tricks.js)
     Object.assign(h,{chips:kills,M:h.mult,banked:score,streak:d.streak,pearls,clean});r.wscore+=score;r.xp+=pearls;r.earned+=pearls;d.wavePearls=(d.wavePearls||0)+pearls;
     ScoreCues.style(r,{chips:kills,mult:h.mult,streak:d.streak,score,pearls,clean});
     d.history.push({chips:kills,killChips:kills,mult:h.mult,streak:d.streak,score,pearls,clean,hits:h.hits,predAir:h.pred.air,items:[],bonus:{...h.bonus},cards:[]});
@@ -169,7 +249,7 @@ var DEMO = (() => {
   function damage(r,e,amount,weapon,dx=0,dy=0,kb=0,crit=false,ctx=null){
     if(r.mode!=='playing'||r.medium.kind!=='air'||r.armed||r.hand?.busted||!r.enemies.includes(e)||e.hp<=0)return;
     ctx={...(ctx||r.demo.currentAttack||{primary:false,weapon,base:amount}),beforeHP:e.hp,amount};
-    amount=FiveCombat.beforeDamage(r,e,amount,ctx);e.hp-=amount;ctx.amount=amount;ctx.killed=e.hp<=0;const applied=Math.min(ctx.beforeHP,amount);if(r.demo.waveTelemetry)r.demo.waveTelemetry[ctx.primary?'primaryApplied':'secondaryApplied']+=applied;r.events.push({kind:'damage',pos:Mr(r.medium.origin,e.pos),value:amount,applied:Math.min(ctx.beforeHP,amount),primary:ctx.primary,item:ctx.item,weapon,id:e.id,crit:!!crit});
+    amount=FiveCombat.beforeDamage(r,e,amount,ctx);e.hp-=amount;ctx.amount=amount;if(tune.port&&ctx.primary){const d=r.demo,ls=(d.stats['Life steal']||0)+(ctx.ls||0);if(ls>0&&d.air-(d.lsT??-1)>=.1&&ce(r)<ls){d.lsT=d.air;r.hp=Math.min(r.stats.maxHp,r.hp+hpScale())}}ctx.killed=e.hp<=0;const applied=Math.min(ctx.beforeHP,amount);if(r.demo.waveTelemetry)r.demo.waveTelemetry[ctx.primary?'primaryApplied':'secondaryApplied']+=applied;r.events.push({kind:'damage',pos:Mr(r.medium.origin,e.pos),value:amount,applied:Math.min(ctx.beforeHP,amount),primary:ctx.primary,item:ctx.item,weapon,id:e.id,crit:!!crit});
     if(e.hp>0){e.velocity.x+=dx*kb;e.velocity.y+=dy*kb;FiveCombat.afterDamage(r,e,ctx);return}
     r.enemies=r.enemies.filter(x=>x!==e);r.kills++;r.flightKills++;r.wkill+=e.kv;r.waveKills++;
     // as v3's kill (lw): a splitter breaks into two swarmers
@@ -179,7 +259,9 @@ var DEMO = (() => {
   }
   function hit(r,amount){
     if(r.medium.kind!=='air'||r.armed||r.hand?.busted||r.hurt>0||r.medium.elapsed<.3)return;
-    const a=r.stats.armour,f=a>=0?15/(15+a):1-a/15,value=FiveCombat.acceptedHit(r,amount*f);
+    if(tune.port&&ce(r)<Math.min(.6,r.demo.stats.Dodge)){r.hurt=.2;r.events.push({kind:'dodge',pos:he(r)});return}
+    if(tune.port&&(r.demo.hitProt||0)>0){r.demo.hitProt--;r.hurt=.2;return}
+    const a=r.stats.armour,f=a>=0?15/(15+a):tune.port?2-15/(15-a):1-a/15,value=FiveCombat.acceptedHit(r,amount*f);
     r.hp=Math.max(0,r.hp-value);r.hurt=tune.bro?Math.min(.4,Math.max(.2,value/Math.max(1,r.stats.maxHp)*.4/.15)):.7;r.metrics.hits++;if(r.hand){r.hand.hits++;r.hand.hpLost+=value}
     const t=r.demo.waveTelemetry;if(t){t.damageTaken+=value;t.hits++;t.lastHits.push({air:r.demo.air,value,hp:r.hp,phase:r.hand?phase(r):'air',enemies:r.enemies.length});if(t.lastHits.length>12)t.lastHits.shift();}
     r.events.push({kind:'hit',pos:he(r),value});if(tune.rules){if(r.hand?.open&&r.hand.hits===1)ScoreCues.streakReset(r);if(r.hp<=0){r.mode='dead';r.endReason='hp';r.demo.lastFailure=diagnosis(r)}return}if(value>0)bail(r);if(r.hp<=0)bust(r);
@@ -202,8 +284,9 @@ var DEMO = (() => {
     if(!boss){const k=kindIndex??choose(r,groups(w).flatMap(g=>g[9].map(u=>u[0])));Ospw(r,r.medium,k,x,y,side);return}
     r.enemies.push({id:++r.id,kind:'charger',role:'boss',pos:ye(x,y),px:o.x+x,py:o.y+y,velocity:{x:0,y:0},hp:900+w*120,maxHp:900+w*120,radius:3.2,kv:25,xp:25,tint:0xff665e,age:0,seed:ce(r)*10,timer:2,shoot:2,charge:0,aim:{x:0,y:0},orbitHit:0,floor:-1e6,bk:18,boss:'boss'});
   }
-  function weaponDamage(r,d,l,crit){const s=r.demo.stats,side=d.side==='Armour'?r.stats.armour:d.side==='Max HP'?r.stats.maxHp:s[d.side]||0;
-    return Math.max(1,(tier(d.damage,l)+d.coef*s[d.type]+(d.sideScale||0)*side)*r.stats.damage)*OwB.hp*(crit?tier(d.cx,l):1)}
+  function weaponDamage(r,d,l,crit){if(d.armory)return Math.round(aBase(r,d,l)*(crit?tier(d.cx,l):1))*OwB.hp;const s=r.demo.stats,side=d.side==='Armour'?r.stats.armour:d.side==='Max HP'?r.stats.maxHp:s[d.side]||0;
+    const also=(d.also||[]).reduce((a,[k,p])=>a+p*(k==='Armour'?r.stats.armour:k==='Max HP'?r.stats.maxHp:s[k]||0),0),raw=(tier(d.damage,l)+d.coef*s[d.type]+(d.sideScale||0)*side+also)*r.stats.damage;
+    return Math.max(1,tune.port?Math.round(raw):raw)*OwB.hp*(crit?tier(d.cx,l):1)}
   function burst(r,x,y,rad,amount,id,kb,skip,crit=false,ctx=null){
     for(const e of [...r.enemies]){const dist=Math.hypot(e.pos.x-x,e.pos.y-y);if(e.id===skip||dist>rad+e.radius)continue;
       damage(r,e,amount*(1-.35*Math.min(1,dist/rad)),id,(e.pos.x-x)/(dist||1),(e.pos.y-y)/(dist||1),kb,crit,ctx)}
@@ -212,21 +295,22 @@ var DEMO = (() => {
   function fire(r,dt){
     const m=r.medium,air=m.kind==='air',s=r.demo.stats;
     const me=m.local,T=air&&!r.armed?[...r.enemies].sort((a,b)=>Math.hypot(a.pos.x-me.x,a.pos.y-me.y)-Math.hypot(b.pos.x-me.x,b.pos.y-me.y)):[];
-    for(const g of r.slots){const d=weapons[g.id],l=g.lvl;g.fx+=dt;g.cd=Math.max(0,(g.cd||0)-dt*r.stats.fireRate);
+    for(const g of r.slots){const d=weapons[g.id],l=g.lvl,how=d.via||g.id;g.fx+=dt;g.cd=Math.max(0,(g.cd||0)-dt*r.stats.fireRate);
       // The gun ring turns each gun towards its target every tick, as in v3: the nearest enemy within range + 8 m (none: it
       // faces forward). It keeps its current target until another is clearly nearer (×0.8), so it doesn't swing between two.
-      const range=d.range+s.Reach*(d.type==='Close'?.5:1),dist=e=>Math.hypot(e.pos.x-me.x,e.pos.y-me.y),near=T.find(e=>e.hp>0&&dist(e)<=range+8+e.radius);
+      const range=Math.max(d.armory?1:0,tier(d.range,l)+s.Reach*(d.type==='Close'?.5:1)),dist=e=>Math.hypot(e.pos.x-me.x,e.pos.y-me.y),back=e=>air&&(e.pos.x-me.x)*(m.vx||1)<0,minr=d.armory?tier(d.minr,l):0,P=minr?T.filter(e=>dist(e)>=minr):d.pref==='behind'?[...T.filter(back),...T.filter(e=>!back(e))]:T,near=P.find(e=>e.hp>0&&dist(e)<=range+8+e.radius);
       const held=g.tg&&near&&near.id!==g.tg?T.find(e=>e.id===g.tg&&e.hp>0&&dist(e)<=range+8+e.radius):null;
       g.tg=held&&dist(near)>dist(held)*.8?held.id:near?near.id:0;
       if(!air||r.armed||r.hand?.busted||g.cd>0)continue;
-      const tgt=g.tg&&T.find(e=>e.id===g.tg&&e.hp>0&&dist(e)<=range+e.radius),target=tgt||T.find(e=>e.hp>0&&dist(e)<=range+e.radius);if(!target)continue;  // hp>0: an earlier weapon this tick may have killed it
+      const tgt=g.tg&&T.find(e=>e.id===g.tg&&e.hp>0&&dist(e)<=range+e.radius),target=tgt||P.find(e=>e.hp>0&&dist(e)<=range+e.radius);if(!target)continue;  // hp>0: an earlier weapon this tick may have killed it
+      if(d.armory){aShoot(r,g,d,l,target,T,me,range);continue}
       const angle=Math.atan2(target.pos.y-me.y,target.pos.x-me.x),c=Math.cos(angle),sn=Math.sin(angle),crit=ce(r)<wt(tier(d.crit,l)+s.Crit,0,1),amount=weaponDamage(r,d,l,crit);
       r.demo.currentAttack={primary:true,attackId:++r.demo.attackSeq,weapon:g.id,slot:r.slots.indexOf(g),base:weaponDamage(r,d,l,false),crit};
-      g.aim=angle;g.fx=0;g.cd=tier(d.cd,l)/60;g.tg=target.id;
-      if(g.id==='fin'||g.id==='sonic'){
-        const radius=range*(1+s.Area),cone=g.id==='sonic'?Math.min(Math.PI*2,1.7*(1+s.Area)):Math.PI*2;
+      g.aim=angle;g.fx=0;g.cd=cooldown(r,d,l);g.tg=target.id;
+      if(how==='fin'||how==='sonic'){
+        const radius=range*(1+s.Area),cone=how==='sonic'&&!d.ring?Math.min(Math.PI*2,1.7*(1+s.Area)):Math.PI*2;
         for(const e of T){const dx=e.pos.x-me.x,dy=e.pos.y-me.y,dist=Math.hypot(dx,dy),da=Math.atan2(Math.sin(Math.atan2(dy,dx)-angle),Math.cos(Math.atan2(dy,dx)-angle));if(dist<=radius+e.radius&&Math.abs(da)<=cone/2)damage(r,e,amount,g.id,dx/(dist||1),dy/(dist||1),d.kb,crit)}
-        r.events.push({kind:g.id==='fin'?'thrust':'pulse',pos:Mr(m.origin,me),to:Mr(m.origin,{x:me.x+c*range,y:me.y+sn*range}),value:radius,aim:angle,cone,weapon:g.id,crit});
+        r.events.push({kind:how==='fin'?'thrust':'pulse',pos:Mr(m.origin,me),to:Mr(m.origin,{x:me.x+c*range,y:me.y+sn*range}),value:radius,aim:angle,cone,weapon:g.id,crit});
       }else if(g.id==='arc'){
         let at=me,remaining=[...T];for(let i=0;i<4;i++){remaining.sort((a,b)=>Math.hypot(a.pos.x-at.x,a.pos.y-at.y)-Math.hypot(b.pos.x-at.x,b.pos.y-at.y));const e=remaining.shift();if(!e||Math.hypot(e.pos.x-at.x,e.pos.y-at.y)>(i?5*(1+s.Area):range)+e.radius)break;
           r.events.push({kind:'beam',pos:Mr(m.origin,at),to:Mr(m.origin,e.pos),weapon:'arc'});damage(r,e,amount*Math.pow(.85,i),'arc',0,0,0,crit);at=e.pos}
@@ -235,10 +319,10 @@ var DEMO = (() => {
         // pierce by tier (DEMO.tune.pierce, after Brotato's tiered pierce): 3 enemies at T1 up to 6 at T4; off: always 3
         line.slice(0,tune.pierce?2+l:3).forEach((q,i)=>damage(r,q.e,amount*Math.pow(.8,i),g.id,0,0,0,crit));r.events.push({kind:'beam',pos:Mr(m.origin,me),to:Mr(m.origin,{x:me.x+c*range,y:me.y+sn*range}),weapon:g.id,crit});
       }else{
-        for(let j=0;j<(g.id==='flak'?3:1);j++){
-          const a=angle+(g.id==='flak'?(j-1)*.16:0),speed=d.type==='Shot'?100:70,gravity=g.id==='depth'?25:0,flight=Math.max(.15,Math.min(.8,Math.hypot(target.pos.x-me.x,target.pos.y-me.y)/speed));
+        for(let j=0,n=tier(d.shots,l)||(g.id==='flak'?3:1);j<n;j++){
+          const a=d.ring?angle+j*2*Math.PI/n:angle+(d.shots?(j-(n-1)/2)*(d.spread||.16):g.id==='flak'?(j-1)*.16:0),speed=d.speed||(d.type==='Shot'?100:70),gravity=g.id==='depth'?25:0,flight=Math.max(.15,Math.min(.8,Math.hypot(target.pos.x-me.x,target.pos.y-me.y)/speed));
           const velocity=gravity?{x:(target.pos.x-me.x)/flight+target.velocity.x,y:(target.pos.y-me.y)/flight+target.velocity.y+gravity*flight/2}:{x:Math.cos(a)*speed,y:Math.sin(a)*speed};
-          r.shots.push({id:++r.id,weapon:g.id,pos:{...me},velocity,damage:amount,radius:g.id==='depth'?.55:.3,life:gravity?flight+.15:(range+3)/speed,pierce:g.id==='harpoon'?(tune.pierce?(crit?2+l:2):(crit?2:1)):1,pdr:g.id==='harpoon'&&tune.pierce?.2:0,hit:[],slot:r.slots.indexOf(g),ctx:{...r.demo.currentAttack},crit,kb:d.kb,ex:(d.blast||0)*(1+s.Area),g:gravity});
+          r.shots.push({id:++r.id,weapon:g.id,pos:{...me},velocity,damage:amount,radius:g.id==='depth'?.55:.3,life:gravity?flight+.15:(range+3)/speed,pierce:d.pierce?tier(d.pierce,l):g.id==='harpoon'?(tune.pierce?(crit?2+l:2):(crit?2:1)):1,pdr:d.pierce?(d.pdr||0):g.id==='harpoon'&&tune.pierce?.2:0,hit:[],slot:r.slots.indexOf(g),ctx:{...r.demo.currentAttack},crit,kb:d.kb,ex:(d.blast||0)*(1+s.Area),g:gravity});
         }
       }
       r.events.push({kind:'shot',pos:Mr(m.origin,me),weapon:g.id,slot:r.slots.indexOf(g)});r.demo.currentAttack=null;
@@ -263,7 +347,7 @@ var DEMO = (() => {
   }
   function shots(r,dt,live){
     for(const sh of [...r.shots]){
-      if(sh.life<=0||sh.weapon==='hostile')continue;const from={...sh.pos};sh.g&&(sh.velocity.y-=sh.g*dt);sh.pos.x+=sh.velocity.x*dt;sh.pos.y+=sh.velocity.y*dt;sh.life-=dt;
+      if(sh.life<=0||sh.weapon==='hostile')continue;if(sh.arm){aMove(r,sh,dt,live);continue}const from={...sh.pos};sh.g&&(sh.velocity.y-=sh.g*dt);sh.pos.x+=sh.velocity.x*dt;sh.pos.y+=sh.velocity.y*dt;sh.life-=dt;
       if(!live)continue;
       for(const e of [...r.enemies]){if(sh.life<=0||sh.hit.includes(e.id)||ew(e.pos,from,sh.pos)>sh.radius+e.radius)continue;
         sh.hit.push(e.id);const dx=e.pos.x-from.x,dy=e.pos.y-from.y,dist=Math.hypot(dx,dy)||1;damage(r,e,sh.damage,sh.weapon,dx/dist,dy/dist,sh.kb,sh.crit,sh.ctx);
@@ -276,7 +360,7 @@ var DEMO = (() => {
   function combat(r,m,input,dt){
     const d=r.demo;d.air+=dt;d.overtimeAir+=Math.max(0,dt-Math.max(0,r.budget));r.hand.activeAir+=dt;FiveCombat.tick(r,dt);
     if(!d.bossSpawned&&r.wave%10===0&&d.air>=clock(r.wave)*.3){spawn(r,true);d.bossSpawned=bossAlive(r)}
-    fire(r,dt);enemies(r,m,input,dt);if(r.mode!=='playing')return;shots(r,dt,true);
+    if(tune.port)aTick(r,dt);fire(r,dt);enemies(r,m,input,dt);if(r.mode!=='playing')return;shots(r,dt,true);
     Oxeair(r,m,dt);
     if(r.hand?.busted){}else if(tune.bro){const R=d.stats.Regen;if(R>0&&r.hp<r.stats.maxHp){d.regenT=(d.regenT||0)+dt;const period=5/(1+(R-1)/2.25);
       while(d.regenT>=period){d.regenT-=period;r.hp=Math.min(r.stats.maxHp,r.hp+hpScale())}}else d.regenT=0}
@@ -288,6 +372,7 @@ var DEMO = (() => {
     if(r.mode!=='playing')return;const d=r.demo;const report={wave:r.wave,score:r.wscore,quota:r.quota,killed:r.wkill,hands:d.history.length,diagnosis:diagnosis(r)};r.lastWave=report;
     // Step 4: a wave is survived, not scored (design doc §4.7). Clear pay plus interest (10% of saved pearls, at most 10);
     // the style pearls were paid at each splashdown and are only reported here.
+    if(tune.port){const H=Math.floor(d.stats.Harvesting);d.wavePearls=0;report.pay={clear:0,interest:0,style:0,harvest:H,total:H};if(H>0){Oxepay(r,H,he(r));d.stats.Harvesting=Math.ceil(H*(1.05+d.stats['Harvest growth']))}for(const f of ownedFx(r,'endwave'))addStat(r,f.s,f.v);sync(r);r.hp=r.stats.maxHp;if(r.wave===20){r.mode='won';r.milestones.victory=true}else{r.mode='shop';shop(r);levelChoices(r)}return}
     if(tune.rules){const base=24+r.wave*4,interest=Math.min(10,Math.floor(r.xp*.1)),style=d.wavePearls||0;d.wavePearls=0;
       report.pay={clear:base,interest,style,total:base+interest+style};r.xp+=base+interest;r.earned+=base+interest;r.hp=r.stats.maxHp;
       if(r.wave===20){r.mode='won';r.milestones.victory=true}else{r.mode='shop';shop(r);levelChoices(r)}return}
@@ -297,8 +382,8 @@ var DEMO = (() => {
     report.pay={clear:base,score:bonus,interest,charms:extra,total:base+bonus+interest+extra};d.pendingPearls=0;r.xp+=report.pay.total;r.earned+=report.pay.total;r.hp=r.stats.maxHp;
     if(r.wave===20){r.mode='won';r.milestones.victory=true}else{r.mode='shop';shop(r);levelChoices(r)}
   }
-  function rarity(r){const a=ce(r),luck=Math.max(0,r.demo.stats.Luck)*.001;return a<.015+r.wave*.002+luck?4:a<.10+r.wave*.007+luck?3:a<.35+r.wave*.01+luck?2:1}
-  const price=(r,base)=>Math.max(1,Math.floor((base+r.wave+.1*base*r.wave)*r.demo.shopMultiplier));
+  function rarity(r){if(tune.port)return tierRoll(r,r.wave);const a=ce(r),luck=Math.max(0,r.demo.stats.Luck)*.001;return a<.015+r.wave*.002+luck?4:a<.10+r.wave*.007+luck?3:a<.35+r.wave*.01+luck?2:1}
+  const price=(r,base)=>Math.max(1,Math.floor((base+r.wave+.1*base*r.wave)*(tune.port?Math.max(0,1+r.demo.stats['Item price']):r.demo.shopMultiplier)));
   // Rarity sets how often an offer appears, not only its price (design doc §4.10). Luck and later waves lift rarer odds.
   function rarityWeight(r,level){const luck=Math.max(0,r.demo.stats.Luck)*.002,late=Math.min(.3,.015*r.wave);return level>=3?.2+late+luck:level===2?.55+late/2+luck:1}
   function weighted(r,list,weight){const ws=list.map(weight),sum=ws.reduce((a,b)=>a+b,0);if(!list.length||!(sum>0))return undefined;let q=ce(r)*sum;for(let i=0;i<list.length;i++){q-=ws[i];if(q<0)return list[i]}return list.at(-1)}
@@ -335,20 +420,22 @@ var DEMO = (() => {
   const ruleIds=r=>['charm','reroll',...(r.demo.shelfBonus<1?['shelf']:[])];
   // weapon offers: 35% guns you own, 35% your guns' types, 15% guns your tricks feed (step 4 rules), the rest any
   function offer(r,row){const d=r.demo,uid=++d.uid;
-    if(row==='weapon'){const owned=r.slots.map(g=>g.id),types=r.slots.map(g=>weapons[g.id].type),pool=Object.keys(weapons),q=ce(r),fed=tune.rules&&typeof Routine!=='undefined'?Routine.gunsFor(r):[],id=q<.35?choose(r,owned):q<.7?choose(r,pool.filter(k=>types.includes(weapons[k].type))):q<.85&&fed.length?choose(r,fed):choose(r,pool),level=q<.35&&ce(r)<.7?choose(r,r.slots.filter(g=>g.id===id&&g.lvl<4).map(g=>g.lvl))||Math.min(rarity(r),1+Math.floor(r.wave/4)):Math.min(rarity(r),1+Math.floor(r.wave/4));return {uid,row,id,level,price:price(r,[12,24,48,96][level-1])}}
+    if(row==='weapon'&&tune.port)return portWeapon(r,uid);
+    if(row==='weapon'){const owned=r.slots.map(g=>g.id),types=r.slots.map(g=>weapons[g.id].type),pool=Object.keys(weapons).filter(k=>!weapons[k].port),q=ce(r),fed=tune.rules&&typeof Routine!=='undefined'?Routine.gunsFor(r):[],id=q<.35?choose(r,owned):q<.7?choose(r,pool.filter(k=>types.includes(weapons[k].type))):q<.85&&fed.length?choose(r,fed):choose(r,pool),level=q<.35&&ce(r)<.7?choose(r,r.slots.filter(g=>g.id===id&&g.lvl<4).map(g=>g.lvl))||Math.min(rarity(r),1+Math.floor(r.wave/4)):Math.min(rarity(r),1+Math.floor(r.wave/4));return {uid,row,id,level,price:price(r,[12,24,48,96][level-1])}}
     if(row==='charm'){const id=weighted(r,charmPool(r),id=>rarityWeight(r,charms[id].rarity)*charmFit(r,id));if(!id)return offer(r,'gear');return {uid,row,id,face:charms[id].bound?boundFace(r):null,price:price(r,charms[id].price)}}
+    if(row==='gear'&&tune.port)return armoryItem(r,uid);
     if(row==='gear')return offer(r,ce(r)<.45?'item':'stat');
     if(row==='item'){const pool=Object.keys(FiveCombat.items).filter(id=>!(id==='I05'&&r.wave<5)&&!(id==='I07'&&r.wave<3));const id=weighted(r,pool,id=>rarityWeight(r,FiveCombat.items[id].rarity)*gearFit(r,'item',id));return {uid,row,id,price:price(r,FiveCombat.items[id].price||18)}}
-    if(row==='stat'){const id=weighted(r,gearStats,i=>gearFit(r,'stat',i));return {uid,row,id,price:price(r,10)}}
+    if(row==='stat'){const id=weighted(r,tune.port?portGear:gearStats,i=>gearFit(r,'stat',i));return {uid,row,id,price:price(r,10)}}
     if(row==='routine'){const choice=routineChoice(r);return {uid,row,id:choice.kind,choice,price:price(r,choicePrice(r,choice))}}
     if(row==='pack'){const mega=r.wave>=8&&ce(r)<.25,charmOk=d.charms.length+(mega?2:1)<=charmSlots(r)&&charmPool(r).length>0;return {uid,row,id:charmOk&&ce(r)<.4?'charm':'routine',mega,fallback:'',price:price(r,mega?12:7)}}
     return {uid,row:'voucher',id:choose(r,ruleIds(r)),price:price(r,35)};
   }
   // Shelf: weapon, gear, charm (+1 with the extra shelf); permanent run rules appear there as rare offers. Routine row: two offers.
   const inRoutineRow=o=>o.row==='routine'||o.row==='pack';
-  function shelfOffer(r,i){if(r.wave>=2&&i>0&&ce(r)<.07)return offer(r,'voucher');if(tune.rules)return offer(r,i%2===0?'weapon':'gear');return offer(r,i===0?'weapon':i===1?'gear':i===2?'charm':choose(r,['weapon','gear','charm']))}  // step 4: no charms; weapons and gear alternate
+  function shelfOffer(r,i){if(tune.port)return portOffer(r);if(r.wave>=2&&i>0&&ce(r)<.07)return offer(r,'voucher');if(tune.rules)return offer(r,i%2===0?'weapon':'gear');return offer(r,i===0?'weapon':i===1?'gear':i===2?'charm':choose(r,['weapon','gear','charm']))}  // step 4: no charms; weapons and gear alternate
   function routineOffer(r,i){return offer(r,i===0||ce(r)<.5?'routine':'pack')}
-  function shop(r){const d=r.demo,held=[...new Map([...d.offers,...(d.deferredOffers||[])].filter(o=>o.locked&&!o.bought&&o.row!=='voucher').map(o=>[o.uid,o])).values()];
+  function shop(r){if(tune.port)return portShop(r);const d=r.demo,held=[...new Map([...d.offers,...(d.deferredOffers||[])].filter(o=>o.locked&&!o.bought&&o.row!=='voucher').map(o=>[o.uid,o])).values()];
     d.offers=held.slice(0,6);d.deferredOffers=held.slice(6);d.pack=null;d.weaponChoice=null;d.rerolls={shelf:0,pack:0};
     // Step 4: no charms or reel routines; their two places go to the shelf.
     if(tune.rules)d.offers=d.offers.filter(o=>!inRoutineRow(o));
@@ -358,7 +445,7 @@ var DEMO = (() => {
     const shelves=3+d.shelfBonus+(tune.rules?3:0);for(let i=d.offers.filter(o=>!inRoutineRow(o)).length;i<shelves&&d.offers.length<6;i++)d.offers.push(shelfOffer(r,i));
     if(!tune.rules)for(let i=d.offers.filter(inRoutineRow).length;i<2&&d.offers.length<6;i++)d.offers.push(routineOffer(r,i));
   }
-  function levelChoices(r){if(!r.lvup){r.demo.levelChoices=[];return}const types=new Set(r.slots.map(g=>weapons[g.id].type)),all=Object.keys(stats).filter(k=>k!=='Drive');r.demo.levelChoices=['combat','defence','flight'].map(group=>{const pool=all.filter(k=>(stats[k].group===group||group==='flight'&&stats[k].group==='economy')&&(!['Close','Shot','Blast'].includes(k)||types.has(k)));return{id:choose(r,pool),level:rarity(r)}})}
+  function levelChoices(r){if(!r.lvup){r.demo.levelChoices=[];return}if(tune.port)return portLevels(r);const types=new Set(r.slots.map(g=>weapons[g.id].type)),all=Object.keys(stats).filter(k=>k!=='Drive'&&!stats[k].port);r.demo.levelChoices=['combat','defence','flight'].map(group=>{const pool=all.filter(k=>(stats[k].group===group||group==='flight'&&stats[k].group==='economy')&&(!['Close','Shot','Blast'].includes(k)||types.has(k)));return{id:choose(r,pool),level:rarity(r)}})}
   function addStat(r,k,v){r.demo.stats[k]+=v;sync(r);if(k==='Max HP'&&v>0)r.hp=Math.min(r.stats.maxHp,r.hp+v*hpScale())}
   const choiceKey=c=>[c.kind,c.id||'',c.face||'',c.donor||'',c.recipient||''].join(':');
   function packChoices(r,o){const d=r.demo,out=[],n=o.mega?5:3;
@@ -391,20 +478,22 @@ var DEMO = (() => {
       if(pool.length){p.choices[i]=choose(r,pool);used.add(choiceKey(p.choices[i]));seen.add(choiceKey(p.choices[i]))}
     }
   }
-  function command(r,action,index){const d=r.demo;if(r.mode!=='shop')return false;d.toast='';if(r.lvup&&action!=='level'){d.toast='Choose your level upgrades first.';return false}
+  function command(r,action,index){const d=r.demo;if(r.mode!=='shop')return false;d.toast='';if(r.lvup&&action!=='level'&&action!=='levelReroll'){d.toast='Choose your level upgrades first.';return false}
     if(action==='level'){const c=d.levelChoices[index];if(!c||!r.lvup)return false;addStat(r,c.id,stats[c.id].sizes[c.level-1]);r.lvup--;levelChoices(r);return true}
     if(action==='next'){if(r.lvup||d.pack||d.weaponChoice){d.toast=r.lvup?'Choose your level upgrades first.':d.pack?'Finish choosing from your open pack.':'Choose a replacement or cancel it first.';return false}r.wave++;wave(r);sync(r);r.mode='playing';return true}
+    if(action==='levelReroll'&&tune.port){const cost=rerollCost(r,'level');if(!r.lvup||r.xp<cost)return false;r.xp-=cost;d.rerolls.level=(d.rerolls.level||0)+1;levelChoices(r);return true}
     if(action==='lock'){const o=d.offers.find(x=>x.uid===+index);if(!o||o.bought||o.row==='voucher')return false;o.locked=!o.locked;return true}
-    if(action==='reroll'){const row=index==='weapon'?'shelf':index,cost=Math.max(1,2+(d.rerolls[row]||0)-d.rerollDiscount);if(!['shelf','pack'].includes(row)||r.xp<cost||d.pack)return false;const pred=o=>row==='pack'?inRoutineRow(o):!inRoutineRow(o),canChange=d.offers.some(o=>pred(o)&&(!o.locked||o.bought));if(!canChange){d.toast='Unlock an offer before rerolling this row.';return false}d.weaponChoice=null;r.xp-=cost;d.rerolls[row]=(d.rerolls[row]||0)+1;const n=d.offers.filter(pred).length;d.offers=d.offers.filter(o=>!pred(o)||o.locked&&!o.bought);for(let i=d.offers.filter(pred).length;i<n;i++)d.offers.push(row==='pack'?routineOffer(r,i):shelfOffer(r,i));return true}
+    if(action==='reroll'){const row=index==='weapon'?'shelf':index,cost=rerollCost(r,row);if(!['shelf','pack'].includes(row)||r.xp<cost||d.pack)return false;const pred=o=>row==='pack'?inRoutineRow(o):!inRoutineRow(o),canChange=d.offers.some(o=>pred(o)&&(!o.locked||o.bought));if(!canChange){d.toast='Unlock an offer before rerolling this row.';return false}d.weaponChoice=null;r.xp-=cost;d.rerolls[row]=(d.rerolls[row]||0)+1;const n=d.offers.filter(pred).length;d.offers=d.offers.filter(o=>!pred(o)||o.locked&&!o.bought);for(let i=d.offers.filter(pred).length;i<n;i++)d.offers.push(row==='pack'?routineOffer(r,i):shelfOffer(r,i));return true}
     if(action==='weaponChoice'){const o=d.offers.find(x=>x.uid===+index);if(!o||o.bought||o.row!=='weapon'||d.pack||r.slots.length!==6)return false;d.weaponChoice=o.uid;return true}
     if(action==='weaponCancel'){d.weaponChoice=null;return true}
-    if(action==='replaceWeapon'){const i=+index,o=d.offers.find(x=>x.uid===d.weaponChoice),g=r.slots[i];if(!g||!o||o.bought||o.row!=='weapon'||d.pack)return false;const refund=Math.floor((g.paid||0)/2),cost=o.price-refund;if(r.xp<cost)return false;const next=Owslot(o.id,o.level,++d.uid);next.paid=o.price;next.cd=0;r.slots[i]=next;r.xp-=cost;o.bought=true;o.locked=false;d.weaponChoice=null;sync(r);return true}
+    if(action==='replaceWeapon'){const i=+index,o=d.offers.find(x=>x.uid===d.weaponChoice),g=r.slots[i];if(!g||!o||o.bought||o.row!=='weapon'||d.pack)return false;const refund=sellValue(r,g),cost=o.price-refund;if(r.xp<cost)return false;const next=Owslot(o.id,o.level,++d.uid);next.paid=o.price;next.cd=0;r.slots[i]=next;r.xp-=cost;o.bought=true;o.locked=false;d.weaponChoice=null;sync(r);return true}
     if(action==='trickMove'){const [id,slot]=String(index).split(':');return Routine.move(r,id,slot)}
     if(action==='buy'){const o=d.offers.find(x=>x.uid===+index);if(!o||o.bought||r.xp<o.price||d.pack)return false;
       if(o.row==='pack'&&o.id==='charm'&&d.charms.length>=charmSlots(r)){d.toast='Sell a charm or gain a charm slot before opening this Charm pack.';return false}
       if(o.row==='weapon'){if(r.slots.length>=6){const g=r.slots.find(g=>g.id===o.id&&g.lvl===o.level&&g.lvl<4);if(!g){d.toast='Choose a weapon to replace, or combine an existing pair.';return false}g.lvl++;g.paid=(g.paid||0)+o.price;g.cd=0}else{const g=Owslot(o.id,o.level,++d.uid);g.paid=o.price;g.cd=0;r.slots.push(g)}}
       else if(o.row==='charm'){if(d.charms.length>=charmSlots(r)||d.charms.includes(o.id))return false;d.charms.push(o.id);d.charmPaid[o.id]=o.price;d.charmFaces[o.id]=o.face}
       else if(o.row==='trick'){Routine.add(r,o.id)}
+      else if(o.row==='armory'){armoryBuy(r,o.id)}
       else if(o.row==='item'){FiveCombat.buy(r,o.id);(d.itemPaid??={})[o.id]=[...(d.itemPaid?.[o.id]||[]),o.price]}
       else if(o.row==='stat'){const a=items[o.id];addStat(r,a.up,a.value);if(a.down)addStat(r,a.down,-a.loss);d.statInventory.push({id:o.id,paid:o.price,uid:o.uid})}
       else if(o.row==='routine'){if(!packChoiceValid(r,o.choice)){d.toast='That upgrade is already at its cap.';return false}applyChoice(r,o.choice)}
@@ -419,23 +508,23 @@ var DEMO = (() => {
     }
     if(action==='packSkip'){if(!d.pack)return false;d.pack=null;return true}
     if(action==='combine'){const i=+index,a=r.slots[i],j=r.slots.findIndex((b,k)=>k!==i&&b.id===a?.id&&b.lvl===a?.lvl);if(!a||a.lvl>=4||j<0)return false;const b=r.slots[j];a.lvl++;a.paid=(a.paid||0)+(b.paid||0);a.cd=0;r.slots.splice(j,1);sync(r);return true}
-    if(action==='sell'){const g=r.slots[+index];if(!g||r.slots.length<=1)return false;r.xp+=Math.floor((g.paid||0)/2);r.slots.splice(+index,1);sync(r);return true}
+    if(action==='sell'){const g=r.slots[+index];if(!g||r.slots.length<=1)return false;r.xp+=sellValue(r,g);r.slots.splice(+index,1);sync(r);return true}
     if(action==='charmLeft'){const i=+index;if(i<=0||i>=d.charms.length)return false;[d.charms[i-1],d.charms[i]]=[d.charms[i],d.charms[i-1]];return true}
     if(action==='charmSell'){const id=d.charms[+index];if(!id)return false;r.xp+=Math.floor((d.charmPaid[id]||0)/2);d.charms.splice(+index,1);FiveScore.sellCharm(d.score,id);delete d.charmPaid[id];delete d.charmFaces[id];return true}
-    if(action==='itemSell'){const id=index;if(!d.itemCounts[id])return false;const paid=(d.itemPaid[id]||[]).pop()||0;if(!FiveCombat.sell(r,id))return false;r.xp+=Math.floor(paid/2);return true}
-    if(action==='statSell'){const i=d.statInventory.findIndex(a=>a.uid===+index);if(i<0)return false;const a=d.statInventory[i],x=items[a.id];addStat(r,x.up,-x.value);if(x.down)addStat(r,x.down,x.loss);r.xp+=Math.floor(a.paid/2);d.statInventory.splice(i,1);return true}
+    if(action==='itemSell'){const id=index;if(!d.itemCounts[id])return false;const paid=(d.itemPaid[id]||[]).pop()||0;if(!FiveCombat.sell(r,id))return false;r.xp+=tune.port?Math.floor(.25*price(r,FiveCombat.items[id].price||18)):Math.floor(paid/2);return true}
+    if(action==='statSell'){const i=d.statInventory.findIndex(a=>a.uid===+index);if(i<0)return false;const a=d.statInventory[i],x=items[a.id];addStat(r,x.up,-x.value);if(x.down)addStat(r,x.down,x.loss);r.xp+=tune.port?Math.floor(.25*price(r,10)):Math.floor(a.paid/2);d.statInventory.splice(i,1);return true}
     return false;
   }
   function preview(r){return null}
 
-  return {broEnemy,withContact,hpScale,tune,TUNE_DEFAULT,saveTune,charmSlots,weapons,cards,charms,stats,items,tier,fmt,phase,strongest,ledger,diagnosis,bossAlive,returnBoss,continueSchedule,statText,standard,clock,quota,expectedChips,cap,init,wave,sync,open,fireCharms,nextCard,tickCards,bank,damage,hit,spawn,fire,weaponDamage,combat,drift,finish,shop,levelChoices,command,preview,applyChoice,packChoiceValid,routineChoice,charmPool,BUST};
+  return {shots,ITEMS,fxText,weaponText,aBase,aNextCd,aHit,aTick,CLASSES,classCounts,tierRoll,weaponPrice,sellValue,rerollCost,cooldown,price,PORT_SIZES,broEnemy,withContact,hpScale,tune,TUNE_DEFAULT,saveTune,charmSlots,weapons,cards,charms,stats,items,tier,fmt,phase,strongest,ledger,diagnosis,bossAlive,returnBoss,continueSchedule,statText,standard,clock,quota,expectedChips,cap,init,wave,sync,open,fireCharms,nextCard,tickCards,bank,damage,hit,spawn,fire,weaponDamage,combat,drift,finish,shop,levelChoices,command,preview,applyChoice,packChoiceValid,routineChoice,charmPool,BUST};
 })();
 
 /* The existing simulation entry points now use the vertical slice. */
 FiveCombat.configure({damage:(r,e,a,c)=>DEMO.damage(r,e,a,c.weapon||('item-'+c.item),0,0,0,false,c),strongest:r=>DEMO.strongest(r),phase:r=>DEMO.phase(r),position:r=>r.medium.local});
 // Match automatic XP level gains to the same HP scale as explicit upgrades.
 // XP orbs and level-ups as v3, except a level adds no Max HP (design doc §4.10); the level-up stat pick is the reward.
-{const xp0=Oxepay;Oxepay=function(r,m,pos){const hp=r.hp;xp0(r,m,pos);if(r.demo){r.hp=hp;DEMO.sync(r)}}}
+{const xp0=Oxepay;Oxepay=function(r,m,pos){const hp=r.hp,pv=Oxe.pv;if(DEMO.tune.port)Oxe.pv=1/(r.stats.xpRate||1);xp0(r,m,pos);Oxe.pv=pv;if(r.demo){r.hp=hp;DEMO.sync(r)}}}
 var DemoHd=Hd;
 Hd=function(seed,starter='harpoon',record=0){return DEMO.init(DemoHd(seed,starter,record),starter)};
 Owsetup=function(r){r.world='open';r.diff='standard';return r};
@@ -445,8 +534,8 @@ touchKill=function(r,p){r.kills++;r.waveKills++;r.flightKills++;r.events.push({k
 {const ovr0=Ovr;Ovr=function(r,e){const B=r.enemies.filter(x=>x.role==='boss'),P=(r.pursuers||[]).filter(p=>p.e?.role==='boss');ovr0(r,e);for(const b of B)r.enemies.includes(b)||r.enemies.push(b);for(const p of P)r.pursuers.includes(p)||r.pursuers.push(p)}}  // the demo's boss never despawns
 
 Oqpost=function(){};Ovn=function(){};Olp.on=0;Oxe.quota=1;Oq.on=1;Oq.kv=1;Oxe.pv=0;Otk.on=1;Owp.try=0;Ocv.on=1;Orw.on=1;Orw.both=1;ai=-15;li.gravity=-15;
-for(const [id,d] of Object.entries(DEMO.weapons)){Object.assign(Owc[id],{pref:'nearest',media:'air',start:['sonic','harpoon','rocket'].includes(id),min:1,trig:null,leap:0,blurb:d.description,dmg:d.damage,cd:d.cd,crit:d.crit,critx:d.cx,rng:d.range*OwB.ppm})}
-OwK=Object.keys(DEMO.weapons);En='harpoon';Owp.dmg=Owp.cd=Owp.rng=Owp.kb=Owp.ex=1;
+for(const [id,d] of Object.entries(DEMO.weapons)){if(d.armory){const pool=d.kind==='melee'?['fin','sonic','orbit','arc','bubble']:['blaster','minigun','scatter','laser','rocket','flak','torpedo','harpoon','depth','tail','nova'],h=[...id].reduce((a,c)=>(a*31+c.charCodeAt(0))>>>0,7),base=pool[h%pool.length];OwArt[id]=OwArt[id]||OwArt[base];Owc[id]={...Owc[base],name:d.name,v:d.v,color:'#'+(h&0x7f7f7f|0x808080).toString(16).padStart(6,'0'),tags:[]}}Object.assign(Owc[id],{pref:'nearest',media:'air',start:d.armory?!!d.starter:['sonic','harpoon','rocket'].includes(id),min:d.min||1,trig:null,leap:0,blurb:d.description||'',dmg:d.damage,cd:d.cd,crit:d.crit,critx:d.cx,rng:(Array.isArray(d.range)?d.range.find(x=>x!=null):d.range)*OwB.ppm})}
+OwK=Object.keys(DEMO.weapons);En=DEMO.weapons.harpoon?'harpoon':OwK.find(k=>DEMO.weapons[k].starter);Owp.dmg=Owp.cd=Owp.rng=Owp.kb=Owp.ex=1;
 /* 20 Oct (user): the movement settings copied from the v3 carve's panel are the demo's defaults (RESET returns to them),
    except launch speed: 30 m/s at wave 1, +5 a wave (the user's correction; the copy had 28 and +0.5).
    Three keep the demo's own value because the demo replaces what they drive: leap.on 0 (no leap weapons), econ.pv 0
@@ -532,14 +621,14 @@ function DemoBind(){for(const b of hr.querySelectorAll('[data-demo]'))b.onclick=
   if(a==='starter'){En=i;ql();return}if(a==='startTrick'){DemoStartTrick=i;ql();return}if(a==='begin'){Zd(En);return}if(a==='tune'){document.getElementById('tune')?DemoPanel(false):DemoTune(true);return}if(a==='help'){const el=document.getElementById('demo-how');if(el)el.hidden=!el.hidden;return}if(a==='home'){ql();return}
   if(a==='next'){if(DEMO.command(S,a,i)){ke=0;as=Br(S);sf()}else Xl();return}DEMO.command(S,a,i);Xl();if(a==='level'){(hr.querySelector('[data-demo=level]:not(:disabled)')||hr.querySelector('[data-demo=buy]:not(:disabled)'))?.focus({preventScroll:true})}else if(S.demo.pack){const choice=hr.querySelector('[data-demo=packPick]:not(:disabled)');choice?.focus({preventScroll:true});choice?.scrollIntoView?.({block:'nearest'})}
 }}
-ql=function(){ft='title';St=null;ur.reset();hr.innerHTML=`${_w()}<section class="title-content demo-title"><div class="eyebrow">CHIPS × MULT · SCORE FEEL TEST</div><h1>ICARUS<span>BUILD YOUR ASCENT</span></h1><p class="intro">Carve your launch.<br>Build the flight you want.</p><p class="title-description">${DEMO.tune.rules&&DEMO.tune.tricks?'Automatic weapons do the killing.<br>Under water, tap W A S D to choose a trick: it boosts one weapon type for the flight.<br>Stay clean to grow your streak. Land to bank pearls.':DEMO.tune.rules?'Automatic weapons turn kills into chips.<br>Pick your first trick: it fires at Breach, Apex or Entry and builds mult.<br>Stay clean to grow your streak. Land to bank pearls.':'Automatic weapons turn kills into chips.<br>Your tricks are the reels: they build mult.<br>Get hit and the trick in progress bails. Land to bank.'}</p><div class="demo-starters">${['sonic','harpoon','rocket'].map(id=>DemoButton('starter',id,`<b>${Owc[id].name}</b><span>${DEMO.weapons[id].type} · ${DEMO.weapons[id].description}</span>`,false,id===En?'selected':'')).join('')}</div>${DEMO.tune.rules&&!DEMO.tune.tricks?(()=>{if(!DemoTrickTitle){DemoTrickTitle=[...Routine.pool()].sort(()=>Math.random()-.5).slice(0,3);DemoStartTrick=DemoTrickTitle[0]}return `<div class="demo-starters demo-tricks">${DemoTrickTitle.map(id=>{const T=Routine.TRICKS[id];return DemoButton('startTrick',id,`<b>${T.glyph} ${T.name}</b><span title="${T.text}">${T.kind==='water'?'Water':'Effect'} · ${Routine.SLOT_NAMES[T.slot]}</span>`,false,id===DemoStartTrick?'selected':'')}).join('')}</div>`})():''}<div class="launch-row">${DemoButton('begin','','BEGIN RUN ↗',false,'demo-primary')}${DemoButton('help','','HOW TO PLAY')}${DemoButton('tune','','SETTINGS')}</div><div id="demo-how" hidden><p><b>Launch:</b> hold ${Controls.carve()?'Space':'W or up'} to carve upward. Release to ride out.${Controls.carve()?'':' Space boosts.'} Water is safe and pauses the air clock.</p><p><b>Fight:</b> W A S D / arrows steer within your launch path. Weapons fire automatically. ${DEMO.tune.rules?'Each kill is a chip. Land in water to bank kills × your clean streak (up to ×5, back to ×1 when you take a hit) as pearls. Survive 20 waves; 0 HP ends the run.':"Kills give chips, plus bonus chips for multi-kills, apex kills and crits. Land in water to bank chips × mult. Meet every wave's quota for 20 waves; missing one ends the run."}</p><p><b>Tricks:</b> each jump draws tricks (3 to start; buy more) that play automatically, like reels. A hit bails the trick in progress: it pays nothing. At 0 HP the jump busts: you fall, bank nothing and come back at half HP.</p><p><b>Build:</b> kills drop XP orbs; steer through them to level up. Each level gives a free stat pick before the shop. Then buy weapons and gear for chips and survival, charms that rewrite the scoring, and Routine upgrades for your tricks. Charms resolve left to right at the bank.</p></div></section><footer class="title-footer"><div><b>${Object.keys(DEMO.weapons).length}</b><span>WEAPONS · SIX SLOTS</span></div><div><b>5</b><span>TRICKS · DRAWS 3→7</span></div><div><b>${Object.keys(FiveScore.charms).length}</b><span>CHARMS</span></div><div><b>${FiveCombat.catalogue.length}</b><span>COMBAT ITEMS</span></div></footer>`;Kl();DemoBind()};
+ql=function(){ft='title';St=null;ur.reset();hr.innerHTML=`${_w()}<section class="title-content demo-title"><div class="eyebrow">CHIPS × MULT · SCORE FEEL TEST</div><h1>ICARUS<span>BUILD YOUR ASCENT</span></h1><p class="intro">Carve your launch.<br>Build the flight you want.</p><p class="title-description">${DEMO.tune.rules&&DEMO.tune.tricks?'Automatic weapons do the killing.<br>'+(DEMO.tune.ladders?'Hold W A S D as you breach for a trick: each one shoves, slows or pays.<br>':'Under water, tap W A S D to choose a trick: it boosts one weapon type for the flight.<br>')+'Stay clean to grow your streak. Land to bank pearls.':DEMO.tune.rules?'Automatic weapons turn kills into chips.<br>Pick your first trick: it fires at Breach, Apex or Entry and builds mult.<br>Stay clean to grow your streak. Land to bank pearls.':'Automatic weapons turn kills into chips.<br>Your tricks are the reels: they build mult.<br>Get hit and the trick in progress bails. Land to bank.'}</p><div class="demo-starters">${(DEMO.weapons.harpoon?['sonic','harpoon','rocket']:OwK.filter(k=>DEMO.weapons[k].starter)).map(id=>DemoButton('starter',id,`<b>${Owc[id].name}</b><span>${DEMO.weapons[id].type} · ${DEMO.weapons[id].description}</span>`,false,id===En?'selected':'')).join('')}</div>${DEMO.tune.rules&&!DEMO.tune.tricks?(()=>{if(!DemoTrickTitle){DemoTrickTitle=[...Routine.pool()].sort(()=>Math.random()-.5).slice(0,3);DemoStartTrick=DemoTrickTitle[0]}return `<div class="demo-starters demo-tricks">${DemoTrickTitle.map(id=>{const T=Routine.TRICKS[id];return DemoButton('startTrick',id,`<b>${T.glyph} ${T.name}</b><span title="${T.text}">${T.kind==='water'?'Water':'Effect'} · ${Routine.SLOT_NAMES[T.slot]}</span>`,false,id===DemoStartTrick?'selected':'')}).join('')}</div>`})():''}<div class="launch-row">${DemoButton('begin','','BEGIN RUN ↗',false,'demo-primary')}${DemoButton('help','','HOW TO PLAY')}${DemoButton('tune','','SETTINGS')}</div><div id="demo-how" hidden><p><b>Launch:</b> hold ${Controls.carve()?'Space':'W or up'} to carve upward. Release to ride out.${Controls.carve()?'':' Space boosts.'} Water is safe and pauses the air clock.</p><p><b>Fight:</b> W A S D / arrows steer within your launch path. Weapons fire automatically. ${DEMO.tune.rules?'Each kill is a chip. Land in water to bank kills × your clean streak (up to ×5, back to ×1 when you take a hit) as pearls. Survive 20 waves; 0 HP ends the run.':"Kills give chips, plus bonus chips for multi-kills, apex kills and crits. Land in water to bank chips × mult. Meet every wave's quota for 20 waves; missing one ends the run."}</p><p><b>Tricks:</b> each jump draws tricks (3 to start; buy more) that play automatically, like reels. A hit bails the trick in progress: it pays nothing. At 0 HP the jump busts: you fall, bank nothing and come back at half HP.</p><p><b>Build:</b> kills drop XP orbs; steer through them to level up. Each level gives a free stat pick before the shop. Then buy weapons and gear for chips and survival, charms that rewrite the scoring, and Routine upgrades for your tricks. Charms resolve left to right at the bank.</p></div></section><footer class="title-footer"><div><b>${Object.keys(DEMO.weapons).length}</b><span>WEAPONS · SIX SLOTS</span></div><div><b>5</b><span>TRICKS · DRAWS 3→7</span></div><div><b>${Object.keys(FiveScore.charms).length}</b><span>CHARMS</span></div><div><b>${FiveCombat.catalogue.length}</b><span>COMBAT ITEMS</span></div></footer>`;Kl();DemoBind()};
 jl=function(){const won=S.mode==='won';Ir(`<section class="scrim"><div class="summary-panel"><div class="eyebrow">${won?'TWENTY WAVES CLEARED':S.endReason==='hp'?'OUT OF HP':'QUOTA MISSED'}</div><h2>${won?'An extraordinary ascent.':'Every flight counts.'}</h2><p>${DEMO.tune.rules?`Wave ${S.wave} · ${S.kills} kills · ${S.earned||0} pearls earned · best streak ×${Math.max(0,...S.demo.history.map(h=>h.streak||0))}.`:`Wave ${S.wave} · ${S.wscore} / ${S.quota} banked · ${S.kills} kills.`}</p><p>${won?'Your build carried the run.':'Bigger banks come from more chips, more mult or fewer Bails: weapons, charms, Routine upgrades and gear.'}</p><div class="demo-summary-hands">${S.demo.history.slice(-5).map(h=>`<div>${h.busted?'BUST':`${h.chips} × ${DEMO.fmt(h.mult)}`} = <b>${h.score}</b><small>${h.cards.join(' · ')}${h.bails?.length?` · ${h.bails.length} Bail${h.bails.length>1?'s':''}`:''}</small></div>`).join('')}</div>${DemoButton('home','','BACK TO START',false,'demo-primary')}</div></section>`);DemoBind()};
 ls=function(){if(ft!=='game'||S.mode!=='playing')return;ft='pause';It.clear();Gr=false;je={x:0,y:0};ke=0;Ir(`<section class="scrim"><div class="modal pause-modal"><div class="eyebrow">TAKE A BREATH</div><h2>Your flight can wait.</h2><p>Hold ${Controls.carve()?'Space':'W / up'} underwater to carve. Release to launch${Controls.carve()?'':'; space boosts'}. In air, W A S D / arrows steer within the launch path.</p><p>Every drawn trick lands unless a hit bails it. At 0 HP the jump busts and banks nothing. Charms resolve at the bank. A flight with no kills keeps the same tricks.</p><p>Wave ${S.wave} · ${DEMO.tune.rules?`streak ×${S.demo.streak||0} · ${S.xp} pearls`:`${S.wscore} / ${S.quota} banked`} · ${S.budget.toFixed(1)}s air left.</p><div class="modal-actions">${kt('resume','RESUME FLIGHT ↗','primary')}${kt('end','END RUN')}${DemoButton('tune','','SETTINGS')}</div></div></section>`);DemoBind()};
 Owstarter=function(){return ''};
 
 /* Settings: one panel in tabs (T, the backquote key, or SCORE TUNING). Score holds the hand-cap levers (structure doc 5.4,
    kept open to balance in play); the other tabs hold the v3 carve's movement sliders, grouped by what they change. */
-const DemoTuneDefs=[['shake','Screen shake',0,2,.1],['shakeDeal','Screen shake from the hits you deal (when you are hit it always shakes)',0,1,1,'check'],['drone','Ambient drone (v3\'s constant low chord)',0,1,1,'check'],['flash','Enemy hit flash',0,1,.1],['space','Marked spawns ahead and flocking (step 1)',0,1,1,'check'],['edge','Step 1: share of spawns from the screen edge',0,1,.05],['danger','Leading shots and mines on the arc (step 2)',0,1,1,'check'],['lead','Step 2: how far shots lead you',0,1,.05],['mines','Step 2: mines per flight',0,4,1],['carve','Space carves (no boost)',0,1,1,'check'],['ccw','Carving always anticlockwise',0,1,1,'check'],['rules','Style score rules (step 4): no quota, reels or charms; 0 HP ends the run',0,1,1,'check'],['payK','Step 4: pearls per flight = k × √score',0,10,.5],['streakCap','Step 4: clean streak cap',1,10,1],['well','Gravity anchor pull (m/s²)',0,150,5],['sides','Armoured enemies (step 8)',0,1,1,'check'],['trickPool','Trick pool: only the shortlist being proven (Eddy, Gravity anchor, Riptide, Snare buoys)',0,1,1,'check'],['tricks','The four tricks (step 2): tap W A S D under water; each boosts its weapon type and replaces the routine',0,1,1,'check'],['viewmax','Water view: most zoom-out (× the air view)',1,5,.1],['cam','Camera (source/camera.js, docs/CAMERA_RULES.md); off: v3\'s camera',0,1,1,'check'],['airband','Water view: air kept in view above the waterline (m; the view widens with depth to keep it)',0,40,1],['airlatch','Breach latch: a direction held as you leave the water (your trick) does not move you in the air until you let it go',0,1,1,'check'],['breachblast','Breach shockwave: every breach knocks nearby enemies back (size and push: Settings › Launch › Rocket boost)',0,1,1,'check'],['pierce','Pierce by tier: Laser hits 3-6 enemies, Harpoon always pierces 1 and crits 1 more per tier',0,1,1,'check'],['moves','Brotato enemy roles (source/enemies.js): turrets keep range, drifters fly around you, splitters hold an offset; off: all chase',0,1,1,'check'],['wetspawn','Enemies keep spawning while you swim',0,1,1,'check'],['pace','Spawns per wave match Brotato\'s, spread over flights and swims (the schedule runs at the air share of play)',0,1,1,'check'],['verbs','Experimental: stomp, dive (S) and dash (Space) in the air (parked; to become tricks)',0,1,1,'check'],['hop','Step 3: stomp lift (m/s)',0,15,.5],['dive','Step 3: dive gravity (x)',1,4,.1],['dashes','Step 3: dash charges',0,4,1]];
+const DemoTuneDefs=[['port','Brotato weapons, stats and shop (new run to apply)',0,1,1,'check'],['ladders','Trick ladders plan (ICARUS-trick-ladders-plan.md): tricks give no damage boost; Front flip shoves but is not invulnerable',0,1,1,'check'],['shake','Screen shake',0,2,.1],['shakeDeal','Screen shake from the hits you deal (when you are hit it always shakes)',0,1,1,'check'],['drone','Ambient drone (v3\'s constant low chord)',0,1,1,'check'],['flash','Enemy hit flash',0,1,.1],['space','Marked spawns ahead and flocking (step 1)',0,1,1,'check'],['edge','Step 1: share of spawns from the screen edge',0,1,.05],['danger','Leading shots and mines on the arc (step 2)',0,1,1,'check'],['lead','Step 2: how far shots lead you',0,1,.05],['mines','Step 2: mines per flight',0,4,1],['carve','Space carves (no boost)',0,1,1,'check'],['ccw','Carving always anticlockwise',0,1,1,'check'],['rules','Style score rules (step 4): no quota, reels or charms; 0 HP ends the run',0,1,1,'check'],['payK','Step 4: pearls per flight = k × √score',0,10,.5],['streakCap','Step 4: clean streak cap',1,10,1],['well','Gravity anchor pull (m/s²)',0,150,5],['sides','Armoured enemies (step 8)',0,1,1,'check'],['trickPool','Trick pool: only the shortlist being proven (Eddy, Gravity anchor, Riptide, Snare buoys)',0,1,1,'check'],['tricks','The four tricks (step 2): tap W A S D under water; each boosts its weapon type and replaces the routine',0,1,1,'check'],['viewmax','Water view: most zoom-out (× the air view)',1,5,.1],['cam','Camera (source/camera.js, docs/CAMERA_RULES.md); off: v3\'s camera',0,1,1,'check'],['airband','Water view: air kept in view above the waterline (m; the view widens with depth to keep it)',0,40,1],['airlatch','Breach latch: a direction held as you leave the water (your trick) does not move you in the air until you let it go',0,1,1,'check'],['breachblast','Breach shockwave: every breach knocks nearby enemies back (size and push: Settings › Launch › Rocket boost)',0,1,1,'check'],['pierce','Pierce by tier: Laser hits 3-6 enemies, Harpoon always pierces 1 and crits 1 more per tier',0,1,1,'check'],['moves','Brotato enemy roles (source/enemies.js): turrets keep range, drifters fly around you, splitters hold an offset; off: all chase',0,1,1,'check'],['wetspawn','Enemies keep spawning while you swim',0,1,1,'check'],['pace','Spawns per wave match Brotato\'s, spread over flights and swims (the schedule runs at the air share of play)',0,1,1,'check'],['verbs','Experimental: stomp, dive (S) and dash (Space) in the air (parked; to become tricks)',0,1,1,'check'],['hop','Step 3: stomp lift (m/s)',0,15,.5],['dive','Step 3: dive gravity (x)',1,4,.1],['dashes','Step 3: dash charges',0,4,1]];
 const DemoTabs=[
   ['Score',null,'Each jump draws 3 tricks; buy more in the Routine row. A hit bails the trick in progress; 0 HP busts the jump.'],
   ['Launch',['Forward only','Rocket boost','Carve','Wave schedule'],'The carve and the launch. Launch speed rises5 per wave.'],

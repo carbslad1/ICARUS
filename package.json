@@ -21,7 +21,8 @@
     "preverify": "node scripts/start-verify.mjs",
     "replay": "node scripts/replay.mjs",
     "record:empty": "node scripts/record-empty.mjs",
-    "record:water": "node scripts/record-water.mjs"
+    "record:water": "node scripts/record-water.mjs",
+    "playtest": "node scripts/playtest.mjs"
   },
   "dependencies": {
     "pixi.js": "^8.0.0"

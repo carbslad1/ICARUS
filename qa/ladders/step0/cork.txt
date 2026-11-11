@@ -1,0 +1,34 @@
+raw runs written to qa/ladders/step0/cork.raw.json
+Corkscrew with squid_launcher + riptide_carbine, hold 8 m, 16 seeds × 10 flights
+ wave 5 T1   damage/s                kills/s               time to kill             in the arena           hits/flight              HP lost/flight     (* outside the 95% band)
+  skim  10°  29→27      -8.3%±13.6  0.8→0.8      -7.3%±13  2.77→3.13s   +12.9%±15.2  15.8→16.1     +2.2%±4.4  0.02→0.01  -66.7%±210.7  1→0      -66.7%±210.7
+        reach squid_launcher 77%, riptide_carbine 55%   dmg/health sent 0%→0% (0 waves)
+  low   28°  54→52         -4%±5.7  1.8→1.7     -3.3%±4.6  4.82→4.91s     +1.8%±7.7  19.8→20.7     +4.4%±6.5  0.41→0.29   -29.2%±46.9  15→11     -25.7%±47.5
+        reach squid_launcher 89%, riptide_carbine 87%   dmg/health sent 0%→0% (0 waves)
+  mid   55°  53→51           -4%±4  1.8→1.8    *-3.9%±3.5  6.05→6.46s    *+6.7%±5.8  24.4→25.7     +5.6%±6.3  1.96→1.50  *-23.3%±14.7  70→54      *-22.7%±15
+        reach squid_launcher 90%, riptide_carbine 88%   dmg/health sent 40%→38% (16 waves)
+  high  78°  52→52         +1%±4.3  1.8→1.8     -0.3%±4.8  6.54→6.68s     +2.2%±5.3  27.5→27.3     -0.8%±4.2  2.44→1.84  *-24.6%±11.8  88→66    *-24.9%±12.5
+        reach squid_launcher 92%, riptide_carbine 90%   dmg/health sent 37%→38% (16 waves)
+ wave 10 T2   damage/s                kills/s               time to kill             in the arena           hits/flight              HP lost/flight     (* outside the 95% band)
+  skim  10°  124→118    -4.5%±10.7  1.2→1.2    -4.6%±10.1  3.49→3.38s     -3.3%±9.4  25.2→25.0     -0.7%±5.2  0.19→0.17    -9.7%±33.6  16→15      -8.6%±34.8
+        reach squid_launcher 86%, riptide_carbine 85%   dmg/health sent 0%→0% (0 waves)
+  low   28°  140→145       +3.1%±5  2.1→2.1     -0.7%±4.7  8.64→8.88s     +2.7%±7.9  55.4→55.3     -0.2%±3.4  2.76→2.27  *-17.6%±10.3  198→154    *-22%±10.5
+        reach squid_launcher 94%, riptide_carbine 94%   dmg/health sent 0%→0% (0 waves)
+  mid   55°  140→134    *-4.2%±3.8  2.1→2.0     -2.4%±3.3  10.53→10.55s      +0.2%±5  58.7→59.3       +1%±1.7  5.36→4.91    *-8.4%±7.9  369→345     -6.6%±8.6
+        reach squid_launcher 94%, riptide_carbine 94%   dmg/health sent 26%→27% (16 waves)
+  high  78°  140→138     -1.1%±2.8  2.1→2.0       -1.3%±3  11.01→11.15s    +1.3%±7.1  61.9→62.4     +0.8%±1.6  7.47→7.39       -1%±7.3  523→516     -1.5%±8.2
+        reach squid_launcher 95%, riptide_carbine 95%   dmg/health sent 26%→26% (16 waves)
+ wave 15 T3   damage/s                kills/s               time to kill             in the arena           hits/flight              HP lost/flight     (* outside the 95% band)
+  skim  10°  225→214       -5%±7.4  1.7→1.8      +2.6%±10  3.77→3.67s     -2.7%±8.7  29.5→29.6     +0.5%±8.3  0.29→0.17   -40.4%±60.4  40→22     -44.7%±61.2
+        reach squid_launcher 86%, riptide_carbine 86%   dmg/health sent 0%→0% (0 waves)
+  low   28°  239→237     -0.8%±2.3  2.6→2.5       -2%±3.7  10.35→10.72s    +3.6%±6.3  71.3→71.9       +0.8%±1  5.64→5.04   *-10.5%±6.5  730→663    *-9.1%±7.6
+        reach squid_launcher 96%, riptide_carbine 96%   dmg/health sent 32%→33% (16 waves)
+  mid   55°  233→237       +2%±2.9  2.5→2.5     -1.7%±2.3  10.19→10.03s    -1.6%±3.5  71.0→71.4     +0.5%±0.6  11.71→11.13     *-5%±4.7  1529→1450   *-5.2%±4.8
+        reach squid_launcher 96%, riptide_carbine 96%   dmg/health sent 31%→32% (16 waves)
+  high  78°  237→238     +0.4%±2.5  2.6→2.5       -2%±2.9  11.26→11.83s       *+5%±4  75.5→75.5       +0%±0.5  14.11→13.70    -2.9%±3.6  1830→1729   *-5.5%±4.4
+        reach squid_launcher 97%, riptide_carbine 97%   dmg/health sent 30%→31% (32 waves)
+  PASS never worse: hits ≤ +10% and damage ≥ −5% in every style and wave
+  PASS clearly safer somewhere: hits ≤ −15%
+  FAIL clearly faster somewhere: time to kill ≤ −15%
+  safer in: mid@w5 high@w5 low@w10 · faster in: – · worse in: –
+  PROVEN by the numbers

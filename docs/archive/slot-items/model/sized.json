@@ -1,0 +1,278 @@
+{
+ "budget": {
+  "C": 7.5,
+  "U": 11,
+  "R": 15
+ },
+ "ref": [
+  "discharge",
+  "lens"
+ ],
+ "waves": [
+  5,
+  10,
+  15,
+  20
+ ],
+ "items": {
+  "battery": {
+   "rarity": "C",
+   "budget": 7.5,
+   "p": 1,
+   "text": "+1 Charge",
+   "value": 11.01,
+   "perWave": [
+    17.09,
+    11.49,
+    8.58,
+    6.87
+   ],
+   "bestPlan": [
+    "10",
+    "10",
+    "10",
+    "10"
+   ],
+   "flat10": 11.49,
+   "steep75": 2.07
+  },
+  "predator": {
+   "rarity": "C",
+   "budget": 7.5,
+   "p": 1.5,
+   "text": "+1.5 Charge per kill this flight",
+   "value": 7.5,
+   "perWave": [
+    7.5,
+    7.5,
+    7.5,
+    7.5
+   ],
+   "bestPlan": [
+    "10",
+    "30",
+    "10",
+    "10"
+   ],
+   "flat10": 7.5,
+   "steep75": 7.5
+  },
+  "magpie": {
+   "rarity": "C",
+   "budget": 7.5,
+   "p": 2.5,
+   "text": "+2.5 Charge per orb this flight",
+   "value": 7.5,
+   "perWave": [
+    7.5,
+    7.5,
+    7.5,
+    7.5
+   ],
+   "bestPlan": [
+    "10",
+    "30",
+    "10",
+    "10"
+   ],
+   "flat10": 7.5,
+   "steep75": 7.5
+  },
+  "capacitor": {
+   "rarity": "U",
+   "budget": 11,
+   "p": 2,
+   "text": "×2 Charge",
+   "value": 10,
+   "perWave": [
+    10,
+    10,
+    10,
+    10
+   ],
+   "bestPlan": [
+    "10",
+    "30",
+    "10",
+    "45"
+   ],
+   "flat10": 10,
+   "steep75": 10
+  },
+  "shallows": {
+   "rarity": "C",
+   "budget": 7.5,
+   "p": 1,
+   "text": "+1 Mult per 1 s the water has been on screen this flight",
+   "value": 7.5,
+   "perWave": [
+    7.5,
+    7.5,
+    7.5,
+    7.5
+   ],
+   "bestPlan": [
+    "30",
+    "20",
+    "10",
+    "10"
+   ],
+   "flat10": 0,
+   "steep75": 0
+  },
+  "summit": {
+   "rarity": "U",
+   "budget": 11,
+   "p": 0.5,
+   "text": "+0.5 Mult per launch tier above the second",
+   "value": 11.25,
+   "perWave": [
+    11.25,
+    11.25,
+    11.25,
+    11.25
+   ],
+   "bestPlan": [
+    "89",
+    "75",
+    "89",
+    "75"
+   ],
+   "flat10": 0,
+   "steep75": 11.25
+  },
+  "skipping": {
+   "rarity": "U",
+   "budget": 11,
+   "p": 1.75,
+   "text": "×1.75 Mult if you launched below 27°",
+   "value": 11.25,
+   "perWave": [
+    11.25,
+    11.25,
+    11.25,
+    11.25
+   ],
+   "bestPlan": [
+    "15",
+    "20",
+    "10",
+    "20"
+   ],
+   "flat10": 11.25,
+   "steep75": 0
+  },
+  "feedback": {
+   "rarity": "U",
+   "budget": 11,
+   "p": 4,
+   "text": "+1 Mult per 4 Charge held",
+   "value": 10.84,
+   "perWave": [
+    9.05,
+    8.91,
+    9,
+    16.39
+   ],
+   "bestPlan": [
+    "75",
+    "45",
+    "30",
+    "60"
+   ],
+   "flat10": 0,
+   "steep75": 8.54
+  },
+  "prism": {
+   "rarity": "R",
+   "budget": 15,
+   "p": 2,
+   "text": "×2 Mult",
+   "value": 15,
+   "perWave": [
+    15,
+    15,
+    15,
+    15
+   ],
+   "bestPlan": [
+    "30",
+    "75",
+    "60",
+    "20"
+   ],
+   "flat10": 15,
+   "steep75": 15
+  },
+  "stalk": {
+   "rarity": "R",
+   "budget": 15,
+   "p": 3,
+   "text": "+1 Mult per 3 air seconds since you last Discharged",
+   "value": 17.48,
+   "perWave": [
+    7.5,
+    13.93,
+    21,
+    27.5
+   ],
+   "bestPlan": [
+    "89",
+    "75",
+    "89",
+    "75"
+   ],
+   "flat10": 0,
+   "steep75": 13.93
+  },
+  "momentum": {
+   "rarity": "U",
+   "budget": 11,
+   "p": 3,
+   "text": "+1 Mult per 3 kills last flight",
+   "value": 12.37,
+   "perWave": [
+    6.43,
+    11.79,
+    12.5,
+    18.75
+   ],
+   "bestPlan": [
+    "75",
+    "89",
+    "60",
+    "75"
+   ],
+   "flat10": 0,
+   "steep75": 6.43
+  },
+  "trophy": {
+   "rarity": "R",
+   "budget": 15,
+   "p": 150,
+   "text": "+1 Mult per 150 kills this run",
+   "value": 14.63,
+   "perWave": [
+    0,
+    7.5,
+    21,
+    30
+   ],
+   "bestPlan": [
+    "10",
+    "10",
+    "89",
+    "20"
+   ],
+   "flat10": 7.5,
+   "steep75": 7.5
+  }
+ },
+ "structural": {
+  "mirror": 7.500000000000014,
+  "mirror (with Prism)": 30.00000000000002,
+  "undertow": 0,
+  "bank + strike (for Discharge, + Lens, Battery)": -5.6784003060165595,
+  "bank + strike + stalk (for Discharge + Stalk)": 31.099739021552875
+ }
+}

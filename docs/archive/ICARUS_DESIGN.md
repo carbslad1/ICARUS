@@ -1,3 +1,5 @@
+> **Archived 2026-11-08: not the plan.** Old design work, mostly AI-written. The roguelite structure, progression, shop and design direction are open. See `AGENTS.md`.
+
 # ICARUS
 ## Game Design & Build Specification
 

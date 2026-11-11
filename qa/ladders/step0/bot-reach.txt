@@ -1,0 +1,49 @@
+PASS the catalogue replaced the old weapons and gear  48 weapons, 105 items
+PASS a run starts with 30 pearls and a starter weapon
+PASS price formula at waves 1, 10, 20
+PASS Item price stat changes prices
+PASS reroll price climbs within a shop
+PASS rerolling charges that price and keeps locked offers
+PASS tier odds match the table
+PASS four offers; waves 1-2 guarantee two weapons, 3-5 one, later 35%; no repeats in a shop
+PASS with six weapons every offer is an item
+PASS weapons are only offered at tiers they exist in
+PASS item limits are respected
+PASS buying an item applies its numbers and counts it
+PASS free rerolls cost nothing until used
+PASS hit protection ignores the first hit of a wave
+PASS end-of-wave items add their stat
+PASS selling a weapon pays a quarter of the current price
+PASS two of a tier combine and free a slot
+PASS level-ups offer four of sixteen stats; fixed tiers; rerollable
+PASS each level adds 10 Max HP
+PASS damage: base plus scaling truncated, then percent rounded
+PASS cooldown: attack speed, random share, big reloads, melee swing time
+PASS class bonuses need two weapons, count duplicates, and leave with the weapon
+PASS Dodge is capped at 60%
+PASS Armour reduces damage; negative raises it
+PASS Harvesting pays at wave end, then grows
+PASS XP gain raises XP but not money
+PASS critical hits multiply, then round
+PASS burn ticks every half second for its duration
+PASS an explosion replaces the direct hit and reaches everyone in its radius
+PASS Explosion size scales the radius
+PASS a shot pierces then stops, losing damage each time
+PASS a bouncing shot retargets and loses damage
+PASS life steal heals at most once per 0.1 s
+PASS every weapon fires and deals damage in a real tick  48 weapons
+PASS the setting restores the old game
+
+bot: reach   wave  runs  income  pearls  buys  level  Close  Shot  Blast  guns  avgTier  maxHP  dmg/health
+           1     6   12.0   42.0    2.7    0.8    0.0    0.0    0.0    1.0    1.0  108.3    46%
+           2     6   29.8   33.0    1.5    2.2    0.0    0.2    0.3    2.7    1.4  121.7    75%
+           3     2   63.0   68.0    2.5    3.5    2.0    0.0    0.5    4.0    1.3  150.0    78%
+           4     1   87.0   90.0    3.0    6.0    4.0    0.0    0.0    6.0    1.2  190.0    93%
+           5     1  186.0  197.0    5.0    8.0    8.0    0.0    0.0    6.0    1.2  210.0    89%
+{"style":"mid-keep","seed":1,"wave":3,"mode":"dead","reason":"hp","lvl":3,"earned":82,"guns":"tuna_gaff2 kelp_cutter1 tuna_gaff1 squid_launcher1 net_weight1"}
+{"style":"low-keep","seed":1,"wave":4,"mode":"dead","reason":"hp","lvl":4,"earned":110,"guns":"tuna_gaff2 marlin_bill1 net_weight2 whale_rib1"}
+{"style":"high-keep","seed":1,"wave":6,"mode":"dead","reason":"hp","lvl":9,"earned":514,"guns":"tuna_gaff1 tide_cleaver1 trident2 thermal_lance1 driftwood_staff1 depth_mortar1"}
+{"style":"mid-keep","seed":2,"wave":3,"mode":"dead","reason":"hp","lvl":3,"earned":74,"guns":"tuna_gaff2 whale_rib2"}
+{"style":"low-keep","seed":2,"wave":3,"mode":"dead","reason":"hp","lvl":3,"earned":83,"guns":"tuna_gaff2 whale_rib1 moray_fang1 crab_claw1"}
+{"style":"high-keep","seed":2,"wave":3,"mode":"dead","reason":"hp","lvl":3,"earned":78,"guns":"tuna_gaff1 pearl_knuckle1 shell_thrower1 moray_fang2"}
+{"round":"port","passed":35,"failed":0}

@@ -1,17 +1,22 @@
 // The four tricks (ICARUS_DESIGN.md §4.3-4.4, step 2 of §4.17; source/tricks.js): performed by the keys held as you
 // breach (D Front flip, A Backflip, W Corkscrew, S Belly flop, whichever way it travels), never dealing damage; each boosts its weapon type's damage for the flight and does one thing at its
 // moment: Charge (Front flip), Repulse (Backflip), Time slow (Corkscrew), Shockwave and ×1.5 XP and pearls (Belly flop).
+// Runs twice (trick-ladders plan, step 0): once with the armoury off (the old weapons, where the +30% type boost is
+// checked) and once with it on, as the game ships (where the boost does not touch armory weapons; docs/BROTATO_PORT.md).
 //   node qa/tricks.cjs [--detail]
 const assert = require('assert'), path = require('path');
 const { load } = require('./load.cjs');
-const H = load(path.join(__dirname, '..', 'ICARUS-demo.html'), new Map([['icarus.scoreshow.tune', JSON.stringify({})]]), { bake: true, modern: true }), D = H.DEMO, T = H.Tricks;
+const file = path.join(__dirname, '..', 'ICARUS-demo.html');
 const checks = [];
+let H, D, T, PORTON, LADDERS;
 function test(name, fn) { try { const detail = fn(); checks.push({ name, pass: true, detail }); console.log('PASS ' + name) } catch (e) { checks.push({ name, pass: false, error: e.stack }); console.log('FAIL ' + name + ': ' + e.message) } }
 const DT = 1 / 120, still = { x: 0, y: 0, w: false, turn: 0, boost: false };
 
+function suite() {
 // a run with this trick chosen under water, then a flight that has just opened, moving right
-function run(id, guns = ['harpoon']) {
-  const r = H.Hd(7, 'harpoon');
+const START = Object.keys(D.weapons).find(k => D.weapons[k].starter);
+function run(id, guns = [START]) {
+  const r = H.Hd(7, START);
   r.slots = guns.map(g => { const s = H.Owslot(g, 1, ++r.demo.uid); s.paid = 0; s.cd = 1e9; return s }); D.sync(r);
   r.demo.trickForce = id || null;
   r.medium = { kind: 'air', origin: { x: 0, y: 100 }, local: { x: 0, y: 0 }, velocity: { x: 0, y: 0 }, vx: 20, vy: 0.001, elapsed: 1, heading: 1, waterScale: 1, exitFlight: false };
@@ -68,7 +73,7 @@ test('in the real game with free turning (the default), the key held through the
   return { toward, away, up, none };
 });
 
-test('each trick boosts only its weapon type (+30% damage); a two-tag weapon takes it if either tag matches', () => {
+if (!PORTON && !LADDERS) test('each trick boosts only its weapon type (+30% damage); a two-tag weapon takes it if either tag matches', () => {
   const out = {};
   for (const id of T.IDS) {
     const r = run(id, ['fin', 'minigun', 'arc', 'harpoon', 'depth']);
@@ -79,6 +84,17 @@ test('each trick boosts only its weapon type (+30% damage); a two-tag weapon tak
   assert.deepEqual(out.cork, { fin: 100, minigun: 100, arc: 130, flak: 130, harpoon: 100, depth: 130 });
   assert.deepEqual(out.flop, { fin: 100, minigun: 100, arc: 100, flak: 100, harpoon: 130, depth: 130 });
   const none = run(null), e = foe(none, 30, 0); D.damage(none, e, 100, 'fin', 0, 0, 0, false, { primary: true, weapon: 'fin', base: 100 }); assert.equal(hurt(none, e), 100, 'no trick, no boost');
+  return out;
+});
+
+if (PORTON) test('the +30% type boost does not touch armory weapons (docs/BROTATO_PORT.md; its label goes in step 1 of the ladders plan)', () => {
+  const rec = { d: null, l: 1, g: null, base: 10, mul: 1, cc: 0, cx: 2, kb: 0, fx: [], ls: 0, ctx: { primary: true, weapon: START } };
+  const out = {};
+  for (const id of [...T.IDS, null]) {
+    const r = run(id, [START]); const e = foe(r, 30, 0);
+    D.aHit(r, e, { ...rec, ctx: { ...rec.ctx } }, 1, 0); out[id || 'none'] = hurt(r, e);
+  }
+  for (const id of T.IDS) assert.equal(out[id], out.none, id + ' changed armory damage');
   return out;
 });
 
@@ -93,13 +109,40 @@ test('no trick deals damage', () => {
   return dealt;
 });
 
-test('Front flip: Charge makes you invulnerable for 1 s from the breach and shoves aside enemies you touch', () => {
+if (!LADDERS) test('Front flip: Charge makes you invulnerable for 1 s from the breach and shoves aside enemies you touch', () => {
   const r = run('front', []); r.hp = 100; const e = foe(r, 1.5, 0);
   D.hit(r, 30); assert.equal(r.hp, 100, 'no damage during Charge');
   enemyStep(r, 2); assert.ok(e.velocity.x > 20, 'shoved away: ' + e.velocity.x.toFixed(1));
   enemyStep(r, 120); r.hurt = 0; D.hit(r, 30); assert.ok(r.hp < 100, 'hits count again after Charge');
   const b = run('back', []); b.hp = 100; b.hurt = 0; D.hit(b, 30); assert.ok(b.hp < 100, 'other tricks give no invulnerability');
   return { hpAfter: Math.round(r.hp) };
+});
+
+// the trick ladders plan, step 1 (ICARUS-trick-ladders-plan.md): Front flip shoves, but you can be hit
+if (LADDERS) test('ladders: Front flip is not invulnerable; a hit in its first second costs HP', () => {
+  const r = run('front', []); r.hp = 100; r.hurt = 0; foe(r, 1.5, 0);
+  assert.ok(r.chargeT > .9, 'the shove window is open');
+  D.hit(r, 30); assert.ok(r.hp < 100, 'hit during the shove window: ' + r.hp);
+  return { hpAfter: Math.round(r.hp) };
+});
+if (LADDERS) test('ladders: Front flip shoves enemies within 2.5 m at the breach and no others', () => {
+  const r = run('front', []), near = [foe(r, 1.5, 0), foe(r, -1, 1.2)], far = [foe(r, 6, 0), foe(r, 0, -9)];
+  enemyStep(r, 2);
+  near.forEach((e, i) => assert.ok(Math.hypot(e.velocity.x, e.velocity.y) > 20, 'near enemy ' + i + ' shoved: ' + Math.hypot(e.velocity.x, e.velocity.y).toFixed(1)));
+  assert.equal(r.hand.tk.touched, 2, 'only the enemies within the shove radius');
+  return { touched: r.hand.tk.touched, farSpeed: far.map(e => +Math.hypot(e.velocity.x, e.velocity.y).toFixed(1)) };
+});
+if (LADDERS) test('ladders: no trick changes weapon damage', () => {
+  const rec = { d: null, l: 1, g: null, base: 10, mul: 1, cc: 0, cx: 2, kb: 0, fx: [], ls: 0, ctx: { primary: true, weapon: START } };
+  const out = {};
+  for (const id of [...T.IDS, null]) { const r = run(id, [START]); const e = foe(r, 30, 0); D.aHit(r, e, { ...rec, ctx: { ...rec.ctx } }, 1, 0); out[id || 'none'] = hurt(r, e) }
+  for (const id of T.IDS) assert.equal(out[id], out.none, id + ' changed damage');
+  return out;
+});
+if (LADDERS) test('ladders: no trick label claims a damage boost', () => {
+  for (const id of T.IDS) { assert.ok(!/%/.test(T.ability(id)), id + ' ability'); assert.ok(!/damage|%/i.test(T.text(id)), id + ' text: ' + T.text(id)) }
+  assert.equal(T.ability('front'), 'Shove');
+  return Object.fromEntries(T.IDS.map(id => [id, T.ability(id)]));
 });
 
 test('Backflip: Repulse pushes enemies within 12 m away and leaves farther ones alone', () => {
@@ -160,6 +203,16 @@ test('the four tricks replace the routine: no routine trick, no shop trick place
   r.mode = 'shop'; D.shop(r); assert.ok(!r.demo.offers.some(o => o.row === 'trick'), 'no trick place in the shop');
   return r.demo.offers.map(o => o.row);
 });
+}
+
+// the same checks with the armoury off (the old weapons) and on (as the game ships)
+// and with the trick ladders plan on (the default since step 1) and off (the game before it)
+for (const [tune, title] of [[{ port: 0, ladders: 0 }, 'the old weapons (port off, ladders off)'], [{ ladders: 0 }, 'the armoury, ladders off (before step 1)'], [{}, 'the armoury, ladders on (as shipped)']]) {
+  H = load(file, new Map([['icarus.scoreshow.tune', JSON.stringify(tune)]]), { bake: true, modern: true });
+  D = H.DEMO; T = H.Tricks; PORTON = D.tune.port !== 0; LADDERS = !!D.tune.ladders;
+  console.log('— with ' + title + ' —');
+  suite();
+}
 
 const failed = checks.filter(c => !c.pass).length;
 if (process.argv.includes('--detail')) for (const c of checks) if (c.detail !== undefined) console.log(c.name, JSON.stringify(c.detail));

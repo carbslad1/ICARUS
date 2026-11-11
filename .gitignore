@@ -9,3 +9,10 @@ playwright-report/
 # enemy sandbox traces (qa/enemy-sandbox.cjs --trace)
 qa/enemy-trace*.json
 qa/compare/
+
+# playtest screenshots and reports (scripts/playtest.mjs; keep on disk, not in git)
+qa/playtest/
+node_modules
+
+# Brotato reference material: local only, never committed
+brotato-reference/

@@ -1,0 +1,34 @@
+raw runs written to qa/ladders/step0/flop.raw.json
+Belly flop with pearl_knuckle, hold 4 m, 16 seeds × 10 flights
+ wave 5 T1   damage/s                kills/s               time to kill             in the arena           hits/flight              HP lost/flight     (* outside the 95% band)
+  skim  10°  6→5       -13.9%±40.2  0.1→0.1   -22.6%±24.8  3.92→3.95s    +0.6%±29.3  19.4→19.3     -0.7%±1.6  0.03→0.01      -50%±158  1→0          -50%±158
+        reach pearl_knuckle 4%   dmg/health sent 0%→0% (0 waves)
+  low   28°  78→77      -1.8%±10.3  1.5→1.5      +0.7%±15  7.45→7.89s        +6%±11  28.3→28.5     +0.7%±6.9  1.41→1.49    +5.8%±20.9  51→53      +4.2%±21.7
+        reach pearl_knuckle 59%   dmg/health sent 0%→0% (0 waves)
+  mid   55°  88→85       -3.5%±6.8  1.8→1.8    -4.4%±10.3  8.33→8.41s       +1%±6.6  28.6→29.1     +1.8%±7.3  3.89→3.63    *-6.8%±6.3  137→130     -5.6%±6.9
+        reach pearl_knuckle 67%   dmg/health sent 67%→68% (16 waves)
+  high  78°  90→91       +1.8%±8.5  1.9→2.0    +3.9%±11.6  8.43→8.10s     -3.9%±9.5  31.1→28.9       -7%±9.4  4.80→4.72     -1.7%±4.1  173→166     -4.1%±4.1
+        reach pearl_knuckle 69%   dmg/health sent 68%→70% (16 waves)
+ wave 10 T2   damage/s                kills/s               time to kill             in the arena           hits/flight              HP lost/flight     (* outside the 95% band)
+  skim  10°  130→111   -14.5%±24.9  0.6→0.5   -23.9%±40.7  5.61→6.32s   +12.6%±17.3  32.8→33.3     +1.5%±3.8  0.54→0.46     -14%±17.5  46→39       -14%±17.8
+        reach pearl_knuckle 48%   dmg/health sent 0%→0% (0 waves)
+  low   28°  353→360     +1.9%±7.7  2.6→2.7       +2%±8.9  9.72→10.25s    +5.4%±9.9  54.8→54.9       +0%±6.1  4.27→4.21     -1.5%±8.7  307→296     -3.6%±9.5
+        reach pearl_knuckle 79%   dmg/health sent 0%→0% (0 waves)
+  mid   55°  356→351     -1.5%±9.5  2.8→2.8    -1.6%±10.1  10.98→10.50s    -4.4%±7.6  57.0→56.8     -0.3%±3.3  8.63→8.42     -2.5%±6.5  615→603       -2%±6.6
+        reach pearl_knuckle 81%   dmg/health sent 62%→62% (16 waves)
+  high  78°  377→367     -2.6%±8.1  3.0→3.0     -1.9%±8.2  10.56→10.85s    +2.7%±7.7  57.7→59.1     +2.5%±3.6  10.50→10.54    +0.4%±4.7  758→746     -1.5%±5.9
+        reach pearl_knuckle 81%   dmg/health sent 61%→60% (16 waves)
+ wave 15 T3   damage/s                kills/s               time to kill             in the arena           hits/flight              HP lost/flight     (* outside the 95% band)
+  skim  10°  339→345    +1.6%±19.2  1.1→1.2    +3.2%±26.5  6.31→6.73s    +6.6%±13.9  39.8→40.7     +2.2%±5.6  0.85→0.90    +5.9%±33.1  115→116    +0.8%±28.5
+        reach pearl_knuckle 62%   dmg/health sent 0%→0% (0 waves)
+  low   28°  659→660     +0.1%±9.9  3.5→3.4      -1%±11.6  12.28→12.26s    -0.2%±9.6  71.9→71.3       -0.8%±2  7.59→7.25     -4.4%±4.6  988→960       -2.8%±5
+        reach pearl_knuckle 87%   dmg/health sent 77%→76% (16 waves)
+  mid   55°  753→767     +1.8%±6.1  3.9→4.0       +1%±6.9  11.38→11.04s    -3.1%±6.7  68.9→68.7     -0.3%±1.6  14.64→14.98    +2.3%±3.7  1948→2000    +2.7%±4.8
+        reach pearl_knuckle 88%   dmg/health sent 81%→81% (16 waves)
+  high  78°  791→798     +0.9%±6.4  4.2→4.3     +0.5%±7.4  11.77→11.62s    -1.3%±6.6  72.6→72.3     -0.5%±1.1  18.10→17.99    -0.6%±2.3  2411→2374    -1.6%±3.1
+        reach pearl_knuckle 87%   dmg/health sent 80%→80% (32 waves)
+  PASS never worse: hits ≤ +10% and damage ≥ −5% in every style and wave
+  FAIL clearly safer somewhere: hits ≤ −15%
+  FAIL clearly faster somewhere: time to kill ≤ −15%
+  safer in: – · faster in: – · worse in: –
+  not proven yet
