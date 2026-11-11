@@ -1,0 +1,19 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "icarus-brotato",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8775",
+        "--bind",
+        "127.0.0.1",
+        "--directory",
+        "/Users/johncarbone/Projects/icarus-brotato"
+      ],
+      "port": 8775
+    }
+  ]
+}

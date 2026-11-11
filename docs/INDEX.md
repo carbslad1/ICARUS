@@ -1,23 +1,24 @@
 # ICARUS docs index
 
-**Last verified 2026-11-08** against the files in this working tree on branch `prototype/slot-items-2026-11`.
+**Last verified 2026-11-12** against the files in this working tree on branch `prototype/brotato-port-2026-11`.
 If a date here is older than a file's own content, trust the file and update this table.
 
 Use this page to find the right document instead of reading 135 KB of design doc to answer one question.
 For the short version of where the project is, read `docs/CURRENT_STATE.md`. For what is locked and what is
-open, read `AGENTS.md`.
+open, read `CLAUDE.md`.
 
 ## Truth order in one line
 
 **Code > dated docs > memory.** Behaviour is settled by `ICARUS-demo.html` + `source/*.js`. Intent is settled
-by `AGENTS.md` (locked and open) and the newest entry in `docs/DECISIONS.md`. Nothing in `docs/archive/` is current.
+by `CLAUDE.md` (locked and open) and the newest entry in `docs/DECISIONS.md`. Nothing in `docs/archive/` is current.
 
 ## Read in this order
 
-1. `AGENTS.md` — how to work here (auto-loaded).
+1. `CLAUDE.md` — how to work here (auto-loaded by Claude Code; `AGENTS.md` points to it).
 2. `docs/CURRENT_STATE.md` — where we are today, dated.
-3. `docs/DECISIONS.md` — what the designer decided, newest first.
-4. `docs/INDEX.md` (this file) — for anything else.
+3. `docs/TRICK_LADDERS_PLAN.md` — the step plan and checkpoint log.
+4. `docs/DESIGN_RULES.md` — the standing design rules; `docs/DECISIONS.md` — what the designer decided, newest first.
+5. `docs/INDEX.md` (this file) — for anything else.
 
 ## Every document
 
@@ -29,9 +30,13 @@ was superseded.
 
 | Document | What it is | Authority / freshness |
 |---|---|---|
-| `AGENTS.md` | Working instructions for an AI agent in this repo. | **CURRENT** — rewritten 2026-11-08. It replaces the old phase instructions. |
+| `CLAUDE.md` | The single rule file for any AI agent in this repo. | **CURRENT** — written 2026-11-12. |
+| `AGENTS.md` | A pointer to `CLAUDE.md` for tools that look for this name. | **CURRENT** — 2026-11-12. The long 2026-11-08 version is in git history. |
+| `docs/TRICK_LADDERS_PLAN.md` | The build guide for trick levels and skill trees: steps 0 to 7, the checks for each, measured results and the checkpoint log. | **CURRENT** — the only copy since 2026-11-12. |
+| `docs/DESIGN_RULES.md` | The designer's standing rules, numbered and dated. | **CURRENT** — collected 2026-11-12. |
+| `qa/gate.cjs`, `qa/gate-expected.json` | The one gate command and the results it is compared with, including the accepted failures. | **RULES** — pinned 2026-11-12. |
 | `docs/INDEX.md` | This file: what every document is, how much to trust it, and the design-doc section map. | **CURRENT** — verified 2026-11-08; update it when a document is added or becomes stale. |
-| `docs/CURRENT_STATE.md` | The single "where we are" file: branch, build, direction, next, open, broken. | **CURRENT** — dated 2026-11-08, updated every session. |
+| `docs/CURRENT_STATE.md` | The single "where we are" file: who is working here, plan state, next, checks, not verified. | **CURRENT** — dated 2026-11-12, updated every session. |
 | `docs/DECISIONS.md` | Append-only designer decision log, newest first, with source and what each supersedes. | **CURRENT** for intent. Never edit old entries; add new ones on top. |
 | `docs/archive/CORE_LOOP.md` | The 7 Nov 2026 smallest-loop experiment: Surge, Core Loop Lab, measured results. | **ARCHIVED** — not the plan. |
 | `docs/archive/SLOT_ITEMS.md` | Branch record for the slot-items prototype. | **ARCHIVED** — not the plan. |
@@ -52,15 +57,15 @@ was superseded.
 | `docs/flow-study/README.md` | The 2026-10-26 visual flow study: what it measured, its limits, how to regenerate it. | **MEASURED** — S4 demo, 291 bot flights. History. |
 | `docs/HARNESS.md` | The DeepSeek Harness setup for the designer: what the ICARUS Studio preset changes, how to use it, what the project skills are for. | **CURRENT** — harness guide (2026-11-08). |
 | `docs/PLAYTEST.md` | Plain-English guide to the headless playtest tool (`scripts/playtest.mjs`, `npm run playtest`): what it proves, what it cannot, how to read screenshots. | **CURRENT** — built and verified 2026-11-08 (title, play, flight and shop modes produce real screenshots of `ICARUS-demo.html`). |
-| `README.md` | The S4 demo's orientation: how a run works, controls, charms, suite table, known balance. | **STALE (S4-era, 2026-10-25/27)** for quotas, charms, controls, balance and suites. Keep for S4 history, the flight-log description and the step-1 notes only. |
-| `NEXT-PASS.md` | The 2026-10-25 approved continuation note (whitespace-mangled): scoring acceptance and work split. | **HISTORY** — its mandate was superseded by the 2026-10-26/27/30 design revisions. |
+| `README.md` | A short front page pointing at the files above. | **CURRENT** — 2026-11-12. The S4-era README is in git history (commit `9f2c1d9`). |
+| `docs/archive/NEXT-PASS.md` | The 2026-10-25 approved continuation note (whitespace-mangled): scoring acceptance and work split. | **HISTORY** — its mandate was superseded by the 2026-10-26/27/30 design revisions. |
 | `docs/archive/ICARUS_DESIGN.md` | The old design and build specification (2,080 lines). Section map in `docs/archive/README.md`. | **ARCHIVED** — not the plan. §13–15 still describe the unfinished TypeScript build in `src/`. |
 | `reviews/product-rubric.md` | Product-review protocol/rubric from the scoring-satisfaction review (S4 era). | **HISTORY** — its scoring mandate predates later revisions; not a current gate. |
 
 ## If documents disagree
 
 1. Behaviour: `ICARUS-demo.html` + `source/*.js` win.
-2. Intent: `AGENTS.md` (locked and open), then the newest entry in `docs/DECISIONS.md`.
+2. Intent: `CLAUDE.md` (locked and open), then the newest entry in `docs/DECISIONS.md`.
 3. Rules/gates: `docs/ENEMY_RULES.md` and `docs/CAMERA_RULES.md` win for their areas until re-decided.
 4. Record the resolution in `docs/DECISIONS.md` and correct the stale document; do not silently fix history.
 
@@ -68,5 +73,5 @@ was superseded.
 
 - Harness guide for the designer: `docs/HARNESS.md`. The preset definition lives outside this repo at
   `~/Documents/deepseek-harness/icarus-studio/` (bundled into the desktop profile as the **ICARUS Studio** preset).
-- Project skills live in `.dsh/skills/` (live-reloaded): `playtest`, `design-truth`, `build-and-verify`,
-  `balance-pass`. Load the matching one before doing that kind of work.
+- Project skills live in `.dsh/skills/` (Harness) and `.claude/skills/` (Claude Code): `playtest`, `design-truth`,
+  `build-and-verify`, `balance-pass`. Load the matching one before doing that kind of work.

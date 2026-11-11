@@ -5,7 +5,7 @@
 // --stream keeps the guns the bottleneck: every enemy that dies is replaced by one of the same kind 8-28 m away, so
 // there are always 14; the trick re-fires every 2 s (as a slot does once a flight); 10 s of combat; movement on only.
 //   node qa/placement.cjs [--stream] [--level=N] [--pierce=0] [--time=S]
-const path = require('path'), root = path.resolve(process.argv.slice(2).find(a => !a.startsWith('--')) || path.join(__dirname, '..'));
+const path = require('path'), root = path.resolve(process.argv.slice(2).find(a => !a.startsWith('--')) || path.join(__dirname, '..', '..'));
 const { load } = require(path.join(root, 'qa/load.cjs'));
 const loadWith = moves => load(path.join(root, 'ICARUS-demo.html'), new Map([['icarus.scoreshow.tune', JSON.stringify({ moves, tricks: 0, ...(PIERCE != null && { pierce: +PIERCE }) })]]), { bake: true, modern: true });
 const ROSTER = ['chaser', 'chaser', 'chaser', 'chaser', 'chaser', 'chaser', 'turret', 'turret', 'turret', 'drifter', 'drifter', 'drifter', 'splitter', 'splitter'];

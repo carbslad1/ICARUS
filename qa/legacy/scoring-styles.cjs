@@ -1,7 +1,7 @@
 /* Equal-spend scoring packages with actual carve controls; setup is explicitly constructed. */
 'use strict';
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict'),crypto=require('node:crypto');
-const {load}=require('./load.cjs'),{flyer}=require('./bot.cjs'),root=path.resolve(__dirname,'..');
+const {load}=require('../load.cjs'),{flyer}=require('../bot.cjs'),root=path.resolve(__dirname,'..','..');
 const round=process.argv.find(x=>x.startsWith('--round='))?.slice(8)||'current',file=process.argv.find(x=>x.startsWith('--file='))?.slice(7)||path.join(root,'ICARUS-demo.html'),hash=crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex'),DT=1/120;
 // Each package is two Common and one Uncommon charm, so all three cost the same 105 pearls.
 const packages={ascent:['S07','N01','S08'],late:['S12','N05','S09'],entry:['N06','S15','S13']},stats={Close:3,Shot:3,Blast:3,'Damage %':.1,'Attack speed':.08,Armour:10,'Max HP':33,Regen:5};const price=b=>Math.floor(b+9+.9*b);

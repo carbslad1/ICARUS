@@ -1,6 +1,6 @@
 'use strict';
-const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict'),crypto=require('node:crypto'),{load}=require('./load.cjs');
-const root=path.resolve(__dirname,'..'),round=process.argv.find(x=>x.startsWith('--round='))?.slice(8)||'U1',file=process.argv.find(x=>x.startsWith('--file='))?.slice(7)||path.join(root,'ICARUS-demo.html'),H=load(file,new Map(),{bake:true,modern:true}),D=H.DEMO,checks=[],zero={x:0,y:0,w:false,boost:false,turn:0};
+const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict'),crypto=require('node:crypto'),{load}=require('../load.cjs');
+const root=path.resolve(__dirname,'..','..'),round=process.argv.find(x=>x.startsWith('--round='))?.slice(8)||'U1',file=process.argv.find(x=>x.startsWith('--file='))?.slice(7)||path.join(root,'ICARUS-demo.html'),H=load(file,new Map(),{bake:true,modern:true}),D=H.DEMO,checks=[],zero={x:0,y:0,w:false,boost:false,turn:0};
 function test(name,fn){try{const details=fn();checks.push({name,passed:true,details});console.log('PASS '+name)}catch(e){checks.push({name,passed:false,error:e.stack});console.log('FAIL '+name+': '+e.message)}}
 function air(seed=1,vy=30,y=100){const r=H.Hd(seed,'harpoon');r.medium={kind:'air',origin:{x:0,y},local:{x:0,y:0},velocity:{x:0,y:0},vx:20,vy,elapsed:.4,heading:1,waterScale:1,exitFlight:false};D.open(r);r.cam={x:0,y};r.camFree={x:0,y};r.camHold={x:0,y};r.camV={x:20,y:vy};r.cameraLead={x:0,y:0};r.camLock=1;return r;}
 function enemy(r,x=2,y=0,hp=10){D.spawn(r,false,0);const e=r.enemies.at(-1);e.pos={x,y};e.hp=hp;e.maxHp=hp;return e;}

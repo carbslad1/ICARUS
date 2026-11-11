@@ -1,0 +1,82 @@
+{
+  "note": "Results the gate is compared with. Failures listed here were accepted by the designer as the baseline (2026-11-12). Re-pin with node qa/gate.cjs --full --record, only for a change the plan calls for.",
+  "pinned": "2026-11-11",
+  "suites": {
+    "port": {
+      "what": "armoury, stats and shop rules",
+      "command": "node qa/port.cjs",
+      "mode": "counts",
+      "passed": 35,
+      "failed": 0
+    },
+    "tricks": {
+      "what": "the four tricks, ladders on and off",
+      "command": "node qa/tricks.cjs",
+      "mode": "counts",
+      "passed": 33,
+      "failed": 0
+    },
+    "rules": {
+      "what": "step 4 scoring and shop rules still hold",
+      "command": "node qa/rules.cjs",
+      "mode": "counts",
+      "passed": 9,
+      "failed": 0
+    },
+    "statuses": {
+      "what": "burn, slow and the other statuses",
+      "command": "node qa/statuses.cjs",
+      "mode": "counts",
+      "passed": 15,
+      "failed": 0
+    },
+    "routine": {
+      "what": "the routine engine the tricks replaced, still intact when switched on",
+      "command": "node qa/routine.cjs",
+      "mode": "counts",
+      "passed": 18,
+      "failed": 0
+    },
+    "shop-ui": {
+      "what": "shop screen checks (named in plan step 2)",
+      "command": "node qa/shop-ui.cjs",
+      "mode": "exit",
+      "exit": 0
+    },
+    "camera-rules": {
+      "what": "camera rules R1 to R6",
+      "command": "node qa/camera-rules.cjs",
+      "mode": "fail-lines",
+      "failures": [
+        "hops, high speed 100 16 17% 3.7 0.0% 19 100.0% 100.0% 2.7 FAIL R2",
+        "hops, top speed 125 14 18% 5.1 0.0% 13 100.0% 100.0% 3.9 FAIL R2",
+        "deep dives, fast 100 6 17% 3.5 0.0% 5 86.7% 100.0% 2.4 FAIL R2 R5",
+        "turnarounds, fast 100 8 17% 3.5 0.0% 14 100.0% 100.0% 2.3 FAIL R2",
+        "trick holds, fast 100 12 17% 3.7 0.0% 14 100.0% 100.0% 2.7 FAIL R2"
+      ],
+      "outputSha256": "98c25219fee322caaf54c0379b0ce392b110dc93318ec2d3c8675b9b7efabb23"
+    },
+    "enemy-rules": {
+      "what": "enemy stage rules",
+      "command": "node qa/enemy-sandbox.cjs --gate",
+      "mode": "fail-lines",
+      "failures": [
+        "FAIL current play-mid wave 4 screen flicks 3.70/min > 3",
+        "FAIL current play-mid wave 4 under the water, touching you 0.38% of the time",
+        "FAIL current play-mid wave 12 under the water, touching you 0.15% of the time",
+        "FAIL current play-high wave 4 screen flicks 3.12/min > 3",
+        "FAIL current play-high wave 4 under the water, touching you 0.07% of the time",
+        "FAIL current play-high wave 12 under the water, touching you 0.12% of the time",
+        "FAIL current hops wave 4 R 0.61 too low (bunched; 1357 samples)",
+        "FAIL current hops wave 12 under the water, touching you 0.16% of the time",
+        "FAIL current swim-level wave 4 under the water, touching you 0.10% of the time",
+        "FAIL current swim-level wave 12 stuck on the water line for 2.4 s",
+        "FAIL current weave wave 12 stuck on the water line for 1.38 s",
+        "FAIL current loops wave 4 under the water, touching you 0.22% of the time",
+        "FAIL current loops wave 4 R 0.63 too low (bunched; 781 samples)",
+        "FAIL current loops wave 12 under the water, touching you 0.20% of the time"
+      ],
+      "outputSha256": "ef4ad2bd8f01e1380035da2bf10d160576166a298f2eafcc626278931d88c5e5"
+    }
+  }
+}

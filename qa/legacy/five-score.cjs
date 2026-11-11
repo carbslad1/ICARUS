@@ -1,6 +1,6 @@
 'use strict';
 const assert=require('assert/strict');
-const S=require('../source/five-score.js');
+const S=require('../../source/five-score.js');
 const results=[];
 let assertions=0;
 function eq(a,b,message){assertions++;assert.deepEqual(a,b,message);}

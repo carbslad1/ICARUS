@@ -1,5 +1,5 @@
-const fs=require('fs'),path=require('path'),assert=require('assert/strict'),crypto=require('crypto'),{load}=require('./load.cjs');
-const root=path.resolve(__dirname,'..'),file=path.join(root,'ICARUS-demo.html'),H=load(file,new Map(),{bake:true,modern:true}),D=H.DEMO,checks=[];
+const fs=require('fs'),path=require('path'),assert=require('assert/strict'),crypto=require('crypto'),{load}=require('../load.cjs');
+const root=path.resolve(__dirname,'..','..'),file=path.join(root,'ICARUS-demo.html'),H=load(file,new Map(),{bake:true,modern:true}),D=H.DEMO,checks=[];
 const round=process.argv.find(x=>x.startsWith('--round='))?.split('=')[1]||'current';
 function test(name,fn){try{checks.push({name,passed:true,detail:fn()});console.log('PASS '+name)}catch(e){checks.push({name,passed:false,error:e.stack});console.log('FAIL '+name+': '+e.message)}}
 function run(){const r=H.Hd(17,'harpoon');r.mode='shop';r.xp=100;r.lvup=0;r.slots=['harpoon','sonic','rocket','fin','flak','laser'].map((id,i)=>Object.assign(H.Owslot(id,1,i+100),{paid:20,cd:.1}));r.demo.offers=[{uid:500,row:'weapon',id:'harpoon',level:1,price:25}];return r}

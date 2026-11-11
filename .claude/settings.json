@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in */source/*.js|*/source/*.css|*/source/build.cjs) d=${f%/source/*}; if [ -f \"$d/source/build.cjs\" ] && [ -f \"$d/source/carve-reference.html\" ]; then node \"$d/source/build.cjs\" >/dev/null 2>&1 || echo \"ICARUS demo rebuild failed in $d\" >&2; fi;; esac; exit 0"
+          }
+        ]
+      }
+    ]
+  }
+}

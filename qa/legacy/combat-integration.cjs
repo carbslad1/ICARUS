@@ -1,7 +1,7 @@
 /* Built-bundle combat checks. Constructed scenes use the real fire/combat/ME/SE entry paths. */
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),{performance}=require('node:perf_hooks');
-const {load}=require('./load.cjs'),root=path.resolve(__dirname,'..'),file=path.join(root,'ICARUS-demo.html');
+const {load}=require('../load.cjs'),root=path.resolve(__dirname,'..','..'),file=path.join(root,'ICARUS-demo.html');
 const round=process.argv.find(x=>x.startsWith('--round='))?.split('=')[1]||'combat';
 const H=load(file,new Map(),{bake:true,modern:true}),D=H.DEMO,C=H.FiveCombat,DT=1/120;
 const input={x:0,y:0,w:false,turn:0,boost:false},checks=[],observations={};

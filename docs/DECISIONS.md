@@ -18,6 +18,21 @@ For current state see `docs/CURRENT_STATE.md`; for which old document is stale s
 
 ---
 
+### 2026-11-12 — Checkpoint 1 signed; three plan questions answered; Belly flop tabled
+- **Decision:** Front flip with the shove only feels right and the shove is the right size ("yes"). XP from a flight with no trick waits for the next trick flown ("yes"). The five Mage runs are not read before Corkscrew's numbers are built ("no"). [TUNE] thresholds are confirmed "at its step". On Belly flop: "we haven't figured this out yet, we would use belly flop for interesting Econ builds but it should be tabled as a feature for now".
+- **Supersedes:** it parks, without cancelling, the 2026-11-10 decision that Belly flop's level is Harvesting (`docs/TRICK_LADDERS_PLAN.md`, section 2). How step 3 treats Belly flop meanwhile is the engineer's reading, marked [ASSUMED] in the plan.
+- **Source:** the designer's written answers in a Claude Code session on 2026-11-12. Still open: whether Close, Shot and Blast come off the items (he asked what the question meant).
+
+### 2026-11-12 — How the work is run
+- **Decision:** Claude Code is the engineer, one agent per worktree. `icarus-brotato` is the game; the slots, Rush/Kite and v3 builds are archive. A local commit and tag are made at every passed checkpoint without asking. The recorded camera and enemy gate failures are acceptable as today's baseline. The old TypeScript build moves to an archive branch. Steps that do not depend on a pending play test may be built ahead. Long measurement runs: "Occasionally, I don't like these and would prefer if they could be run faster somehow, like not in real time or in sped up versions". What happens after step 7 is "undecided".
+- **Supersedes:** the plan's rule that no step starts before the previous checkpoint is signed (it may now be built, not signed); the earlier "commits only when asked" rule, for checkpoint commits. Pushing was also answered "yes", but the repo turned out to be public, so the engineer holds each push for a fresh yes.
+- **Source:** the designer's written answers in a Claude Code session on 2026-11-12.
+
+### 2026-11-10 — Trick levels and skill trees are the direction
+- **Decision:** Brotato's melee, ranged and elemental scaling moves onto the tricks as trick levels; a skill tree per trick replaces the general level-up screen; Front flip is not invulnerable; no new weapons and no evolutions; tricks give no flat fire-rate bonus. The full list is in `docs/TRICK_LADDERS_PLAN.md`, section 2.
+- **Supersedes:** the 2026-10-30 rejection of a skill tree; "nothing is scheduled for the open areas" in the 2026-11-08 state.
+- **Source:** `docs/TRICK_LADDERS_PLAN.md`, section 2 (written with the designer on 2026-11-10). Entered here on 2026-11-12.
+
 ### 2026-11-08 — Port Brotato's weapons, stats and shop on a new branch
 - **Decision:** on `prototype/brotato-port-2026-11`, port Brotato's weapons, stats and shop into ICARUS. Rules and numbers only; `docs/BROTATO_PORT.md` lists them. This is the designer's requested exception to "weapons as they are", for this branch.
 - **Supersedes:** nothing outside this branch.

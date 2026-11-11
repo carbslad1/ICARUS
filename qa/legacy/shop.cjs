@@ -1,8 +1,8 @@
 /* Actual built-runtime shop contracts. Fixtures mutate run state, never runtime code. */
 'use strict';
 const assert=require('assert/strict'),fs=require('fs'),path=require('path'),crypto=require('crypto');
-const {load}=require('./load.cjs');
-const root=path.resolve(__dirname,'..'),file=process.argv.find(x=>x.startsWith('--file='))?.slice(7)||path.join(root,'ICARUS-demo.html');
+const {load}=require('../load.cjs');
+const root=path.resolve(__dirname,'..','..'),file=process.argv.find(x=>x.startsWith('--file='))?.slice(7)||path.join(root,'ICARUS-demo.html');
 const H=load(file,new Map(),{bake:true,modern:true}),D=H.DEMO,F=H.FiveScore;
 const checks=[],observations={};
 function test(name,fn){try{const detail=fn();checks.push({name,passed:true,detail});console.log('PASS '+name);}catch(e){checks.push({name,passed:false,error:e.message});console.log('FAIL '+name+': '+e.message);}}

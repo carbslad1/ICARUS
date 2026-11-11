@@ -1,7 +1,7 @@
 'use strict';
 // Independent acceptance checks of the actual bundled product. Fixtures are explicitly labelled.
-const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict'),crypto=require('node:crypto'),{load}=require('./load.cjs');
-const root=path.resolve(__dirname,'..'),round=process.argv.find(x=>x.startsWith('--round='))?.slice(8)||'U1',file=path.resolve(process.argv.find(x=>x.startsWith('--file='))?.slice(7)||path.join(root,'ICARUS-demo.html'));
+const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict'),crypto=require('node:crypto'),{load}=require('../load.cjs');
+const root=path.resolve(__dirname,'..','..'),round=process.argv.find(x=>x.startsWith('--round='))?.slice(8)||'U1',file=path.resolve(process.argv.find(x=>x.startsWith('--file='))?.slice(7)||path.join(root,'ICARUS-demo.html'));
 const sha=crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex'),report={round,buildSha256:sha,scope:'Independent built-runtime fixtures. Browser checks are separately identified; no human learning/fun, commercial or physical-device performance claim.',checks:[]};
 function check(name,fn){try{const detail=fn();report.checks.push({name,passed:true,detail});console.log('PASS '+name)}catch(e){report.checks.push({name,passed:false,error:e.stack});console.log('FAIL '+name+': '+e.message)}}
 const H=load(file,new Map(),{bake:true,modern:true}),D=H.DEMO,F=H.FiveScore;

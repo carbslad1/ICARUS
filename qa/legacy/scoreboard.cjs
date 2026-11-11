@@ -1,7 +1,7 @@
 'use strict';
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict'),crypto=require('node:crypto');
-const {load}=require('./load.cjs'),{flyer}=require('./bot.cjs'),F=require('../source/five-score.js'),C=require('../source/score-cues.js');
-const root=path.resolve(__dirname,'..'),file=path.join(root,'ICARUS-demo.html'),base=path.join(root,'..','icarus-five-trick-demo','ICARUS-demo.html'),checks=[];
+const {load}=require('../load.cjs'),{flyer}=require('../bot.cjs'),F=require('../../source/five-score.js'),C=require('../../source/score-cues.js');
+const root=path.resolve(__dirname,'..','..'),file=path.join(root,'ICARUS-demo.html'),base=path.join(root,'..','icarus-five-trick-demo','ICARUS-demo.html'),checks=[];
 function test(name,fn){try{const detail=fn();checks.push({name,passed:true,detail});console.log('PASS '+name)}catch(e){checks.push({name,passed:false,error:e.stack});console.log('FAIL '+name+': '+e.message)}}
 function scene(hand,state=F.create()){return {wave:1,wscore:0,quota:52,events:[],demo:{score:state},hand:{n:1,open:1,K:0,drawn:hand,air:0,pred:{air:4}}}}
 test('chips only follow real kill attribution, while trick and nested combo additions reconcile',()=>{const r=scene(['front','front','front']);C.begin(r);r.hand.K=7;C.chips(r,7,{x:2,y:5});C.advance(r,1);assert.equal(r.hand.scoreShow.mult,1);C.advance(r,2);assert.equal(r.hand.scoreShow.mult,3);C.advance(r,3);assert.equal(r.hand.scoreShow.mult,7);const trick=r.events.filter(e=>e.type==='trick'),combos=r.events.filter(e=>e.type==='combo');assert.equal(trick.length,3);assert.deepEqual(combos.map(c=>c.name),['Pair','Triple']);assert.equal(r.events.filter(e=>e.type==='chips')[0].amount,7);return {tricks:3,comboBonuses:combos.map(c=>c.amount)}});

@@ -1,6 +1,6 @@
 'use strict';
 const assert=require('node:assert/strict');
-const Combat=require('../source/five-combat.js');
+const Combat=require('../../source/five-combat.js');
 const tests=[];let calls=[];
 function test(name,fn){fn();tests.push({name,pass:true});}
 function run(ids=[]){calls=[];const r={mode:'playing',armed:false,enemies:[],shots:[],events:[],stats:{maxHp:100},medium:{kind:'air',local:{x:0,y:0},origin:{x:10,y:100},velocity:{x:0,y:0}},demo:{stats:{Area:0},itemCounts:{}},hand:{K:0,kills:[],air:0,activeAir:0,pred:{air:10,apex:5}}};Combat.initWave(r);for(const id of ids)Combat.buy(r,id);Combat.configure({position:r=>r.medium.local,strongest:()=>({id:'laser',slot:1,amount:100}),phase:r=>r.hand.phase||'ascent',damage:(r,e,n,ctx)=>{calls.push({id:e.id,n,ctx});const beforeHP=e.hp;e.hp-=n;if(e.hp<=0){r.enemies=r.enemies.filter(x=>x!==e);r.hand.K++;r.hand.kills.push({kv:1});}Combat.afterDamage(r,e,{...ctx,beforeHP,killed:e.hp<=0});}});Combat.breach(r);return r;}

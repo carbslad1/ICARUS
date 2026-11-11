@@ -1,6 +1,6 @@
 // Real seeded runs, actual offered purchases; no HP, damage, money or outcome grants.
-const fs=require('fs'),path=require('path'),crypto=require('crypto'),{load}=require('./load.cjs'),{flyer}=require('./bot.cjs');
-const root=path.resolve(__dirname,'..'),round=process.argv.find(x=>x.startsWith('--round='))?.split('=')[1]||'baseline',file=process.argv.find(x=>x.startsWith('--file='))?.slice(7)||path.join(root,'ICARUS-demo.html');
+const fs=require('fs'),path=require('path'),crypto=require('crypto'),{load}=require('../load.cjs'),{flyer}=require('../bot.cjs');
+const root=path.resolve(__dirname,'..','..'),round=process.argv.find(x=>x.startsWith('--round='))?.split('=')[1]||'baseline',file=process.argv.find(x=>x.startsWith('--file='))?.slice(7)||path.join(root,'ICARUS-demo.html');
 const routes=[{id:'low-close',style:'low-keep',starter:'sonic',keep:4,face:'spout',charms:['N06','S07','S04','N04','S12','N11','S16'],items:['I04','I08','I10'],routine:'Repeat'},
 {id:'middle-shot',style:'mid-keep',starter:'harpoon',keep:12,face:'front',charms:['N03','S02','S04','N05','N12','S01','S06'],items:['I01','I02','I06'],routine:'Formation'},
 {id:'high-blast',style:'high-keep',starter:'rocket',keep:12,face:'star',charms:['N01','S10','N05','S09','N09','S05','S03'],items:['I05','I07','I06'],routine:'Variety'}];
