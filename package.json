@@ -7,21 +7,9 @@
     "node": ">=20.19.0"
   },
   "scripts": {
-    "dev": "vite --host 127.0.0.1",
-    "build": "vite build",
-    "preview": "vite preview --host 127.0.0.1",
-    "typecheck": "tsc --noEmit",
-    "lint": "eslint .",
-    "test:sim": "vitest run --project sim",
-    "test:web": "vitest run --project browser",
-    "test:e2e": "playwright test",
-    "bench": "vitest bench --project sim --run",
-    "verify": "npm run typecheck && npm run lint && npm run test:sim && npm run test:web && npm run test:e2e",
-    "postverify": "node scripts/check-verify-budget.mjs",
-    "preverify": "node scripts/start-verify.mjs",
-    "replay": "node scripts/replay.mjs",
-    "record:empty": "node scripts/record-empty.mjs",
-    "record:water": "node scripts/record-water.mjs",
+    "build": "node source/build.cjs",
+    "gate": "node qa/gate.cjs",
+    "gate:full": "node qa/gate.cjs --full",
     "playtest": "node scripts/playtest.mjs"
   },
   "dependencies": {
