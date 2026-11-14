@@ -28,6 +28,8 @@ Nothing of feed and frenzy is built yet.
 
 Reported by the designer on 2026-11-15: "the brotato demo freezes when choosing the new weapons". Not reproduced yet. Tried on 2026-11-15, all without a freeze or a console error: picking each start weapon on the title and starting a run; buying a new weapon in the shop and launching the next wave; the six-slot replace choice; the playtest loadout with a ported weapon; and every ported weapon, six copies at tier 1 and tier 4, flown 40 s by the bot at wave 8 (slowest single step 165 ms). Waiting on the designer for where exactly it happens.
 
+The designer then sent a flight log (2026-11-15, wave 1, one 2.2 s flight that lands at 4.6 s; the log stops there). What it shows: the page was not hung, because the log was exported after the freeze. Under water nothing spawns and the wave clock does not run (it counts air time), so a dolphin that stops being able to breach looks like a frozen game. Found while replaying: with the default free-turning controls, a dolphin that reaches the seabed (130 m down) nose-first is held there, and its nose drops back to straight down whenever no turn key is held, so boosting alone never gets it out. Not yet confirmed as what the designer saw.
+
 Small display bugs found on the way: the start-weapon cards and loadout slots read "undefined" where a weapon description should be, and the selected start-weapon card's text is nearly invisible.
 
 ## Things the plan found (2026-11-15)
