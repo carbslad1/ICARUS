@@ -109,6 +109,44 @@ Build:
 
 **Designer:** answered 2026-11-15: the start weapon is the old Harpoon ("old harpoon").
 
+#### Step 0 results (2026-11-15)
+
+**Built** in `~/Projects/icarus-brotato`, behind `DEMO.tune.feed` (on by default; "Feed and frenzy baseline" in Settings):
+- The old Harpoon is back, in the armoury's format with its own numbers, and is the only start weapon. Left out: its extra pierce on a critical hit (no armoury rule for it) [ASSUMED]; its price tiers copy Pressure Cannon's [ASSUMED].
+- The shop sells only the pool: Harpoon, Trident, Tuna Gaff, Spitter, Pressure Cannon, Squid Launcher, Riptide Carbine. The Harpoon is in the pool so it can be combined.
+- Fixed on the way: the wave 1 freeze (ported ranged weapons had no bullet colour, so their first shot crashed the drawing); the title screen crashing with the Harpoon back; "undefined" on the start-weapon cards.
+- `qa/feed.cjs`: 7 checks (start weapon, its numbers, the pool, combining, setting off). In the gate.
+- `qa/floor.cjs`: the floor harness. Every (weapon, wave, seed) run starts fresh from its own seed, so a result never depends on what else is in the command; `--vs` runs two settings in one paired batch; `--quick` is the smoke tier; `--check` proves a cell repeats.
+- Speed: the enemies' push-apart step was 44% of all simulation time. It now skips far pairs before the square root, which halves a heavy run (28 s to 14.6 s). Results are bit-identical: both rule gates and 24 floor runs match their earlier output exactly.
+- The camera and enemy gates now run with `feed` off, so they keep proving the locked movement and enemies are unchanged. With `feed` on their numbers move, because the default weapon changed (more kills); that is not a code change in either system.
+
+| Check | Result |
+|---|---|
+| Fast | **Not met, narrowly.** A full on/off comparison for one build (4 waves × 6 seeds × 2 settings) took 338 s with 4 workers, against a 300 s target, while another game was using the machine (load 11). The smoke tier takes 36 s. `--seeds=4` would bring the comparison to about 4 minutes |
+| Paired | **Pass.** The same 24 cells gave identical results with a setting on and off (`ladders`, which the bot never triggers), and a cell gives the same result alone or inside another batch |
+| Floor recorded | **Pass.** Below |
+| Gate | **Pass.** `node qa/gate.cjs --full`, 2026-11-15 |
+
+**The floor** (`node qa/floor.cjs`, 2026-11-15; raw in `qa/feed/step0-floor.json`). Six copies of one weapon at the wave's tier (T1 at wave 5, T2 at 10, T3 at 15, T4 at 20 [ASSUMED]), no stats, no items, no feed or frenzy; a cannot-die bot flying mid arcs and holding 8 m from enemies; one whole wave; 6 seeds. "Killed" is kills against arrivals. Crowd is enemies on screen in the air (the game caps it at 100).
+
+| Weapon | Wave 5 killed / crowd | Wave 10 | Wave 15 | Wave 20 |
+|---|---|---|---|---|
+| Harpoon | 96% / 4 | 94% / 13 | 97% / 14 | 99% / 4 |
+| Trident | 71% / 21 | 63% / 60 (hits 100) | 77% / 62 (hits 100) | 92% / 18 |
+| Tuna Gaff | 74% / 18 | 62% / 60 (hits 100) | 76% / 64 (hits 100) | 90% / 21 |
+| Spitter | 84% / 14 | 70% / 48 (hits 100) | 79% / 59 (hits 100) | 92% / 20 |
+| Pressure Cannon | 91% / 9 | 65% / 55 (hits 100) | 71% / 62 (hits 100) | 97% / 11 |
+| Squid Launcher | 89% / 8 | 75% / 34 | 80% / 47 | 98% / 7 |
+| Riptide Carbine | 86% / 13 | 68% / 54 (hits 100) | 74% / 64 (hits 100) | 91% / 21 |
+
+Arrivals per wave: about 145 at wave 5, 310 to 400 at wave 10, 370 to 485 at 15 and 280 at 20 (fewer get in once the screen is full). Spread between seeds is 1 to 4 points, 8 at most.
+
+**What this says for step 3 (not decided):**
+- **The Harpoon is far stronger than the other six.** Six Harpoons kill 94 to 99% of every wave with no multiplier, where the others kill 62 to 80% at waves 10 and 15. Its 30 m reach (the others reach 6 to 16 m) and two-enemy pierce are why. If the Harpoon stays as it is, a Harpoon build has nothing left for frenzy to do.
+- **Waves 10 and 15 are where the floor is lowest** for every other weapon: the screen fills to its 100-enemy cap. That is the room feed and frenzy has to fill.
+- **Wave 20 is easier than 15** for every weapon at tier 4. Whether that holds with a real build is unknown.
+- These are pure builds of one weapon, not what a player holds, and the bot never uses tricks or moves the way a person does.
+
 ### Step 1: the jump ramp (play checkpoint)
 
 **Goal:** jumps get faster through a wave, as rule 7 says, before anything is built on it.
@@ -179,7 +217,7 @@ Build nothing new. Set the section 5 numbers.
 | Checkpoint | Date | Result | Designer's note |
 |---|---|---|---|
 | Plan locked | 2026-11-15 | Written from the designer's answers of 2026-11-14 and 15 | "Yes, lock it" |
-| 0 Facts and a fast measure | | | |
+| 0 Facts and a fast measure | 2026-11-15 | Built and measured; gate passes. The "Fast" check missed its 5-minute target by 38 s under load, so this step waits on the designer's word on that threshold | |
 | 1 The jump ramp | | | |
 | 2 Feed and frenzy | | | |
 | 3 The numbers (baseline signed) | | | |

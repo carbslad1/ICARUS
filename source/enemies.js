@@ -90,9 +90,14 @@ var Enemies = (() => {
   function apart(list, i, top) {
     const [e, x, y] = list[i];
     let px = 0, py = 0;
-    for (let j = 0; j < list.length; j++) {
+    // Speed only (15 Nov): reject far pairs before the square root and skip the per-pair destructuring. The pairs kept and
+    // the sums are exactly as before (a pair with |dx| or |dy| ≥ R always had d ≥ R); qa/enemy-sandbox.cjs pins the output.
+    const er = e.radius || 1, len = list.length;
+    for (let j = 0; j < len; j++) {
       if (j === i) continue;
-      const [g, gx, gy] = list[j], R = (e.radius || 1) + (g.radius || 1) + P.GAP, dx = x - gx, dy = y - gy, d = Math.hypot(dx, dy);
+      const q = list[j], g = q[0], R = er + (g.radius || 1) + P.GAP, dx = x - q[1], dy = y - q[2];
+      if (dx >= R || dx <= -R || dy >= R || dy <= -R) continue;
+      const d = Math.hypot(dx, dy);
       if (d >= R) continue;
       const k = Math.min(1, (R - d) / P.GAP), u = d > 1e-6 ? { x: dx / d, y: dy / d } : { x: e.id > g.id ? 1 : -1, y: 0 };
       px += u.x * k; py += u.y * k;

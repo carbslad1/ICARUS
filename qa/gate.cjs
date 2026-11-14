@@ -20,8 +20,8 @@ const SUITES = [
   { name: 'statuses', tier: 'quick', args: ['qa/statuses.cjs'], mode: 'counts', what: 'burn, slow and the other statuses' },
   { name: 'routine', tier: 'quick', args: ['qa/routine.cjs'], mode: 'counts', what: 'the routine engine the tricks replaced, still intact when switched on' },
   { name: 'shop-ui', tier: 'quick', args: ['qa/shop-ui.cjs'], mode: 'exit', what: 'shop screen checks (named in plan step 2)' },
-  { name: 'camera-rules', tier: 'full', args: ['qa/camera-rules.cjs'], mode: 'fail-lines', what: 'camera rules R1 to R6' },
-  { name: 'enemy-rules', tier: 'full', args: ['qa/enemy-sandbox.cjs', '--gate'], mode: 'fail-lines', what: 'enemy stage rules' },
+  { name: 'camera-rules', tier: 'full', args: ['qa/camera-rules.cjs', '--tune=feed:0'], mode: 'fail-lines', what: 'camera rules R1 to R6' },
+  { name: 'enemy-rules', tier: 'full', args: ['qa/enemy-sandbox.cjs', '--gate', '--preset=', '--variant=current={"feed":0}'], mode: 'fail-lines', what: 'enemy stage rules' },
 ];
 
 // 1. The built file must match its sources: tests load ICARUS-demo.html, not source/.

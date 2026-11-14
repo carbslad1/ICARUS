@@ -1,6 +1,6 @@
 # Current state: 2026-11-15
 
-**Working here:** Claude Code, 2026-11-15 (feed and frenzy step 0). (Put your tool, session and date here when you start; clear it when you stop. One agent per worktree.)
+**Working here:** nobody. (Put your tool, session and date here when you start; clear it when you stop. One agent per worktree.)
 
 **This is the game.** `~/Projects/icarus-brotato`, branch `prototype/brotato-port-2026-11`. `~/Projects/icarus` (Rush/Kite) and `~/Projects/icarus-slots` are archive. Everything is committed. The GitHub repo is public and this branch has not been pushed: ask before pushing.
 
@@ -13,12 +13,12 @@
 | Step | State |
 |---|---|
 | Plan locked | 2026-11-15 |
-| 0 Facts and a fast measure | **Next.** Signed by automated checks |
-| 1 The jump ramp | Not started. Play checkpoint |
+| 0 Facts and a fast measure | **Built and measured 2026-11-15.** Waiting on the designer: the measurement took 5.6 minutes against a 5-minute target |
+| 1 The jump ramp | **Next.** Not started. Play checkpoint |
 | 2 Feed and frenzy | Not started. Play checkpoint |
 | 3 The numbers (signs the baseline) | Not started. Play checkpoint |
 
-Nothing of feed and frenzy is built yet.
+Built so far (behind the `feed` setting, on by default): the old Harpoon as the only start weapon, and a shop that sells only the seven baseline weapons. Feed and frenzy itself is not built yet. Step 0's floor is in the plan: six Harpoons already kill 94 to 99% of every wave, far above the other six weapons.
 
 ## Answered
 

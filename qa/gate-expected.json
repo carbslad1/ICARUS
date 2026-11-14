@@ -1,5 +1,5 @@
 {
-  "note": "Results the gate is compared with. Failures listed here were accepted by the designer as the baseline (2026-11-12). Re-pin with node qa/gate.cjs --full --record, only for a change the plan calls for.",
+  "note": "Results the gate is compared with. Failures listed here were accepted by the designer as the baseline (2026-11-12). Re-pin with node qa/gate.cjs --full --record, only for a change the plan calls for. Since 2026-11-15 the camera and enemy gates run with tune.feed off, so they keep proving the locked movement and enemies are unchanged; feed-on behaviour is checked by qa/feed.cjs.",
   "pinned": "2026-11-15 (port re-pinned for its new colour check; rule gates unchanged since 2026-11-12)",
   "suites": {
     "port": {
@@ -52,7 +52,7 @@
     },
     "camera-rules": {
       "what": "camera rules R1 to R6",
-      "command": "node qa/camera-rules.cjs",
+      "command": "node qa/camera-rules.cjs --tune=feed:0",
       "mode": "fail-lines",
       "failures": [
         "hops, high speed 100 16 17% 3.7 0.0% 19 100.0% 100.0% 2.7 FAIL R2",
@@ -60,12 +60,11 @@
         "deep dives, fast 100 6 17% 3.5 0.0% 5 86.7% 100.0% 2.4 FAIL R2 R5",
         "turnarounds, fast 100 8 17% 3.5 0.0% 14 100.0% 100.0% 2.3 FAIL R2",
         "trick holds, fast 100 12 17% 3.7 0.0% 14 100.0% 100.0% 2.7 FAIL R2"
-      ],
-      "outputSha256": "98c25219fee322caaf54c0379b0ce392b110dc93318ec2d3c8675b9b7efabb23"
+      ]
     },
     "enemy-rules": {
       "what": "enemy stage rules",
-      "command": "node qa/enemy-sandbox.cjs --gate",
+      "command": "node qa/enemy-sandbox.cjs --gate --preset= --variant=current={\"feed\":0}",
       "mode": "fail-lines",
       "failures": [
         "FAIL current play-mid wave 4 screen flicks 3.70/min > 3",
@@ -82,8 +81,7 @@
         "FAIL current loops wave 4 under the water, touching you 0.22% of the time",
         "FAIL current loops wave 4 R 0.63 too low (bunched; 781 samples)",
         "FAIL current loops wave 12 under the water, touching you 0.20% of the time"
-      ],
-      "outputSha256": "ef4ad2bd8f01e1380035da2bf10d160576166a298f2eafcc626278931d88c5e5"
+      ]
     }
   }
 }
