@@ -42,6 +42,7 @@ Standing rules in `docs/DESIGN_RULES.md` still bind: damage only from weapons, n
 | 2026-11-14 | **Feed is the ascent, frenzy is the descent, fixed.** His reason: frenzy kills stealing feed "will annoy players". This drops the earlier idea of choosing a phase per weapon. |
 | 2026-11-14 | **Tiers raise feed and frenzy in turn,** "feed, frenzy, feed, frenzy ie T1-T4". |
 | 2026-11-14 | **Items and characters are where unique feed and frenzy rules go,** later. |
+| 2026-11-15 | **The start weapon is the old Harpoon** ("old harpoon"), not a ported weapon. |
 | 2026-11-15 | **The baseline in section 1 is locked.** It includes the engineer's proposals he accepted with it: two halves split at the peak with no apex phase; Feed and Frenzy as totals; tier 1 has some of both; the multiplier acts on fire rate only; it resets on landing; jump speed is the only growth within a wave. |
 
 ## 4. Parked
@@ -76,7 +77,7 @@ Checked in the code and docs on 2026-11-15.
 | Fact | Source | What it means |
 |---|---|---|
 | Launch speed is fixed for a whole wave: 30 m/s at wave 1, +5 per wave. There is no per-jump ramp in this build. | `source/demo.js` (the 20 Oct note); `docs/GAME_MAP.md` | Rule 7 has to be built (step 1). It existed only in the Core Loop Lab on the slots branch. It changes a rule recorded as locked, on the designer's instruction of 2026-11-14 |
-| No weapon in the ported armoury is called Harpoon. The port's starters are Tuna Gaff, Pressure Cannon and Brine Sprayer. The old Harpoon (long shots, 30 m reach) is still in the code from before the port. | `source/armory-data.js`, `source/demo.js` | Step 0 asks the designer which Harpoon he means [ASSUMED: the old Harpoon, with its own numbers, as the start weapon] |
+| No weapon in the ported armoury is called Harpoon. The port's starters are Tuna Gaff, Pressure Cannon and Brine Sprayer. The old Harpoon (long shots, 30 m reach) is still in the code from before the port. | `source/armory-data.js`, `source/demo.js` | **Answered 2026-11-15: the old Harpoon**, with its own numbers, is the start weapon |
 | Every ported weapon has tiers 1 to 4, and combining two of the same tier makes the next tier. | `source/demo.js` | Rule 6 needs no new merge rule |
 | One fire-rate number already speeds up every gun's cooldown. | `source/demo.js` | Frenzy multiplies it while falling |
 | Close weapons had a target in reach only 4% of air time on skims at wave 5; ranged weapons 55 to 97%. | Old plan, checkpoint 0 (2026-11-10) | A build with only Close weapons may barely feed on low jumps. Measured in step 3 |
@@ -106,7 +107,7 @@ Build:
 | Floor recorded | The table of kills against arrivals is in this document |
 | Gate | `node qa/gate.cjs --full` passes unchanged |
 
-**Designer:** one question. Is the start weapon the old Harpoon (long reach, slow shots), or one of the ported weapons renamed?
+**Designer:** answered 2026-11-15: the start weapon is the old Harpoon ("old harpoon").
 
 ### Step 1: the jump ramp (play checkpoint)
 

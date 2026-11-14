@@ -20,9 +20,15 @@
 
 Nothing of feed and frenzy is built yet.
 
-## Open with the designer
+## Answered
 
-- **Which Harpoon is the start weapon?** No ported weapon has that name. The old Harpoon (long reach, slow shots) is still in the code from before the port; the port's own starters are Tuna Gaff, Pressure Cannon and Brine Sprayer. The plan assumes the old Harpoon until he answers (step 0).
+- **Start weapon:** the old Harpoon (designer, 2026-11-15). With the armoury on, the old Harpoon is not in the catalogue (the port replaced the old weapons), so step 0 has to bring it back as the start weapon.
+
+## Open bug: a freeze when choosing weapons
+
+Reported by the designer on 2026-11-15: "the brotato demo freezes when choosing the new weapons". Not reproduced yet. Tried on 2026-11-15, all without a freeze or a console error: picking each start weapon on the title and starting a run; buying a new weapon in the shop and launching the next wave; the six-slot replace choice; the playtest loadout with a ported weapon; and every ported weapon, six copies at tier 1 and tier 4, flown 40 s by the bot at wave 8 (slowest single step 165 ms). Waiting on the designer for where exactly it happens.
+
+Small display bugs found on the way: the start-weapon cards and loadout slots read "undefined" where a weapon description should be, and the selected start-weapon card's text is nearly invisible.
 
 ## Things the plan found (2026-11-15)
 
