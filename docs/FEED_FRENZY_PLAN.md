@@ -163,6 +163,31 @@ Build: each wave's first jump launches at 30 m/s; each jump after adds 5 m/s, up
 
 **Designer plays** waves 1 to 6: does each wave feel like it builds? Is the slow first jump of a late wave a problem?
 
+#### Step 1 results (2026-11-15)
+
+**Built** behind `feed` (on by default): each wave's first jump launches at 30 m/s and each finished flight adds 5 m/s, up to the wave's own speed. The count starts again every wave. `source/demo.js` wraps the engine's wave-speed function; with `feed` off it is untouched. `feedRamp: 0` turns only the ramp off, for measuring.
+
+| Check | Result |
+|---|---|
+| Rule | **Pass.** Real bot jumps at waves 1, 4, 6 and 10 launch at exactly min(30 + 5(n − 1), 30 + 5(w − 1)) m/s, within 0.5 m/s. Wave 6 reads 30, 35, 40, 45, 50, 55, 55, 55 (`qa/feed.cjs`) |
+| Wave 1 | **Pass.** Every jump at 30 m/s |
+| Setting off | **Pass.** Every jump at the wave's speed; the camera and enemy gates match their pinned results exactly |
+| Recorded | Below |
+| Camera | **Pass** with `feed` off (pinned). With the ramp on, early jumps are slower than the cases the camera gate tests, so it adds no new speeds |
+
+**Crowd and hits, ramp off against on** (`node qa/floor.cjs --weapons=harpoon,tuna_gaff --waves=5,10,15 --seeds=4 --tune='{"feed":1,"feedRamp":0}' --vs='{"feed":1}'`; raw in `qa/feed/step1-ramp.json`; six copies of one weapon, cannot-die bot, mid arcs):
+
+| Build | Wave | Killed: off → on | Crowd in the air: off → on | Hits per wave: off → on |
+|---|---|---|---|---|
+| Harpoon | 5 | 97% → 95% | 4.3 → 4.2 | 77 → 62 |
+| | 10 | 94% → 95% | 13.6 → 12.5 | 199 → 185 |
+| | 15 | 97% → 97% | 14.0 → 14.1 | 259 → 213 |
+| Tuna Gaff | 5 | 73% → 79% | 19.2 → 17.7 | 72 → 74 |
+| | 10 | 62% → 63% | 59.9 → 62.3 | 156 → 143 |
+| | 15 | 75% → 73% | 65.2 → 72.5 | 276 → 229 |
+
+**What this means:** the ramp barely changes how much of a wave gets killed (within about 6 points, about the seed spread). The bot takes somewhat fewer hits with it, up to 18% fewer at wave 15, probably because short early jumps spend less time among enemies; the wave clock counts air time, so a wave lasts the same air time either way. The crowd is a little larger for the Tuna Gaff at wave 15. The feel of a wave that starts slow is the designer's call.
+
 ### Step 2: feed and frenzy (play checkpoint)
 
 **Goal:** the loop itself, with first-guess numbers.
@@ -218,6 +243,6 @@ Build nothing new. Set the section 5 numbers.
 |---|---|---|---|
 | Plan locked | 2026-11-15 | Written from the designer's answers of 2026-11-14 and 15 | "Yes, lock it" |
 | 0 Facts and a fast measure | 2026-11-15 | Built and measured; gate passes. The "Fast" check missed its 5-minute target by 38 s under load, so this step waits on the designer's word on that threshold | |
-| 1 The jump ramp | | | |
+| 1 The jump ramp | 2026-11-15 | Built; automated checks pass (tag `feed-cp1-auto`). Waiting on the designer's play test | |
 | 2 Feed and frenzy | | | |
 | 3 The numbers (baseline signed) | | | |

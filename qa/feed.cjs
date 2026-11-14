@@ -36,5 +36,21 @@ test('with the setting off, the game is as before: no Harpoon, the port starters
   assert(seen.size > POOL.length + 10, 'only ' + seen.size + ' weapons offered'); return seen.size + ' weapons offered';
 });
 
+// Step 1: the jump ramp. Fly real jumps with the test bot and read each launch speed at the breach.
+function launches(G, wave, n, seed = 3) {
+  const { flyer } = require('./bot.cjs'), D = G.DEMO, r = G.Hd(seed); r.wave = wave; D.wave(r);
+  const f = flyer(G, 'mid-keep', seed, { keep: 8 }), out = []; let prev = r.medium.kind, t = 0;
+  while (t < 120 * 200 && r.mode === 'playing' && out.length < n) { r.hp = 1e9; const it = f(r); if (r.medium.kind === 'air' && r.budget <= 0) it.y = -1; G.sw(r, it); t++; if (prev === 'water' && r.medium.kind === 'air') out.push(Math.hypot(r.medium.vx, r.medium.vy)); prev = r.medium.kind; }
+  return out;
+}
+test('jump n of wave w launches at min(30 + 5(n − 1), 30 + 5(w − 1)) m/s', () => {
+  for (const w of [1, 4, 6, 10]) { const v = launches(ON, w, 12); assert(v.length >= Math.min(w, 5) + 1, 'only ' + v.length + ' jumps at wave ' + w);  // enough to pass the cap (wave 1 ends after about 6)
+    v.forEach((x, i) => { const want = Math.min(30 + 5 * i, 30 + 5 * (w - 1)); assert(Math.abs(x - want) < .5, `wave ${w} jump ${i + 1}: ${x.toFixed(1)} vs ${want}`); }); }
+  return 'waves 1, 4, 6 and 10';
+});
+test('wave 1 plays exactly as before: every jump at 30 m/s', () => { for (const x of launches(ON, 1, 8)) assert(Math.abs(x - 30) < .5, x); });
+test('with the setting off, every jump of a wave launches at the wave speed', () => { for (const x of launches(OFF, 6, 8)) assert(Math.abs(x - 55) < .5, x); });
+test('the count starts again each wave', () => { const G = ON, D = G.DEMO, r = G.Hd(2); r.wave = 6; D.wave(r); r.demo.jumps = 5; D.wave(r); assert.equal(r.demo.jumps, 0); });
+
 console.log(JSON.stringify({ round: 'feed', passed, failed }));
 process.exit(failed ? 1 : 0);

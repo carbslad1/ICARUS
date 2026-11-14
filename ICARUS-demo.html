@@ -4574,6 +4574,7 @@ var DEMO = (() => {
   function wave(r){
     if(tune.port&&r.demo)r.demo.hitProt=Object.entries(r.demo.aItems||{}).reduce((n,[id,c])=>n+c*ITEMS[id].fx.filter(f=>f.k==='hitprot').reduce((a,f)=>a+f.n,0),0);
     const d=r.demo;r.budget=clock(r.wave);r.quota=quota(r.wave);r.wscore=0;r.wkill=0;r.armed=false;r.hand=null;r.hands=[];r.aft=null;r.endReason=null;
+    d.jumps=0;  // feed baseline step 1: flights finished this wave, for the launch-speed ramp
     d.air=0;d.spawn=0;d.skim=0;d.skipRun=0;d.dirs=[];d.draw=[];d.discard=[];d.heldHand=null;{const relay=d.score.relay;FiveScore.resetWave(d.score);d.score.relay=relay}FiveCombat.initWave(r);d.history=[];d.bossSpawned=false;d.bossDefeated=false;d.bossRecoveries=0;d.overtime=false;d.overtimeAir=0;d.overtimeRecycles=0;d.waveTelemetry={damageTaken:0,hits:0,primaryApplied:0,secondaryApplied:0,lastHits:[]};d.lastFailure=null;d.lastDir=1;
     
     r.enemies=[];r.pursuers=[];r.shots=[];r.wshots=[];r.eorbs=[];r.departing=[];r.warns=[];r.bw=-1;r.bq=[];r.spawnRemaining=0;r.boss=null;
@@ -4963,6 +4964,12 @@ sw=function(r,input,dt=Ar){
   for(const e of r.departing){e.age+=dt;e.pos=se(e.pos.x+e.velocity.x*dt,e.pos.y+e.velocity.y*dt)}r.departing=r.departing.filter(e=>e.age<e.life).slice(-100);
   Ovr(r,dt);
 };
+/* Feed baseline step 1 (docs/FEED_FRENZY_PLAN.md, rule 7; designer 14 Nov: "jumps increase speed by 5ms/ cap increases
+   by 5 each wave"). With tune.feed on, each wave's first jump launches at wave 1's speed and each finished flight adds one
+   step, up to the wave's own speed: jump n of wave w gets min(Dd(n), Dd(w)). The engine asks Dd(wave) for the speed both
+   under water and at the breach, so the jump count lives on the run being stepped (DEMO.cur). Off: Dd is unchanged. */
+{const sw1=sw;sw=function(r,input,dt){DEMO.cur=r;const k=r?.medium?.kind,o=sw1.apply(this,arguments);if(k==='air'&&r.medium?.kind==='water'&&r.demo)r.demo.jumps=(r.demo.jumps||0)+1;return o}}
+{const dd0=Dd;Dd=w=>{const r=DEMO.cur;if(!DEMO.tune.feed||DEMO.tune.feedRamp===0||!r?.demo||r.wave!==w)return dd0(w);  /* feedRamp:0 is for measuring only */return Math.min(dd0(w),dd0(1+(r.demo.jumps||0)))};DEMO.baseSpeed=dd0}
 rw=function(r,a){DEMO.hit(r,a)};
 Oscore=function(r,h){return{chips:h.K,mult:h.mult||1,score:Math.round(h.K*(h.mult||1)),trick:{n:h.completed?.length||0,m:(h.mult||1)-1},lit:[]}};
 Otdraw=function(R,r,m,title){if(title||m.kind!=='air')return;const a=r.hand?.active;R.rollOffset=0;if(!a)return;const progress=a.elapsed/a.time,dir=Math.sign(m.vx)||1;

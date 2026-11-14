@@ -13,7 +13,7 @@
       "what": "feed and frenzy baseline: start weapon, shop pool, setting off",
       "command": "node qa/feed.cjs",
       "mode": "counts",
-      "passed": 7,
+      "passed": 11,
       "failed": 0
     },
     "tricks": {

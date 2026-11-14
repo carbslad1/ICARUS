@@ -24,18 +24,18 @@ function cell({ weapon, wave, seed, style, tune }) {
   const lvl = Math.max(D.weapons[weapon].min || 1, TIER[wave] || 1);
   r.slots = Array.from({ length: 6 }, (_, i) => G.Owslot(weapon, lvl, 500 + i)); r.slots.forEach(g => { g.cd = 0; }); D.sync(r);
   const fly = flyer(G, style, seed, { keep: 8 }), seen = new Set(), t0 = Date.now();
-  let steps = 0, crowdSum = 0, crowdN = 0, peak = 0, airSteps = 0, sent = 0, landed = 0;
+  let hits = 0, hpLost = 0, steps = 0, crowdSum = 0, crowdN = 0, peak = 0, airSteps = 0, sent = 0, landed = 0;
   while (r.mode === 'playing' && steps < 120 * 600) {
     r.hp = 1e9;
     const it = fly(r); if (r.medium.kind === 'air' && r.budget <= 0) it.y = -1;
-    G.sw(r, it); steps++;
+    G.sw(r, it); steps++; if (r.hp < 1e9) { hits++; hpLost += 1e9 - r.hp; }
     for (const e of r.enemies) if (!seen.has(e.id)) { seen.add(e.id); sent += e.maxHp; }
     for (const ev of r.events || []) if (ev.kind === 'damage') landed += ev.applied ?? ev.value;
     if (r.medium.kind === 'air') { airSteps++; crowdSum += r.enemies.length; crowdN++; if (r.enemies.length > peak) peak = r.enemies.length; }
   }
   const kills = r.waveKills ?? r.wkill ?? 0;
   return { weapon, wave, seed, style, tune, tier: lvl, ended: r.mode, arrivals: seen.size, kills, share: seen.size ? kills / seen.size : 0,
-    crowd: crowdN ? crowdSum / crowdN : 0, peak, air: airSteps / 120, landedShare: sent ? landed / sent : 0, secs: (Date.now() - t0) / 1000 };
+    crowd: crowdN ? crowdSum / crowdN : 0, peak, hits, hpLost, air: airSteps / 120, landedShare: sent ? landed / sent : 0, secs: (Date.now() - t0) / 1000 };
 }
 
 if (process.argv[2] === '--worker') {
@@ -61,10 +61,10 @@ function table(rows) {
   const by = {}; for (const r of rows) (by[r.weapon + '|' + r.wave] ||= []).push(r);
   const keys = Object.keys(by).sort((a, b) => { const [wa, va] = a.split('|'), [wb, vb] = b.split('|'); return POOL.indexOf(wa) - POOL.indexOf(wb) || va - vb; });
   const mean = (a, f) => a.reduce((s, x) => s + f(x), 0) / a.length, sd = (a, f) => { const m = mean(a, f); return Math.sqrt(mean(a, x => (f(x) - m) ** 2)); };
-  console.log('weapon            wave tier seeds  arrivals  killed (± sd)   crowd  peak  landed/sent  air s');
+  console.log('weapon            wave tier seeds  arrivals  killed (± sd)   crowd  peak  hits  landed/sent  air s');
   for (const k of keys) {
     const a = by[k], x = a[0];
-    console.log(`${x.weapon.padEnd(17)} ${String(x.wave).padStart(4)} ${String(x.tier).padStart(4)} ${String(a.length).padStart(5)} ${mean(a, y => y.arrivals).toFixed(0).padStart(9)}  ${pct(mean(a, y => y.share)).padStart(6)} (± ${pct(sd(a, y => y.share)).padStart(3)})  ${mean(a, y => y.crowd).toFixed(1).padStart(6)} ${mean(a, y => y.peak).toFixed(0).padStart(5)}  ${pct(mean(a, y => y.landedShare)).padStart(11)} ${mean(a, y => y.air).toFixed(0).padStart(6)}`);
+    console.log(`${x.weapon.padEnd(17)} ${String(x.wave).padStart(4)} ${String(x.tier).padStart(4)} ${String(a.length).padStart(5)} ${mean(a, y => y.arrivals).toFixed(0).padStart(9)}  ${pct(mean(a, y => y.share)).padStart(6)} (± ${pct(sd(a, y => y.share)).padStart(3)})  ${mean(a, y => y.crowd).toFixed(1).padStart(6)} ${mean(a, y => y.peak).toFixed(0).padStart(5)} ${mean(a, y => y.hits ?? 0).toFixed(0).padStart(5)}  ${pct(mean(a, y => y.landedShare)).padStart(11)} ${mean(a, y => y.air).toFixed(0).padStart(6)}`);
   }
 }
 

@@ -14,11 +14,11 @@
 |---|---|
 | Plan locked | 2026-11-15 |
 | 0 Facts and a fast measure | **Built and measured 2026-11-15.** Waiting on the designer: the measurement took 5.6 minutes against a 5-minute target |
-| 1 The jump ramp | **Next.** Not started. Play checkpoint |
-| 2 Feed and frenzy | Not started. Play checkpoint |
+| 1 The jump ramp | **Built 2026-11-15; waiting on the designer's play test** (waves 1 to 6) |
+| 2 Feed and frenzy | **Next.** May be built while step 1 is played; signed only after it |
 | 3 The numbers (signs the baseline) | Not started. Play checkpoint |
 
-Built so far (behind the `feed` setting, on by default): the old Harpoon as the only start weapon, and a shop that sells only the seven baseline weapons. Feed and frenzy itself is not built yet. Step 0's floor is in the plan: six Harpoons already kill 94 to 99% of every wave, far above the other six weapons.
+Built so far (behind the `feed` setting, on by default): the old Harpoon as the only start weapon, a shop that sells only the seven baseline weapons, and the jump ramp (each wave starts at 30 m/s and each jump adds 5, up to the wave's speed). Feed and frenzy itself is not built yet. Step 0's floor is in the plan: six Harpoons already kill 94 to 99% of every wave, far above the other six weapons.
 
 ## Answered
 
