@@ -60,6 +60,7 @@ var Tricks = (() => {
   const flying = r => r.hand?.tk?.id || null;           // this flight's trick, fixed at the breach
   function boostFor(r, weapon) {
     const id = flying(r); if (!id || r.lab?.off || ladders()) return 1;
+    if (DEMO.weapons[weapon]?.armory) return 1;  // armoury weapons never take the old boost (the feed baseline's Harpoon is one)
     return (TAGS[weapon] || []).includes(TRICKS[id].type) ? 1 + P.boost : 1;
   }
 

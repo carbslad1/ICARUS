@@ -14,6 +14,7 @@ const FULL = process.argv.includes('--full'), RECORD = process.argv.includes('--
 const sha = s => crypto.createHash('sha256').update(s).digest('hex');
 const SUITES = [
   { name: 'port', tier: 'quick', args: ['qa/port.cjs'], mode: 'counts', what: 'armoury, stats and shop rules' },
+  { name: 'feed', tier: 'quick', args: ['qa/feed.cjs'], mode: 'counts', what: 'feed and frenzy baseline: start weapon, shop pool, setting off' },
   { name: 'tricks', tier: 'quick', args: ['qa/tricks.cjs'], mode: 'counts', what: 'the four tricks, ladders on and off' },
   { name: 'rules', tier: 'quick', args: ['qa/rules.cjs'], mode: 'counts', what: 'step 4 scoring and shop rules still hold' },
   { name: 'statuses', tier: 'quick', args: ['qa/statuses.cjs'], mode: 'counts', what: 'burn, slow and the other statuses' },

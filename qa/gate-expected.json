@@ -9,6 +9,13 @@
       "passed": 36,
       "failed": 0
     },
+    "feed": {
+      "what": "feed and frenzy baseline: start weapon, shop pool, setting off",
+      "command": "node qa/feed.cjs",
+      "mode": "counts",
+      "passed": 7,
+      "failed": 0
+    },
     "tricks": {
       "what": "the four tricks, ladders on and off",
       "command": "node qa/tricks.cjs",

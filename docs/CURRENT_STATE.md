@@ -1,6 +1,6 @@
 # Current state: 2026-11-15
 
-**Working here:** nobody. (Put your tool, session and date here when you start; clear it when you stop. One agent per worktree.)
+**Working here:** Claude Code, 2026-11-15 (feed and frenzy step 0). (Put your tool, session and date here when you start; clear it when you stop. One agent per worktree.)
 
 **This is the game.** `~/Projects/icarus-brotato`, branch `prototype/brotato-port-2026-11`. `~/Projects/icarus` (Rush/Kite) and `~/Projects/icarus-slots` are archive. Everything is committed. The GitHub repo is public and this branch has not been pushed: ask before pushing.
 

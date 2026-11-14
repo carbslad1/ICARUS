@@ -27,7 +27,7 @@ function arena(r, n = 3) {
 const hitRec = (base = 10, x = {}) => ({ d: null, l: 1, g: null, base, mul: 1, cc: 0, cx: 2, kb: 0, fx: [], ls: 0, ctx: { primary: true, weapon: START }, ...x });
 const fly = (r, secs) => { for (let i = 0; i < secs * 120; i++) D.shots(r, 1 / 120, true); };
 
-test('the catalogue replaced the old weapons and gear', () => { for (const old of ['harpoon', 'laser', 'flak']) assert(!W[old], old); assert(ids.length >= 48); assert(Object.keys(D.ITEMS).length >= 105); for (const k of ids) assert(W[k].armory && W[k].classes.length >= 1, k); return `${ids.length} weapons, ${Object.keys(D.ITEMS).length} items`; });
+test('the catalogue replaced the old weapons and gear', () => { for (const old of ['harpoon', 'laser', 'flak']) assert(!W[old] || (old === 'harpoon' && D.tune.feed && W.harpoon.armory), old); /* feed baseline: the Harpoon returns in the armoury's format */ assert(ids.length >= 48); assert(Object.keys(D.ITEMS).length >= 105); for (const k of ids) assert(W[k].armory && W[k].classes.length >= 1, k); return `${ids.length} weapons, ${Object.keys(D.ITEMS).length} items`; });
 test('a run starts with 30 pearls and a starter weapon', () => { const r = H.Hd(1); assert.equal(r.xp, 30); assert.equal(r.slots.length, 1); assert(W[r.slots[0].id].starter); });
 test('price formula at waves 1, 10, 20', () => { for (const [w, base, want] of [[1, 10, 12], [10, 10, 30], [20, 10, 50], [1, 50, 56], [10, 50, 110], [20, 50, 170]]) { const r = shopRun(1); r.wave = w; assert.equal(D.price(r, base), want); } });
 test('Item price stat changes prices', () => { const r = shopRun(1); r.wave = 10; r.demo.stats['Item price'] = -.1; assert.equal(D.price(r, 10), 27); });
