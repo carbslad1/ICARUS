@@ -4892,7 +4892,12 @@ touchKill=function(r,p){r.kills++;r.waveKills++;r.flightKills++;r.events.push({k
 
 Oqpost=function(){};Ovn=function(){};Olp.on=0;Oxe.quota=1;Oq.on=1;Oq.kv=1;Oxe.pv=0;Otk.on=1;Owp.try=0;Ocv.on=1;Orw.on=1;Orw.both=1;ai=-15;li.gravity=-15;
 for(const [id,d] of Object.entries(DEMO.weapons)){if(d.armory){const pool=d.kind==='melee'?['fin','sonic','orbit','arc','bubble']:['blaster','minigun','scatter','laser','rocket','flak','torpedo','harpoon','depth','tail','nova'],h=[...id].reduce((a,c)=>(a*31+c.charCodeAt(0))>>>0,7),base=pool[h%pool.length];OwArt[id]=OwArt[id]||OwArt[base];Owc[id]={...Owc[base],name:d.name,v:d.v,color:'#'+(h&0x7f7f7f|0x808080).toString(16).padStart(6,'0'),tags:[]}}Object.assign(Owc[id],{pref:'nearest',media:'air',start:d.armory?!!d.starter:['sonic','harpoon','rocket'].includes(id),min:d.min||1,trig:null,leap:0,blurb:d.description||'',dmg:d.damage,cd:d.cd,crit:d.crit,critx:d.cx,rng:(Array.isArray(d.range)?d.range.find(x=>x!=null):d.range)*OwB.ppm})}
-OwK=Object.keys(DEMO.weapons);En=DEMO.weapons.harpoon?'harpoon':OwK.find(k=>DEMO.weapons[k].starter);Owp.dmg=Owp.cd=Owp.rng=Owp.kb=Owp.ex=1;
+OwK=Object.keys(DEMO.weapons);
+/* 15 Nov: the engine builds its weapon colour table (Q) from OwK before this script runs, so the armoury's weapons were
+   missing from it and the first shot of a ported ranged weapon crashed the draw (the game froze, Esc still worked).
+   Rebuild it from the current catalogue, keeping the old entries. */
+Q={...Q,...Object.fromEntries(OwK.map(k=>[k,{name:Owc[k].name,color:Owc[k].color,glyph:Owc[k].glyph,description:Owc[k].blurb,evolution:""}]))};
+En=DEMO.weapons.harpoon?'harpoon':OwK.find(k=>DEMO.weapons[k].starter);Owp.dmg=Owp.cd=Owp.rng=Owp.kb=Owp.ex=1;
 /* 20 Oct (user): the movement settings copied from the v3 carve's panel are the demo's defaults (RESET returns to them),
    except launch speed: 30 m/s at wave 1, +5 a wave (the user's correction; the copy had 28 and +0.5).
    Three keep the demo's own value because the demo replaces what they drive: leap.on 0 (no leap weapons), econ.pv 0

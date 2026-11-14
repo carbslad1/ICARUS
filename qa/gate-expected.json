@@ -1,12 +1,12 @@
 {
   "note": "Results the gate is compared with. Failures listed here were accepted by the designer as the baseline (2026-11-12). Re-pin with node qa/gate.cjs --full --record, only for a change the plan calls for.",
-  "pinned": "2026-11-11",
+  "pinned": "2026-11-15 (port re-pinned for its new colour check; rule gates unchanged since 2026-11-12)",
   "suites": {
     "port": {
       "what": "armoury, stats and shop rules",
       "command": "node qa/port.cjs",
       "mode": "counts",
-      "passed": 35,
+      "passed": 36,
       "failed": 0
     },
     "tricks": {
