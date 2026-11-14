@@ -9,7 +9,7 @@ A neon dolphin game. Build speed under water, breach, and fight in the air on a 
 | Need | File |
 |---|---|
 | Where we are today | `docs/CURRENT_STATE.md` |
-| The step plan and its checkpoint log | `docs/TRICK_LADDERS_PLAN.md` |
+| The step plan and its checkpoint log | `docs/FEED_FRENZY_PLAN.md` |
 | The standing design rules | `docs/DESIGN_RULES.md` |
 | What the designer decided, newest first | `docs/DECISIONS.md` |
 | Every other document and how far to trust it | `docs/INDEX.md` |

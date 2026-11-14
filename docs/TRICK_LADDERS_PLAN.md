@@ -1,5 +1,7 @@
 # ICARUS trick levels and skill trees: build guide
 
+> **PAUSED on 2026-11-15.** The designer chose feed and frenzy as the direction (`docs/FEED_FRENZY_PLAN.md`). This plan stops after step 1; what steps 0 and 1 built stays in the game. Steps 2 to 7 are parked, not cancelled (item 7 of the new plan's parked list). Its measurements remain valid evidence for the 2026-11-10 build.
+
 **Written 2026-11-10 with the designer; revised 2026-11-12.** This is the guide document for this work and the only copy (`docs/TRICK_LADDERS_PLAN.md` in `~/Projects/icarus-brotato`; it moved here from the Dolphin game folder on 2026-11-12). It lists what to build, in order, and the checks that must pass before the next step starts. Update it when a decision changes; sign off each checkpoint in the log at the bottom.
 
 **Build target:** `~/Projects/icarus-brotato`, branch `prototype/brotato-port-2026-11`. This is the build that has Brotato's weapons, stats and shop. `~/Projects/icarus-slots` has the same tricks, movement and enemies but the older slot-items shop. Confirmed by the designer at checkpoint 0 (2026-11-10).

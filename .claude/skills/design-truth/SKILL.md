@@ -13,14 +13,14 @@ camera, controls, weapons, enemy behaviour, enemy health, and Brotato's spawn sc
 Brotato's wave clock). The code in `source/` defines them, with `docs/ENEMY_RULES.md` and
 `docs/CAMERA_RULES.md`. No hit-stop, slow motion or freezes.
 
-**Chosen on 2026-11-10:** trick levels and a skill tree per trick, built step by step from `docs/TRICK_LADDERS_PLAN.md`.
-Its section 2 lists what is decided and section 3 what is still open. Outside that plan the roguelite structure, economy,
-items and overall direction stay open: offer ideas there as proposals; the designer decides.
+**Chosen on 2026-11-15:** the feed and frenzy baseline, built step by step from `docs/FEED_FRENZY_PLAN.md`. Its section 1
+is locked and frozen until its checkpoint 3 is signed; its section 4 is the parked list, where new ideas go. The earlier
+trick levels plan (`docs/TRICK_LADDERS_PLAN.md`, 2026-11-10) is paused after its step 1.
 
 ## Where the truth lives
 
 - Behaviour: the code (`source/*.js` -> `ICARUS-demo.html`).
-- Locked and open: `CLAUDE.md`. Standing rules: `docs/DESIGN_RULES.md`. The plan: `docs/TRICK_LADDERS_PLAN.md`.
+- Locked and open: `CLAUDE.md`. Standing rules: `docs/DESIGN_RULES.md`. The plan: `docs/FEED_FRENZY_PLAN.md`.
 - Status: `docs/CURRENT_STATE.md`.
 - Designer decisions: `docs/DECISIONS.md`, newest first. An entry about the open areas dated before 2026-11-08
   is history.

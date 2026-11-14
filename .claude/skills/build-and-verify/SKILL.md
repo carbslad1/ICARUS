@@ -28,14 +28,14 @@ The gate compares each suite with `qa/gate-expected.json`.
 
 1. Read the lines it prints. Find the cause before changing anything.
 2. If the change was not meant to touch that behaviour, it is a regression: fix the code.
-3. If the plan calls for the change (a new test, a trick rule that moves enemies), re-pin with `node qa/gate.cjs --full --record`, and name the reason in the commit message and in the step's results in `docs/TRICK_LADDERS_PLAN.md`.
+3. If the plan calls for the change (a new test, a trick rule that moves enemies), re-pin with `node qa/gate.cjs --full --record`, and name the reason in the commit message and in the step's results in `docs/FEED_FRENZY_PLAN.md`.
 4. A worse pinned result (more failures, a larger failing number) needs the designer's yes first. Never loosen a threshold, skip a check or delete an assertion to pass.
 
 ## Before a checkpoint commit
 
 1. `node qa/gate.cjs --full` prints `GATE PASS`.
 2. Suites may rewrite files under `reviews/`; the gate warns when they do. Do not commit that churn: `git checkout -- reviews/`, after checking no wanted measurement lives only there.
-3. Commit the rebuilt `ICARUS-demo.html` and `build.json` with the source change, then tag `ladders-cpN-auto`.
+3. Commit the rebuilt `ICARUS-demo.html` and `build.json` with the source change, then tag `feed-cpN-auto`.
 4. Do not push without asking: the GitHub repo is public.
 
 ## What the gate does not prove

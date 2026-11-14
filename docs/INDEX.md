@@ -1,6 +1,6 @@
 # ICARUS docs index
 
-**Last verified 2026-11-12** against the files in this working tree on branch `prototype/brotato-port-2026-11`.
+**Last verified 2026-11-15** against the files in this working tree on branch `prototype/brotato-port-2026-11`.
 If a date here is older than a file's own content, trust the file and update this table.
 
 Use this page to find the right document instead of reading 135 KB of design doc to answer one question.
@@ -16,7 +16,7 @@ by `CLAUDE.md` (locked and open) and the newest entry in `docs/DECISIONS.md`. No
 
 1. `CLAUDE.md` — how to work here (auto-loaded by Claude Code; `AGENTS.md` points to it).
 2. `docs/CURRENT_STATE.md` — where we are today, dated.
-3. `docs/TRICK_LADDERS_PLAN.md` — the step plan and checkpoint log.
+3. `docs/FEED_FRENZY_PLAN.md` — the step plan and checkpoint log.
 4. `docs/DESIGN_RULES.md` — the standing design rules; `docs/DECISIONS.md` — what the designer decided, newest first.
 5. `docs/INDEX.md` (this file) — for anything else.
 
@@ -32,7 +32,8 @@ was superseded.
 |---|---|---|
 | `CLAUDE.md` | The single rule file for any AI agent in this repo. | **CURRENT** — written 2026-11-12. |
 | `AGENTS.md` | A pointer to `CLAUDE.md` for tools that look for this name. | **CURRENT** — 2026-11-12. The long 2026-11-08 version is in git history. |
-| `docs/TRICK_LADDERS_PLAN.md` | The build guide for trick levels and skill trees: steps 0 to 7, the checks for each, measured results and the checkpoint log. | **CURRENT** — the only copy since 2026-11-12. |
+| `docs/FEED_FRENZY_PLAN.md` | The feed and frenzy baseline: the locked rules, what is held still, the parked list, steps 0 to 3 and the checkpoint log. | **CURRENT** — locked by the designer 2026-11-15. |
+| `docs/TRICK_LADDERS_PLAN.md` | The build guide for trick levels and skill trees, with its measured results for steps 0 and 1. | **PAUSED 2026-11-15** after step 1. Its measurements are dated evidence; its steps 2 to 7 are parked. |
 | `docs/DESIGN_RULES.md` | The designer's standing rules, numbered and dated. | **CURRENT** — collected 2026-11-12. |
 | `qa/gate.cjs`, `qa/gate-expected.json` | The one gate command and the results it is compared with, including the accepted failures. | **RULES** — pinned 2026-11-12. |
 | `docs/INDEX.md` | This file: what every document is, how much to trust it, and the design-doc section map. | **CURRENT** — verified 2026-11-08; update it when a document is added or becomes stale. |

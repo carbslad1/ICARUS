@@ -7,7 +7,7 @@ ICARUS is a neon dolphin game: build speed under water, breach, and fight in the
 ## Read first, every session
 
 1. `docs/CURRENT_STATE.md`: where we are, who is working here, what is next.
-2. `docs/TRICK_LADDERS_PLAN.md`: the step-by-step plan and its checkpoint log.
+2. `docs/FEED_FRENZY_PLAN.md`: the step-by-step plan and its checkpoint log.
 3. `docs/DESIGN_RULES.md`: the standing design rules. `docs/DECISIONS.md` is the dated decision log.
 
 Trust order: the code and built game for behaviour, then these dated docs for intent, then memory last. If they disagree, fix the doc and note it. `docs/INDEX.md` says how far to trust every other document; `docs/archive/` is never the plan.
@@ -15,8 +15,9 @@ Trust order: the code and built game for behaviour, then these dated docs for in
 ## Locked and open
 
 - **Locked** unless the designer asks: movement and swim physics, camera, controls, enemy behaviour, enemy health, Brotato's spawn schedule, and the ported weapons and shop rules (`docs/BROTATO_PORT.md`).
-- **Being built:** trick levels and skill trees, by the plan. Every new behaviour sits behind `DEMO.tune.ladders`; with it off the game plays as before.
-- **Tabled:** Belly flop's economy role. **Undecided:** what happens after step 7.
+- **Being built:** the feed and frenzy baseline, by the plan. Every new behaviour sits behind `DEMO.tune.feed`; with it off the game plays as before.
+- **Frozen until the baseline is signed (plan checkpoint 3):** the rules in the plan's sections 1 and 2. A new idea goes on the plan's parked list, not into the build. If play shows a rule is wrong, stop and ask.
+- **Parked:** trick levels and skill trees (`docs/TRICK_LADDERS_PLAN.md`, paused after step 1), Belly flop's economy role, and the rest of the plan's parked list.
 
 ## Build and check
 
@@ -30,7 +31,7 @@ Trust order: the code and built game for behaviour, then these dated docs for in
 ## Steps and checkpoints
 
 - One step at a time, one change at a time, measured before and after on the same seeds.
-- A step is done when: the gate passes, measurements are in the plan, the work is committed and tagged `ladders-cpN-auto`, and, for play checkpoints (steps 1, 3, 4, 5, 6), the designer has played and said go.
+- A step is done when: the gate passes, measurements are in the plan, the work is committed and tagged `feed-cpN-auto`, and, for play checkpoints (steps 1, 2, 3), the designer has played and said go.
 - Commit and tag at every passed checkpoint without asking. **Ask before pushing: the GitHub repo is public.**
 - A step that does not depend on a pending play test may be built ahead; it cannot be signed ahead.
 - Hand over a play checkpoint as one page: what changed for the player, the one build to open, two or three questions, the evidence, what is not proven. Write his answers into the plan's log word for word.

@@ -18,6 +18,12 @@ For current state see `docs/CURRENT_STATE.md`; for which old document is stale s
 
 ---
 
+### 2026-11-15 — Feed and frenzy baseline locked; trick levels plan paused
+- **Decision:** the direction is feed and frenzy: "I have settled on a final option. a feed and frenzy mechanic. still 6 weapons." After discussion the designer fixed feed to the ascent and frenzy to the descent (frenzy kills stealing feed "will annoy players"), with tiers raising "feed, frenzy, feed, frenzy ie T1-T4" and items and characters making "unique rules around feed and frenzy" later. On 2026-11-15 he locked the baseline as written in `docs/FEED_FRENZY_PLAN.md`, section 1 ("Yes, lock it"). He also restated as stable: "tricks are tied to a weapon class. jumps increase speed by 5ms/ cap increases by 5 each wave" and "default weapon is harpoon".
+- **Why a baseline:** "we are getting stuck on iterative changes and not progressing the build of the game. I feel we should try and keep as many variables as possible stable and then build from there." Nothing in the baseline's rules changes until it has been played to wave 10 and signed.
+- **Supersedes:** the 2026-11-10 direction (trick levels and skill trees), which is paused after its step 1 and parked. It also changes "launch speed is fixed per wave" (recorded as a locked rule in `docs/GAME_MAP.md`): jumps now start at 30 m/s and gain 5 m/s each, up to the wave's speed. That per-jump rule was not in this build on 2026-11-15; it is step 1 of the new plan.
+- **Source:** the designer's messages in a Claude Code session on 2026-11-14 and 2026-11-15. Parts of the baseline were the engineer's proposals that he accepted with the lock; the plan's section 3 says which.
+
 ### 2026-11-12 — Checkpoint 1 signed; three plan questions answered; Belly flop tabled
 - **Decision:** Front flip with the shove only feels right and the shove is the right size ("yes"). XP from a flight with no trick waits for the next trick flown ("yes"). The five Mage runs are not read before Corkscrew's numbers are built ("no"). [TUNE] thresholds are confirmed "at its step". On Belly flop: "we haven't figured this out yet, we would use belly flop for interesting Econ builds but it should be tabled as a feature for now".
 - **Supersedes:** it parks, without cancelling, the 2026-11-10 decision that Belly flop's level is Harvesting (`docs/TRICK_LADDERS_PLAN.md`, section 2). How step 3 treats Belly flop meanwhile is the engineer's reading, marked [ASSUMED] in the plan.
