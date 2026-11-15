@@ -266,5 +266,5 @@ Build nothing new. Set the section 5 numbers.
 | Plan locked | 2026-11-15 | Written from the designer's answers of 2026-11-14 and 15 | "Yes, lock it" |
 | 0 Facts and a fast measure | 2026-11-15 | Built and measured; gate passes. The "Fast" check missed its 5-minute target by 38 s under load, so this step waits on the designer's word on that threshold | |
 | 1 The jump ramp | 2026-11-15 | Passed. Automated checks pass (tag `feed-cp1-auto`); designer played waves 1 to 6 | "Does each wave feel like it builds?": "Yes, it builds". The second question (is the slow first jump of a late wave a problem?) was not answered separately |
-| 2 Feed and frenzy | 2026-11-15 | Built; automated checks pass (tag `feed-cp2-auto`). Waiting on the designer's play test | |
+| 2 Feed and frenzy | 2026-11-15 | Passed. Automated checks pass (tag `feed-cp2-auto`); designer played | "Can you see the build and the release?": "Yes, it reads". Whether the release feels like a payoff was not answered separately |
 | 3 The numbers (baseline signed) | | | |
