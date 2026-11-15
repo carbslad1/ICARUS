@@ -1,6 +1,6 @@
 # Current state: 2026-11-15
 
-**Working here:** nobody. (Put your tool, session and date here when you start; clear it when you stop. One agent per worktree.)
+**Working here:** Claude Code, 2026-11-15 (feed and frenzy step 2). (Put your tool, session and date here when you start; clear it when you stop. One agent per worktree.)
 
 **This is the game.** `~/Projects/icarus-brotato`, branch `prototype/brotato-port-2026-11`. `~/Projects/icarus` (Rush/Kite) and `~/Projects/icarus-slots` are archive. Everything is committed. The GitHub repo is public and this branch has not been pushed: ask before pushing.
 
@@ -14,7 +14,7 @@
 |---|---|
 | Plan locked | 2026-11-15 |
 | 0 Facts and a fast measure | **Built and measured 2026-11-15.** Waiting on the designer: the measurement took 5.6 minutes against a 5-minute target |
-| 1 The jump ramp | **Built 2026-11-15; waiting on the designer's play test** (waves 1 to 6) |
+| 1 The jump ramp | Signed 2026-11-15: "Yes, it builds" |
 | 2 Feed and frenzy | **Next.** May be built while step 1 is played; signed only after it |
 | 3 The numbers (signs the baseline) | Not started. Play checkpoint |
 
