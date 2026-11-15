@@ -246,6 +246,44 @@ Build nothing new. Set the section 5 numbers.
 
 **Designer plays** one run to wave 10: does power build against the pressure of each wave? Was there a wave where it felt hopeless or a wave where it felt already won?
 
+#### Step 3 measurements (2026-11-15)
+
+All with `node qa/floor.cjs` (cannot-die bot, one whole wave, 4 seeds per cell; raw in `qa/feed/step3/`). Two builds: **mixed** = one each of Trident, Tuna Gaff, Spitter, Pressure Cannon, Squid Launcher, Riptide Carbine; **Harpoon** = six Harpoons. All six weapons at the wave's tier (T1 at wave 5 up to T4 at wave 20 [ASSUMED]). **Floor** holds the falling multiplier at 1, **ceiling** holds it at the cap, **actual** is the game as built. "Mult" is the multiplier each flight reached, median against the cap.
+
+| Build | Wave | Floor: killed / crowd | Actual: killed / crowd | Ceiling: killed / crowd | Actual mult: median of cap |
+|---|---|---|---|---|---|
+| Mixed | 5 | 88% / 12 | 88% / 10 | 91% / 8 | 1.84 of 2.5 |
+| | 10 | 69% / 50 | 86% / 33 | 84% / 31 | **2.5 of 2.5** |
+| | 15 | 76% / 64 | 91% / 36 | 91% / 33 | 4.1 of 5.5 |
+| | 20 | 96% / 14 | 99% / 7 | 98% / 6 | 3.9 of 5.5 |
+| Harpoon | 5 to 20 | 95 to 99% | 97 to 101% | 97 to 100% | at or near the cap |
+
+**What it says:**
+- **Frenzy does real work where the game is hardest.** At waves 10 and 15 it lifts the mixed build from 69% to 86% and from 76% to 91% of arrivals killed, and roughly halves the crowd on screen (50 to 33, 64 to 36).
+- **Feed is too generous.** The actual game sits on the ceiling: at wave 10 the median flight reaches the cap. The plan's check "the median is neither stuck at 1 nor stuck at the cap" fails at wave 10.
+- **The Harpoon build gains nothing,** because its floor is already 95 to 99%.
+- **Waves 5 and 20 are easy even at the floor** (88 to 99%). Wave 20 at tier 4 may not reflect a real run.
+- **Flight style barely matters:** kills per air second at wave 10 are 4.9 (low), 5.1 (mid) and 5.1 (high), well inside the plan's "no style more than twice another". Skims were not measured; the bot has no skim style in this harness.
+- **Close-only builds were not measured here;** at step 0 they had the lowest floor.
+
+**Feed at half and a quarter** (`feedScale` 0.5 and 0.25, everything else the same; mixed build):
+
+| Wave | Floor | Feed ×1 (built) | Feed ×0.5 | Feed ×0.25 | Ceiling |
+|---|---|---|---|---|---|
+| 5 | 88% | 88%, mult 1.84 | 90%, mult 1.36 | 87%, mult 1.21 | 91% |
+| 10 | 69% | 86%, mult 2.5 (cap) | 82%, mult 2.08 | 80%, mult 1.60 | 84% |
+| 15 | 76% | 91%, mult 4.1 | 87%, mult 2.68 | 86%, mult 1.78 | 91% |
+| 20 | 96% | 99%, mult 3.9 | 98%, mult 2.44 | 99%, mult 1.72 | 98% |
+
+At half Feed the multiplier is earned rather than automatic (median well below the cap from wave 15, a little below at wave 10), and the build still kills most of what arrives.
+
+**Proposed for the designer to confirm (nothing below is changed in the game yet):**
+1. Feed per tier halves to 1%, 2%, 2%, 3% per kill. Frenzy stays +0.25, +0.25, +0.75, +0.75.
+2. Thresholds [TUNE]: at waves 10 and 15, the floor kills 60 to 80% of arrivals and the actual game 80 to 95%; the median multiplier sits between 30% and 80% of the way from 1 to the cap; no flight style kills more than 1.5 times as fast per air second as another.
+3. The Harpoon: as built, six Harpoons win every wave without feed or frenzy (30 m reach against the others' 6 to 16 m, and a second-enemy pierce). Options: bring its reach down to the pool's ranged weapons (16 m), or keep it as a strong start that the shop rarely sells.
+
+**Speed:** with the machine quiet, a 32-run batch took about 25 seconds, so a one-build on/off comparison now takes about a minute. The step 0 "Fast" check passes on a quiet machine.
+
 **When this is signed, the baseline is frozen as the reference.** Parked ideas are then tried one at a time against it.
 
 ## 9. Known risks

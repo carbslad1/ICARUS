@@ -14,28 +14,33 @@
 const path = require('path'), os = require('os'), fs = require('fs'), { fork } = require('child_process');
 const arg = (k, d) => { const a = process.argv.find(x => x.startsWith('--' + k + '=')); return a ? a.slice(k.length + 3) : d; };
 const has = k => process.argv.includes('--' + k);
-const POOL = ['harpoon', 'trident', 'tuna_gaff', 'spitter', 'pressure_cannon', 'squid_launcher', 'riptide_carbine'];
+const POOL = ['mixed', 'harpoon', 'trident', 'tuna_gaff', 'spitter', 'pressure_cannon', 'squid_launcher', 'riptide_carbine'];
 const TIER = { 5: 1, 10: 2, 15: 3, 20: 4 };   // the tier a build plausibly holds by then [ASSUMED]; Brotato winners reach 3 to 4
 
 function cell({ weapon, wave, seed, style, tune }) {
   const { load } = require('./load.cjs'), { flyer } = require('./bot.cjs');
   const G = load(path.join(__dirname, '..', 'ICARUS-demo.html'), new Map([['icarus.scoreshow.tune', JSON.stringify(tune)]]), { bake: true, modern: true }), D = G.DEMO;
   const r = G.Hd(seed); r.wave = wave; D.wave(r);
-  const lvl = Math.max(D.weapons[weapon].min || 1, TIER[wave] || 1);
-  r.slots = Array.from({ length: 6 }, (_, i) => G.Owslot(weapon, lvl, 500 + i)); r.slots.forEach(g => { g.cd = 0; }); D.sync(r);
+  const lvl = TIER[wave] || 1;
+  const MIXED = ['trident', 'tuna_gaff', 'spitter', 'pressure_cannon', 'squid_launcher', 'riptide_carbine'];
+  r.slots = Array.from({ length: 6 }, (_, i) => { const id = weapon === 'mixed' ? MIXED[i] : weapon; return G.Owslot(id, Math.max(D.weapons[id].min || 1, TIER[wave] || 1), 500 + i); });
+  r.slots.forEach(g => { g.cd = 0; }); D.sync(r);
   const fly = flyer(G, style, seed, { keep: 8 }), seen = new Set(), t0 = Date.now();
+  const mults = []; let prevKind = r.medium.kind, lastHand = null;
   let hits = 0, hpLost = 0, steps = 0, crowdSum = 0, crowdN = 0, peak = 0, airSteps = 0, sent = 0, landed = 0;
   while (r.mode === 'playing' && steps < 120 * 600) {
     r.hp = 1e9;
     const it = fly(r); if (r.medium.kind === 'air' && r.budget <= 0) it.y = -1;
+    if (r.medium.kind === 'air') lastHand = r.hand;
     G.sw(r, it); steps++; if (r.hp < 1e9) { hits++; hpLost += 1e9 - r.hp; }
+    if (prevKind === 'air' && r.medium.kind !== 'air' && lastHand && D.feedTotals) mults.push(Math.min(lastHand.fm || 1, D.feedTotals(r).cap)); prevKind = r.medium.kind;
     for (const e of r.enemies) if (!seen.has(e.id)) { seen.add(e.id); sent += e.maxHp; }
     for (const ev of r.events || []) if (ev.kind === 'damage') landed += ev.applied ?? ev.value;
     if (r.medium.kind === 'air') { airSteps++; crowdSum += r.enemies.length; crowdN++; if (r.enemies.length > peak) peak = r.enemies.length; }
   }
   const kills = r.waveKills ?? r.wkill ?? 0;
   return { weapon, wave, seed, style, tune, tier: lvl, ended: r.mode, arrivals: seen.size, kills, share: seen.size ? kills / seen.size : 0,
-    crowd: crowdN ? crowdSum / crowdN : 0, peak, hits, hpLost, air: airSteps / 120, landedShare: sent ? landed / sent : 0, secs: (Date.now() - t0) / 1000 };
+    crowd: crowdN ? crowdSum / crowdN : 0, peak, hits, hpLost, mults, cap: D.feedTotals ? D.feedTotals(r).cap : 1, air: airSteps / 120, landedShare: sent ? landed / sent : 0, secs: (Date.now() - t0) / 1000 };
 }
 
 if (process.argv[2] === '--worker') {
@@ -61,10 +66,10 @@ function table(rows) {
   const by = {}; for (const r of rows) (by[r.weapon + '|' + r.wave] ||= []).push(r);
   const keys = Object.keys(by).sort((a, b) => { const [wa, va] = a.split('|'), [wb, vb] = b.split('|'); return POOL.indexOf(wa) - POOL.indexOf(wb) || va - vb; });
   const mean = (a, f) => a.reduce((s, x) => s + f(x), 0) / a.length, sd = (a, f) => { const m = mean(a, f); return Math.sqrt(mean(a, x => (f(x) - m) ** 2)); };
-  console.log('weapon            wave tier seeds  arrivals  killed (± sd)   crowd  peak  hits  landed/sent  air s');
+  console.log('weapon            wave tier seeds  arrivals  killed (± sd)   crowd  peak  hits  landed/sent  air s  mult med/p90/cap');
   for (const k of keys) {
     const a = by[k], x = a[0];
-    console.log(`${x.weapon.padEnd(17)} ${String(x.wave).padStart(4)} ${String(x.tier).padStart(4)} ${String(a.length).padStart(5)} ${mean(a, y => y.arrivals).toFixed(0).padStart(9)}  ${pct(mean(a, y => y.share)).padStart(6)} (± ${pct(sd(a, y => y.share)).padStart(3)})  ${mean(a, y => y.crowd).toFixed(1).padStart(6)} ${mean(a, y => y.peak).toFixed(0).padStart(5)} ${mean(a, y => y.hits ?? 0).toFixed(0).padStart(5)}  ${pct(mean(a, y => y.landedShare)).padStart(11)} ${mean(a, y => y.air).toFixed(0).padStart(6)}`);
+    console.log(`${x.weapon.padEnd(17)} ${String(x.wave).padStart(4)} ${String(x.tier).padStart(4)} ${String(a.length).padStart(5)} ${mean(a, y => y.arrivals).toFixed(0).padStart(9)}  ${pct(mean(a, y => y.share)).padStart(6)} (± ${pct(sd(a, y => y.share)).padStart(3)})  ${mean(a, y => y.crowd).toFixed(1).padStart(6)} ${mean(a, y => y.peak).toFixed(0).padStart(5)} ${mean(a, y => y.hits ?? 0).toFixed(0).padStart(5)}  ${pct(mean(a, y => y.landedShare)).padStart(11)} ${mean(a, y => y.air).toFixed(0).padStart(6)}  ${(() => { const m = a.flatMap(y => y.mults || []).sort((p, q) => p - q); if (!m.length) return '-'; const q = f => m[Math.min(m.length - 1, Math.floor(f * m.length))]; return q(.5).toFixed(2) + '/' + q(.9).toFixed(2) + '/' + (x.cap || 1).toFixed(2); })()}`);
   }
 }
 

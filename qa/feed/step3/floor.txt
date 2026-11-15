@@ -1,0 +1,10 @@
+weapon            wave tier seeds  arrivals  killed (± sd)   crowd  peak  hits  landed/sent  air s  mult med/p90/cap
+mixed                5    1     4       143     88% (±  3%)    11.7    25    66          89%     42  1.96/2.50/2.50
+mixed               10    2     4       350     69% (±  1%)    50.3   100   156          74%     64  2.50/2.50/2.50
+mixed               15    3     4       419     76% (±  1%)    63.5   100   199          81%     64  4.60/5.50/5.50
+mixed               20    4     4       275     96% (±  1%)    14.2    47   157          95%     95  4.60/5.50/5.50
+harpoon              5    1     4       142     95% (±  1%)     4.2    14    62          95%     43  2.08/2.50/2.50
+harpoon             10    2     4       403     95% (±  2%)    12.5    33   185          95%     66  2.50/2.50/2.50
+harpoon             15    3     4       506     97% (±  1%)    14.1    31   213          97%     66  5.50/5.50/5.50
+harpoon             20    4     4       283     99% (±  1%)     3.8    23   157          99%     96  5.32/5.50/5.50
+32 runs in 23 s wall (89 s of game simulation work, 4 workers). Style mid-keep, tune {"feed":1,"feedHold":1}.

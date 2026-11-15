@@ -4407,11 +4407,13 @@ var DEMO = (() => {
   // little of each, tier 2 Feed, tier 3 Frenzy, tier 4 Feed. First numbers [TUNE], set in step 3:
   //   Feed: what each kill while rising adds to the multiplier.  Frenzy: how far above 1 the multiplier may go.
   const FEED_BY_TIER=[.02,.04,.04,.06],FRENZY_BY_TIER=[.25,.25,.75,.75];
-  const feedOf=l=>FEED_BY_TIER[Math.max(1,Math.min(4,l))-1],frenzyOf=l=>FRENZY_BY_TIER[Math.max(1,Math.min(4,l))-1];
+  const feedOf=l=>FEED_BY_TIER[Math.max(1,Math.min(4,l))-1]*(tune.feedScale??1),  /* feedScale: a tuning knob for step 3 */
+    frenzyOf=l=>FRENZY_BY_TIER[Math.max(1,Math.min(4,l))-1];
   function feedTotals(r){let feed=0,frenzy=0;for(const g of r.slots||[]){feed+=feedOf(g.lvl);frenzy+=frenzyOf(g.lvl)}return{feed,cap:1+frenzy}}
   // The multiplier lives on this flight's hand (a new hand at every breach, so it starts at 1 and is gone at the landing).
   const rising=r=>r.medium?.kind==='air'&&r.hand&&!r.hand.apex,falling=r=>r.medium?.kind==='air'&&!!r.hand?.apex;
-  function frenzyNow(r){if(!tune.feed||!falling(r))return 1;const h=r.hand;return Math.min(h.fm||1,feedTotals(r).cap)}
+  // tune.feedHold is for measuring only (qa/floor.cjs): hold the falling multiplier at a fixed value (1 = the floor; a big number = the cap)
+  function frenzyNow(r){if(!tune.feed||!falling(r))return 1;const h=r.hand;return Math.min(tune.feedHold!=null?tune.feedHold:(h.fm||1),feedTotals(r).cap)}
   // Five independent trick identities. Their identity never gates movement or weapon damage.
   const cards=Object.fromEntries(FiveScore.faces.map(id=>[id,{name:FiveScore.names[id],family:['front','back'].includes(id)?'Flip':id==='cork'?'Corkscrew':id==='star'?'Pose':'Spout',mult:1,time:1}]));
   const charms=FiveScore.charms;
