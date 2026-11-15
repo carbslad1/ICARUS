@@ -381,6 +381,20 @@ Both remaining builds miss by a few points. The close-only miss is reach, which 
 - **Hits are rare but heavy:** at wave 7 each hit took 46 HP, so three hits ended the run from 170 max HP.
 - **Pearls were short:** about 120 spent by wave 6, a wave or so behind the bot's 123 by wave 5, with level-ups taking part of it.
 
+**Measured against Brotato (2026-11-16).** Sources: Brotato = medians of 24 winning Run Tracker runs (`~/Projects/Dolphin game/brotato-reference/map/tracker-runs-2026-11-10.md`, section 1). Designer = this flight log (kills per wave from its flights; pearls from its shop entries, which record pearls held after each shop action, `source/flightlog.js`). Bot = `qa/bot.cjs` on the current build, seed 81855343, cannot die, buys every weapon it can afford; same results with low, mid and high arcs and with orb-chasing switched off.
+
+| Wave | Kills: Brotato / designer / bot | Gold or pearls earned: Brotato / designer / bot |
+|---|---|---|
+| 1 | 27 / 23 / 21 | 28 / not measurable (see below) / 10 to 18 |
+| 2 | 41 / 34 / 39 | 46 / 6 / 28 to 36 |
+| 3 | 70 / 51 / 68 | 70 / 4 / 62 to 83 |
+| 4 | 84 / 49 / 86 | 99 / 6 / 83 to 102 |
+| 5 | 137 / 70 / 144 | 130 / 18 / 134 to 156 |
+
+**What is measured:** the bot's kills and pearls track Brotato's within about 10% from wave 2. The designer's kills were 58 to 85% of Brotato's, but his pearls were 5 to 14% of Brotato's at waves 2 to 5. With 51 kills at wave 3 he earned 4 pearls; the bot earns about one pearl for every one or two kills.
+
+**Not explained yet:** why the designer's pearls were so low, and why he left the first shop with 8 pearls having started with 30 and bought nothing (the bot cannot reproduce a drop: its pearls never go down during a wave). The log could not say where pearls went. From 2026-11-16 the flight log records, per wave, pearls earned, pearls held and the bag, plus the settings the run was played with, so the next run's log can answer it.
+
 **Not yet decided:** the designer chooses what to change. The rules in sections 1 and 2 stay frozen until then.
 
 **When this is signed, the baseline is frozen as the reference.** Parked ideas are then tried one at a time against it.

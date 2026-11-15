@@ -8,13 +8,17 @@ var FlightLog = (() => {
   // 15), and not in Trick Lab runs. Samples without them are skipped by qa/flightlog-metrics.cjs.
   const EN_EVERY = 2, MAX_ROWS = 200000;
   const r1 = v => Math.round(v * 10) / 10, deg = a => r1(a * 180 / Math.PI);
-  let log = null, run = null, flight = null, dive = [], tick = 0, samples = 0, rows = 0, airN = 0, prev = null;
+  let pearls = null, log = null, run = null, flight = null, dive = [], tick = 0, samples = 0, rows = 0, airN = 0, prev = null;
   function reset(r) {
     run = r; flight = null; dive = []; tick = 0; samples = 0; rows = 0; airN = 0;
     prev = { kind: r.medium.kind, kills: r.kills, hp: r.hp, hits: 0, wave: r.wave, history: 0 };
     log = { format: 'icarus-flightlog', version: VERSION, build: globalThis.icarusDemo?.version || 'demo', exported: null,
       starter: r.starter ?? null, seed: r.seed ?? null, units: 'metres, seconds, degrees. x,y: dolphin world position; o: arena origin; l: dolphin arena-local position; en: [kind, local x, local y, hp]; pu: pursuers [world x, world y, wet]; in: [x, y, boost, w, turn]; kills and hits record the dolphin position; view: the visible half-width in metres',
-      waves: [], flights: [], shop: [], end: null };
+      waves: [], flights: [], shop: [], end: null,
+      // 16 Nov: the settings this run was played with, so a log can be reproduced exactly
+      settings: (() => { const g = k => { try { return JSON.parse(localStorage.getItem(k) || 'null') } catch (e) { return null } }; return { tune: { ...DEMO.tune }, saved: g('icarus.scoreshow.settings.v2') } })(),
+      startPearls: r.xp };
+    pearls = { earned: r.earned || 0, bag: r.bag || 0 };
   }
   function input(i) { return i ? [r1(i.x || 0), r1(i.y || 0), i.boost ? 1 : 0, i.w ? 1 : 0, r1(i.turn || 0)] : null }
   function sample(r, i) {
@@ -67,7 +71,10 @@ var FlightLog = (() => {
   function waveEnd(r) {
     if (!log || r !== run) return;
     closeFlight(r);
-    log.waves.push({ wave: r.wave, score: r.wscore, quota: r.quota, hp: Math.round(r.hp), maxHp: Math.round(r.stats.maxHp), kills: r.kills, slots: r.slots.map(g => g.id + g.lvl) });
+    const earned = (r.earned || 0) - (pearls?.earned || 0);
+    log.waves.push({ wave: r.wave, score: r.wscore, quota: r.quota, hp: Math.round(r.hp), maxHp: Math.round(r.stats.maxHp), kills: r.kills, waveKills: r.waveKills, slots: r.slots.map(g => g.id + g.lvl),
+      pearlsEarned: earned, pearlsHeld: r.xp, bag: r.bag || 0 });   // 16 Nov: pearl income per wave
+    pearls = { earned: r.earned || 0, bag: r.bag || 0 };
   }
   function command(r, a, i, ok) {
     if (!log || r !== run) return;
