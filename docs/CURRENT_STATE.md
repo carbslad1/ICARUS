@@ -16,7 +16,7 @@
 | 0 Facts and a fast measure | **Built and measured 2026-11-15.** Waiting on the designer: the measurement took 5.6 minutes against a 5-minute target |
 | 1 The jump ramp | Signed 2026-11-15: "Yes, it builds" |
 | 2 Feed and frenzy | Signed 2026-11-15: "Yes, it reads" |
-| 3 The numbers (signs the baseline) | **Numbers set 2026-11-16; small misses accepted. Waiting on the designer's play test to wave 10** |
+| 3 The numbers (signs the baseline) | **Play test 2026-11-16: "too opressive for a baseline"** (died on wave 7 with 2 to 5 guns). Waiting on the designer's choice of fix |
 
 Built so far (behind the `feed` setting, on by default): the old Harpoon as the only start weapon, a shop that sells only the seven baseline weapons, and the jump ramp (each wave starts at 30 m/s and each jump adds 5, up to the wave's speed). Feed and frenzy itself (step 2): kills while rising build a multiplier, falling multiplies every gun's fire rate up to a cap, shown as cyan rings, a pink burst at the peak and pink pulses. Step 0's floor is in the plan: six Harpoons already kill 94 to 99% of every wave, far above the other six weapons.
 

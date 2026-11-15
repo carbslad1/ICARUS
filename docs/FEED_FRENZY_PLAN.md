@@ -361,6 +361,28 @@ Both remaining builds miss by a few points. The close-only miss is reach, which 
 
 **Exceptions accepted** (designer, 2026-11-16: "Accept, play test"): the Harpoon's wave 10 multiplier (84% of the way to its cap, mark 80%) and the close-only build's two misses (wave 10 as played 72%, mark 80%; wave 15 multiplier 29%, mark 30%). The marks themselves are unchanged. Automated part of step 3 tagged `feed-cp3-auto`; the step is signed after the designer's play test.
 
+#### Play test to wave 10 (designer, 2026-11-16)
+
+**Result: not signed.** The designer: "it was too opressive for a baseline". Died on wave 7 (flight log `icarus-flightlog-wave7.json`, seed 81855343).
+
+| Wave | Weapons held | Kills | Crowd in the air: mean / peak | Hits | Lowest HP |
+|---|---|---|---|---|---|
+| 1 | Harpoon | 23 | 6 / 12 | 0 | 100 |
+| 2 | Harpoon | 34 | 9 / 23 | 0 | 100 |
+| 3 | + Riptide Carbine | 51 | 15 / 28 | 0 | 110 |
+| 4 | 2 weapons | 49 | 28 / 55 | 1 | 110 |
+| 5 | 2 weapons | 70 | 40 / 99 | 2 | 42 |
+| 6 | + Harpoon | 106 | 42 / 91 | 2 | 28 |
+| 7 | 5 weapons, all tier 1 | 144 | 35 / 70 | 3 (46 HP each) | dead |
+
+**What the log shows:**
+- **The run had a third of the guns the measurements assumed.** Step 3 measured six weapons from wave 5; this run had two until wave 6. With two guns at wave 5 the crowd averaged 40 and peaked at 99, against 10 and 24 for the six-gun build.
+- **Feed and frenzy cannot rescue a small build.** With one or two weapons the cap is ×1.25 to ×1.5, so frenzy adds little exactly when the player is behind.
+- **Hits are rare but heavy:** at wave 7 each hit took 46 HP, so three hits ended the run from 170 max HP.
+- **Pearls were short:** about 120 spent by wave 6, a wave or so behind the bot's 123 by wave 5, with level-ups taking part of it.
+
+**Not yet decided:** the designer chooses what to change. The rules in sections 1 and 2 stay frozen until then.
+
 **When this is signed, the baseline is frozen as the reference.** Parked ideas are then tried one at a time against it.
 
 ## 9. Known risks
@@ -382,4 +404,4 @@ Both remaining builds miss by a few points. The close-only miss is reach, which 
 | 0 Facts and a fast measure | 2026-11-15 | Built and measured; gate passes. The "Fast" check missed its 5-minute target by 38 s under load, so this step waits on the designer's word on that threshold | |
 | 1 The jump ramp | 2026-11-15 | Passed. Automated checks pass (tag `feed-cp1-auto`); designer played waves 1 to 6 | "Does each wave feel like it builds?": "Yes, it builds". The second question (is the slow first jump of a late wave a problem?) was not answered separately |
 | 2 Feed and frenzy | 2026-11-15 | Passed. Automated checks pass (tag `feed-cp2-auto`); designer played | "Can you see the build and the release?": "Yes, it reads". Whether the release feels like a payoff was not answered separately |
-| 3 The numbers (baseline signed) | 2026-11-16 | Numbers set and measured; three small misses accepted by the designer (tag `feed-cp3-auto`). Waiting on the play test to wave 10 | |
+| 3 The numbers (baseline signed) | 2026-11-16 | Not signed: play test died on wave 7 | "it was too opressive for a baseline" |
