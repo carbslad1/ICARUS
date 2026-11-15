@@ -312,6 +312,19 @@ Waves 5 and 20 (not in the thresholds): mixed 90% and 98%, close 77% and 95%, Ha
 
 **Step 3 is not signed:** two of three builds fail a threshold. The thresholds stay as confirmed; the designer decides what changes.
 
+#### Harpoon crits lowered (2026-11-15)
+
+**Decided** (designer: "Lower its crits"): the Harpoon's critical hits now match Pressure Cannon's, 10, 15, 20 and 25% at ×2 (they were 30 to 45% at ×2.25 to ×3).
+
+**Re-measured** (six Harpoons, 4 seeds; raw in `qa/feed/step3c/`):
+
+| Wave | Floor killed: before → after | Actual killed: before → after | Median mult |
+|---|---|---|---|
+| 10 | 94% → **91%** | 97% → **97%** | 2.5 of 2.5 |
+| 15 | 94% → **91%** | 96% → **97%** | 3.4 of 5.5 |
+
+**Still fails.** Six Harpoons kill 91% with no frenzy and 97% as played, above the 60 to 80% and 80 to 95% marks. Lowering crits took 3 points off the floor. What is left is its rate of fire and damage: it shoots every 0.67 s for 14 damage at tier 1, where Pressure Cannon shoots every 1.0 s for 12, so it deals about 1.75 times as much, and each shot also passes through a second enemy.
+
 **When this is signed, the baseline is frozen as the reference.** Parked ideas are then tried one at a time against it.
 
 ## 9. Known risks
