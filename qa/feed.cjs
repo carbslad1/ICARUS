@@ -17,7 +17,7 @@ test('a run starts with one tier 1 Harpoon', () => { const r = ON.Hd(1); same(r.
 test('the Harpoon keeps its own numbers, with 16 m reach', () => {
   const w = ON.DEMO.weapons.harpoon;
   same(w.damage, [14, 24, 36, 50]); same(w.cd, [60, 55, 50, 40]);  /* slowed to Pressure Cannon's in step 3 (designer, 15 Nov) */ same(w.crit, [.1, .15, .2, .25]);
-  same(w.cx, [2, 2, 2, 2]);  /* crits lowered to Pressure Cannon's in step 3 (designer, 15 Nov) */ assert.equal(w.range[0], 16);  /* 30 m until step 3 (designer, 15 Nov) */ assert.equal(w.pierce[0], 2); assert.equal(w.type, 'Shot');
+  same(w.cx, [2, 2, 2, 2]);  /* crits lowered to Pressure Cannon's in step 3 (designer, 15 Nov) */ assert.equal(w.range[0], 16);  /* 30 m until step 3 (designer, 15 Nov) */ assert.equal(w.pierce[0], 1);  /* pierce removed in step 3 (designer, 15 Nov) */ assert.equal(w.type, 'Shot');
 });
 test('the Harpoon is the only start weapon', () => { const s = Object.keys(ON.DEMO.weapons).filter(k => ON.DEMO.weapons[k].starter); same(s, ['harpoon']); });
 test('the draw has a colour for the Harpoon', () => { assert(/^#[0-9a-f]{6}$/i.test(ON.Q.harpoon.color)); });

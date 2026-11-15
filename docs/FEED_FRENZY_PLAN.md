@@ -338,6 +338,27 @@ Waves 5 and 20 (not in the thresholds): mixed 90% and 98%, close 77% and 95%, Ha
 
 **Now close, but not passing.** Frenzy does real work for the Harpoon build (it adds 12 to 13 points and nearly halves the crowd), and the misses are narrow: the floor by 2 points, wave 15 as played by 0.3 points. The wave 10 multiplier still fills to its cap (the cap there is 2.5, and six Harpoons kill enough on the way up to fill it).
 
+#### Harpoon pierce removed (2026-11-15)
+
+**Decided** (designer: "Remove its pierce"): each Harpoon shot hits one enemy, as Pressure Cannon's. It now differs from Pressure Cannon only in damage (14, 24, 36, 50 against 12, 20, 30, 50), its Luck scaling and its classes.
+
+**Re-measured** (six Harpoons, 4 seeds; raw in `qa/feed/step3e/`):
+
+| Wave | Floor killed (60 to 80%) | Actual killed (80 to 95%) | Median mult, way to cap (30 to 80%) | Crowd: floor → actual |
+|---|---|---|---|---|
+| 10 | 73.1% ✓ | 90.5% ✓ | 2.26 of 2.5, **84% ✗** | 42 → 22 |
+| 15 | 78.2% ✓ | 93.4% ✓ | 2.74 of 5.5, 39% ✓ | 56 → 27 |
+
+**Where step 3 stands** (all three builds against the confirmed marks):
+
+| Build | Misses |
+|---|---|
+| Mixed | None |
+| Harpoon | One: at wave 10 the multiplier reaches 84% of the way to its cap (mark: 80%) |
+| Close only | Two: wave 10 as played 72% (mark: 80%); wave 15 multiplier 29% of the way (mark: 30%) |
+
+Both remaining builds miss by a few points. The close-only miss is reach, which feed and frenzy numbers cannot fix (it reaches only 74% even at the cap). The designer decides whether to accept them.
+
 **When this is signed, the baseline is frozen as the reference.** Parked ideas are then tried one at a time against it.
 
 ## 9. Known risks

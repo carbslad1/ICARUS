@@ -33,15 +33,16 @@ var DEMO = (() => {
   if(tune.port){for(const k of Object.keys(weapons))delete weapons[k];for(const [k,w] of Object.entries(Armory.weapons)){const c=w.cd.find(x=>x!=null);weapons[k]={...w,cad:c<25?'Rapid':c<55?'Steady':'Heavy',coef:0}}
     // Feed and frenzy baseline (tune.feed, docs/FEED_FRENZY_PLAN.md). The start weapon is the old Harpoon (designer, 15 Nov),
     // written in the armoury's format with its own numbers: damage, cooldown, crit, crit damage, Shot ×0.9 and
-    // Luck ×0.1, through 2 enemies at 20% less each. Reach 16 m like the pool's ranged weapons (designer, 15 Nov, step 3;
+    // Luck ×0.1. Reach 16 m like the pool's ranged weapons (designer, 15 Nov, step 3;
     // it was 30 m and six Harpoons won every wave without feed or frenzy). Critical hits as Pressure Cannon's: 10 to 25% at
     // ×2 (designer, 15 Nov, step 3; they were 30 to 45% at ×2.25 to ×3). Cooldown as Pressure Cannon's, 60/55/50/40 frames
-    // (designer, 15 Nov, step 3; it was 40/36/32/28). Its extra pierce on a critical hit has no armoury rule and is left out
+    // (designer, 15 Nov, step 3; it was 40/36/32/28). No pierce: one enemy per shot, as Pressure Cannon (designer, 15 Nov,
+    // step 3; it went through a second enemy at 20% less). Its extra pierce on a critical hit has no armoury rule and is left out
     // [ASSUMED]. Its price tiers copy Pressure Cannon's [ASSUMED]. The shop sells only the baseline pool below.
     if(tune.feed){const four=v=>[v,v,v,v];weapons.harpoon={armory:1,name:'Harpoon',kind:'ranged',type:'Shot',classes:['Gunnery','Hunter'],min:1,v:[10,22,45,91],
       damage:[14,24,36,50],cd:[60,55,50,40],crit:[.1,.15,.2,.25],cx:four(2),acc:four(1),minr:four(0),range:four(16),kb:four(2),ls:four(0),
-      scale:four([['Shot',.9],['Luck',.1]]),every:four(-1),mult:four(-1),recoil:four(.1),fx:four([]),shots:four(1),pierce:four(2),pdr:four(.2),bounce:four(0),bdr:four(.5),
-      speed:four(100),spread:four(0),canBounce:four(false),rangeSpeed:four(false),starter:1,description:'Accurate long shots that pass through a second enemy.',cad:'Steady',coef:0};
+      scale:four([['Shot',.9],['Luck',.1]]),every:four(-1),mult:four(-1),recoil:four(.1),fx:four([]),shots:four(1),pierce:four(1),pdr:four(.5),bounce:four(0),bdr:four(.5),
+      speed:four(100),spread:four(0),canBounce:four(false),rangeSpeed:four(false),starter:1,description:'Accurate, hard-hitting single shots.',cad:'Steady',coef:0};
       for(const k of Object.keys(weapons))if(k!=='harpoon')delete weapons[k].starter}}
   // The weapons the shop sells while tune.feed is on: the plan's six, two per type, plus the Harpoon so it can be combined.
   const FEED_POOL=['harpoon','trident','tuna_gaff','spitter','pressure_cannon','squid_launcher','riptide_carbine'];
