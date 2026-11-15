@@ -1,0 +1,6 @@
+weapon            wave tier seeds  arrivals  killed (± sd)   crowd  peak  hits  landed/sent  air s  mult med/p90/cap
+mixed               10    2     4       400     85% (±  2%)    42.4    78   166          86%     66  2.32/2.50/2.50
+mixed               15    3     4       506     88% (±  1%)    50.1    82   200          90%     66  2.56/4.12/5.50
+close               10    2     4       377     75% (±  1%)    66.2   100   216          77%     66  1.72/2.50/2.50
+close               15    3     4       431     79% (±  2%)    71.8   100   253          81%     66  2.08/3.04/5.50
+16 runs in 153 s wall (590 s of game simulation work, 4 workers). Style high-keep, tune {"feed":1}.

@@ -14,7 +14,7 @@
 const path = require('path'), os = require('os'), fs = require('fs'), { fork } = require('child_process');
 const arg = (k, d) => { const a = process.argv.find(x => x.startsWith('--' + k + '=')); return a ? a.slice(k.length + 3) : d; };
 const has = k => process.argv.includes('--' + k);
-const POOL = ['mixed', 'harpoon', 'trident', 'tuna_gaff', 'spitter', 'pressure_cannon', 'squid_launcher', 'riptide_carbine'];
+const POOL = ['mixed', 'close', 'harpoon', 'trident', 'tuna_gaff', 'spitter', 'pressure_cannon', 'squid_launcher', 'riptide_carbine'];
 const TIER = { 5: 1, 10: 2, 15: 3, 20: 4 };   // the tier a build plausibly holds by then [ASSUMED]; Brotato winners reach 3 to 4
 
 function cell({ weapon, wave, seed, style, tune }) {
@@ -22,8 +22,8 @@ function cell({ weapon, wave, seed, style, tune }) {
   const G = load(path.join(__dirname, '..', 'ICARUS-demo.html'), new Map([['icarus.scoreshow.tune', JSON.stringify(tune)]]), { bake: true, modern: true }), D = G.DEMO;
   const r = G.Hd(seed); r.wave = wave; D.wave(r);
   const lvl = TIER[wave] || 1;
-  const MIXED = ['trident', 'tuna_gaff', 'spitter', 'pressure_cannon', 'squid_launcher', 'riptide_carbine'];
-  r.slots = Array.from({ length: 6 }, (_, i) => { const id = weapon === 'mixed' ? MIXED[i] : weapon; return G.Owslot(id, Math.max(D.weapons[id].min || 1, TIER[wave] || 1), 500 + i); });
+  const MIXED = ['trident', 'tuna_gaff', 'spitter', 'pressure_cannon', 'squid_launcher', 'riptide_carbine'], CLOSE = ['trident', 'tuna_gaff', 'trident', 'tuna_gaff', 'trident', 'tuna_gaff'];
+  r.slots = Array.from({ length: 6 }, (_, i) => { const id = weapon === 'mixed' ? MIXED[i] : weapon === 'close' ? CLOSE[i] : weapon; return G.Owslot(id, Math.max(D.weapons[id].min || 1, TIER[wave] || 1), 500 + i); });
   r.slots.forEach(g => { g.cd = 0; }); D.sync(r);
   const fly = flyer(G, style, seed, { keep: 8 }), seen = new Set(), t0 = Date.now();
   const mults = []; let prevKind = r.medium.kind, lastHand = null;

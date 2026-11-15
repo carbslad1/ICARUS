@@ -284,6 +284,34 @@ At half Feed the multiplier is earned rather than automatic (median well below t
 
 **Speed:** with the machine quiet, a 32-run batch took about 25 seconds, so a one-build on/off comparison now takes about a minute. The step 0 "Fast" check passes on a quiet machine.
 
+#### Step 3 decisions and re-measurement (2026-11-15)
+
+**Decided** (designer, 2026-11-15: "Yes, apply all three"): Feed per tier halves to 1%, 2%, 2%, 3%; the thresholds below; the Harpoon's reach drops from 30 m to 16 m. The Harpoon item offered two options; the engineer read "apply" as the reach cut [ASSUMED].
+
+**Thresholds (confirmed):** at waves 10 and 15, the floor kills 60 to 80% of arrivals and the actual game 80 to 95%; the median multiplier sits between 30% and 80% of the way from 1 to the cap; no flight style kills more than 1.5 times as fast per air second as another.
+
+**Re-measured** (raw in `qa/feed/step3b/`; 4 seeds; three builds: mixed = one each of the six non-Harpoon weapons, close = three Tridents and three Tuna Gaffs, Harpoon = six Harpoons):
+
+| Build | Wave | Floor killed | Actual killed | Ceiling killed | Median mult (way to cap) | Verdict |
+|---|---|---|---|---|---|---|
+| Mixed | 10 | 69% ✓ | 82% ✓ | 84% | 2.08 of 2.5 (72%) ✓ | **Pass** |
+| | 15 | 76% ✓ | 87% ✓ | 91% | 2.68 of 5.5 (37%) ✓ | **Pass** |
+| Close | 10 | 66% ✓ | **72% ✗** | 74% | 1.96 of 2.5 (64%) ✓ | Fails: actual below 80% |
+| | 15 | 74% ✓ | 81% ✓ | 83% | 2.32 of 5.5 (**29% ✗**) | Fails narrowly: multiplier |
+| Harpoon | 10 | **94% ✗** | **97% ✗** | 96% | 2.5 of 2.5 (**100% ✗**) | Fails: wins without frenzy |
+| | 15 | **94% ✗** | **96% ✗** | 97% | 3.64 of 5.5 (59%) ✓ | Fails: wins without frenzy |
+
+Waves 5 and 20 (not in the thresholds): mixed 90% and 98%, close 77% and 95%, Harpoon 93% and 99% as played.
+
+**Styles: pass.** Kills per air second, low against high arcs: mixed 4.7 against 5.2 at wave 10; close 3.6 against 4.3. At most 1.2 times apart.
+
+**What it says:**
+- **The mixed build meets every threshold.** Feed at half makes the multiplier earned, and frenzy lifts the hard waves by 11 to 13 points.
+- **The close-only build is a little weak at wave 10** (72% as played, 74% even at the cap). Raising frenzy cannot fix it; its guns lack reach. This is the Close weapons risk in section 9.
+- **The Harpoon is still too strong at 16 m:** six of them kill 94% with no frenzy. The reach was not the main cause. Its 30 to 45% critical chance at 2.25 to 3 times damage, its fast cooldown and its pierce were. Six Harpoons beat six of any other weapon.
+
+**Step 3 is not signed:** two of three builds fail a threshold. The thresholds stay as confirmed; the designer decides what changes.
+
 **When this is signed, the baseline is frozen as the reference.** Parked ideas are then tried one at a time against it.
 
 ## 9. Known risks

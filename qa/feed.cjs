@@ -14,10 +14,10 @@ function test(name, fn) { try { const d = fn(); passed++; console.log('PASS ' + 
 function shopRun(G, wave, seed) { const r = G.Hd(seed); r.wave = wave; G.DEMO.wave(r); r.mode = 'shop'; r.lvup = 0; r.xp = 5000; G.DEMO.shop(r); return r; }
 
 test('a run starts with one tier 1 Harpoon', () => { const r = ON.Hd(1); same(r.slots.map(g => [g.id, g.lvl]), [['harpoon', 1]]); });
-test('the Harpoon keeps its own numbers', () => {
+test('the Harpoon keeps its own numbers, with 16 m reach', () => {
   const w = ON.DEMO.weapons.harpoon;
   same(w.damage, [14, 24, 36, 50]); same(w.cd, [40, 36, 32, 28]); same(w.crit, [.3, .35, .4, .45]);
-  same(w.cx, [2.25, 2.5, 2.75, 3]); assert.equal(w.range[0], 30); assert.equal(w.pierce[0], 2); assert.equal(w.type, 'Shot');
+  same(w.cx, [2.25, 2.5, 2.75, 3]); assert.equal(w.range[0], 16);  /* 30 m until step 3 (designer, 15 Nov) */ assert.equal(w.pierce[0], 2); assert.equal(w.type, 'Shot');
 });
 test('the Harpoon is the only start weapon', () => { const s = Object.keys(ON.DEMO.weapons).filter(k => ON.DEMO.weapons[k].starter); same(s, ['harpoon']); });
 test('the draw has a colour for the Harpoon', () => { assert(/^#[0-9a-f]{6}$/i.test(ON.Q.harpoon.color)); });
@@ -62,7 +62,7 @@ function airFlight(G, guns) {
 const enemyAt = (r, x, y, hp = 1) => { const e = { id: 90000 + r.enemies.length, kind: 'chaser', pos: { x, y }, velocity: { x: 0, y: 0 }, hp, maxHp: hp, radius: .5, kv: 1, xp: 1 }; r.enemies.push(e); return e; };
 test('Feed and Frenzy totals are the sums over held weapons by tier, after buy, sell and combine', () => {
   const D = ON.DEMO, r = shopRun(ON, 4, 3); r.slots = [ON.Owslot('harpoon', 1, 1), ON.Owslot('spitter', 2, 2), ON.Owslot('trident', 3, 3), ON.Owslot('tuna_gaff', 4, 4)]; D.sync(r);
-  const want = () => ({ feed: r.slots.reduce((a, g) => a + [.02, .04, .04, .06][g.lvl - 1], 0), cap: 1 + r.slots.reduce((a, g) => a + [.25, .25, .75, .75][g.lvl - 1], 0) });
+  const want = () => ({ feed: r.slots.reduce((a, g) => a + [.01, .02, .02, .03][g.lvl - 1], 0), cap: 1 + r.slots.reduce((a, g) => a + [.25, .25, .75, .75][g.lvl - 1], 0) });
   const close = (a, b) => assert(Math.abs(a.feed - b.feed) < 1e-9 && Math.abs(a.cap - b.cap) < 1e-9, JSON.stringify(a) + ' vs ' + JSON.stringify(b));
   close(D.feedTotals(r), want());
   r.demo.offers[0] = { uid: 9101, row: 'weapon', id: 'harpoon', level: 1, price: 1 }; assert(D.command(r, 'buy', 9101)); close(D.feedTotals(r), want());
