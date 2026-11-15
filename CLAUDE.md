@@ -50,6 +50,8 @@ Trust order: the code and built game for behaviour, then these dated docs for in
 
 Plain English, no code or file paths unless he asks. Show the game, not a description. One decision question at a time, only about feel, fun, risk or direction. Say what is proven, with what, and what is not. Date every status.
 
+**No made-up explanations (designer, 2026-11-16).** Every claim about how or why the game behaves must come from the code you read or a number you measured this session, and say which. Anything else is labelled a guess, or left out. Never fill a gap with how Brotato or another game works, or with how the dolphin "probably" moves. Known traps: a wave's air time is its combat time and equals Brotato's wave length; WASD steers in the air. When the designer reports a problem, measure it before explaining it.
+
 ## End of every session
 
 Update `docs/CURRENT_STATE.md` (short, dated, true) and add any designer decision to `docs/DECISIONS.md`, newest first, in his words.
