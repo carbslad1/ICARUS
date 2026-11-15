@@ -325,6 +325,19 @@ Waves 5 and 20 (not in the thresholds): mixed 90% and 98%, close 77% and 95%, Ha
 
 **Still fails.** Six Harpoons kill 91% with no frenzy and 97% as played, above the 60 to 80% and 80 to 95% marks. Lowering crits took 3 points off the floor. What is left is its rate of fire and damage: it shoots every 0.67 s for 14 damage at tier 1, where Pressure Cannon shoots every 1.0 s for 12, so it deals about 1.75 times as much, and each shot also passes through a second enemy.
 
+#### Harpoon fire rate slowed (2026-11-15)
+
+**Decided** (designer: "Slow its fire rate"): the Harpoon's cooldown matches Pressure Cannon's, 60, 55, 50 and 40 frames by tier (it was 40, 36, 32 and 28). With the earlier changes it now differs from Pressure Cannon only in damage (14 against 12 at tier 1), reach (16 m both) and its second-enemy pierce.
+
+**Re-measured** (six Harpoons, 4 seeds; raw in `qa/feed/step3d/`):
+
+| Wave | Floor killed (60 to 80%) | Actual killed (80 to 95%) | Median mult, way to cap (30 to 80%) | Crowd: floor → actual |
+|---|---|---|---|---|
+| 10 | **82.1% ✗** | 94.6% ✓ | **2.38 of 2.5, 92% ✗** | 31 → 17 |
+| 15 | **82.4% ✗** | **95.3% ✗** | 2.86 of 5.5, 41% ✓ | 44 → 24 |
+
+**Now close, but not passing.** Frenzy does real work for the Harpoon build (it adds 12 to 13 points and nearly halves the crowd), and the misses are narrow: the floor by 2 points, wave 15 as played by 0.3 points. The wave 10 multiplier still fills to its cap (the cap there is 2.5, and six Harpoons kill enough on the way up to fill it).
+
 **When this is signed, the baseline is frozen as the reference.** Parked ideas are then tried one at a time against it.
 
 ## 9. Known risks
