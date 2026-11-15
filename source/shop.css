@@ -20,3 +20,7 @@ button.shop-slot{color:#e3eff0;font:inherit;cursor:pointer;text-align:left;touch
 .shop-board-note{font-size:10px;line-height:1.4;color:#9bb3bd;margin:6px 0 0}
 /* Last-flight breakdown: bailed tricks and busts. */
 .demo-drawn .bailed{color:#ff6b6b;text-decoration:line-through}.demo-drawn .landed{color:#f4c6dd}.demo-bust{color:#ff6b6b;font-weight:800}
+
+/* feed and frenzy totals (plan step 2) */
+.shop-feed-line{margin:8px 0 0;font:600 12px/1.4 Menlo,monospace;letter-spacing:.04em;color:#bfefff}
+.shop-feed-line b{color:#5ff0ff}.shop-feed-line b+b,.shop-feed-line b:last-of-type{color:#ff7ab8}

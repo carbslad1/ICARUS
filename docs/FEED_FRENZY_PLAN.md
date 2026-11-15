@@ -208,6 +208,28 @@ Build:
 
 **Designer plays** to wave 5: can you see the build and the release without reading anything? Does the release feel like a payoff?
 
+#### Step 2 results (2026-11-15)
+
+**Built** behind `feed` (on by default), in `source/demo.js` and `source/shop.js`:
+- Every kill while rising (before the peak) adds your Feed total to this flight's multiplier, which starts at 1 at each breach. Kills while falling add nothing.
+- While falling, every gun's cooldown runs faster by min(multiplier, cap). The cap is 1 + your Frenzy total.
+- Per weapon by tier, the plan's first numbers [TUNE]: Feed 2%, 4%, 4%, 6% per kill; Frenzy +0.25, +0.25, +0.75, +0.75.
+- On screen, no text: a cyan ring on the dolphin for each feeding kill, bigger as the multiplier grows; a pink burst at the peak sized by the multiplier; pink pulses while falling, faster and bigger with the multiplier.
+- In the shop: each weapon card adds "Feed +n% · Frenzy +n"; under your weapons, one line gives your totals ("FEED +2% per kill while rising · FRENZY up to ×1.25 fire rate while falling").
+
+| Check | Result |
+|---|---|
+| Feed | **Pass.** A kill while rising adds exactly the Feed total; a kill while falling adds nothing (`qa/feed.cjs`) |
+| Frenzy | **Pass.** Falling, a tick of every gun's cooldown is exactly the multiplier times a plain tick; rising, it is not; the cap holds |
+| Reset | **Pass.** The multiplier is 1 at every breach, over 4 breaches |
+| Totals | **Pass.** Equal to the sums by tier after a buy, a combine and a sell |
+| Setting off | **Pass.** No frenzy; the camera and enemy gates match their pins exactly (`node qa/gate.cjs --full`) |
+| Seen | **Pass.** Frames in `qa/feed/step2-frames/` (made with `qa/feed/frames.cjs`): the cyan ring while rising, the pink burst at the peak, the pink pulses while falling, and the shop |
+
+**A bot flight, for a sense of size** (wave 8, six tier 1 weapons, mid arcs): kills while rising per flight 0 to 9; multiplier reached 1.0 to 2.1 against a cap of 2.5; guns fired 5.9 shots per air second rising and 8.6 falling.
+
+**Not changed:** the old CHIPS × MULT panel at the bottom of the screen is still there. Its "MULT" is the old scoring, not this multiplier, and may confuse a play test. Removing it is outside this plan's steps; it is noted for the designer.
+
 ### Step 3: the numbers (play checkpoint; this signs the baseline)
 
 **Goal:** a floor a little behind the wave and a ceiling ahead of it.
@@ -244,5 +266,5 @@ Build nothing new. Set the section 5 numbers.
 | Plan locked | 2026-11-15 | Written from the designer's answers of 2026-11-14 and 15 | "Yes, lock it" |
 | 0 Facts and a fast measure | 2026-11-15 | Built and measured; gate passes. The "Fast" check missed its 5-minute target by 38 s under load, so this step waits on the designer's word on that threshold | |
 | 1 The jump ramp | 2026-11-15 | Passed. Automated checks pass (tag `feed-cp1-auto`); designer played waves 1 to 6 | "Does each wave feel like it builds?": "Yes, it builds". The second question (is the slow first jump of a late wave a problem?) was not answered separately |
-| 2 Feed and frenzy | | | |
+| 2 Feed and frenzy | 2026-11-15 | Built; automated checks pass (tag `feed-cp2-auto`). Waiting on the designer's play test | |
 | 3 The numbers (baseline signed) | | | |

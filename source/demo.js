@@ -42,6 +42,15 @@ var DEMO = (() => {
       for(const k of Object.keys(weapons))if(k!=='harpoon')delete weapons[k].starter}}
   // The weapons the shop sells while tune.feed is on: the plan's six, two per type, plus the Harpoon so it can be combined.
   const FEED_POOL=['harpoon','trident','tuna_gaff','spitter','pressure_cannon','squid_launcher','riptide_carbine'];
+  // Feed and frenzy (step 2, docs/FEED_FRENZY_PLAN.md section 1). Every weapon has both, raised by tier in turn: tier 1 a
+  // little of each, tier 2 Feed, tier 3 Frenzy, tier 4 Feed. First numbers [TUNE], set in step 3:
+  //   Feed: what each kill while rising adds to the multiplier.  Frenzy: how far above 1 the multiplier may go.
+  const FEED_BY_TIER=[.02,.04,.04,.06],FRENZY_BY_TIER=[.25,.25,.75,.75];
+  const feedOf=l=>FEED_BY_TIER[Math.max(1,Math.min(4,l))-1],frenzyOf=l=>FRENZY_BY_TIER[Math.max(1,Math.min(4,l))-1];
+  function feedTotals(r){let feed=0,frenzy=0;for(const g of r.slots||[]){feed+=feedOf(g.lvl);frenzy+=frenzyOf(g.lvl)}return{feed,cap:1+frenzy}}
+  // The multiplier lives on this flight's hand (a new hand at every breach, so it starts at 1 and is gone at the landing).
+  const rising=r=>r.medium?.kind==='air'&&r.hand&&!r.hand.apex,falling=r=>r.medium?.kind==='air'&&!!r.hand?.apex;
+  function frenzyNow(r){if(!tune.feed||!falling(r))return 1;const h=r.hand;return Math.min(h.fm||1,feedTotals(r).cap)}
   // Five independent trick identities. Their identity never gates movement or weapon damage.
   const cards=Object.fromEntries(FiveScore.faces.map(id=>[id,{name:FiveScore.names[id],family:['front','back'].includes(id)?'Flip':id==='cork'?'Corkscrew':id==='star'?'Pose':'Spout',mult:1,time:1}]));
   const charms=FiveScore.charms;
@@ -264,6 +273,7 @@ var DEMO = (() => {
     amount=FiveCombat.beforeDamage(r,e,amount,ctx);e.hp-=amount;ctx.amount=amount;if(tune.port&&ctx.primary){const d=r.demo,ls=(d.stats['Life steal']||0)+(ctx.ls||0);if(ls>0&&d.air-(d.lsT??-1)>=.1&&ce(r)<ls){d.lsT=d.air;r.hp=Math.min(r.stats.maxHp,r.hp+hpScale())}}ctx.killed=e.hp<=0;const applied=Math.min(ctx.beforeHP,amount);if(r.demo.waveTelemetry)r.demo.waveTelemetry[ctx.primary?'primaryApplied':'secondaryApplied']+=applied;r.events.push({kind:'damage',pos:Mr(r.medium.origin,e.pos),value:amount,applied:Math.min(ctx.beforeHP,amount),primary:ctx.primary,item:ctx.item,weapon,id:e.id,crit:!!crit});
     if(e.hp>0){e.velocity.x+=dx*kb;e.velocity.y+=dy*kb;FiveCombat.afterDamage(r,e,ctx);return}
     r.enemies=r.enemies.filter(x=>x!==e);r.kills++;r.flightKills++;r.wkill+=e.kv;r.waveKills++;
+    if(tune.feed&&rising(r)){const h=r.hand;h.fm=(h.fm||1)+feedTotals(r).feed;h.feedKills=(h.feedKills||0)+1}  // rule 2: feed
     // as v3's kill (lw): a splitter breaks into two swarmers
     if(e.kind==='splitter')for(let s=0;s<2&&r.enemies.length+(r.pursuers?.length||0)<100;s++){const o=6*Ld(r.wave);r.enemies.push({...e,id:++r.id,kind:'swarmer',xp:Osp.xp,tint:0,pos:ye(e.pos.x+(s?1.3:-1.3),e.pos.y+1.5),hp:o,maxHp:o,radius:ObR(1),age:0,velocity:{x:s?12:-12,y:8}})}
     if(e.role==='boss')r.demo.bossDefeated=true;recordKill(r,e,ctx);FiveCombat.afterDamage(r,e,ctx);
@@ -307,7 +317,8 @@ var DEMO = (() => {
   function fire(r,dt){
     const m=r.medium,air=m.kind==='air',s=r.demo.stats;
     const me=m.local,T=air&&!r.armed?[...r.enemies].sort((a,b)=>Math.hypot(a.pos.x-me.x,a.pos.y-me.y)-Math.hypot(b.pos.x-me.x,b.pos.y-me.y)):[];
-    for(const g of r.slots){const d=weapons[g.id],l=g.lvl,how=d.via||g.id;g.fx+=dt;g.cd=Math.max(0,(g.cd||0)-dt*r.stats.fireRate);
+    const fz=frenzyNow(r);  // rule 3: frenzy multiplies every gun's fire rate while falling
+    for(const g of r.slots){const d=weapons[g.id],l=g.lvl,how=d.via||g.id;g.fx+=dt;g.cd=Math.max(0,(g.cd||0)-dt*r.stats.fireRate*fz);
       // The gun ring turns each gun towards its target every tick, as in v3: the nearest enemy within range + 8 m (none: it
       // faces forward). It keeps its current target until another is clearly nearer (×0.8), so it doesn't swing between two.
       const range=Math.max(d.armory?1:0,tier(d.range,l)+s.Reach*(d.type==='Close'?.5:1)),dist=e=>Math.hypot(e.pos.x-me.x,e.pos.y-me.y),back=e=>air&&(e.pos.x-me.x)*(m.vx||1)<0,minr=d.armory?tier(d.minr,l):0,P=minr?T.filter(e=>dist(e)>=minr):d.pref==='behind'?[...T.filter(back),...T.filter(e=>!back(e))]:T,near=P.find(e=>e.hp>0&&dist(e)<=range+8+e.radius);
@@ -529,7 +540,7 @@ var DEMO = (() => {
   }
   function preview(r){return null}
 
-  return {shots,ITEMS,fxText,weaponText,aBase,aNextCd,aHit,aTick,CLASSES,classCounts,tierRoll,weaponPrice,sellValue,rerollCost,cooldown,price,PORT_SIZES,broEnemy,withContact,hpScale,tune,TUNE_DEFAULT,saveTune,charmSlots,weapons,cards,charms,stats,items,tier,fmt,phase,strongest,ledger,diagnosis,bossAlive,returnBoss,continueSchedule,statText,standard,clock,quota,expectedChips,cap,init,wave,sync,open,fireCharms,nextCard,tickCards,bank,damage,hit,spawn,fire,weaponDamage,combat,drift,finish,shop,levelChoices,command,preview,applyChoice,packChoiceValid,routineChoice,charmPool,BUST};
+  return {feedOf,frenzyOf,feedTotals,frenzyNow,shots,ITEMS,fxText,weaponText,aBase,aNextCd,aHit,aTick,CLASSES,classCounts,tierRoll,weaponPrice,sellValue,rerollCost,cooldown,price,PORT_SIZES,broEnemy,withContact,hpScale,tune,TUNE_DEFAULT,saveTune,charmSlots,weapons,cards,charms,stats,items,tier,fmt,phase,strongest,ledger,diagnosis,bossAlive,returnBoss,continueSchedule,statText,standard,clock,quota,expectedChips,cap,init,wave,sync,open,fireCharms,nextCard,tickCards,bank,damage,hit,spawn,fire,weaponDamage,combat,drift,finish,shop,levelChoices,command,preview,applyChoice,packChoiceValid,routineChoice,charmPool,BUST};
 })();
 
 /* The existing simulation entry points now use the vertical slice. */
@@ -541,7 +552,7 @@ var DemoHd=Hd;
 Hd=function(seed,starter='harpoon',record=0){return DEMO.init(DemoHd(seed,starter,record),starter)};
 Owsetup=function(r){r.world='open';r.diff='standard';return r};
 Ocvtk=function(){};Otpick=function(){return []};Ovq=function(){return false};AE=function(){};
-touchKill=function(r,p){r.kills++;r.waveKills++;r.flightKills++;r.events.push({kind:'kill',pos:se(p.x,p.y),weapon:'touch',enemy:p.kind})};
+touchKill=function(r,p){r.kills++;r.waveKills++;r.flightKills++;if(DEMO.tune.feed&&r.medium?.kind==='air'&&r.hand&&!r.hand.apex){r.hand.fm=(r.hand.fm||1)+DEMO.feedTotals(r).feed;r.hand.feedKills=(r.hand.feedKills||0)+1}r.events.push({kind:'kill',pos:se(p.x,p.y),weapon:'touch',enemy:p.kind})};
 {const pq0=Pq;Pq=function(r,dt){const bosses=(r.pursuers||[]).filter(p=>p.e?.role==='boss'&&p.e.hp>0);pq0(r,dt);if(r.demo)for(const p of bosses)DEMO.returnBoss(r,p.e,p)}}
 {const ovr0=Ovr;Ovr=function(r,e){const B=r.enemies.filter(x=>x.role==='boss'),P=(r.pursuers||[]).filter(p=>p.e?.role==='boss');ovr0(r,e);for(const b of B)r.enemies.includes(b)||r.enemies.push(b);for(const p of P)r.pursuers.includes(p)||r.pursuers.push(p)}}  // the demo's boss never despawns
 
@@ -754,6 +765,13 @@ const DemoFx={SHK:K/1920,CHARM:{'+chips':0x5ff2ff,'+mult':0xb98cff,'×mult':0xff
       this.rings.push({x:ev.pos.x,y:ev.pos.y,age:0,life:.6,radius:x?10:6,color:c});if(x||ev.rare)this.rings.push({x:ev.pos.x,y:ev.pos.y,age:0,life:.75,radius:x?16:10,color:c});
       DemoFx.label(this,DemoCharmText(ev.effect,ev.value),{x:ev.pos.x,y:ev.pos.y+2.5+(q.j||0)*1.9},c,x?22:16,.8)}
       this.cfx=now}
+    // Feed and frenzy, shown on the dolphin with no text (plan step 2): a cyan ring for each kill that feeds while rising,
+    // larger as the multiplier grows; a pink burst at the peak sized by the multiplier; pink pulses while falling in frenzy.
+    if(T.feed&&!o&&t?.medium?.kind==='air'&&t.hand){const h=t.hand,at=he(t),fm=h.fm||1,cap=DEMO.feedTotals(t).cap,lit=Math.min(fm,cap);
+      if(this.ffHand!==h){this.ffHand=h;this.ffFm=1;this.ffApex=false;this.ffPulse=0}
+      if(!h.apex&&fm>this.ffFm+1e-9){this.ffFm=fm;const R=3+3*(lit-1);this.rings.push({x:at.x,y:at.y,age:0,life:.5,radius:R,color:0x5ff0ff},{x:at.x,y:at.y,age:0,life:.5,radius:R*.8,color:0xbff8ff})}
+      if(h.apex&&!this.ffApex){this.ffApex=true;if(lit>1){for(const [d,l] of [[0,.45],[1,.55],[2.5,.7],[4,.85],[6,1]])this.rings.push({x:at.x,y:at.y,age:0,life:l,radius:4+d+6*(lit-1),color:d<2?0xffd0e6:0xff3d9a})}}
+      if(h.apex&&lit>1){this.ffPulse-=s;if(this.ffPulse<=0){this.ffPulse=.16/lit;const R=3+2.5*(lit-1);this.rings.push({x:at.x,y:at.y,age:0,life:.35,radius:R,color:0xff3d9a},{x:at.x,y:at.y,age:0,life:.35,radius:R*.75,color:0xff9ccb})}}}
     const k=this.shk;if(k&&k.t>0&&!o&&T.shake>0&&!this.reduced){k.t-=s;const a=k.i*T.shake;this.root.position.set((Math.random()*2-1)*a,(Math.random()*2-1)*a);if(k.t<=0)k.i=0}
     else{if(this.root.x||this.root.y)this.root.position.set(0,0);if(k&&k.t<=0)k.i=0}}catch(err){}
   return out}}

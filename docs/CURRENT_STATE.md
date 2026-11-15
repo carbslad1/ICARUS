@@ -1,6 +1,6 @@
 # Current state: 2026-11-15
 
-**Working here:** Claude Code, 2026-11-15 (feed and frenzy step 2). (Put your tool, session and date here when you start; clear it when you stop. One agent per worktree.)
+**Working here:** nobody. (Put your tool, session and date here when you start; clear it when you stop. One agent per worktree.)
 
 **This is the game.** `~/Projects/icarus-brotato`, branch `prototype/brotato-port-2026-11`. `~/Projects/icarus` (Rush/Kite) and `~/Projects/icarus-slots` are archive. Everything is committed. The GitHub repo is public and this branch has not been pushed: ask before pushing.
 
@@ -15,10 +15,10 @@
 | Plan locked | 2026-11-15 |
 | 0 Facts and a fast measure | **Built and measured 2026-11-15.** Waiting on the designer: the measurement took 5.6 minutes against a 5-minute target |
 | 1 The jump ramp | Signed 2026-11-15: "Yes, it builds" |
-| 2 Feed and frenzy | **Next.** May be built while step 1 is played; signed only after it |
+| 2 Feed and frenzy | **Built 2026-11-15; waiting on the designer's play test** (to wave 5) |
 | 3 The numbers (signs the baseline) | Not started. Play checkpoint |
 
-Built so far (behind the `feed` setting, on by default): the old Harpoon as the only start weapon, a shop that sells only the seven baseline weapons, and the jump ramp (each wave starts at 30 m/s and each jump adds 5, up to the wave's speed). Feed and frenzy itself is not built yet. Step 0's floor is in the plan: six Harpoons already kill 94 to 99% of every wave, far above the other six weapons.
+Built so far (behind the `feed` setting, on by default): the old Harpoon as the only start weapon, a shop that sells only the seven baseline weapons, and the jump ramp (each wave starts at 30 m/s and each jump adds 5, up to the wave's speed). Feed and frenzy itself (step 2): kills while rising build a multiplier, falling multiplies every gun's fire rate up to a cap, shown as cyan rings, a pink burst at the peak and pink pulses. Step 0's floor is in the plan: six Harpoons already kill 94 to 99% of every wave, far above the other six weapons.
 
 ## Answered
 

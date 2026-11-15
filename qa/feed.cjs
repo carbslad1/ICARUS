@@ -52,5 +52,47 @@ test('wave 1 plays exactly as before: every jump at 30 m/s', () => { for (const 
 test('with the setting off, every jump of a wave launches at the wave speed', () => { for (const x of launches(OFF, 6, 8)) assert(Math.abs(x - 55) < .5, x); });
 test('the count starts again each wave', () => { const G = ON, D = G.DEMO, r = G.Hd(2); r.wave = 6; D.wave(r); r.demo.jumps = 5; D.wave(r); assert.equal(r.demo.jumps, 0); });
 
+// Step 2: feed and frenzy. A flight set up in the air with enemies close enough for every gun.
+function airFlight(G, guns) {
+  const D = G.DEMO, r = G.Hd(9); r.wave = 6; D.wave(r); r.slots = guns.map(([id, l], i) => G.Owslot(id, l, 700 + i)); D.sync(r);
+  const { flyer } = require('./bot.cjs'), f = flyer(G, 'mid-keep', 9, { keep: 8 }); let t = 0;
+  while (t < 120 * 60 && !(r.medium.kind === 'air' && r.hand)) { r.hp = 1e9; G.sw(r, f(r)); t++; }
+  return { r, f };
+}
+const enemyAt = (r, x, y, hp = 1) => { const e = { id: 90000 + r.enemies.length, kind: 'chaser', pos: { x, y }, velocity: { x: 0, y: 0 }, hp, maxHp: hp, radius: .5, kv: 1, xp: 1 }; r.enemies.push(e); return e; };
+test('Feed and Frenzy totals are the sums over held weapons by tier, after buy, sell and combine', () => {
+  const D = ON.DEMO, r = shopRun(ON, 4, 3); r.slots = [ON.Owslot('harpoon', 1, 1), ON.Owslot('spitter', 2, 2), ON.Owslot('trident', 3, 3), ON.Owslot('tuna_gaff', 4, 4)]; D.sync(r);
+  const want = () => ({ feed: r.slots.reduce((a, g) => a + [.02, .04, .04, .06][g.lvl - 1], 0), cap: 1 + r.slots.reduce((a, g) => a + [.25, .25, .75, .75][g.lvl - 1], 0) });
+  const close = (a, b) => assert(Math.abs(a.feed - b.feed) < 1e-9 && Math.abs(a.cap - b.cap) < 1e-9, JSON.stringify(a) + ' vs ' + JSON.stringify(b));
+  close(D.feedTotals(r), want());
+  r.demo.offers[0] = { uid: 9101, row: 'weapon', id: 'harpoon', level: 1, price: 1 }; assert(D.command(r, 'buy', 9101)); close(D.feedTotals(r), want());
+  assert(D.command(r, 'combine', 0)); close(D.feedTotals(r), want());
+  assert(D.command(r, 'sell', r.slots.length - 1)); close(D.feedTotals(r), want());
+});
+test('a kill while rising adds exactly the Feed total; a kill while falling adds nothing', () => {
+  const D = ON.DEMO, { r } = airFlight(ON, [['harpoon', 1], ['spitter', 2]]), feed = D.feedTotals(r).feed;
+  assert(!r.hand.apex, 'not rising'); assert.equal(r.hand.fm || 1, 1);
+  const e = enemyAt(r, r.medium.local.x + 1, r.medium.local.y); D.damage(r, e, 99, 'harpoon'); assert(!r.enemies.includes(e), 'not killed');
+  assert(Math.abs((r.hand.fm || 1) - (1 + feed)) < 1e-9, 'rising kill gave ' + r.hand.fm);
+  r.hand.apex = true; const before = r.hand.fm; const e2 = enemyAt(r, r.medium.local.x + 1, r.medium.local.y); ON.DEMO.damage(r, e2, 99, 'harpoon');
+  assert.equal(r.hand.fm, before, 'falling kill changed the multiplier');
+});
+test('while falling every gun fires faster by min(multiplier, cap); while rising it does not', () => {
+  const D = ON.DEMO, { r } = airFlight(ON, [['harpoon', 1], ['spitter', 1]]), cap = D.feedTotals(r).cap;
+  r.hand.fm = 9; assert.equal(D.frenzyNow(r), 1, 'rising');
+  r.hand.apex = true; assert(Math.abs(D.frenzyNow(r) - cap) < 1e-9, 'capped'); r.hand.fm = 1.2; assert(Math.abs(D.frenzyNow(r) - 1.2) < 1e-9, 'below cap');
+  // the cooldown really runs that much faster: one tick of every gun
+  r.slots.forEach(g => { g.cd = 10; }); r.enemies = []; D.fire(r, .1); const fast = r.slots.map(g => 10 - g.cd);
+  r.hand.fm = 1; r.slots.forEach(g => { g.cd = 10; }); D.fire(r, .1); const plain = r.slots.map(g => 10 - g.cd);
+  fast.forEach((x, i) => assert(Math.abs(x / plain[i] - 1.2) < 1e-6, `gun ${i}: ${x / plain[i]}`));
+});
+test('the multiplier is 1 at every breach', () => {
+  const { r, f } = airFlight(ON, [['harpoon', 1]]); const G = ON; let breaches = 0, prev = r.medium.kind, t = 0;
+  while (t < 120 * 120 && breaches < 4 && r.mode === 'playing') { r.hp = 1e9; if (r.hand) r.hand.fm = (r.hand.fm || 1) + .5; G.sw(r, f(r)); t++;
+    if (prev === 'water' && r.medium.kind === 'air') { breaches++; assert.equal(r.hand.fm || 1, 1, 'breach ' + breaches);  /* the old hand was pumped every tick; the new one starts at 1 */ } prev = r.medium.kind; }
+  assert(breaches >= 3, 'only ' + breaches + ' breaches'); return breaches + ' breaches';
+});
+test('with the setting off there is no frenzy', () => { const { r } = airFlight(OFF, [['tuna_gaff', 1]]); r.hand.fm = 3; r.hand.apex = true; assert.equal(OFF.DEMO.frenzyNow(r), 1); });
+
 console.log(JSON.stringify({ round: 'feed', passed, failed }));
 process.exit(failed ? 1 : 0);
