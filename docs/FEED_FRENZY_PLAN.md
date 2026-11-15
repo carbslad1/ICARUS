@@ -359,6 +359,8 @@ Waves 5 and 20 (not in the thresholds): mixed 90% and 98%, close 77% and 95%, Ha
 
 Both remaining builds miss by a few points. The close-only miss is reach, which feed and frenzy numbers cannot fix (it reaches only 74% even at the cap). The designer decides whether to accept them.
 
+**Exceptions accepted** (designer, 2026-11-16: "Accept, play test"): the Harpoon's wave 10 multiplier (84% of the way to its cap, mark 80%) and the close-only build's two misses (wave 10 as played 72%, mark 80%; wave 15 multiplier 29%, mark 30%). The marks themselves are unchanged. Automated part of step 3 tagged `feed-cp3-auto`; the step is signed after the designer's play test.
+
 **When this is signed, the baseline is frozen as the reference.** Parked ideas are then tried one at a time against it.
 
 ## 9. Known risks
@@ -380,4 +382,4 @@ Both remaining builds miss by a few points. The close-only miss is reach, which 
 | 0 Facts and a fast measure | 2026-11-15 | Built and measured; gate passes. The "Fast" check missed its 5-minute target by 38 s under load, so this step waits on the designer's word on that threshold | |
 | 1 The jump ramp | 2026-11-15 | Passed. Automated checks pass (tag `feed-cp1-auto`); designer played waves 1 to 6 | "Does each wave feel like it builds?": "Yes, it builds". The second question (is the slow first jump of a late wave a problem?) was not answered separately |
 | 2 Feed and frenzy | 2026-11-15 | Passed. Automated checks pass (tag `feed-cp2-auto`); designer played | "Can you see the build and the release?": "Yes, it reads". Whether the release feels like a payoff was not answered separately |
-| 3 The numbers (baseline signed) | | | |
+| 3 The numbers (baseline signed) | 2026-11-16 | Numbers set and measured; three small misses accepted by the designer (tag `feed-cp3-auto`). Waiting on the play test to wave 10 | |

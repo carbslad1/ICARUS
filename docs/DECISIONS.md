@@ -18,6 +18,11 @@ For current state see `docs/CURRENT_STATE.md`; for which old document is stale s
 
 ---
 
+### 2026-11-16 — Feed and frenzy numbers set (step 3)
+- **Decision:** Feed per tier 1%, 2%, 2%, 3% per kill while rising (halved from the first guess); Frenzy unchanged (+0.25, +0.25, +0.75, +0.75). Pass marks at waves 10 and 15: floor 60 to 80% of arrivals killed, as played 80 to 95%, median multiplier 30 to 80% of the way to the cap, no flight style more than 1.5 times another. The Harpoon now has 16 m reach, Pressure Cannon's crits and fire rate, and no pierce, so six Harpoons no longer win without frenzy. Accepted misses: the Harpoon's wave 10 multiplier (84%) and the close-only build at wave 10 (72%) and its wave 15 multiplier (29%).
+- **Supersedes:** the plan's first Feed numbers (2, 4, 4, 6%) and the Harpoon's own numbers from 2026-11-15 (30 m reach, 30 to 45% crit at ×2.25 to ×3, faster cooldown, pierce).
+- **Source:** the designer's answers in a Claude Code session, 2026-11-15 and 16: "Yes, apply all three", "Lower its crits", "Slow its fire rate", "Remove its pierce", "Accept, play test". Measurements in `docs/FEED_FRENZY_PLAN.md`, step 3.
+
 ### 2026-11-15 — Feed and frenzy baseline locked; trick levels plan paused
 - **Decision:** the direction is feed and frenzy: "I have settled on a final option. a feed and frenzy mechanic. still 6 weapons." After discussion the designer fixed feed to the ascent and frenzy to the descent (frenzy kills stealing feed "will annoy players"), with tiers raising "feed, frenzy, feed, frenzy ie T1-T4" and items and characters making "unique rules around feed and frenzy" later. On 2026-11-15 he locked the baseline as written in `docs/FEED_FRENZY_PLAN.md`, section 1 ("Yes, lock it"). He also restated as stable: "tricks are tied to a weapon class. jumps increase speed by 5ms/ cap increases by 5 each wave" and "default weapon is harpoon".
 - **Why a baseline:** "we are getting stuck on iterative changes and not progressing the build of the game. I feel we should try and keep as many variables as possible stable and then build from there." Nothing in the baseline's rules changes until it has been played to wave 10 and signed.
