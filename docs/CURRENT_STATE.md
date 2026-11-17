@@ -30,11 +30,11 @@ The designer reported the game freezing in wave 1 with only Esc working, and sen
 
 Small display bugs found on the way: the start-weapon cards and loadout slots read "undefined" where a weapon description should be, and the selected start-weapon card's text is nearly invisible.
 
-## Open bug: "webpage is using too much memory" (designer, 2026-11-17)
+## Fixed, not yet committed: "webpage is using too much memory" (designer report 2026-11-17, fixed 2026-11-17)
 
-**Not reproduced.** Measured 2026-11-17 in headless Chrome (the installed Chrome app; Playwright's own browser download was missing from this Mac): a bot run from wave 1 to wave 20 (23 game minutes) with rendering on. The page's JavaScript memory moved between 35 and 128 MB and fell back after each peak; the graphics process went from about 520 MB to 320 MB, the page process from about 370 MB to 250 MB. Nothing grew. The wording of the message matches Safari's; Safari was not tested. Needed from the designer: which browser, which wave, and whether it was one long run or several runs without reloading.
-
-**Pearls cannot be the cause** (code, `source/carve-reference.html`): pearls in the air are capped at 60 (beyond that a new drop merges into the nearest one, `Oxedrop`), and at every water entry the list is emptied into the bag, which is a single number (`Oxebag`).
+**Cause, measured.** Reproduced in real Safari 26.2 (`node qa/safari-memory.mjs`; record `qa/feed/safari-memory-2026-11-17.txt`): the page process grew from 0.6 GB (wave 1) to 8.1 GB (wave 14, 7 min at 2x speed) and the page died; the graphics process grew to 1.3 GB. Counting calls in Chrome: about 18 new WebGL buffers per frame, none ever deleted. Stack traces put all of them in the PixiJS graphics-context pool bundled in `source/carve-reference.html`: its pooled render-data `init()` built a new batcher (with new GPU buffers) on every reuse and dropped the old one without freeing it.
+**Fix.** One change in `source/carve-reference.html`: `init()` keeps the batcher it already has. After it: 0 new buffers over 1,227 frames (Chrome); Safari page process flat at 412-461 MB and graphics process about 72 MB through wave 14 (`qa/feed/safari-memory-fixed-2026-11-17.jsonl`). Quick gate passes. Frames look right on inspection; an exact pixel comparison was not possible because the browser harness does not step identically between runs.
+**Not checked:** a person playing in Safari; Chrome showing no growth before the fix is not explained.
 
 ## Pearls at water entry (code read 2026-11-17)
 

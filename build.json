@@ -1,7 +1,7 @@
 {
-  "built": "2026-11-17T09:04:40.527Z",
-  "referenceSha256": "9e8c37dbffd6ca31aac94a19b69d5c4418d230ed482c9726aed57ca37a581180",
-  "outputSha256": "77e649d6880854488127f6ac5ad01c2bc86ff8e523991362ba33d0f48f99c5b0",
+  "built": "2026-11-17T11:35:20.044Z",
+  "referenceSha256": "9211e528f23cc82a6d93af3de68a7620855cb9b7364fb56dc5ffe2d5d7726c59",
+  "outputSha256": "30a8b800d953610cf29f025889c71c3a2774a69b6cbb8e01925834648234694e",
   "reference": "source/carve-reference.html",
   "output": "ICARUS-demo.html"
 }
