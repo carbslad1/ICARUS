@@ -30,6 +30,16 @@ The designer reported the game freezing in wave 1 with only Esc working, and sen
 
 Small display bugs found on the way: the start-weapon cards and loadout slots read "undefined" where a weapon description should be, and the selected start-weapon card's text is nearly invisible.
 
+## Open bug: "webpage is using too much memory" (designer, 2026-11-17)
+
+**Not reproduced.** Measured 2026-11-17 in headless Chrome (the installed Chrome app; Playwright's own browser download was missing from this Mac): a bot run from wave 1 to wave 20 (23 game minutes) with rendering on. The page's JavaScript memory moved between 35 and 128 MB and fell back after each peak; the graphics process went from about 520 MB to 320 MB, the page process from about 370 MB to 250 MB. Nothing grew. The wording of the message matches Safari's; Safari was not tested. Needed from the designer: which browser, which wave, and whether it was one long run or several runs without reloading.
+
+**Pearls cannot be the cause** (code, `source/carve-reference.html`): pearls in the air are capped at 60 (beyond that a new drop merges into the nearest one, `Oxedrop`), and at every water entry the list is emptied into the bag, which is a single number (`Oxebag`).
+
+## Pearls at water entry (code read 2026-11-17)
+
+The designer's reading is right: pearls you do not fly into are not banked. In the air a pearl is picked up only within about 6 m of the dolphin (`Oxe.pick` 6 m, scaled by the Pickup stat). Uncollected pearls drift back and sink; any that leave the screen, and all that are still in the air when you enter the water, go into the bag (`Oxelose`, `Oxebag`). The bag is paid back one pearl at a time: each later drop carries one extra pearl while the bag lasts (`Oxedrop`), and those drops also have to be flown into. Changing this changes a shop and economy rule, so it waits for the designer.
+
 ## Things the plan found (2026-11-15)
 
 - The "+5 m/s per jump, capped by the wave" rule is not in this build. Launch speed is fixed for a whole wave today. Step 1 builds it.
