@@ -18,6 +18,11 @@ For current state see `docs/CURRENT_STATE.md`; for which old document is stale s
 
 ---
 
+### 2026-11-17 — Pearls bank without being collected
+- **Decision:** pearls you do not fly into are banked, not bagged: all still in the air when you enter the water, and any that drift off screen. Behind `tune.feed`.
+- **Supersedes:** the engine's bag rule for this baseline (uncollected pearls went into a bag repaid one pearl per later drop, `Oxelose`/`Oxebag`/`Oxedrop` in `source/carve-reference.html`).
+- **Source:** the designer, 2026-11-17: "i think its cause pearls arent banking on entry to water if i dont physically collect them", then "Yes, bank them". His wave 7 run earned 4 to 18 pearls a wave at waves 2 to 5 against Brotato's 46 to 130.
+
 ### 2026-11-16 — Feed and frenzy numbers set (step 3)
 - **Decision:** Feed per tier 1%, 2%, 2%, 3% per kill while rising (halved from the first guess); Frenzy unchanged (+0.25, +0.25, +0.75, +0.75). Pass marks at waves 10 and 15: floor 60 to 80% of arrivals killed, as played 80 to 95%, median multiplier 30 to 80% of the way to the cap, no flight style more than 1.5 times another. The Harpoon now has 16 m reach, Pressure Cannon's crits and fire rate, and no pierce, so six Harpoons no longer win without frenzy. Accepted misses: the Harpoon's wave 10 multiplier (84%) and the close-only build at wave 10 (72%) and its wave 15 multiplier (29%).
 - **Supersedes:** the plan's first Feed numbers (2, 4, 4, 6%) and the Harpoon's own numbers from 2026-11-15 (30 m reach, 30 to 45% crit at ×2.25 to ×3, faster cooldown, pierce).

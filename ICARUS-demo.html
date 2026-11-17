@@ -4914,6 +4914,10 @@ var DEMO = (() => {
 FiveCombat.configure({damage:(r,e,a,c)=>DEMO.damage(r,e,a,c.weapon||('item-'+c.item),0,0,0,false,c),strongest:r=>DEMO.strongest(r),phase:r=>DEMO.phase(r),position:r=>r.medium.local});
 // Match automatic XP level gains to the same HP scale as explicit upgrades.
 // XP orbs and level-ups as v3, except a level adds no Max HP (design doc §4.10); the level-up stat pick is the reward.
+/* Pearls bank without being collected (designer, 2026-11-17: "Yes, bank them"; tune.feed). The engine sends every pearl
+   you did not fly into to the bag: the ones that drift off screen and all still in the air when you enter the water
+   (Oxelose). With tune.feed on they are paid straight into your pearls instead, so the bag stays empty. Off: unchanged. */
+{const lose0=Oxelose;Oxelose=function(r,m){if(DEMO.tune.feed&&r?.demo){Oxepay(r,m);return}return lose0(r,m)}}
 {const xp0=Oxepay;Oxepay=function(r,m,pos){const hp=r.hp,pv=Oxe.pv;if(DEMO.tune.port)Oxe.pv=1/(r.stats.xpRate||1);xp0(r,m,pos);Oxe.pv=pv;if(r.demo){r.hp=hp;DEMO.sync(r)}}}
 var DemoHd=Hd;
 Hd=function(seed,starter='harpoon',record=0){return DEMO.init(DemoHd(seed,starter,record),starter)};

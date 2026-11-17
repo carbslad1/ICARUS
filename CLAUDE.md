@@ -25,6 +25,7 @@ Trust order: the code and built game for behaviour, then these dated docs for in
 - `node qa/gate.cjs`: the quick gate (seconds). Run it after every change.
 - `node qa/gate.cjs --full`: adds the camera and enemy rule gates (about 2 minutes). Run it before every checkpoint and commit.
 - The gate compares against `qa/gate-expected.json`. Known failures are pinned there as accepted results; any difference is a regression until explained. Re-pin with `--record` only for a change the plan calls for, and say so in the commit. Never re-pin a worse result without the designer's yes.
+- `node qa/income.cjs --nochase`: pearl income per wave beside Brotato's gold.
 - `node qa/floor.cjs --quick` (about 40 s) and `node qa/floor.cjs` (about 6 min): how much of each wave plain builds kill. `--vs='{...}'` compares two settings on the same seeds.
 - `node scripts/playtest.mjs --mode flight --seconds 20` screenshots a real flight. Look at the pictures before claiming anything visual.
 - Suites in `qa/legacy/` test earlier prototypes. They do not gate anything.

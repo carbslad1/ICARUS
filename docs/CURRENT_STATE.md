@@ -38,7 +38,7 @@ Small display bugs found on the way: the start-weapon cards and loadout slots re
 
 ## Pearls at water entry (code read 2026-11-17)
 
-The designer's reading is right: pearls you do not fly into are not banked. In the air a pearl is picked up only within about 6 m of the dolphin (`Oxe.pick` 6 m, scaled by the Pickup stat). Uncollected pearls drift back and sink; any that leave the screen, and all that are still in the air when you enter the water, go into the bag (`Oxelose`, `Oxebag`). The bag is paid back one pearl at a time: each later drop carries one extra pearl while the bag lasts (`Oxedrop`), and those drops also have to be flown into. Changing this changes a shop and economy rule, so it waits for the designer.
+The designer's reading is right: pearls you do not fly into are not banked. In the air a pearl is picked up only within about 6 m of the dolphin (`Oxe.pick` 6 m, scaled by the Pickup stat). Uncollected pearls drift back and sink; any that leave the screen, and all that are still in the air when you enter the water, go into the bag (`Oxelose`, `Oxebag`). The bag is paid back one pearl at a time: each later drop carries one extra pearl while the bag lasts (`Oxedrop`), and those drops also have to be flown into. **Changed 2026-11-17** (designer: "Yes, bank them"): with `feed` on, pearls you do not fly into are paid straight into your pearls (both the ones that drift off screen and all still in the air at water entry), so the bag stays empty. Measured with `node qa/income.cjs --nochase --tune='{"feed":1}'` (bot never steers for pearls, seed 81855343): earned per wave 22, 44, 73, 101, 158, 194 against Brotato's 28, 46, 70, 99, 130, 170.
 
 ## Things the plan found (2026-11-15)
 

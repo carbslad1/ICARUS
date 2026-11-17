@@ -94,5 +94,12 @@ test('the multiplier is 1 at every breach', () => {
 });
 test('with the setting off there is no frenzy', () => { const { r } = airFlight(OFF, [['tuna_gaff', 1]]); r.hand.fm = 3; r.hand.apex = true; assert.equal(OFF.DEMO.frenzyNow(r), 1); });
 
+// Pearls bank without being collected (designer, 2026-11-17): entering the water pays every pearl still in the air.
+test('entering the water banks every pearl still in the air; with the setting off they go to the bag', () => {
+  for (const [G, on] of [[ON, true], [OFF, false]]) { const r = G.Hd(2); r.eorbs = [{ x: 0, y: 5, vx: 0, vy: 0, m: 3, age: 0 }, { x: 2, y: 6, vx: 0, vy: 0, m: 4, age: 0 }];
+    const xp = r.xp; G.Oxebag(r, { x: 0, y: 0 }, null);
+    if (on) { assert.equal(r.xp, xp + 7); assert.equal(r.bag || 0, 0); } else { assert.equal(r.xp, xp); assert.equal(r.bag, 7); } assert.equal(r.eorbs.length, 0); }
+});
+
 console.log(JSON.stringify({ round: 'feed', passed, failed }));
 process.exit(failed ? 1 : 0);
